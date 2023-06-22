@@ -1,0 +1,1 @@
+export const notificationTokenSelector = ({ app }) => app.notificationToken

@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "jsEngine": "hermes",
+    "name": "Courrier",
+    "slug": "courrier",
+    "version": "1.0.0",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mediabox.cra"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.mediabox.courrier"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "icon": "./assets/logo.png",
+      "color": "#dddddd",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Cra",
+      "iosDisplayInForeground": true
+    },
+    "scheme": "cra",
+    "description": "Une application pour remplir le compte rendu d'activite de mediabox",
+    "extra": {
+      "eas": {
+        "projectId": "6466d0cb-db09-40fa-88d2-b62b0a4bd5cd"
+      }
+    },
+    "owner": "mediabox-innovation-team"
+  }
+}
