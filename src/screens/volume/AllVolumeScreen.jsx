@@ -156,7 +156,7 @@ export default function AllVolumeScreen() {
         {
             text: "Ajouter volume",
             icon: require("../../../assets/images/entrant.jpg"),
-            name: "CourrierScreen",
+            name: "NewVolumeScreen",
             position: 1,
             render: () => <Action title={"Courrier entrants"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
         },
@@ -352,11 +352,9 @@ export default function AllVolumeScreen() {
             <FloatingAction
                 actions={actions}  
                 onPressItem={name => {
-                    if (name == 'CourrierScreen') {
-                        navigation.navigate("CourrierScreen")
-                    } else if (name == 'CourrierSortantScreen') {
-                        navigation.navigate('CourrierSortantScreen')
-                    } else {
+                    if (name == 'NewVolumeScreen') {
+                        navigation.navigate("NewVolumeScreen")
+                    }  else {
                         // scanModalizeRef.current?.open()
                         navigation.navigate('CourrierScanSourceScreen')
                     }

@@ -1,4 +1,4 @@
-import { ADD_COMMAND_ACTION, REMOVE_COMMAND_ACTION, RESET_CART_ACTION } from "../reducers/ecommerceCartReducer"
+import { ADD_COMMAND_ACTION, REMOVE_COMMAND_ACTION, RESET_CART_ACTION } from "../reducers/volumeCartReducer"
 
 
 export const addVolumeAction = (product) => {
@@ -7,10 +7,10 @@ export const addVolumeAction = (product) => {
                     payload: { ...product}
           }
 }
-export const removeVolumeAction = (ID_VOLUME) => {
+export const removeVolumeAction = (ID_PRODUIT) => {
           return {
                     type: REMOVE_COMMAND_ACTION,
-                    payload: ID_VOLUME
+                    payload: ID_PRODUIT
           }
 }
 
