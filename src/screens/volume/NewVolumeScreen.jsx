@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableNativeFeedback, StatusBar, ToastAndroid, Alert } from "react-native";
 import { OutlinedTextField } from 'rn-material-ui-textfield'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../styles/COLORS';
 import { useForm } from '../../hooks/useForm';
@@ -9,9 +9,10 @@ import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { addVolumeAction } from '../../store/actions/planificationCartActions';
-import { ecommerceCartReducer } from '../../store/reducers/planificationCartReducer';
-import { ecommerceCartSelector, planificationCartSelector } from '../../store/selectors/planificationCartSelectors';
+import { planificationCartSelector } from '../../store/selectors/planificationCartSelectors';
 import { removeVolumeAction } from '../../store/actions/planificationCartActions';
+import { userSelector } from '../../store/selectors/userSelector';
+import * as DocumentPicker from 'expo-document-picker';
 
 /**
  * Screen pour planifier et enregistrement volume
@@ -24,11 +25,11 @@ export default function NewVolumeScreen() {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const activity = useSelector(planificationCartSelector)
-    console.log(activity)
+    const user = useSelector(userSelector)
 
     const [data, handleChange, setValue] = useForm({
-        nbre_volume: null,
-        numero: null,
+        nbre_volume: '',
+        numero: '',
     })
 
     const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -49,37 +50,23 @@ export default function NewVolumeScreen() {
         }
     })
     const isValidAdd = () => {
-        var isVali = false
-        isVali = data.nbre_volume > 0 && data.numero ? true : false
-        return isVali
+        var isValid = false
+        isValid = data.nbre_volume == 0 ? true : false
+        return isValid
     }
-    const isValid = () => {
-        // var isValiExpediteur = false
 
-        // var isValiExpediteur = false
-        // var isValidDestinateur = false
-        // if (data.expediteurtpe == 1) {
-        //     isValiExpediteur = data.expediteur ? true : false
-        // } else if (data.expediteurtpe == 2) {
-        //     isValiExpediteur = data.societe ? true : false
-        // }
-        // if (data.isconfidentiel == 1 && data.destinatairetpe == 2) {
-        //     isValidDestinateur = data.selectedUser.length > 0
-        // } else if (data.isconfidentiel == 1 && data.destinatairetpe == 1) {
-        //     isValidDestinateur = data.departemant
-        // }
-        // else if (data.isconfidentiel == 0) {
-        //     isValidDestinateur = data.isconfidentiel != null
-        // }
-        // return isValidate() && isValiExpediteur && isValidDestinateur
+    const isValidFin = () => {
+        var isVal = false
+        isVal = data.nbre_volume > 0 ? true : false
+        return isVal
     }
     const onAddToCart = () => {
-        dispatch(addVolumeAction({ ID_VOLUME: parseInt(data.nbre_volume)+ parseInt(activity.length), NUMERO_VOLUME: data.numero }))
+        dispatch(addVolumeAction({ ID_VOLUME: parseInt(data.nbre_volume), NUMERO_VOLUME: data.numero }))
         handleChange("nbre_volume", data.nbre_volume - 1)
         handleChange("numero", "")
     }
- 
-    const onRemoveProduct = (product) => {
+
+    const onRemoveProduct = (index) => {
         Alert.alert("Enlever le produit", "Voulez-vous vraiment enlever ce produit du panier ?",
             [
                 {
@@ -88,113 +75,166 @@ export default function NewVolumeScreen() {
                 },
                 {
                     text: "Oui", onPress: async () => {
-                        dispatch(removeVolumeAction(product.ID_VOLUME))
+                        dispatch(removeVolumeAction(index))
                     }
                 }
             ])
     }
 
+    const selectdocument = async () => {
+        setError("document", "")
+        handleChange("document", null)
+        const document = await DocumentPicker.getDocumentAsync({
+            type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+        })
+        if (document.type == 'cancel') {
+            return false
+        }
+        var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
+        if (sizeDocument <= 2) {
+            handleChange("document", document)
+        }
+        else {
+            setError("document", ["Document trop volumineux(max:2M)"])
+        }
+
+    }
+
+
+
+    const submitPlanification = async () => {
+        try {
+            const form = new FormData()
+            form.append('USER', user.USERS_ID)
+            form.append('VOLUME', JSON.stringify(activity))
+            if (data.document) {
+                let localUri = data.document.uri;
+                let filename = localUri.split('/').pop();
+                form.append("document", {
+                    uri: data.document.uri, name: filename, type: data.document.mimeType
+                })
+            }
+            console.log(form)
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
             <View style={styles.container}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, marginTop: StatusBar.currentHeight }}>
+                <View style={styles.cardHeader}>
                     <TouchableNativeFeedback
-                        style={{}}
                         onPress={() => navigation.goBack()}
                         background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                        <View style={{ padding: 10 }}>
-                            <Ionicons name="arrow-back-sharp" size={24} color={COLORS.primary} />
+                        <View style={styles.backBtn}>
+                            <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.Title}>Planifier les volumes</Text>
+                    <Text style={styles.titlePrincipal}>Planifier les volumes</Text>
                 </View>
-                <View>
-                    <View style={styles.inputCard}>
-                        <View>
-                            <OutlinedTextField
-                                label="Nombre de volume"
-                                fontSize={14}
-                                baseColor={COLORS.smallBrown}
-                                tintColor={COLORS.primary}
-                                containerStyle={{ borderRadius: 20 }}
-                                lineWidth={1}
-                                activeLineWidth={1}
-                                errorColor={COLORS.error}
-                                value={data.nbre_volume}
-                                onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
-                                onBlur={() => checkFieldData('nbre_volume')}
-                                error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
-                                // onSubmitEditing={() => {
-                                //     objetInputRef.current.focus()
-                                // }}
-                                autoCompleteType='off'
-                                // returnKeyType="next"
-                                blurOnSubmit={false}
-                            />
-                        </View>
-                    </View>
-                    {data.nbre_volume > 0 ? <View style={styles.inputCard}>
-                        <View>
-                            <OutlinedTextField
-                                label="Numero"
-                                fontSize={14}
-                                baseColor={COLORS.smallBrown}
-                                tintColor={COLORS.primary}
-                                containerStyle={{ borderRadius: 20 }}
-                                lineWidth={1}
-                                activeLineWidth={1}
-                                errorColor={COLORS.error}
-                                value={data.numero}
-                                onChangeText={(newValue) => handleChange('numero', newValue)}
-                                onBlur={() => checkFieldData('numero')}
-                                error={hasError('numero') ? getError('numero') : ''}
-                                // onSubmitEditing={() => {
-                                //     objetInputRef.current.focus()
-                                // }}
-                                autoCompleteType='off'
-                                // returnKeyType="next"
-                                blurOnSubmit={false}
-                            />
-                        </View>
-                    </View> : null}
+                <View style={{ marginVertical: 8 }}>
+                    <OutlinedTextField
+                        label="Nombre de volume"
+                        fontSize={14}
+                        baseColor={COLORS.smallBrown}
+                        tintColor={COLORS.primary}
+                        containerStyle={{ borderRadius: 20 }}
+                        lineWidth={1}
+                        activeLineWidth={1}
+                        errorColor={COLORS.error}
+                        value={data.nbre_volume}
+                        onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
+                        onBlur={() => checkFieldData('nbre_volume')}
+                        error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
+                        autoCompleteType='off'
+                        blurOnSubmit={false}
+                    />
                 </View>
-                {/* <Text style={styles.titlePrincipal}>Mon panier</Text> */}
-                {/* <View style={{marginBottom:200 }}> */}
+                {data.nbre_volume > 0 ? <View style={{ marginVertical: 8 }}>
+                    <OutlinedTextField
+                        label="Numero"
+                        fontSize={14}
+                        baseColor={COLORS.smallBrown}
+                        tintColor={COLORS.primary}
+                        containerStyle={{ borderRadius: 20 }}
+                        lineWidth={1}
+                        activeLineWidth={1}
+                        errorColor={COLORS.error}
+                        value={data.numero}
+                        onChangeText={(newValue) => handleChange('numero', newValue)}
+                        onBlur={() => checkFieldData('numero')}
+                        error={hasError('numero') ? getError('numero') : ''}
+                        autoCompleteType='off'
+                        blurOnSubmit={false}
+                    />
+                </View> : null}
                 <ScrollView>
-                    {activity.map((product, index) => {
-                        return (
-                            <View style={{marginHorizontal:20}}>
-                            <View style={styles.headerRead}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' ,flex:1}}>
-                                    <View style={{ maxWidth: 220 }} >
-                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>
-                                            {product.NUMERO_VOLUME}</Text>
-                                    </View>
-                                    <View style={{ maxWidth: 220 }} >
-                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>
-                                            {product.ID_VOLUME}</Text>
-                                    </View>
-                                    <View style={{ marginTop: 10 }}>
-                                        <TouchableOpacity style={styles.reomoveBtn} onPress={()=>onRemoveProduct(product)}>
-                                            <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                        </TouchableOpacity>
+                    <>
+                        {activity.map((product, index) => {
+                            return (
+                                <View style={styles.headerRead}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                        <View style={styles.cardFolder}>
+                                            <Text style={[styles.title]} numberOfLines={1}>{product.NUMERO_VOLUME}</Text>
+                                            <View style={styles.cardDescription}>
+                                                <AntDesign name="folderopen" size={20} color="black" />
+                                            </View>
+
+                                        </View>
+                                        <View>
+                                            <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_VOLUME}</Text>
+                                        </View>
+                                        <View>
+                                            <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
+                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            </View>
-                        )
-                    })}
+                            )
+                        })}
+
+                        <View>
+                            <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                onPress={selectdocument}
+                            >
+                                <View>
+                                    <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                        Importer le proces verbal
+                                    </Text>
+                                    {data.document ? <View>
+                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                            {data.document.name}
+                                        </Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                            <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                            </Text>
+                                        </View>
+                                    </View> : null}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+
+                    </>
                 </ScrollView>
                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                     <TouchableOpacity
-                        style={[styles.amountChanger, !isValidAdd() && { opacity: 0.5 }]} 
+                        disabled={!isValidFin()}
                         onPress={onAddToCart}
-                        >
-                        <Text style={styles.amountChangerText}>+</Text>
+                    >
+                        <View style={[styles.amountChanger, !isValidFin() && { opacity: 0.5 }]}>
+                            <Text style={styles.amountChangerText}>+</Text>
+                        </View>
                     </TouchableOpacity>
                     <TouchableWithoutFeedback
-                        disabled={!isValid()}>
-                        <View style={[styles.button, !isValid() && { opacity: 0.5 }]}>
+                        disabled={!isValidAdd()}
+                        onPress={submitPlanification}
+                    >
+                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                             <Text style={styles.buttonText}>Enregistrer</Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -205,23 +245,23 @@ export default function NewVolumeScreen() {
 }
 
 const styles = StyleSheet.create({
-    Title: {
+    container: {
+        marginTop: -20,
+        flex: 1,
+        marginHorizontal: 10
+    },
+    titlePrincipal: {
         fontSize: 18,
         fontWeight: "bold",
         marginLeft: 10,
         color: COLORS.primary
-    },
-    inputCard: {
-        marginHorizontal: 20,
-        marginTop: 10
     },
     button: {
         marginVertical: 10,
         borderRadius: 8,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        backgroundColor: COLORS.primary,
-        marginHorizontal: 20
+        backgroundColor: COLORS.primary
     },
     buttonText: {
         color: "#fff",
@@ -230,9 +270,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center"
     },
-    container: {
-        flex: 1,
-    },
     amountChanger: {
         width: 100,
         height: 50,
@@ -240,8 +277,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
-        marginHorizontal: 20
+        marginTop: 10
 
     },
     amountChangerText: {
@@ -274,5 +310,58 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 5,
         paddingHorizontal: 30
-    }
+    },
+    cardFolder: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        backgroundColor: '#FFF',
+        maxHeight: 50,
+        borderRadius: 20,
+        padding: 3,
+        paddingVertical: 2,
+        elevation: 10,
+        shadowColor: '#c4c4c4',
+    },
+    cardDescription: {
+        marginLeft: 10,
+        width: 30,
+        height: 30,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        backgroundColor: "#ddd"
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        marginTop: StatusBar.currentHeight,
+        alignContent: "center",
+        alignItems: "center",
+        marginBottom: 15
+
+    },
+    backBtn: {
+        backgroundColor: COLORS.ecommercePrimaryColor,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+    },
+    selectContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        padding: 13,
+        borderRadius: 5,
+        borderWidth: 0.5,
+        borderColor: "#777",
+        marginVertical: 10
+    },
+    selectLabel: {
+        color: '#777'
+    },
 })

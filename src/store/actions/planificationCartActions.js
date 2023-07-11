@@ -4,7 +4,7 @@ import { ADD_PLANIFICATION_ACTION, REMOVE_PLANIFICATION_ACTION, RESET_PLANIFICAT
 export const addVolumeAction = (product) => {
           return {
                     type: ADD_PLANIFICATION_ACTION,
-                    payload: { ...product}
+                    payload: product
           }
 }
 export const removeVolumeAction = (ID_VOLUME) => {
