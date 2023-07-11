@@ -6,6 +6,15 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { COLORS } from "../../styles/COLORS";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
+
+/**
+ * Un composant pour afficher l'entente de volume planifier de l'application
+ * @author Vanny Boy <vanny@mediabox.bi>
+ * @date le 11/7/2023
+ * @param {*} param0 
+ * @returns 
+ */
+
 export default function AppHeader({ modal }) {
     const user = useSelector(userSelector)
     const navigation = useNavigation()
@@ -22,10 +31,12 @@ export default function AppHeader({ modal }) {
             </TouchableNativeFeedback>
            
                 <Text style={styles.logo}>Volume planifie</Text>
-            <TouchableOpacity onPress={() => {
-                        modal.current?.open()
+            <TouchableOpacity 
+            // onPress={() => {
+            //             modal.current?.open()
 
-                    }}>
+            //         }}
+                    >
             <View style={{ padding: 10 }}>
                 <Ionicons name="filter-sharp" size={25} color={COLORS.primary} />
             </View>

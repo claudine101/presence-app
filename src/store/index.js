@@ -1,5 +1,5 @@
 import { combineReducers, createStore } from "redux";
-import { ecommerceCartReducer } from "./reducers/ecommerceCartReducer";
+import { planificationCartReducer } from "./reducers/planificationCartReducer";
 
 import userReducer from "./reducers/userReducer";
 import appReducer from "./reducers/appReducer";
@@ -8,7 +8,7 @@ import appReducer from "./reducers/appReducer";
 export const store = createStore(
           combineReducers({
                     user: userReducer,
-                    ecommerceCart: ecommerceCartReducer,
+                    planificationCart: planificationCartReducer,
                     app: appReducer
 
        }),
