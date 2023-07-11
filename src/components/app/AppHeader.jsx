@@ -6,7 +6,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { COLORS } from "../../styles/COLORS";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
-export default function AppHeader({ notification,modal }) {
+export default function AppHeader({ modal }) {
     const user = useSelector(userSelector)
     const navigation = useNavigation()
     return (
@@ -30,17 +30,7 @@ export default function AppHeader({ notification,modal }) {
                 <Ionicons name="filter-sharp" size={25} color={COLORS.primary} />
             </View>
             </TouchableOpacity>
-            <TouchableNativeFeedback
-
-                onPress={() => navigation.navigate("NotificationScreen", { service: 1 })}
-                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                <View style={{ padding: 5 }}>
-                    <Ionicons name="notifications-circle" size={30} color="#18678E" />
-                    {notification > 0 ? <View style={styles.badge}>
-                        <Text style={styles.badgeText} numberOfLines={1}>{notification}</Text>
-                    </View> : null}
-                </View>
-            </TouchableNativeFeedback>
+           
         </View >
     )
 }
