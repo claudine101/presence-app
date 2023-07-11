@@ -34,13 +34,13 @@ export default function AllVolumeScreen() {
             position: 1,
             render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
         },
-        // {
-        //     text: "Scanner un QR",
-        //     icon: require("../../../assets/images/qr-code.png"),
-        //     name: "CourrierScanScreen",
-        //     position: 3,
-        //     render: () => <Action title={"Scanner un QR"} image={require("../../../assets/images/qr-code.png")} key={"key3"} />
-        // }
+        {
+            text: "Scanner un QR",
+            icon: require("../../../assets/images/qr-code.png"),
+            name: "AgentArchivageScreen",
+            position: 3,
+            render: () => <Action title={"Agent Archivages"} image={require("../../../assets/images/qr-code.png")} key={"key3"} />
+        }
     ];
 
     return (
@@ -61,11 +61,9 @@ export default function AllVolumeScreen() {
                 onPressItem={name => {
                     if (name == 'NewVolumeScreen') {
                         navigation.navigate("NewVolumeScreen")
-                    } 
-                    // else {
-                    //     // scanModalizeRef.current?.open()
-                    //     navigation.navigate('CourrierScanSourceScreen')
-                    // }
+                    } else {
+                        navigation.navigate('AgentArchivageScreen')
+                    }
                 }}
                 color={COLORS.primary}
             />
