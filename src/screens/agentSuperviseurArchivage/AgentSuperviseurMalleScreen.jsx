@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
@@ -9,87 +9,58 @@ import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
-import { useDispatch, useSelector } from "react-redux";
-import { folioNatureCartSelector } from "../../store/selectors/folioNatureCartSelector";
-import { addFolioAction, removeFolioAction } from "../../store/actions/folioNatureCartActions";
 
 /**
- * Le screen pour details le volume, le dossier utilisable par un agent superviseur
+ * Le screen pour  mettre le volume detailler dans un malle
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 12/7/2021
  * @returns 
  */
 
-
-export default function AgentSuperviseurScreen() {
+export default function AgentSuperviseurMalleScreen() {
         const navigation = useNavigation()
-        const dispatch = useDispatch()
-        const folioNatures = useSelector(folioNatureCartSelector)
 
         const [data, handleChange, setValue] = useForm({
-                dossier: '',
-                folio: '',
+                malle: '',
+                aille: ''
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 dossier: {
                         required: true
                 },
-                folio: {
+                aille: {
                         required: true
                 }
         }, {
                 dossier: {
                         required: 'ce champ est obligatoire',
                 },
-                folio: {
+                aille: {
                         required: 'ce champ est obligatoire',
                 }
         })
 
-        // Volume select
-        const volumeModalizeRef = useRef(null);
-        const [volumes, setVolumes] = useState(null);
-        const openVolumeModalize = () => {
-                volumeModalizeRef.current?.open();
+        // Batiment select
+        const batimentModalizeRef = useRef(null);
+        const [batiments, setBatiments] = useState(null);
+        const openBatimentModalize = () => {
+                batimentModalizeRef.current?.open();
         };
-        const setSelectedVolume = (vol) => {
-                volumeModalizeRef.current?.close();
-                setVolumes(vol)
+        const setSelectedBatiment = (bat) => {
+                batimentModalizeRef.current?.close();
+                setBatiments(bat)
         }
 
-        // Nature du dossier select
-        const natureModalizeRef = useRef(null);
-        const [natures, setNatures] = useState(null);
-        const openNaturesModalize = () => {
-                natureModalizeRef.current?.open();
+        // Distributeur select
+        const distributrutModalizeRef = useRef(null);
+        const [distributeur, setDistributeur] = useState(null);
+        const openDistributeurModalize = () => {
+                distributrutModalizeRef.current?.open();
         };
-        const setSelectedNtures = (nat) => {
-                natureModalizeRef.current?.close();
-                setNatures(nat)
-        }
-
-        //Fonction pour ajouter le folio da le redux
-        const onAddToCart = () => {
-                dispatch(addFolioAction({ ID_FOLIO: parseInt(data.dossier), NATURE: data.folio, TOTAL: data.dossier + data.folio }))
-                // handleChange("nbre_volume", data.nbre_volume - 1)
-                // handleChange("numero", "")
-        }
-
-        //Fonction pour enlever le folio da le redux
-        const onRemoveProduct = (index) => {
-                Alert.alert("Enlever le folio", "Voulez-vous vraiment enlever ce folio dans les details ?",
-                        [
-                                {
-                                        text: "Annuler",
-                                        style: "cancel"
-                                },
-                                {
-                                        text: "Oui", onPress: async () => {
-                                                dispatch(removeFolioAction(index))
-                                        }
-                                }
-                        ])
+        const setSelectedDistibuteur = (distr) => {
+                distributrutModalizeRef.current?.close();
+                setDistributeur(distr)
         }
 
         //Fonction pour upload un documents 
@@ -112,20 +83,20 @@ export default function AgentSuperviseurScreen() {
 
         }
 
-        //Composent pour afficher le modal de volume associer a un agent superviceur
-        const VolumeAgentSuperviseurList = () => {
+        //Composent pour afficher le modal des batiments 
+        const BatimentList = () => {
                 return (
                         <>
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les volumes</Text>
+                                                <Text style={styles.modalTitle}>Les batiments</Text>
 
                                         </View>
                                         <ScrollView>
                                                 <TouchableNativeFeedback >
                                                         <View style={styles.modalItem} >
                                                                 <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                 </View>
                                                                 <Text style={styles.itemTitle}>dgdg</Text>
                                                         </View>
@@ -136,20 +107,20 @@ export default function AgentSuperviseurScreen() {
                 )
         }
 
-        //Composent pour afficher le modal de nature de folio
-        const NatureDossierList = () => {
+        //Composent pour afficher le modal de liste des distrubuteur 
+        const DistributeurAgentList = () => {
                 return (
                         <>
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Nature du dossier</Text>
+                                                <Text style={styles.modalTitle}>Les distributeurs</Text>
 
                                         </View>
                                         <ScrollView>
                                                 <TouchableNativeFeedback >
                                                         <View style={styles.modalItem} >
                                                                 <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                        <AntDesign name="addusergroup" size={24} color="black" />
                                                                 </View>
                                                                 <Text style={styles.itemTitle}>dgdg</Text>
                                                         </View>
@@ -160,25 +131,25 @@ export default function AgentSuperviseurScreen() {
                 )
         }
 
-        const submitFolio = async () => {
+        const submitInMalle = async () => {
                 try {
                         const form = new FormData()
-                        form.append('USER', data.dossier)
-                        form.append('USER', data.folio)
+                        form.append('USER', data.malle)
+                        form.append('USER', data.aille)
 
                         // form.append('VOLUME', JSON.stringify(activity))
                         if (data.document) {
-                            let localUri = data.document.uri;
-                            let filename = localUri.split('/').pop();
-                            form.append("document", {
-                                uri: data.document.uri, name: filename, type: data.document.mimeType
-                            })
+                                let localUri = data.document.uri;
+                                let filename = localUri.split('/').pop();
+                                form.append("document", {
+                                        uri: data.document.uri, name: filename, type: data.document.mimeType
+                                })
                         }
                         console.log(form)
-                    }
-                    catch (error) {
+                }
+                catch (error) {
                         console.log(error)
-                    }
+                }
         }
 
 
@@ -192,11 +163,11 @@ export default function AgentSuperviseurScreen() {
                                                 <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                         </View>
                                 </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Detailler le volume</Text>
+                                <Text style={styles.titlePrincipal}>Detail de volume dans un malle</Text>
                         </View>
                         <ScrollView>
                                 <View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
+                                        <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Volume
@@ -207,10 +178,10 @@ export default function AgentSuperviseurScreen() {
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </TouchableOpacity>
+                                        </View>
                                         <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
-                                                        label="Nombre de dossier"
+                                                        label="Numero de la malle"
                                                         fontSize={14}
                                                         baseColor={COLORS.smallBrown}
                                                         tintColor={COLORS.primary}
@@ -218,86 +189,56 @@ export default function AgentSuperviseurScreen() {
                                                         lineWidth={1}
                                                         activeLineWidth={1}
                                                         errorColor={COLORS.error}
-                                                        value={data.dossier}
-                                                        onChangeText={(newValue) => handleChange('dossier', newValue)}
-                                                        onBlur={() => checkFieldData('dossier')}
-                                                        error={hasError('dossier') ? getError('dossier') : ''}
+                                                        value={data.malle}
+                                                        onChangeText={(newValue) => handleChange('malle', newValue)}
+                                                        onBlur={() => checkFieldData('malle')}
+                                                        error={hasError('malle') ? getError('malle') : ''}
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
                                         </View>
-                                        <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Folio</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nombre de folio"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.folio}
-                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
-                                                        onBlur={() => checkFieldData('folio')}
-                                                        error={hasError('folio') ? getError('folio') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Nature du dossier</Text>
-                                        </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner la nature
+                                                                Selectioner le batiment
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdh
+                                                                        hdhdggk
                                                                 </Text>
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                <View></View>
-                                                <TouchableOpacity
-                                                        onPress={onAddToCart}
-                                                >
-                                                        <View style={styles.buttonPlus}>
-                                                                <Text style={styles.buttonTextPlus}>+</Text>
-                                                        </View>
-                                                </TouchableOpacity>
+                                        <View style={{ marginVertical: 8 }}>
+                                                <OutlinedTextField
+                                                        label="Numero de l'aille"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.aille}
+                                                        onChangeText={(newValue) => handleChange('aille', newValue)}
+                                                        onBlur={() => checkFieldData('aille')}
+                                                        error={hasError('aille') ? getError('aille') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                />
                                         </View>
-                                        {folioNatures.map((product, index) => {
-                                                return (
-                                                        <View style={styles.headerRead}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                        <View style={styles.cardFolder}>
-                                                                                <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-
-                                                                        </View>
-                                                                        <View>
-                                                                                <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
-                                                                        </View>
-                                                                        <View>
-                                                                                <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_FOLIO}</Text>
-                                                                        </View>
-                                                                        <View>
-                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                </TouchableOpacity>
-                                                                        </View>
-                                                                </View>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Selectioner le distributeur
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        hdhdggk
+                                                                </Text>
                                                         </View>
-                                                )
-                                        })}
+                                                </View>
+                                        </TouchableOpacity>
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -323,20 +264,21 @@ export default function AgentSuperviseurScreen() {
                                 </View>
                         </ScrollView>
                         <TouchableWithoutFeedback
-                                onPress={submitFolio}
+                                onPress={submitInMalle}
                         >
                                 <View style={styles.button}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
+
                         <Portal>
-                                <Modalize ref={volumeModalizeRef}  >
-                                        <VolumeAgentSuperviseurList />
+                                <Modalize ref={batimentModalizeRef}  >
+                                        <BatimentList />
                                 </Modalize>
                         </Portal>
                         <Portal>
-                                <Modalize ref={natureModalizeRef}  >
-                                        <NatureDossierList />
+                                <Modalize ref={distributrutModalizeRef}  >
+                                        <DistributeurAgentList />
                                 </Modalize>
                         </Portal>
                 </View>
@@ -384,10 +326,6 @@ const styles = StyleSheet.create({
         selectedValue: {
                 color: '#777'
         },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
         modalHeader: {
                 flexDirection: "row",
                 alignItems: "center",
@@ -421,71 +359,16 @@ const styles = StyleSheet.create({
                 marginLeft: 10
         },
         button: {
-                marginVertical: 10,
+                marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: COLORS.primary
+                backgroundColor: "#18678E",
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
-        },
-        buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center"
-        },
-        buttonTextPlus: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 25
-        },
-        headerRead: {
-                borderRadius: 8,
-                backgroundColor: "#ddd",
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 5,
-                paddingHorizontal: 30
-        },
-        cardFolder: {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: '#FFF',
-                maxHeight: 50,
-                borderRadius: 20,
-                padding: 3,
-                paddingVertical: 2,
-                elevation: 10,
-                shadowColor: '#c4c4c4',
-        },
-        cardDescription: {
-                marginLeft: 10,
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ddd"
-        },
-        reomoveBtn: {
-                width: 30,
-                height: 30,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
         },
 })
