@@ -3,45 +3,44 @@ import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView,
 import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
-import { Modalize } from 'react-native-modalize';
-import { Portal } from 'react-native-portalize';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 
 /**
- * Le screen pour associer un volume a un agents superviseur
+ * Le screen pour details le volume, le dossier utilisable par un agent superviseur
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 11/7/2021
+ * @date 12/7/2021
  * @returns 
  */
 
-export default function AgentArchivageScreen() {
+
+export default function AgentSuperviseurScreen() {
         const navigation = useNavigation()
 
         const [data, handleChange, setValue] = useForm({
-                numero: '',
+                dossier: '',
+                folio: '',
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                numero: {
+                dossier: {
+                        required: true
+                },
+                folio: {
                         required: true
                 }
         }, {
-                numero: {
+                dossier: {
+                        required: 'ce champ est obligatoire',
+                },
+                folio: {
                         required: 'ce champ est obligatoire',
                 }
         })
-
-        const isValidAdd = () => {
-                var isValid = false
-                isValid = data.numero > 0 ? true : false
-                isValid = volumes > 0 ? true : false
-                isValid = agents > 0 ? true : false
-                return isValid
-        }
-
 
         // Volume select
         const volumeModalizeRef = useRef(null);
@@ -54,15 +53,15 @@ export default function AgentArchivageScreen() {
                 setVolumes(vol)
         }
 
-        // Agent archivage select
-        const agentModalizeRef = useRef(null);
-        const [agents, setAgents] = useState(null);
-        const openAgentModalize = () => {
-                agentModalizeRef.current?.open();
+        // Nature du dossier select
+        const natureModalizeRef = useRef(null);
+        const [natures, setNatures] = useState(null);
+        const openNaturesModalize = () => {
+                natureModalizeRef.current?.open();
         };
-        const setSelectedAgent = (ag) => {
-                agentModalizeRef.current?.close();
-                setAgents(ag)
+        const setSelectedNtures = (nat) => {
+                natureModalizeRef.current?.close();
+                setNatures(nat)
         }
 
         //Fonction pour upload un documents 
@@ -85,8 +84,7 @@ export default function AgentArchivageScreen() {
 
         }
 
-        //Modal pour afficher la liste de volumes existants
-        const VolumeList = () => {
+        const VolumeAgentSuperviseurList = () => {
                 return (
                         <>
                                 <View style={styles.modalContainer}>
@@ -109,20 +107,19 @@ export default function AgentArchivageScreen() {
                 )
         }
 
-        //Modal pour afficher la liste de agents archivages existants
-        const AgentArchivageList = () => {
+        const NatureDossierList = () => {
                 return (
                         <>
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Agents archivages</Text>
+                                                <Text style={styles.modalTitle}>Nature du dossier</Text>
 
                                         </View>
                                         <ScrollView>
                                                 <TouchableNativeFeedback >
                                                         <View style={styles.modalItem} >
                                                                 <View style={styles.modalImageContainer}>
-                                                                        <Feather name="users" size={24} color="black" />
+                                                                        <AntDesign name="folderopen" size={20} color="black" />
                                                                 </View>
                                                                 <Text style={styles.itemTitle}>dgdg</Text>
                                                         </View>
@@ -134,24 +131,6 @@ export default function AgentArchivageScreen() {
         }
 
 
-        const handleSubmit = async () => {
-                try {
-                        const form = new FormData()
-                        form.append('numero', data.numero)
-                        if (data.document) {
-                                let localUri = data.document.uri;
-                                let filename = localUri.split('/').pop();
-                                form.append("document", {
-                                        uri: data.document.uri, name: filename, type: data.document.mimeType
-                                })
-                        }
-                        console.log(form)
-                }
-                catch (error) {
-                        console.log(error)
-                }
-        }
-
         return (
                 <View style={styles.container}>
                         <View style={styles.cardHeader}>
@@ -162,24 +141,19 @@ export default function AgentArchivageScreen() {
                                                 <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                         </View>
                                 </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Planifier un agent</Text>
+                                <Text style={styles.titlePrincipal}>Detailler le volume</Text>
                         </View>
                         <ScrollView>
                                 <View>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner le volume
+                                                                Volume
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         hdhdh
                                                                 </Text>
-                                                                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                M
-                                                                        </Text>
-                                                                </View> */}
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
@@ -193,18 +167,42 @@ export default function AgentArchivageScreen() {
                                                         lineWidth={1}
                                                         activeLineWidth={1}
                                                         errorColor={COLORS.error}
-                                                        value={data.numero}
-                                                        onChangeText={(newValue) => handleChange('numero', newValue)}
-                                                        onBlur={() => checkFieldData('numero')}
-                                                        error={hasError('numero') ? getError('numero') : ''}
+                                                        value={data.dossier}
+                                                        onChangeText={(newValue) => handleChange('dossier', newValue)}
+                                                        onBlur={() => checkFieldData('dossier')}
+                                                        error={hasError('dossier') ? getError('dossier') : ''}
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
+                                        <View style={{ marginBottom: 8 }}>
+                                                <Text style={styles.label}>Folio</Text>
+                                        </View>
+                                        <View style={{ marginVertical: 8 }}>
+                                                <OutlinedTextField
+                                                        label="Nombre de folio"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.folio}
+                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
+                                                        onBlur={() => checkFieldData('folio')}
+                                                        error={hasError('folio') ? getError('folio') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                />
+                                        </View>
+                                        <View style={{ marginBottom: 8 }}>
+                                                <Text style={styles.label}>Nature du dossier</Text>
+                                        </View>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner un agent d'archive
+                                                                Selectioner la nature
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
@@ -213,6 +211,14 @@ export default function AgentArchivageScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                <View></View>
+                                                <TouchableOpacity>
+                                                        <View style={styles.buttonPlus}>
+                                                                <Text style={styles.buttonTextPlus}>+</Text>
+                                                        </View>
+                                                </TouchableOpacity>
+                                        </View>
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -235,25 +241,24 @@ export default function AgentArchivageScreen() {
                                                         </View>
                                                 </TouchableOpacity>
                                         </View>
-
                                 </View>
                         </ScrollView>
-                        <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={handleSubmit}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
+                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                <View></View>
+                                <TouchableWithoutFeedback>
+                                        <View style={styles.button}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </View>
                         <Portal>
                                 <Modalize ref={volumeModalizeRef}  >
-                                        <VolumeList />
+                                        <VolumeAgentSuperviseurList />
                                 </Modalize>
                         </Portal>
                         <Portal>
-                                <Modalize ref={agentModalizeRef}  >
-                                        <AgentArchivageList />
+                                <Modalize ref={natureModalizeRef}  >
+                                        <NatureDossierList />
                                 </Modalize>
                         </Portal>
                 </View>
@@ -298,6 +303,13 @@ const styles = StyleSheet.create({
                 borderColor: "#777",
                 marginVertical: 10
         },
+        selectedValue: {
+                color: '#777'
+        },
+        label: {
+                fontSize: 16,
+                fontWeight: 'bold'
+        },
         modalHeader: {
                 flexDirection: "row",
                 alignItems: "center",
@@ -321,12 +333,6 @@ const styles = StyleSheet.create({
                 justifyContent: "center",
                 alignItems: "center"
         },
-        modalImage: {
-                width: "85%",
-                height: "85%",
-                resizeMode: "center",
-                borderRadius: 100,
-        },
         modalTitle: {
                 fontWeight: "bold",
                 textAlign: "center",
@@ -337,11 +343,11 @@ const styles = StyleSheet.create({
                 marginLeft: 10
         },
         button: {
-                marginTop: 10,
+                marginVertical: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor: COLORS.primary
         },
         buttonText: {
                 color: "#fff",
@@ -349,7 +355,18 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
-        selectedValue: {
-                color: '#777'
+        buttonPlus:{
+                width:50,
+                height:50,
+                borderRadius: 50,
+                backgroundColor: COLORS.primary,
+                justifyContent:"center",
+                alignContent:"center",
+                alignItems:"center"
         },
+        buttonTextPlus:{
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 25
+        }
 })

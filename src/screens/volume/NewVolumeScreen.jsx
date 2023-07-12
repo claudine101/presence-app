@@ -60,12 +60,15 @@ export default function NewVolumeScreen() {
         isVal = data.nbre_volume > 0 ? true : false
         return isVal
     }
+
+    //Fonction pour ajouter un volume da le redux
     const onAddToCart = () => {
         dispatch(addVolumeAction({ ID_VOLUME: parseInt(data.nbre_volume), NUMERO_VOLUME: data.numero }))
         handleChange("nbre_volume", data.nbre_volume - 1)
         handleChange("numero", "")
     }
 
+    //Fonction pour enlever un volume da le redux
     const onRemoveProduct = (index) => {
         Alert.alert("Enlever le produit", "Voulez-vous vraiment enlever ce produit du panier ?",
             [
@@ -81,6 +84,7 @@ export default function NewVolumeScreen() {
             ])
     }
 
+      //Fonction pour upload un documents 
     const selectdocument = async () => {
         setError("document", "")
         handleChange("document", null)

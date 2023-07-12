@@ -35,12 +35,19 @@ export default function AllVolumeScreen() {
             render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
         },
         {
-            text: "Scanner un QR",
-            icon: require("../../../assets/images/qr-code.png"),
+            text: "Agent Archivages",
+            icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentArchivageScreen",
+            position: 2,
+            render: () => <Action title={"Agent Archivages"} image={require("../../../assets/images/mail-receive-small.png")} key={"key2"} />
+        },
+        {
+            text: "Agent superviseur",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "AgentSuperviseurScreen",
             position: 3,
-            render: () => <Action title={"Agent Archivages"} image={require("../../../assets/images/qr-code.png")} key={"key3"} />
-        }
+            render: () => <Action title={"Agent superviseur"} image={require("../../../assets/images/mail-receive-small.png")} key={"key3"} />
+        },
     ];
 
     return (
@@ -61,8 +68,10 @@ export default function AllVolumeScreen() {
                 onPressItem={name => {
                     if (name == 'NewVolumeScreen') {
                         navigation.navigate("NewVolumeScreen")
-                    } else {
+                    } else  if (name == 'AgentArchivageScreen') {
                         navigation.navigate('AgentArchivageScreen')
+                    }else{
+                        navigation.navigate('AgentSuperviseurScreen')
                     }
                 }}
                 color={COLORS.primary}

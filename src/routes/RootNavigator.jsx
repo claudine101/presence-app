@@ -4,6 +4,7 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import DrawerNavigator from './DrawerNavigator';
 import NewVolumeScreen from '../screens/volume/NewVolumeScreen';
 import AgentArchivageScreen from '../screens/agentArchivages/AgentArchivageScreen';
+import AgentSuperviseurScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -18,6 +19,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='Root' component={DrawerNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name='NewVolumeScreen' component={NewVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AgentArchivageScreen' component={AgentArchivageScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='AgentSuperviseurScreen' component={AgentSuperviseurScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>
