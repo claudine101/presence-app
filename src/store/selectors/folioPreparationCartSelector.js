@@ -1,0 +1,1 @@
+export const folioPreparationCartSelector = ({ folioPreparationCart }) => folioPreparationCart
