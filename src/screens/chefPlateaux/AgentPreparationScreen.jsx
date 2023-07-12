@@ -24,7 +24,6 @@ export default function AgentPreparationScreen() {
         const navigation = useNavigation()
         const dispatch = useDispatch()
         const folioPreparer = useSelector(folioPreparationCartSelector)
-        console.log(folioPreparer)
                 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
