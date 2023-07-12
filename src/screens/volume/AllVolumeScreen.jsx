@@ -76,6 +76,13 @@ export default function AllVolumeScreen() {
             position: 7,
             render: () => <Action title={"Agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
         },
+        {
+            text: "Agent traitement",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "AgentSuperviseurFinScreen",
+            position: 8,
+            render: () => <Action title={"Agent traitement"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+        },
     ];
 
     return (
@@ -106,8 +113,10 @@ export default function AllVolumeScreen() {
                         navigation.navigate('AgentSuperviseurAilleScreen')
                     }else if(name == 'AgentChefPlateauScreen'){
                         navigation.navigate('AgentChefPlateauScreen')
-                    }else{
+                    }else if(name == 'AgentPreparationScreen'){
                         navigation.navigate('AgentPreparationScreen')
+                    }else{
+                        navigation.navigate('AgentSuperviseurFinScreen')
                     }
                 }}
                 color={COLORS.primary}
