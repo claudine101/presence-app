@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { ImageBackground, ScrollView, StyleSheet, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View, useWindowDimensions, StatusBar } from "react-native";
 import { TextField, FilledTextField, InputAdornment, OutlinedTextField } from 'rn-material-ui-textfield'
 import { FontAwesome, Fontisto, EvilIcons, AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +18,7 @@ import { notificationTokenSelector } from '../../store/selectors/appSelectors';
 export default function ConnexionScreen() {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const { height } = useWindowDimensions()
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false);
   const passwordInputRef = useRef(null)
@@ -84,15 +85,13 @@ export default function ConnexionScreen() {
   return (
     <>
       {loading && <Loading />}
-      <ImageBackground style={styles.container} source={require('../../../assets/images/g52.png')}>
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <View>
-            {/* <Image source={require('../../../assets/images/logo1.png')} style={styles.image} /> */}
+      <ScrollView>
+          <View style={styles.container}>
+            <Image source={require('../../../assets/splash.png')} style={{...styles.image, resizeMode:"center", height: (30*height-StatusBar.currentHeight)/100}}/>
+          
             <View style={styles.cardTitle}>
-              <Text style={styles.Title}>Connexion</Text>
-              {/* <Text style={styles.description}> Chap Chap</Text> */}
+              <Text style={styles.title}>Connexion</Text>
             </View>
-
 
             <View style={styles.inputCard}>
               <View>
@@ -167,52 +166,29 @@ export default function ConnexionScreen() {
 
               </View>
             </View>}
-
           </View>
-        </ScrollView>
-      </ImageBackground>
+          </ScrollView>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  Title: {
-    fontSize: 18,
-    fontWeight: "bold"
-  },
-  description: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1D8585"
-  },
-  cardTitle: {
-    flexDirection: "row",
-    marginTop: 30,
-    marginVertical: 20,
-    justifyContent: "center",
-    alignItems: "center"
-  },
   inputCard: {
     marginHorizontal: 20,
     marginTop: 10
   },
-  InputIcon: {
-    position: "absolute",
-    right: 15,
-    marginTop: 15
-  },
   button: {
-    marginTop: 10,
+    // marginTop: 10,
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 10,
     backgroundColor: "#18678E",
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    marginVertical:30
   },
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
-    // textTransform:"uppercase",
     fontSize: 16,
     textAlign: "center"
   },
@@ -226,11 +202,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+
   container: {
     flex: 1,
   },
-  image: {
-    marginTop: 30,
-    alignSelf: "center",
-  },
+  image:{
+    maxWidth: '80%',
+    alignSelf: 'center',
+},
+title: {
+  fontSize: 25,
+  fontWeight: 'bold',
+  marginBottom: 25,
+  opacity: 0.8
+},
+cardTitle: {
+  flexDirection: "row",
+  marginTop: 30,
+  marginVertical: 20,
+  justifyContent: "center",
+  alignItems: "center"
+},
 })
