@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
@@ -9,6 +9,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
+import { useDispatch, useSelector } from "react-redux";
+import { folioDetailsCartSelector } from "../../store/selectors/folioDetailsCartSelector";
+import { addFolioDetailAction, removeFolioDetailAction } from "../../store/actions/folioDetailsCartActions";
 
 /**
  * Le screen pour aider le superviseur de la phase preparation
@@ -19,6 +22,9 @@ import { OutlinedTextField } from 'rn-material-ui-textfield'
 
 export default function AgentChefPlateauScreen() {
         const navigation = useNavigation()
+        const dispatch = useDispatch()
+        const folioDetails = useSelector(folioDetailsCartSelector)
+
         const [data, handleChange, setValue] = useForm({
                 folio: '',
                 dossier: ''
@@ -49,6 +55,30 @@ export default function AgentChefPlateauScreen() {
         const setSelectedSupPreparation = (prep) => {
                 preparationModalizeRef.current?.close();
                 setSupPreparations(prep)
+        }
+
+
+        //Fonction pour ajouter le folio details dans redux
+        const onAddToCart = () => {
+                dispatch(addFolioDetailAction({ NOMBRE: data.folio }))
+                // handleChange("nbre_volume", data.nbre_volume - 1)
+                // handleChange("numero", "")
+        }
+
+        //Fonction pour enlever le folio da le redux
+        const onRemoveProduct = (index) => {
+                Alert.alert("Enlever le details du folio", "Voulez-vous vraiment enlever ce detail du folio ?",
+                        [
+                                {
+                                        text: "Annuler",
+                                        style: "cancel"
+                                },
+                                {
+                                        text: "Oui", onPress: async () => {
+                                                dispatch(removeFolioDetailAction(index))
+                                        }
+                                }
+                        ])
         }
 
 
@@ -103,7 +133,7 @@ export default function AgentChefPlateauScreen() {
                         form.append('USER', data.malle)
                         form.append('USER', data.aille)
 
-                        form.append('VOLUME', JSON.stringify(activity))
+                        form.append('VOLUME', JSON.stringify(folioDetails))
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
@@ -181,28 +211,7 @@ export default function AgentChefPlateauScreen() {
                                                 </View>
                                         </TouchableOpacity>
                                         <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Folio</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nombre de folio"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.folio}
-                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
-                                                        onBlur={() => checkFieldData('folio')}
-                                                        error={hasError('folio') ? getError('folio') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Nature du dossier</Text>
+                                                <Text style={styles.label}>Nombre de dossier</Text>
                                         </View>
                                         <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
@@ -222,6 +231,57 @@ export default function AgentChefPlateauScreen() {
                                                         blurOnSubmit={false}
                                                 />
                                         </View>
+                                        <View style={{ marginBottom: 8 }}>
+                                                <Text style={styles.label}>Folio</Text>
+                                        </View>
+                                        <View style={{ marginVertical: 8 }}>
+                                                <OutlinedTextField
+                                                        label="detail de folio"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.folio}
+                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
+                                                        onBlur={() => checkFieldData('folio')}
+                                                        error={hasError('folio') ? getError('folio') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                />
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                <View></View>
+                                                <TouchableOpacity
+                                                        onPress={onAddToCart}
+                                                >
+                                                        <View style={styles.buttonPlus}>
+                                                                <Text style={styles.buttonTextPlus}>+</Text>
+                                                        </View>
+                                                </TouchableOpacity>
+                                        </View>
+                                        {folioDetails.map((product, index) => {
+                                                return (
+                                                        <View style={styles.headerRead}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                        <View style={styles.cardFolder}>
+                                                                                <Text style={[styles.title]} numberOfLines={1}>{product.NOMBRE}</Text>
+                                                                                <View style={styles.cardDescription}>
+                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                                </View>
+                                                                        </View>
+                                                                        <View>
+                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
+                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                                                                </TouchableOpacity>
+                                                                        </View>
+                                                                </View>
+                                                        </View>
+                                                )
+                                        })}
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -351,5 +411,60 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        buttonPlus: {
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                backgroundColor: COLORS.primary,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center"
+        },
+        buttonTextPlus: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 25
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#ddd",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 5,
+                paddingHorizontal: 30
+        },
+        cardFolder: {
+                flexDirection: "row",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: '#FFF',
+                maxHeight: 50,
+                borderRadius: 20,
+                padding: 3,
+                paddingVertical: 2,
+                elevation: 10,
+                shadowColor: '#c4c4c4',
+        },
+        cardDescription: {
+                marginLeft: 10,
+                width: 30,
+                height: 30,
+                borderRadius: 30,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: "#ddd"
+        },
+        reomoveBtn: {
+                width: 30,
+                height: 30,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center'
         },
 })

@@ -1,6 +1,7 @@
 import { combineReducers, createStore } from "redux";
 import { planificationCartReducer } from "./reducers/planificationCartReducer";
 import { folioNatureCartReducer } from "./reducers/folioNatureCartReducer";
+import { folioDetailsCartReducer } from "./reducers/folioDetailsCartReducer";
 
 import userReducer from "./reducers/userReducer";
 import appReducer from "./reducers/appReducer";
@@ -11,6 +12,7 @@ export const store = createStore(
                     user: userReducer,
                     planificationCart: planificationCartReducer,
                     folioNatureCart: folioNatureCartReducer,
+                    folioDetailCart: folioDetailsCartReducer,
                     app: appReducer
 
        }),
