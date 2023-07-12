@@ -7,6 +7,7 @@ import AgentArchivageScreen from '../screens/agentArchivages/AgentArchivageScree
 import AgentSuperviseurScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurScreen';
 import AgentSuperviseurMalleScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurMalleScreen';
 import AgentSuperviseurAilleScreen from '../screens/agentSuperviseurAilles/AgentSuperviseurAilleScreen';
+import AgentChefPlateauScreen from '../screens/chefPlateaux/AgentChefPlateauScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -24,6 +25,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentSuperviseurScreen' component={AgentSuperviseurScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurMalleScreen' component={AgentSuperviseurMalleScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurAilleScreen' component={AgentSuperviseurAilleScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='AgentChefPlateauScreen' component={AgentChefPlateauScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>

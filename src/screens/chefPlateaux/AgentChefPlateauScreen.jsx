@@ -8,34 +8,74 @@ import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
+import { OutlinedTextField } from 'rn-material-ui-textfield'
 
 /**
- * Le screen pour aider le distributeur a renger les males dans le batiments
+ * Le screen pour aider le superviseur de la phase preparation
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 12/7/2021
  * @returns 
  */
 
-export default function AgentSuperviseurAilleScreen() {
+export default function AgentChefPlateauScreen() {
         const navigation = useNavigation()
-
         const [data, handleChange, setValue] = useForm({
+                folio: '',
+                dossier: ''
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-              
+                folio: {
+                        required: true
+                },
+                dossier: {
+                        required: true
+                }
+        }, {
+                folio: {
+                        required: 'ce champ est obligatoire',
+                },
+                dossier: {
+                        required: 'ce champ est obligatoire',
+                }
         })
 
-        // Chef du plateau select
-        const chefplateauModalizeRef = useRef(null);
-        const [chefPlateaux, setChefPlateaux] = useState(null);
-        const openChefPlateauModalize = () => {
-                chefplateauModalizeRef.current?.open();
+        // Agent superviseur preparation select
+        const preparationModalizeRef = useRef(null);
+        const [supPreparations, setSupPreparations] = useState(null);
+        const openSupPreparationModalize = () => {
+                preparationModalizeRef.current?.open();
         };
-        const setSelectedChefPlateau = (chef) => {
-                chefplateauModalizeRef.current?.close();
-                setDistributeur(chef)
+        const setSelectedSupPreparation = (prep) => {
+                preparationModalizeRef.current?.close();
+                setSupPreparations(prep)
         }
+
+
+        //Composent pour afficher le modal des agents de phase preparation
+        const SupervisionPreparationList = () => {
+                return (
+                        <>
+                                <View style={styles.modalContainer}>
+                                        <View style={styles.modalHeader}>
+                                                <Text style={styles.modalTitle}>Les agents de preparations</Text>
+
+                                        </View>
+                                        <ScrollView>
+                                                <TouchableNativeFeedback >
+                                                        <View style={styles.modalItem} >
+                                                                <View style={styles.modalImageContainer}>
+                                                                        <AntDesign name="addusergroup" size={24} color="black" />
+                                                                </View>
+                                                                <Text style={styles.itemTitle}>dgdg</Text>
+                                                        </View>
+                                                </TouchableNativeFeedback>
+                                        </ScrollView>
+                                </View>
+                        </>
+                )
+        }
+
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -57,31 +97,7 @@ export default function AgentSuperviseurAilleScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des platequx
-        const ChefPlateauList = () => {
-                return (
-                        <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les chefs de plateaux</Text>
-
-                                        </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
-                        </>
-                )
-        }
-
-        const submitInAille = async () => {
+        const submitDataPreparation = async () => {
                 try {
                         const form = new FormData()
                         form.append('USER', data.malle)
@@ -101,7 +117,6 @@ export default function AgentSuperviseurAilleScreen() {
                         console.log(error)
                 }
         }
-
 
         return (
                 <View style={styles.container}>
@@ -153,10 +168,10 @@ export default function AgentSuperviseurAilleScreen() {
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner le distributeur
+                                                                Selectioner un agent de preparation
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
@@ -165,6 +180,48 @@ export default function AgentSuperviseurAilleScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
+                                        <View style={{ marginBottom: 8 }}>
+                                                <Text style={styles.label}>Folio</Text>
+                                        </View>
+                                        <View style={{ marginVertical: 8 }}>
+                                                <OutlinedTextField
+                                                        label="Nombre de folio"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.folio}
+                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
+                                                        onBlur={() => checkFieldData('folio')}
+                                                        error={hasError('folio') ? getError('folio') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                />
+                                        </View>
+                                        <View style={{ marginBottom: 8 }}>
+                                                <Text style={styles.label}>Nature du dossier</Text>
+                                        </View>
+                                        <View style={{ marginVertical: 8 }}>
+                                                <OutlinedTextField
+                                                        label="Nombre de dossier"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.dossier}
+                                                        onChangeText={(newValue) => handleChange('dossier', newValue)}
+                                                        onBlur={() => checkFieldData('dossier')}
+                                                        error={hasError('dossier') ? getError('dossier') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                />
+                                        </View>
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -190,15 +247,15 @@ export default function AgentSuperviseurAilleScreen() {
                                 </View>
                         </ScrollView>
                         <TouchableWithoutFeedback
-                                onPress={submitInAille}
+                                onPress={submitDataPreparation}
                         >
                                 <View style={styles.button}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
                         <Portal>
-                                <Modalize ref={chefplateauModalizeRef}  >
-                                        <ChefPlateauList />
+                                <Modalize ref={preparationModalizeRef}  >
+                                        <SupervisionPreparationList />
                                 </Modalize>
                         </Portal>
                 </View>
@@ -277,6 +334,10 @@ const styles = StyleSheet.create({
         },
         itemTitle: {
                 marginLeft: 10
+        },
+        label: {
+                fontSize: 16,
+                fontWeight: 'bold'
         },
         button: {
                 marginTop: 10,
