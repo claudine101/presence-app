@@ -52,8 +52,15 @@ export default function AllVolumeScreen() {
             text: "Agent superviseur maille",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentSuperviseurMalleScreen",
-            position: 3,
-            render: () => <Action title={"Agent superviseur maille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key3"} />
+            position: 4,
+            render: () => <Action title={"Agent superviseur maille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key4"} />
+        },
+        {
+            text: "Agent superviseur aille",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "AgentSuperviseurAilleScreen",
+            position: 5,
+            render: () => <Action title={"Agent superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key5"} />
         },
     ];
 
@@ -79,8 +86,10 @@ export default function AllVolumeScreen() {
                         navigation.navigate('AgentArchivageScreen')
                     }else if(name == 'AgentSuperviseurScreen'){
                         navigation.navigate('AgentSuperviseurScreen')
-                    }else{
+                    }else if(name == 'AgentSuperviseurMalleScreen'){
                         navigation.navigate('AgentSuperviseurMalleScreen')
+                    }else{
+                        navigation.navigate('AgentSuperviseurAilleScreen')
                     }
                 }}
                 color={COLORS.primary}

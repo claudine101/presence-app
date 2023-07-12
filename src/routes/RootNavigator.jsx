@@ -6,6 +6,7 @@ import NewVolumeScreen from '../screens/volume/NewVolumeScreen';
 import AgentArchivageScreen from '../screens/agentArchivages/AgentArchivageScreen';
 import AgentSuperviseurScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurScreen';
 import AgentSuperviseurMalleScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurMalleScreen';
+import AgentSuperviseurAilleScreen from '../screens/agentSuperviseurAilles/AgentSuperviseurAilleScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -22,6 +23,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentArchivageScreen' component={AgentArchivageScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurScreen' component={AgentSuperviseurScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurMalleScreen' component={AgentSuperviseurMalleScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='AgentSuperviseurAilleScreen' component={AgentSuperviseurAilleScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>
