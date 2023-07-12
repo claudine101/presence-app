@@ -70,7 +70,7 @@ export default function NewVolumeScreen() {
 
     //Fonction pour enlever un volume da le redux
     const onRemoveProduct = (index) => {
-        Alert.alert("Enlever le produit", "Voulez-vous vraiment enlever ce produit du panier ?",
+        Alert.alert("Enlever le volume", "Voulez-vous vraiment enlever ce volume dans les details?",
             [
                 {
                     text: "Annuler",
