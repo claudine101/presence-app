@@ -11,6 +11,7 @@ import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import * as DocumentPicker from 'expo-document-picker';
 import fetchApi from "../../helpers/fetchApi";
 import useFetch from "../../hooks/useFetch";
+import Loading from "../../components/app/Loading";
 
 /**
  * Le screen pour associer un volume a un agents superviseur
@@ -21,17 +22,25 @@ import useFetch from "../../hooks/useFetch";
 
 export default function AgentArchivageScreen() {
         const navigation = useNavigation()
+        const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 numero: '',
+                document:null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 numero: {
                         required: true
+                },
+                document:{
+                        required: true
                 }
         }, {
                 numero: {
+                        required: 'ce champ est obligatoire',
+                },
+                document: {
                         required: 'ce champ est obligatoire',
                 }
         })
@@ -39,9 +48,9 @@ export default function AgentArchivageScreen() {
         const isValidAdd = () => {
                 var isValid = false
                 isValid = data.numero > 0 ? true : false
-                isValid = volumes > 0 ? true : false
-                isValid = agents > 0 ? true : false
-                return isValid
+                isValid = volumes !=null ? true : false
+                isValid = agents !=null ? true : false
+                return isValid && isValidate()
         }
 
 
@@ -169,23 +178,33 @@ export default function AgentArchivageScreen() {
 
         const handleSubmit = async () => {
                 try {
+                        setLoading(true)
                         const form = new FormData()
-                        form.append('numero', data.numero)
+                        form.append('NOMBRE_DOSSIER', data.numero)
+                        form.append('ID_USERS', agents.USERS_ID)
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("document", {
+                                form.append("PV", {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        console.log(form)
+                        const res = await fetchApi(`/volume/dossiers/mofidier/${volumes.ID_VOLUME}`, {
+                                method: 'PUT',
+                                body: form,
+                                // headers: { "Content-Type": "application/json" }
+                        })
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
+                } finally {
+                        setLoading(false)
                 }
         }
 
-        return (
+        return (<>
+                {loading && <Loading />}
                 <View style={styles.container}>
                         <View style={styles.cardHeader}>
                                 <TouchableNativeFeedback
@@ -275,7 +294,7 @@ export default function AgentArchivageScreen() {
                                 disabled={!isValidAdd()}
                                 onPress={handleSubmit}
                         >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                <View style={[styles.button,!isValidAdd() && { opacity: 0.5 }]}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
@@ -290,6 +309,7 @@ export default function AgentArchivageScreen() {
                                 </Modalize>
                         </Portal>
                 </View>
+        </>
         )
 }
 
@@ -390,9 +410,9 @@ const styles = StyleSheet.create({
                 justifyContent: "space-between",
                 flex: 1
         },
-        itemTitleDesc:{
-                color:"#777",
+        itemTitleDesc: {
+                color: "#777",
                 marginLeft: 10,
-                fontSize:11
+                fontSize: 11
         }
 })
