@@ -20,7 +20,6 @@ export default function AllVolumeScreen() {
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [allVolumes, setAllVolumes] = useState([])
-    console.log(allVolumes)
     const [loading, setLoading] = useState(false)
 
     const Action = ({ title, image }) => {

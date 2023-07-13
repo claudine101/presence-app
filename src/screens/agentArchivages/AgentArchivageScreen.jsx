@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
+import { Ionicons, AntDesign, Feather, Fontisto } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -9,6 +9,8 @@ import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import * as DocumentPicker from 'expo-document-picker';
+import fetchApi from "../../helpers/fetchApi";
+import useFetch from "../../hooks/useFetch";
 
 /**
  * Le screen pour associer un volume a un agents superviseur
@@ -87,48 +89,79 @@ export default function AgentArchivageScreen() {
 
         //Modal pour afficher la liste de volumes existants
         const VolumeList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/volumes')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les volumes</Text>
-
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {volumesAll.result.map((vol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
+                                                                                                </View>
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
 
         //Modal pour afficher la liste de agents archivages existants
         const AgentArchivageList = () => {
+                const [loadingAgentArchive, agentSuperviseurArchives] = useFetch('/agent/superviseur_archives')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Agents archivages</Text>
+                                {loadingAgentArchive ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
 
+                                                </View>
+                                                {agentSuperviseurArchives.result.map((ag, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {agents?.USERS_ID == ag.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <Feather name="users" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
@@ -173,7 +206,7 @@ export default function AgentArchivageScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdh
+                                                                        {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
                                                                 </Text>
                                                                 {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                         <Text style={styles.selectedValue}>
@@ -208,7 +241,7 @@ export default function AgentArchivageScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdh
+                                                                        {agents ? `${agents.NOM}` + `${agents.PRENOM}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -352,4 +385,14 @@ const styles = StyleSheet.create({
         selectedValue: {
                 color: '#777'
         },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        itemTitleDesc:{
+                color:"#777",
+                marginLeft: 10,
+                fontSize:11
+        }
 })
