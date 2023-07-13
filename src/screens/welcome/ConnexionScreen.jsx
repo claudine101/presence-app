@@ -52,7 +52,7 @@ export default function ConnexionScreen() {
 
   const handleLogin = async () => {
     const user = {
-      username: data.email,
+      email: data.email,
       password: data.password,
       PUSH_NOTIFICATION_TOKEN: token,
       DEVICE: Platform.OS === 'ios' ? 1 : 0
@@ -61,7 +61,7 @@ export default function ConnexionScreen() {
     try {
       setLoading(true)
       setAdditionalErrors({})
-      const userData = await fetchApi("/auth/users", {
+      const userData = await fetchApi("/auth/users/login", {
         method: "POST",
         body: JSON.stringify(user),
         headers: { "Content-Type": "application/json" },
@@ -150,7 +150,7 @@ export default function ConnexionScreen() {
             <TouchableWithoutFeedback
               disabled={!isValidate()}
               onPress={handleLogin} >
-              <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
+              <View style={[styles.button,!isValidate() && { opacity: 0.5 }]}>
                 <Text style={styles.buttonText}>Se connecter</Text>
               </View>
             </TouchableWithoutFeedback>

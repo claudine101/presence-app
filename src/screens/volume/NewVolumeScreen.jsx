@@ -8,11 +8,13 @@ import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVolumeAction } from '../../store/actions/planificationCartActions';
+import { addVolumeAction, resetCartAction } from '../../store/actions/planificationCartActions';
 import { planificationCartSelector } from '../../store/selectors/planificationCartSelectors';
 import { removeVolumeAction } from '../../store/actions/planificationCartActions';
 import { userSelector } from '../../store/selectors/userSelector';
 import * as DocumentPicker from 'expo-document-picker';
+import fetchApi from '../../helpers/fetchApi';
+import Loading from '../../components/app/Loading';
 
 /**
  * Screen pour planifier et enregistrement volume
@@ -26,6 +28,7 @@ export default function NewVolumeScreen() {
     const dispatch = useDispatch()
     const activity = useSelector(planificationCartSelector)
     const user = useSelector(userSelector)
+    const [loading, setLoading] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
         nbre_volume: '',
@@ -84,7 +87,7 @@ export default function NewVolumeScreen() {
             ])
     }
 
-      //Fonction pour upload un documents 
+    //Fonction pour upload un documents 
     const selectdocument = async () => {
         setError("document", "")
         handleChange("document", null)
@@ -104,13 +107,11 @@ export default function NewVolumeScreen() {
 
     }
 
-
-
     const submitPlanification = async () => {
         try {
+            setLoading(true)
             const form = new FormData()
-            form.append('USER', user.USERS_ID)
-            form.append('VOLUME', JSON.stringify(activity))
+            form.append('volume', JSON.stringify(activity))
             if (data.document) {
                 let localUri = data.document.uri;
                 let filename = localUri.split('/').pop();
@@ -118,15 +119,23 @@ export default function NewVolumeScreen() {
                     uri: data.document.uri, name: filename, type: data.document.mimeType
                 })
             }
-            console.log(form)
+            const volume = await fetchApi(`/volume/dossiers`, {
+                method: "POST",
+                body: form
+            })
+            dispatch(resetCartAction())
+            navigation.goBack()
         }
         catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
     return (
         <>
+            {loading && <Loading />}
             <View style={styles.container}>
                 <View style={styles.cardHeader}>
                     <TouchableNativeFeedback
