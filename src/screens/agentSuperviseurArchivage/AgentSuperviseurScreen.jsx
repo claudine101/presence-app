@@ -11,9 +11,11 @@ import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useDispatch, useSelector } from "react-redux";
 import { folioNatureCartSelector } from "../../store/selectors/folioNatureCartSelector";
-import { addFolioAction, removeFolioAction } from "../../store/actions/folioNatureCartActions";
+import { addFolioAction, removeFolioAction, resetCartAction } from "../../store/actions/folioNatureCartActions";
 import { userSelector } from "../../store/selectors/userSelector";
 import useFetch from "../../hooks/useFetch";
+import Loading from "../../components/app/Loading";
+import fetchApi from "../../helpers/fetchApi";
 
 /**
  * Le screen pour details le volume, le dossier utilisable par un agent superviseur
@@ -28,8 +30,7 @@ export default function AgentSuperviseurScreen() {
         const dispatch = useDispatch()
         const folioNatures = useSelector(folioNatureCartSelector)
         const user = useSelector(userSelector)
-
-        console.log(folioNatures.length)
+        const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
@@ -200,182 +201,193 @@ export default function AgentSuperviseurScreen() {
 
         const submitFolio = async () => {
                 try {
+                        setLoading(true)
                         const form = new FormData()
-                        form.append('USER', data.dossier)
-                        form.append('USER', data.folio)
-
-                        // form.append('VOLUME', JSON.stringify(activity))
+                        form.append('ID_VOLUME', volumes.ID_VOLUME)
+                        form.append('folio', data.folio)
+                        form.append('folioObjet', JSON.stringify(folioNatures))
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("document", {
+                                form.append("PV", {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
                         console.log(form)
+                        const volume = await fetchApi(`/folio/dossiers`, {
+                                method: "POST",
+                                body: form
+                        })
+                        dispatch(resetCartAction())
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
+                }finally{
+                        setLoading(true)
                 }
         }
 
 
         return (
-                <View style={styles.container}>
-                        <View style={styles.cardHeader}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.backBtn}>
-                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
-                                        </View>
-                                </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Detailler le volume</Text>
-                        </View>
-                        <ScrollView>
-                                <View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
+                <>
+                        {loading && <Loading />}
+                        <View style={styles.container}>
+                                <View style={styles.cardHeader}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.backBtn}>
+                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
-                                        </TouchableOpacity>
-                                        {volumes ? <View style={styles.selectContainer}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Nombre de dossier
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {volumes ? volumes.NOMBRE_DOSSIER : null}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </View> : null}
-                                        {(volumes && (folioNatures.length == volumes.NOMBRE_DOSSIER)) ? null : <>
-                                                <View style={{ marginBottom: 8 }}>
-                                                        <Text style={styles.label}>Folio</Text>
-                                                </View>
-                                                <View style={{ marginVertical: 8 }}>
-                                                        <OutlinedTextField
-                                                                label="Nombre de folio"
-                                                                fontSize={14}
-                                                                baseColor={COLORS.smallBrown}
-                                                                tintColor={COLORS.primary}
-                                                                containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
-                                                                errorColor={COLORS.error}
-                                                                value={data.folio}
-                                                                onChangeText={(newValue) => handleChange('folio', newValue)}
-                                                                onBlur={() => checkFieldData('folio')}
-                                                                error={hasError('folio') ? getError('folio') : ''}
-                                                                autoCompleteType='off'
-                                                                blurOnSubmit={false}
-                                                        />
-                                                </View>
-                                                <View style={{ marginBottom: 8 }}>
-                                                        <Text style={styles.label}>Nature du dossier</Text>
-                                                </View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.titlePrincipal}>Detailler le volume</Text>
+                                </View>
+                                <ScrollView>
+                                        <View>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner la nature
+                                                                        Volume
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {natures ? `${natures.DESCRIPTION}` : 'Aucun'}
+                                                                                {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                        <View></View>
-                                                        <TouchableOpacity
-                                                                disabled={!isValidAdd()}
-                                                                onPress={onAddToCart}
+                                                {volumes ? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Nombre de dossier
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {volumes ? volumes.NOMBRE_DOSSIER : null}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                {(volumes && (folioNatures.length == volumes.NOMBRE_DOSSIER)) ? null : <>
+                                                        <View style={{ marginBottom: 8 }}>
+                                                                <Text style={styles.label}>Folio</Text>
+                                                        </View>
+                                                        <View style={{ marginVertical: 8 }}>
+                                                                <OutlinedTextField
+                                                                        label="Nombre de folio"
+                                                                        fontSize={14}
+                                                                        baseColor={COLORS.smallBrown}
+                                                                        tintColor={COLORS.primary}
+                                                                        containerStyle={{ borderRadius: 20 }}
+                                                                        lineWidth={1}
+                                                                        activeLineWidth={1}
+                                                                        errorColor={COLORS.error}
+                                                                        value={data.folio}
+                                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
+                                                                        onBlur={() => checkFieldData('folio')}
+                                                                        error={hasError('folio') ? getError('folio') : ''}
+                                                                        autoCompleteType='off'
+                                                                        blurOnSubmit={false}
+                                                                />
+                                                        </View>
+                                                        <View style={{ marginBottom: 8 }}>
+                                                                <Text style={styles.label}>Nature du dossier</Text>
+                                                        </View>
+                                                        <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
+                                                                <View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Selectioner la nature
+                                                                        </Text>
+                                                                        <View>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {natures ? `${natures.DESCRIPTION}` : 'Aucun'}
+                                                                                </Text>
+                                                                        </View>
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                                <View></View>
+                                                                <TouchableOpacity
+                                                                        disabled={!isValidAdd()}
+                                                                        onPress={onAddToCart}
+                                                                >
+                                                                        <View style={[styles.buttonPlus, !isValidAdd() && { opacity: 0.5 }]}>
+                                                                                <Text style={styles.buttonTextPlus}>+</Text>
+                                                                        </View>
+                                                                </TouchableOpacity>
+                                                        </View>
+                                                </>}
+
+                                                {folioNatures.map((product, index) => {
+                                                        return (
+                                                                <View style={styles.headerRead}>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                <View style={styles.cardFolder}>
+                                                                                        <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
+                                                                                        <View style={styles.cardDescription}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+
+                                                                                </View>
+                                                                                <View>
+                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
+                                                                                </View>
+                                                                                <View>
+                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_NATURE_FOLIO}</Text>
+                                                                                </View>
+                                                                                <View>
+                                                                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
+                                                                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                                                                        </TouchableOpacity>
+                                                                                </View>
+                                                                        </View>
+                                                                </View>
+                                                        )
+                                                })}
+                                                <View>
+                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                                onPress={selectdocument}
                                                         >
-                                                                <View style={[styles.buttonPlus, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                        <Text style={styles.buttonTextPlus}>+</Text>
+                                                                <View>
+                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                                Importer le proces verbal
+                                                                        </Text>
+                                                                        {data.document ? <View>
+                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                        {data.document.name}
+                                                                                </Text>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                        </Text>
+                                                                                </View>
+                                                                        </View> : null}
                                                                 </View>
                                                         </TouchableOpacity>
                                                 </View>
-                                        </>}
-
-                                        {folioNatures.map((product, index) => {
-                                                return (
-                                                        <View style={styles.headerRead}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                        <View style={styles.cardFolder}>
-                                                                                <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-
-                                                                        </View>
-                                                                        <View>
-                                                                                <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
-                                                                        </View>
-                                                                        <View>
-                                                                                <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_NATURE_FOLIO}</Text>
-                                                                        </View>
-                                                                        <View>
-                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                </TouchableOpacity>
-                                                                        </View>
-                                                                </View>
-                                                        </View>
-                                                )
-                                        })}
-                                        <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
-                                                        <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
-                                                                </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
-                                                                        </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
-                                                        </View>
-                                                </TouchableOpacity>
                                         </View>
-                                </View>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                                onPress={submitFolio}
-                        >
-                                <View style={styles.button}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                        <Portal>
-                                <Modalize ref={volumeModalizeRef}  >
-                                        <VolumeAgentSuperviseurList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={natureModalizeRef}  >
-                                        <NatureDossierList />
-                                </Modalize>
-                        </Portal>
-                </View>
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        onPress={submitFolio}
+                                >
+                                        <View style={styles.button}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                                <Portal>
+                                        <Modalize ref={volumeModalizeRef}  >
+                                                <VolumeAgentSuperviseurList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={natureModalizeRef}  >
+                                                <NatureDossierList />
+                                        </Modalize>
+                                </Portal>
+                        </View>
+                </>
         )
 }
 
