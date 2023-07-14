@@ -202,6 +202,7 @@ export default function AgentSuperviseurScreen() {
                 )
         }
 
+        //fonction pour envoyer les donnees dans la base
         const submitFolio = async () => {
                 try {
                         setLoading(true)
