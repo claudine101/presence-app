@@ -115,9 +115,7 @@ export default function NewVolumeScreen() {
             if (data.document) {
                 let localUri = data.document.uri;
                 let filename = localUri.split('/').pop();
-                form.append("document", {
-                    uri: data.document.uri, name: filename, type: data.document.mimeType
-                })
+                form.append("document", JSON.stringify({uri: data.document.uri, name: filename, type: data.document.mimeType}))
             }
             const volume = await fetchApi(`/volume/dossiers`, {
                 method: "POST",
@@ -187,7 +185,7 @@ export default function NewVolumeScreen() {
                     <>
                         {activity.map((product, index) => {
                             return (
-                                <View style={styles.headerRead}>
+                                <View style={styles.headerRead} key={index}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                         <View style={styles.cardFolder}>
                                             <Text style={[styles.title]} numberOfLines={1}>{product.NUMERO_VOLUME}</Text>

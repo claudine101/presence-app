@@ -185,9 +185,7 @@ export default function AgentArchivageScreen() {
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", {
-                                        uri: data.document.uri, name: filename, type: data.document.mimeType
-                                })
+                                form.append("PV", JSON.stringify({uri: data.document.uri, name: filename, type: data.document.mimeType}))
                         }
                         const res = await fetchApi(`/volume/dossiers/mofidier/${volumes.ID_VOLUME}`, {
                                 method: 'PUT',

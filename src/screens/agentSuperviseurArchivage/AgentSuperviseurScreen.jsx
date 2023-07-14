@@ -34,14 +34,17 @@ export default function AgentSuperviseurScreen() {
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
+                document:null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                folio: {
+               
+                document:{
                         required: true
                 }
         }, {
-                folio: {
+                
+                document: {
                         required: 'ce champ est obligatoire',
                 }
         })
@@ -50,7 +53,7 @@ export default function AgentSuperviseurScreen() {
                 var isValid = false
                 isValid = data.folio > 0 ? true : false
                 isValid = natures != null ? true : false
-                return isValid && isValidate()
+                return isValid
         }
 
 
@@ -79,7 +82,7 @@ export default function AgentSuperviseurScreen() {
 
         //Fonction pour ajouter le folio da le redux
         const onAddToCart = () => {
-                dispatch(addFolioAction({ NUMERO_FOLIO: data.folio, ID_NATURE_FOLIO: natures.ID_NATURE_FOLIO, TOTAL: data.folio + natures.DESCRIPTION }))
+                dispatch(addFolioAction({ NUMERO_FOLIO: data.folio, ID_NATURE: natures.ID_NATURE_FOLIO, TOTAL: data.folio + natures.DESCRIPTION }))
                 // handleChange("folio", data.nbre_volume - 1)
                 handleChange("folio", "")
                 setNatures(null)
@@ -204,16 +207,12 @@ export default function AgentSuperviseurScreen() {
                         setLoading(true)
                         const form = new FormData()
                         form.append('ID_VOLUME', volumes.ID_VOLUME)
-                        form.append('folio', data.folio)
-                        form.append('folioObjet', JSON.stringify(folioNatures))
+                        form.append('folio', JSON.stringify(folioNatures))
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", {
-                                        uri: data.document.uri, name: filename, type: data.document.mimeType
-                                })
+                                form.append("PV", JSON.stringify({uri: data.document.uri, name: filename, type: data.document.mimeType}))
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/folio/dossiers`, {
                                 method: "POST",
                                 body: form
@@ -224,7 +223,7 @@ export default function AgentSuperviseurScreen() {
                 catch (error) {
                         console.log(error)
                 }finally{
-                        setLoading(true)
+                        setLoading(false)
                 }
         }
 
@@ -321,7 +320,7 @@ export default function AgentSuperviseurScreen() {
 
                                                 {folioNatures.map((product, index) => {
                                                         return (
-                                                                <View style={styles.headerRead}>
+                                                                <View style={styles.headerRead} key={index}>
                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                 <View style={styles.cardFolder}>
                                                                                         <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
@@ -370,9 +369,10 @@ export default function AgentSuperviseurScreen() {
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
+                                disabled={!isValidate()}
                                         onPress={submitFolio}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button,!isValidate() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
