@@ -33,29 +33,23 @@ export default function NewVolumeScreen() {
     const [data, handleChange, setValue] = useForm({
         nbre_volume: '',
         numero: '',
+        document:null
     })
 
     const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-        nbre_volume: {
-            required: true,
-            length: [1, 255]
-        },
-        numero: {
+        document: {
             required: true
         }
     }, {
-        nbre_volume: {
-            required: 'ce champ est obligatoire',
-        },
-        numero: {
+        document: {
             required: 'ce champ est obligatoire',
 
         }
     })
     const isValidAdd = () => {
         var isValid = false
-        isValid = data.nbre_volume == 0 ? true : false
-        return isValid
+        isValid = (data.nbre_volume =='' && activity.length > 0) ? true : false
+        return isValid && isValidate()
     }
 
     const isValidFin = () => {
@@ -67,8 +61,12 @@ export default function NewVolumeScreen() {
     //Fonction pour ajouter un volume da le redux
     const onAddToCart = () => {
         dispatch(addVolumeAction({ ID_VOLUME: parseInt(data.nbre_volume), NUMERO_VOLUME: data.numero }))
-        handleChange("nbre_volume", data.nbre_volume - 1)
         handleChange("numero", "")
+        if(data.nbre_volume - 1 == 0){
+            handleChange("nbre_volume", "")
+        }else{
+            handleChange("nbre_volume", data.nbre_volume - 1)
+        }
     }
 
     //Fonction pour enlever un volume da le redux
@@ -160,6 +158,7 @@ export default function NewVolumeScreen() {
                         onBlur={() => checkFieldData('nbre_volume')}
                         error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
                         autoCompleteType='off'
+                        keyboardType='number-pad'
                         blurOnSubmit={false}
                     />
                 </View>

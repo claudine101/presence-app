@@ -34,16 +34,16 @@ export default function AgentSuperviseurScreen() {
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
-                document:null
+                document: null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-               
-                document:{
+
+                document: {
                         required: true
                 }
         }, {
-                
+
                 document: {
                         required: 'ce champ est obligatoire',
                 }
@@ -211,7 +211,7 @@ export default function AgentSuperviseurScreen() {
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", JSON.stringify({uri: data.document.uri, name: filename, type: data.document.mimeType}))
+                                form.append("PV", JSON.stringify({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
                         }
                         const volume = await fetchApi(`/folio/dossiers`, {
                                 method: "POST",
@@ -222,7 +222,7 @@ export default function AgentSuperviseurScreen() {
                 }
                 catch (error) {
                         console.log(error)
-                }finally{
+                } finally {
                         setLoading(false)
                 }
         }
@@ -369,10 +369,10 @@ export default function AgentSuperviseurScreen() {
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                disabled={!isValidate()}
+                                        disabled={!isValidate()}
                                         onPress={submitFolio}
                                 >
-                                        <View style={[styles.button,!isValidate() && { opacity: 0.5 }]}>
+                                        <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>

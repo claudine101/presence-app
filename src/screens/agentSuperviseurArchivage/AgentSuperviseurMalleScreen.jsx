@@ -23,25 +23,28 @@ export default function AgentSuperviseurMalleScreen() {
         const navigation = useNavigation()
 
         const [data, handleChange, setValue] = useForm({
-                malle: '',
-                aille: ''
+                document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                dossier: {
-                        required: true
-                },
-                aille: {
+                document: {
                         required: true
                 }
         }, {
                 dossier: {
                         required: 'ce champ est obligatoire',
-                },
-                aille: {
-                        required: 'ce champ est obligatoire',
                 }
         })
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = volumes != null ? true : false
+                isValid = malles != null ? true : false
+                isValid = batiments != null ? true : false
+                isValid = ailles != null ? true : false
+                isValid = distributeur != null ? true : false
+                return isValid && isValidate()
+        }
 
         // Volume select
         const volumeModalizeRef = useRef(null);
@@ -424,7 +427,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
+                                        {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Selectioner ailles
@@ -435,8 +438,8 @@ export default function AgentSuperviseurMalleScreen() {
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
+                                        </TouchableOpacity> : null}
+                                        {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Selectioner le distributeur
@@ -447,7 +450,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity>:null}
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -473,9 +476,10 @@ export default function AgentSuperviseurMalleScreen() {
                                 </View>
                         </ScrollView>
                         <TouchableWithoutFeedback
+                                disabled={!isValidAdd()}
                                 onPress={submitInMalle}
                         >
-                                <View style={styles.button}>
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
