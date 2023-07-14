@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
@@ -9,6 +9,8 @@ import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
+import useFetch from "../../hooks/useFetch";
+import fetchApi from "../../helpers/fetchApi";
 
 /**
  * Le screen pour  mettre le volume detailler dans un malle
@@ -41,6 +43,28 @@ export default function AgentSuperviseurMalleScreen() {
                 }
         })
 
+        // Volume select
+        const volumeModalizeRef = useRef(null);
+        const [volumes, setVolumes] = useState(null);
+        const openVolumeModalize = () => {
+                volumeModalizeRef.current?.open();
+        };
+        const setSelectedVolume = (vol) => {
+                volumeModalizeRef.current?.close();
+                setVolumes(vol)
+        }
+
+        // Malle select
+        const maleModalizeRef = useRef(null);
+        const [malles, setMalles] = useState(null);
+        const openMallesModalize = () => {
+                maleModalizeRef.current?.open();
+        };
+        const setSelectedMalle = (mal) => {
+                maleModalizeRef.current?.close();
+                setMalles(mal)
+        }
+
         // Batiment select
         const batimentModalizeRef = useRef(null);
         const [batiments, setBatiments] = useState(null);
@@ -50,6 +74,17 @@ export default function AgentSuperviseurMalleScreen() {
         const setSelectedBatiment = (bat) => {
                 batimentModalizeRef.current?.close();
                 setBatiments(bat)
+        }
+
+        // Ailles select
+        const aillesModalizeRef = useRef(null);
+        const [ailles, setAilles] = useState(null);
+        const openAilleModalize = () => {
+                aillesModalizeRef.current?.open();
+        };
+        const setSelectedAille = (ail) => {
+                aillesModalizeRef.current?.close();
+                setAilles(ail)
         }
 
         // Distributeur select
@@ -62,6 +97,8 @@ export default function AgentSuperviseurMalleScreen() {
                 distributrutModalizeRef.current?.close();
                 setDistributeur(distr)
         }
+
+
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -83,50 +120,234 @@ export default function AgentSuperviseurMalleScreen() {
 
         }
 
-        //Composent pour afficher le modal des batiments 
-        const BatimentList = () => {
+        //Composent pour afficher le maille existant
+        const MalleList = () => {
+                const [loadingMalle, mallesAll] = useFetch('/folio/dossiers/maille')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les batiments</Text>
-
+                                {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des malles</Text>
+                                                </View>
+                                                {mallesAll.result.map((mal, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                                                                </View>
+                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de volume associer a un agent superviceur
+        const VolumeAgentSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {volumesAll.result.map((vol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
+                                                                                                </View>
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal des batiments 
+        const BatimentList = () => {
+                const [loadingBatiment, batimentsAll] = useFetch('/folio/dossiers/batiment')
+                return (
+                        <>
+                                <>
+                                        {loadingBatiment ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des batiments</Text>
                                                         </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                                        {batimentsAll.result.map((bat, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                        </View>
+                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de liste des ailles
+        const AillesList = ({ batiments }) => {
+                const [allailles, setAllailles] = useState([]);
+                const [aillesLoading, setAillesLoading] = useState(false);
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (batiments) {
+                                                setAillesLoading(true)
+                                                const aie = await fetchApi(`/folio/dossiers/aile/${batiments.ID_BATIMENT}`)
+                                                setAllailles(aie.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setAillesLoading(false)
+                                }
+                        })()
+                }, [batiments])
+                return (
+                        <>
+                                {aillesLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des ailles</Text>
+                                                </View>
+                                                {allailles.map((ail, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                </View>
+                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
                         </>
                 )
         }
 
         //Composent pour afficher le modal de liste des distrubuteur 
-        const DistributeurAgentList = () => {
+        const DistributeurAgentList = ({ ailles }) => {
+                const [allDistributeur, setAllDistributeur] = useState([]);
+                const [distributeurLoading, setDistributeurLoading] = useState(false);
+
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (ailles) {
+                                                setDistributeurLoading(true)
+                                                const distr = await fetchApi(`/folio/dossiers/agent/${ailles.ID_AILE}`)
+                                                setAllDistributeur(distr.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setDistributeurLoading(false)
+                                }
+                        })()
+                }, [ailles])
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les distributeurs</Text>
-
+                                {distributeurLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des distributeurs</Text>
+                                                </View>
+                                                {allDistributeur.map((distr, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {distributeur?.ID_AFFECTATION == distr.ID_AFFECTATION ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
@@ -167,36 +388,30 @@ export default function AgentSuperviseurMalleScreen() {
                         </View>
                         <ScrollView>
                                 <View>
-                                        <View style={styles.selectContainer}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Volume
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdh
+                                                                        {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Numero de la malle"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.malle}
-                                                        onChangeText={(newValue) => handleChange('malle', newValue)}
-                                                        onBlur={() => checkFieldData('malle')}
-                                                        error={hasError('malle') ? getError('malle') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Selectioner le malle
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {malles ? `${malles.NUMERO_MAILLE}` : 'Aucun'}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
@@ -204,29 +419,23 @@ export default function AgentSuperviseurMalleScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdggk
+                                                                        {batiments ? `${batiments.NUMERO_BATIMENT}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Numero de l'aille"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.aille}
-                                                        onChangeText={(newValue) => handleChange('aille', newValue)}
-                                                        onBlur={() => checkFieldData('aille')}
-                                                        error={hasError('aille') ? getError('aille') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Selectioner ailles
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {ailles ? `${ailles.NUMERO_AILE}` : 'Aucun'}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
@@ -234,7 +443,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdggk
+                                                                        {distributeur ? `${distributeur.NOM}` + `${distributeur.PRENOM}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -270,6 +479,16 @@ export default function AgentSuperviseurMalleScreen() {
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
+                        <Portal>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
+                                <Modalize ref={maleModalizeRef}  >
+                                        <MalleList />
+                                </Modalize>
+                        </Portal>
 
                         <Portal>
                                 <Modalize ref={batimentModalizeRef}  >
@@ -277,8 +496,13 @@ export default function AgentSuperviseurMalleScreen() {
                                 </Modalize>
                         </Portal>
                         <Portal>
+                                <Modalize ref={aillesModalizeRef}  >
+                                        <AillesList batiments={batiments} />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
                                 <Modalize ref={distributrutModalizeRef}  >
-                                        <DistributeurAgentList />
+                                        <DistributeurAgentList ailles={ailles} />
                                 </Modalize>
                         </Portal>
                 </View>
@@ -370,5 +594,15 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
         },
 })
