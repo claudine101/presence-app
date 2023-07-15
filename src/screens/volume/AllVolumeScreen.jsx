@@ -1,5 +1,5 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Image, ScrollView, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView, ActivityIndicator, FlatList, TouchableNativeFeedback } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import AppHeader from "../../components/app/AppHeader";
 import { FloatingAction } from "react-native-floating-action";
@@ -134,6 +134,9 @@ export default function AllVolumeScreen() {
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                             <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
+                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} 
+                                            onPress={()=>navigation.navigate("VolumeDetailsScreen")}
+                                        >
                                             <View style={styles.cardDetails}>
                                                 <View style={styles.carddetailItem}>
                                                     <View style={styles.cardImages}>
@@ -142,14 +145,16 @@ export default function AllVolumeScreen() {
                                                     <View style={styles.cardDescription}>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                             <View>
-                                                                <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME} hhh</Text>
+                                                                <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME}</Text>
                                                                 <Text>{volume.CODE_VOLUME}</Text>
                                                             </View>
                                                             <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>}
+                                            </View>
+                                            </TouchableNativeFeedback>
+                                            }
                                     </>
                                 )
                             }}
