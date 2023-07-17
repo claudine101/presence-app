@@ -212,7 +212,7 @@ export default function AgentSuperviseurScreen() {
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", JSON.stringify({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
+                                form.append("PV",({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
                         }
                         const volume = await fetchApi(`/folio/dossiers`, {
                                 method: "POST",

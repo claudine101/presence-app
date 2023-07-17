@@ -114,7 +114,7 @@ export default function NewVolumeScreen() {
             if (data.document) {
                 let localUri = data.document.uri;
                 let filename = localUri.split('/').pop();
-                form.append("document", JSON.stringify({uri: data.document.uri, name: filename, type: data.document.mimeType}))
+                form.append("PV",({uri: data.document.uri, name: filename, type: data.document.mimeType}))
             }
             const volume = await fetchApi(`/volume/dossiers`, {
                 method: "POST",

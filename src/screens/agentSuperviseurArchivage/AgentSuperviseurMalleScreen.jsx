@@ -11,6 +11,7 @@ import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import useFetch from "../../hooks/useFetch";
 import fetchApi from "../../helpers/fetchApi";
+import Loading from "../../components/app/Loading";
 
 /**
  * Le screen pour  mettre le volume detailler dans un malle
@@ -21,6 +22,7 @@ import fetchApi from "../../helpers/fetchApi";
 
 export default function AgentSuperviseurMalleScreen() {
         const navigation = useNavigation()
+        const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 document: null,
@@ -341,7 +343,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                                                                         <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {distributeur?.ID_AFFECTATION == distr.ID_AFFECTATION ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {distributeur?.ID_USER_AILE == distr.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -358,159 +360,167 @@ export default function AgentSuperviseurMalleScreen() {
         //fonction pour envoyer les donnees dans la base
         const submitInMalle = async () => {
                 try {
+                        setLoading(true)
                         const form = new FormData()
-                        form.append('USER', data.malle)
-                        form.append('USER', data.aille)
-
-                        // form.append('VOLUME', JSON.stringify(activity))
+                        form.append('MAILLE', malles.ID_MAILLE)
+                        form.append('AGENT_DISTRIBUTEUR', distributeur.ID_USER_AILE)
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("document", {
+                                form.append("PV", {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        console.log(form)
+                        const volume = await fetchApi(`/volume/dossiers/affectationDistributeur/${volumes.ID_VOLUME}`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
+                } finally {
+                        setLoading(false)
                 }
         }
 
 
         return (
-                <View style={styles.container}>
-                        <View style={styles.cardHeader}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.backBtn}>
-                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
-                                        </View>
-                                </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Detail de volume dans un malle</Text>
-                        </View>
-                        <ScrollView>
-                                <View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
+                <>
+                        {loading && <Loading />}
+                        <View style={styles.container}>
+                                <View style={styles.cardHeader}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.backBtn}>
+                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner le malle
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {malles ? `${malles.NUMERO_MAILLE}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner le batiment
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {batiments ? `${batiments.NUMERO_BATIMENT}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity>
-                                        {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner ailles
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {ailles ? `${ailles.NUMERO_AILE}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity> : null}
-                                        {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner le distributeur
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {distributeur ? `${distributeur.NOM}` + `${distributeur.PRENOM}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity>:null}
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.titlePrincipal}>Detail de volume dans un malle</Text>
+                                </View>
+                                <ScrollView>
                                         <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
                                                         <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
+                                                                <Text style={styles.selectLabel}>
+                                                                        Volume
                                                                 </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
                                                                         </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
+                                                                </View>
                                                         </View>
                                                 </TouchableOpacity>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le malle
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {malles ? `${malles.NUMERO_MAILLE}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le batiment
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {batiments ? `${batiments.NUMERO_BATIMENT}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity>
+                                                {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner ailles
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {ailles ? `${ailles.NUMERO_AILE}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity> : null}
+                                                {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le distributeur
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {distributeur ? `${distributeur.NOM}` + `${distributeur.PRENOM}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity> : null}
+                                                <View>
+                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                                onPress={selectdocument}
+                                                        >
+                                                                <View>
+                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                                Importer le proces verbal
+                                                                        </Text>
+                                                                        {data.document ? <View>
+                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                        {data.document.name}
+                                                                                </Text>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                        </Text>
+                                                                                </View>
+                                                                        </View> : null}
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                </View>
                                         </View>
-                                </View>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={submitInMalle}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                        <Portal>
-                                <Modalize ref={volumeModalizeRef}  >
-                                        <VolumeAgentSuperviseurList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={maleModalizeRef}  >
-                                        <MalleList />
-                                </Modalize>
-                        </Portal>
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitInMalle}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                                <Portal>
+                                        <Modalize ref={volumeModalizeRef}  >
+                                                <VolumeAgentSuperviseurList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={maleModalizeRef}  >
+                                                <MalleList />
+                                        </Modalize>
+                                </Portal>
 
-                        <Portal>
-                                <Modalize ref={batimentModalizeRef}  >
-                                        <BatimentList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={aillesModalizeRef}  >
-                                        <AillesList batiments={batiments} />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={distributrutModalizeRef}  >
-                                        <DistributeurAgentList ailles={ailles} />
-                                </Modalize>
-                        </Portal>
-                </View>
+                                <Portal>
+                                        <Modalize ref={batimentModalizeRef}  >
+                                                <BatimentList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={aillesModalizeRef}  >
+                                                <AillesList batiments={batiments} />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={distributrutModalizeRef}  >
+                                                <DistributeurAgentList ailles={ailles} />
+                                        </Modalize>
+                                </Portal>
+                        </View>
+                </>
         )
 }
 
