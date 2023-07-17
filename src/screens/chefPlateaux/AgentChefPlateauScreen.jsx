@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -12,6 +12,9 @@ import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useDispatch, useSelector } from "react-redux";
 import { folioDetailsCartSelector } from "../../store/selectors/folioDetailsCartSelector";
 import { addFolioDetailAction, removeFolioDetailAction } from "../../store/actions/folioDetailsCartActions";
+import useFetch from "../../hooks/useFetch";
+import { useEffect } from "react";
+import fetchApi from "../../helpers/fetchApi";
 
 /**
  * Le screen pour aider le superviseur de la phase preparation
@@ -24,6 +27,8 @@ export default function AgentChefPlateauScreen() {
         const navigation = useNavigation()
         const dispatch = useDispatch()
         const folioDetails = useSelector(folioDetailsCartSelector)
+        const [loadingInformation, setLoadingInformation] = useState(false)
+        const [informations, setInformations] = useState(null);
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
@@ -46,6 +51,17 @@ export default function AgentChefPlateauScreen() {
                 }
         })
 
+        // Volume select
+        const volumeModalizeRef = useRef(null);
+        const [volumes, setVolumes] = useState(null);
+        const openVolumeModalize = () => {
+                volumeModalizeRef.current?.open();
+        };
+        const setSelectedVolume = (vol) => {
+                volumeModalizeRef.current?.close();
+                setVolumes(vol)
+        }
+
         // Agent superviseur preparation select
         const preparationModalizeRef = useRef(null);
         const [supPreparations, setSupPreparations] = useState(null);
@@ -57,10 +73,136 @@ export default function AgentChefPlateauScreen() {
                 setSupPreparations(prep)
         }
 
+        // Modal folio multi select
+        const multSelectModalizeRef = useRef(null);
+        const [multiFolios, setMultiFolios] = useState([]);
+        const openMultiSelectModalize = () => {
+                multSelectModalizeRef.current?.open();
+        };
+        const submitConfimer = () => {
+                multSelectModalizeRef.current?.close();
+        }
+
+        //Composent pour afficher le modal de volume 
+        const VolumeAgentSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {volumesAll.result.map((vol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
+                                                                                                </View>
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de multi select des folio
+        const MultiFolioSelctList = () => {
+                const [allFolios, setAllFolios] = useState([]);
+                const [foliosLoading, setFoliosLoading] = useState(false);
+
+                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+                const setSelectedFolio = (fol) => {
+                        if (isSelected(fol.ID_FOLIO)) {
+                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                                setMultiFolios(newfolio)
+                        } else {
+                                setMultiFolios(u => [...u, fol])
+                        }
+
+                }
+
+                //fonction pour recuperer le folio par rapport de volume
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (volumes) {
+                                                setFoliosLoading(true)
+                                                const rep = await fetchApi(`/folio/dossiers/allFolio/${volumes.ID_VOLUME}`)
+                                                setAllFolios(rep.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setFoliosLoading(false)
+                                }
+                        })()
+                }, [volumes])
+                return (
+                        <>
+                                {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {allFolios.map((fol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                </View>
+                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </>
+                )
+        }
+
 
         //Fonction pour ajouter le folio details dans redux
         const onAddToCart = () => {
-                dispatch(addFolioDetailAction({ NOMBRE: data.folio }))
+                // dispatch(addFolioDetailAction({ NOMBRE: data.folio }))
                 // handleChange("nbre_volume", data.nbre_volume - 1)
                 // handleChange("numero", "")
         }
@@ -82,26 +224,42 @@ export default function AgentChefPlateauScreen() {
         }
 
 
-        //Composent pour afficher le modal des agents de phase preparation
+        //Composent pour afficher le modal des agents superviseur phase preparation
         const SupervisionPreparationList = () => {
+                // <AntDesign name="addusergroup" size={24} color="black" />
+                const [loadingSuper, allSuperviseur] = useFetch('/folio/dossiers/agentSuperviseurPreparation')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les agents de preparations</Text>
-
+                                {loadingSuper ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {allSuperviseur.result.map((prep, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {supPreparations?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
@@ -148,6 +306,25 @@ export default function AgentChefPlateauScreen() {
                 }
         }
 
+        //Fonction pour appeller les autres information en passant l'id de volume selectionner
+        useEffect(() => {
+                (async () => {
+                        try {
+
+                                if (volumes) {
+                                        setLoadingInformation(true)
+                                        const aie = await fetchApi(`/volume/dossiers/batimentAile/${volumes.ID_VOLUME}`)
+                                        setInformations(aie.result)
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingInformation(false)
+                        }
+                })()
+        }, [volumes])
+
         return (
                 <View style={styles.container}>
                         <View style={styles.cardHeader}>
@@ -162,42 +339,42 @@ export default function AgentChefPlateauScreen() {
                         </View>
                         <ScrollView>
                                 <View>
-                                        <View style={styles.selectContainer}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Volume
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdh
+                                                                        {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
-                                        <View style={styles.selectContainer}>
+                                        </TouchableOpacity>
+                                        {volumes ? <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Malle
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdhdkdj
+                                                                        {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
-                                        <View style={styles.selectContainer}>
+                                        </View> : null}
+                                        {volumes ? <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Nombre de dossier
+                                                                Dossier
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hkdj
+                                                                        {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
+                                        </View> : null}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
@@ -205,15 +382,29 @@ export default function AgentChefPlateauScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdggk
+                                                                        {supPreparations ? `${supPreparations.NOM}` + `${supPreparations.PRENOM}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <View style={{ marginBottom: 8 }}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Selectioner les folios
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </TouchableOpacity>
+
+
+                                        {/* <View style={{ marginBottom: 8 }}>
                                                 <Text style={styles.label}>Nombre de dossier</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
                                                         label="Nombre de dossier"
                                                         fontSize={14}
@@ -230,11 +421,11 @@ export default function AgentChefPlateauScreen() {
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
-                                        </View>
-                                        <View style={{ marginBottom: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginBottom: 8 }}>
                                                 <Text style={styles.label}>Folio</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
                                                         label="detail de folio"
                                                         fontSize={14}
@@ -251,9 +442,9 @@ export default function AgentChefPlateauScreen() {
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
-                                        </View>
+                                        </View> */}
 
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                        {/* <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                                 <View></View>
                                                 <TouchableOpacity
                                                         onPress={onAddToCart}
@@ -262,8 +453,8 @@ export default function AgentChefPlateauScreen() {
                                                                 <Text style={styles.buttonTextPlus}>+</Text>
                                                         </View>
                                                 </TouchableOpacity>
-                                        </View>
-                                        {folioDetails.map((product, index) => {
+                                        </View> */}
+                                        {/* {folioDetails.map((product, index) => {
                                                 return (
                                                         <View style={styles.headerRead}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
@@ -281,7 +472,7 @@ export default function AgentChefPlateauScreen() {
                                                                 </View>
                                                         </View>
                                                 )
-                                        })}
+                                        })} */}
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -316,6 +507,16 @@ export default function AgentChefPlateauScreen() {
                         <Portal>
                                 <Modalize ref={preparationModalizeRef}  >
                                         <SupervisionPreparationList />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
+                                <Modalize ref={multSelectModalizeRef}  >
+                                        <MultiFolioSelctList />
                                 </Modalize>
                         </Portal>
                 </View>
@@ -467,4 +668,24 @@ const styles = StyleSheet.create({
                 justifyContent: 'center',
                 alignItems: 'center'
         },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        butConfirmer:{
+                // marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                // paddingHorizontal: 10,
+                backgroundColor: "#18678E",
+                marginHorizontal:50,
+                marginVertical:15
+        }
+
 })

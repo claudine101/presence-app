@@ -199,7 +199,6 @@ export default function AgentSupPlateauScreen() {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/volume/dossiers/affectationPlateau/${volumes.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
@@ -245,11 +244,11 @@ export default function AgentSupPlateauScreen() {
                                                 {volumes ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Malle
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
+                                                                                {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -257,11 +256,11 @@ export default function AgentSupPlateauScreen() {
                                                 {volumes ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Malle
+                                                                        Dossier
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
