@@ -11,6 +11,8 @@ import AgentChefPlateauScreen from '../screens/chefPlateaux/AgentChefPlateauScre
 import AgentPreparationScreen from '../screens/chefPlateaux/AgentPreparationScreen';
 import AgentSuperviseurFinScreen from '../screens/chefPlateaux/AgentSuperviseurFinScreen';
 import VolumeDetailsScreen from '../screens/volume/details/VolumeDetailsScreen';
+import DossierArchivageDetailsScreen from '../screens/agentArchivages/details/DossierArchivageDetailsScreen';
+import FolioNatureSupDetailsScreen from '../screens/agentSuperviseurArchivage/details/FolioNatureSupDetailsScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -31,7 +33,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentChefPlateauScreen' component={AgentChefPlateauScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentPreparationScreen' component={AgentPreparationScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurFinScreen' component={AgentSuperviseurFinScreen} options={{ headerShown: false }}/>
+
                 <Stack.Screen name='VolumeDetailsScreen' component={VolumeDetailsScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DossierArchivageDetailsScreen' component={DossierArchivageDetailsScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='FolioNatureSupDetailsScreen' component={FolioNatureSupDetailsScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>

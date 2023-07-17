@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, StatusBar } from "react-native";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
@@ -10,15 +10,16 @@ import { COLORS } from '../../../styles/COLORS';
 import { useNavigation } from "@react-navigation/native";
 
 /**
- * Screen pour afficher le details de volume de chef de division
+ * Screen pour afficher le details des dossier deja archives dans un volume
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 15/7/2023
  * @returns 
  */
 
-export default function VolumeDetailsScreen() {
+export default function DossierArchivageDetailsScreen() {
         const modelRef = useRef(null)
         const navigation = useNavigation()
+
         const [data, handleChange, setValue] = useForm({
                 document: null
         })
@@ -29,6 +30,7 @@ export default function VolumeDetailsScreen() {
                         required: true
                 }
         })
+
         const onOpenModal = async () => {
                 modelRef.current.open()
         }
@@ -56,6 +58,7 @@ export default function VolumeDetailsScreen() {
                 }
 
         }
+
         return (
                 <>
                         <ScrollView style={styles.container}>
@@ -79,7 +82,7 @@ export default function VolumeDetailsScreen() {
                                                                 </View>
                                                                 <View>
                                                                         <Text>En attente...</Text>
-                                                                        <Text>sjsjsj</Text>
+                                                                        {/* <Text>sjsjsj</Text> */}
                                                                 </View>
 
                                                         </View>
@@ -126,7 +129,7 @@ export default function VolumeDetailsScreen() {
                                         <View style={{ paddingHorizontal: 10, }}>
                                                 <View style={styles.modalContainer}>
                                                         <View style={styles.modalHeader}>
-                                                                <Text style={styles.modalTitle}>Les volumes</Text>
+                                                                <Text style={styles.modalTitle}>Archivages</Text>
                                                         </View>
                                                         <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                                 onPress={selectdocument}
@@ -212,14 +215,21 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 20,
                 alignSelf: "flex-end"
         },
-        backBtn: {
-                backgroundColor: '#fff',
-                borderColor: '#ddd',
-                borderWidth: 1
-        },
         nextBtnText: {
                 color: '#000',
                 fontWeight: "bold",
+        },
+        modalHeader: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingVertical: 5
+        },
+        modalTitle: {
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 16
         },
         selectContainer: {
                 flexDirection: "row",
@@ -234,22 +244,6 @@ const styles = StyleSheet.create({
         },
         selectedValue: {
                 color: '#777'
-        },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
-        modalHeader: {
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingVertical: 5
-        },
-        modalTitle: {
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop: 10,
-                fontSize: 16
         },
         button: {
                 marginVertical: 10,
@@ -269,9 +263,9 @@ const styles = StyleSheet.create({
                 // marginTop: StatusBar.currentHeight,
                 alignContent: "center",
                 alignItems: "center",
-                marginHorizontal: 10,
-                marginTop: 10
-
+                marginHorizontal:10,
+                marginTop:10
+                
         },
         backBtn: {
                 backgroundColor: COLORS.ecommercePrimaryColor,

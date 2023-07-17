@@ -62,6 +62,26 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </TouchableNativeFeedback>
+                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllDossierArchivageScreen')}>
+                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                        <View style={styles.drawerItem}>
+                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
+                            <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
+                                    Dossiers Archivees
+                                    </Text>
+                        </View>
+                    </View>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioNatureSupScreen')}>
+                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                        <View style={styles.drawerItem}>
+                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
+                            <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }, { marginBottom: 3 }]}>
+                                        Folio et nature
+                                    </Text>
+                        </View>
+                    </View>
+                </TouchableNativeFeedback>
                
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
