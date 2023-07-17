@@ -10,13 +10,13 @@ import { COLORS } from '../../../styles/COLORS';
 import { useNavigation } from "@react-navigation/native";
 
 /**
- * Screen pour afficher le details de folio avec leur nature  
+ * Screen pour afficher le details de folio et de volume qui sont dans un malle
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 
  */
 
-export default function FolioNatureSupDetailsScreen() {
+export default function AllFolioVolumeMalleDetailsScreen() {
         const navigation = useNavigation()
         const modelRef = useRef(null)
 
@@ -127,7 +127,31 @@ export default function FolioNatureSupDetailsScreen() {
                                                                 <View>
                                                                         <Text>Nature</Text>
                                                                 </View>
-
+                                                        </View>
+                                                </View>
+                                        </View>
+                                        <View style={styles.separator}></View>
+                                        <View style={styles.carddetailItem}>
+                                                <View style={styles.cardDescription}>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                        <Text style={styles.itemVolume}>Male</Text>
+                                                                        <Text>333</Text>
+                                                                </View>
+                                                                {/* <View>
+                                                                        <Text>Nature</Text>
+                                                                </View> */}
+                                                        </View>
+                                                </View>
+                                        </View>
+                                        <View style={styles.separator}></View>
+                                        <View style={styles.carddetailItem}>
+                                                <View style={styles.cardDescription}>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                        <Text style={styles.itemVolume}>Batiments</Text>
+                                                                        <Text>A123</Text>
+                                                                </View>
                                                         </View>
                                                 </View>
                                         </View>
@@ -193,7 +217,6 @@ export default function FolioNatureSupDetailsScreen() {
                                 </Modalize>
                         </Portal>
                 </>
-
         )
 }
 

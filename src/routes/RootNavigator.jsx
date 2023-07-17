@@ -13,6 +13,7 @@ import AgentSuperviseurFinScreen from '../screens/chefPlateaux/AgentSuperviseurF
 import VolumeDetailsScreen from '../screens/volume/details/VolumeDetailsScreen';
 import DossierArchivageDetailsScreen from '../screens/agentArchivages/details/DossierArchivageDetailsScreen';
 import FolioNatureSupDetailsScreen from '../screens/agentSuperviseurArchivage/details/FolioNatureSupDetailsScreen';
+import AllFolioVolumeMalleDetailsScreen from '../screens/agentSuperviseurArchivage/details/AllFolioVolumeMalleDetailsScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -37,6 +38,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='VolumeDetailsScreen' component={VolumeDetailsScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DossierArchivageDetailsScreen' component={DossierArchivageDetailsScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='FolioNatureSupDetailsScreen' component={FolioNatureSupDetailsScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='AllFolioVolumeMalleDetailsScreen' component={AllFolioVolumeMalleDetailsScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>
