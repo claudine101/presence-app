@@ -86,25 +86,32 @@ export default function AllVolumeScreen() {
             render: () => <Action title={"Agent superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key5"} />
         },
         {
+            text: "Superviseur aille",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "AgentSupPlateauScreen",
+            position: 6,
+            render: () => <Action title={"Superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key6"} />
+        },
+        {
             text: "Agent chef plateau",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentChefPlateauScreen",
-            position: 6,
-            render: () => <Action title={"Agent chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key6"} />
+            position: 7,
+            render: () => <Action title={"Agent chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
         },
         {
             text: "Agent preparation",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentPreparationScreen",
-            position: 7,
-            render: () => <Action title={"Agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
+            position: 8,
+            render: () => <Action title={"Agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
         },
         {
             text: "Agent traitement",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentSuperviseurFinScreen",
-            position: 8,
-            render: () => <Action title={"Agent traitement"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+            position: 9,
+            render: () => <Action title={"Agent traitement"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
         },
     ];
 
@@ -176,7 +183,9 @@ export default function AllVolumeScreen() {
                         navigation.navigate('AgentSuperviseurMalleScreen')
                     } else if (name == 'AgentSuperviseurAilleScreen') {
                         navigation.navigate('AgentSuperviseurAilleScreen')
-                    } else if (name == 'AgentChefPlateauScreen') {
+                    } else if(name == 'AgentSupPlateauScreen'){
+                        navigation.navigate('AgentSupPlateauScreen')
+                    }else if (name == 'AgentChefPlateauScreen') {
                         navigation.navigate('AgentChefPlateauScreen')
                     } else if (name == 'AgentPreparationScreen') {
                         navigation.navigate('AgentPreparationScreen')

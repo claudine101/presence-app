@@ -14,13 +14,13 @@ import { useEffect } from "react";
 import fetchApi from "../../helpers/fetchApi";
 
 /**
- * Le screen pour aider le distributeur a renger les males dans le batiments
+ * Le screen pour aider un superviseur aille affecter un chef du plateaux
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 12/7/2021
+ * @date 17/7/2021
  * @returns 
  */
 
-export default function AgentSuperviseurAilleScreen() {
+export default function AgentSupPlateauScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
 
@@ -90,10 +90,9 @@ export default function AgentSuperviseurAilleScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des platequx
+        //Composent pour afficher le modal des chefs des plateaux
         const ChefPlateauList = () => {
-               
-                const [loadingSuperviseur, superviseurList] = useFetch('/folio/dossiers/agentSuperviseur')
+                const [loadingSuperviseur, superviseurList] = useFetch('/folio/dossiers/chefPlateau')
                 return (
                         <>
                                 {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -192,7 +191,7 @@ export default function AgentSuperviseurAilleScreen() {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('AGENT_SUPERVISEUR', chefPlateaux.ID_USER_AILE)
+                        form.append('CHEF_PLATEAU', chefPlateaux.ID_USER_AILE)
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
@@ -200,7 +199,8 @@ export default function AgentSuperviseurAilleScreen() {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        const volume = await fetchApi(`/volume/dossiers/affectationSuperviseur/${volumes.ID_VOLUME}`, {
+                        console.log(form)
+                        const volume = await fetchApi(`/volume/dossiers/affectationPlateau/${volumes.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -226,7 +226,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Detailler dans l'aille</Text>
+                                        <Text style={styles.titlePrincipal}>Affecter un chef plateaux</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
@@ -242,6 +242,18 @@ export default function AgentSuperviseurAilleScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
+                                                {volumes ? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Dossier
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
                                                 {volumes ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -281,7 +293,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner agent superviseur aille
+                                                                        Selectioner un chef de plateau
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
