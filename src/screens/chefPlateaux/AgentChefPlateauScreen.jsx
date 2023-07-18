@@ -33,7 +33,7 @@ export default function AgentChefPlateauScreen() {
         const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
-                document: '',
+                document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -45,6 +45,13 @@ export default function AgentChefPlateauScreen() {
                         required: 'ce champ est obligatoire',
                 },
         })
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = volumes != null ? true : false
+                isValid = supPreparations != null ? true : false
+                isValid = multiFolios.length > 0 ? true : false
+                return isValid && isValidate()
+        }
 
         // Volume select
         const volumeModalizeRef = useRef(null);
@@ -401,9 +408,10 @@ export default function AgentChefPlateauScreen() {
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
                                         onPress={submitDataPreparation}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
