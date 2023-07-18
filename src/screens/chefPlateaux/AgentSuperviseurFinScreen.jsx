@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, Feather, EvilIcons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
+import { Ionicons, AntDesign, Feather, EvilIcons, Fontisto } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -12,6 +12,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { launchCamera } from 'react-native-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import useFetch from "../../hooks/useFetch";
 
 /**
  * Le screen pour aider le superviseur chef plateaux d'enregistrer le donnees de superviseur de preparation
@@ -27,7 +28,8 @@ export default function AgentSuperviseurFinScreen() {
                 parcelle: '',
                 localite: '',
                 nom: '',
-                nombre: ''
+                nombre: '',
+                document: null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -42,6 +44,9 @@ export default function AgentSuperviseurFinScreen() {
                 },
                 nombre: {
                         required: true
+                },
+                document: {
+                        required: true
                 }
         }, {
                 parcelle: {
@@ -55,12 +60,22 @@ export default function AgentSuperviseurFinScreen() {
                 },
                 nombre: {
                         required: 'ce champ est obligatoire',
+                },
+                document: {
+                        required: 'ce champ est obligatoire',
                 }
         })
 
         const modelRef = useRef(null)
         const [logoImage, setLogoImage] = useState(null)
         const [loadingCompress, setLoadingCompress] = useState(null)
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = agentPreparation != null ? true : false
+                isValid = allFolio != null ? true : false
+                return isValid && isValidate()
+        }
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -106,48 +121,79 @@ export default function AgentSuperviseurFinScreen() {
 
         //Composent pour afficher le modal des agents de preparation
         const PreparationList = () => {
+                const [loadingAgentPrepa, allAgentsPreparation] = useFetch('/folio/dossiers/agentPreparation')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les agents de preparations</Text>
-
+                                {loadingAgentPrepa ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les agents de preparations</Text>
+                                                </View>
+                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
 
         //Composent pour afficher le modal de listes de folio
-        const FolioList = () => {
+        const FolioList = ({agentPreparation}) => {
+                console.log(agentPreparation)
+                const [loadingFolio, allFolios] = useFetch('/folio/dossiers/getFolios')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Lites des folio</Text>
-
+                                {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                </View>
+                                                {allFolios.result.map((fol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                </View>
+                                                                                                {allFolio?.ID_FOLIO == fol.ID_FOLIO ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
@@ -201,6 +247,25 @@ export default function AgentSuperviseurFinScreen() {
                 }
         }
 
+        //Fonction pour recuperer les nombre de folios par rapport du folio selectionner
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        // try {
+                        //         var url = `/absence/responsable`
+                        //         if (search) {
+                        //                 url += `?q=${search}`
+                        //         }
+                        //         const leade = await fetchApi(url)
+                        //         setProjects(leade)
+                        // }
+                        // catch (error) {
+                        //         console.log(error)
+                        // } finally {
+                        //         setLoadingProjets(false)
+                        // }
+                })()
+        }, []))
+
 
         return (
                 <View style={styles.container}>
@@ -231,11 +296,11 @@ export default function AgentSuperviseurFinScreen() {
                                         <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner un superviseur de preparation
+                                                                Selectioner un agent de preparation
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdggk
+                                                                        {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -247,7 +312,7 @@ export default function AgentSuperviseurFinScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        hdhdggk
+                                                                        {allFolio ? `${allFolio.NUMERO_FOLIO}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -372,9 +437,10 @@ export default function AgentSuperviseurFinScreen() {
                                 </View>
                         </ScrollView>
                         <TouchableWithoutFeedback
+                        disabled={!isValidAdd()}
                         // onPress={submitData}
                         >
-                                <View style={styles.button}>
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
@@ -385,7 +451,7 @@ export default function AgentSuperviseurFinScreen() {
                         </Portal>
                         <Portal>
                                 <Modalize ref={folioModalizeRef}  >
-                                        <FolioList />
+                                        <FolioList agentPreparation={agentPreparation}/>
                                 </Modalize>
                         </Portal>
                         <Portal>
@@ -547,5 +613,15 @@ const styles = StyleSheet.create({
                 height: 1,
                 width: "100%",
                 backgroundColor: '#F1F1F1'
+        },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
         },
 })

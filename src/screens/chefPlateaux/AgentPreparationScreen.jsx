@@ -102,7 +102,7 @@ export default function AgentPreparationScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Les agents de preparations</Text>
                                                 </View>
                                                 {allAgentsPreparation.result.map((prep, index) => {
                                                         return (
