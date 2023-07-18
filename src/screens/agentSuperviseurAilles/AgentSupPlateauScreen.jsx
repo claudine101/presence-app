@@ -100,7 +100,7 @@ export default function AgentSupPlateauScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
                                                 </View>
                                                 {superviseurList.result.map((chef, index) => {
                                                         return (

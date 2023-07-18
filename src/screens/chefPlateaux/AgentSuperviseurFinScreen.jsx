@@ -13,6 +13,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { launchCamera } from 'react-native-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import useFetch from "../../hooks/useFetch";
+import { useEffect } from "react";
+import fetchApi from "../../helpers/fetchApi";
+import Loading from "../../components/app/Loading";
 
 /**
  * Le screen pour aider le superviseur chef plateaux d'enregistrer le donnees de superviseur de preparation
@@ -23,13 +26,15 @@ import useFetch from "../../hooks/useFetch";
 
 export default function AgentSuperviseurFinScreen() {
         const navigation = useNavigation()
+        const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
                 nom: '',
                 nombre: '',
-                document: null
+                doublon: '',
+                prenom: ''
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -45,7 +50,10 @@ export default function AgentSuperviseurFinScreen() {
                 nombre: {
                         required: true
                 },
-                document: {
+                doublon: {
+                        required: true
+                },
+                prenom: {
                         required: true
                 }
         }, {
@@ -61,7 +69,10 @@ export default function AgentSuperviseurFinScreen() {
                 nombre: {
                         required: 'ce champ est obligatoire',
                 },
-                document: {
+                doublon: {
+                        required: 'ce champ est obligatoire',
+                },
+                prenom: {
                         required: 'ce champ est obligatoire',
                 }
         })
@@ -74,28 +85,29 @@ export default function AgentSuperviseurFinScreen() {
                 var isValid = false
                 isValid = agentPreparation != null ? true : false
                 isValid = allFolio != null ? true : false
+                isValid = logoImage != null ? true : false
                 return isValid && isValidate()
         }
 
         //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
+        // const selectdocument = async () => {
+        //         setError("document", "")
+        //         handleChange("document", null)
+        //         const document = await DocumentPicker.getDocumentAsync({
+        //                 type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+        //         })
+        //         if (document.type == 'cancel') {
+        //                 return false
+        //         }
+        //         var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
+        //         if (sizeDocument <= 2) {
+        //                 handleChange("document", document)
+        //         }
+        //         else {
+        //                 setError("document", ["Document trop volumineux(max:2M)"])
+        //         }
 
-        }
+        // }
 
         // Agent preparation select
         const preparationModalizeRef = useRef(null);
@@ -159,9 +171,30 @@ export default function AgentSuperviseurFinScreen() {
         }
 
         //Composent pour afficher le modal de listes de folio
-        const FolioList = ({agentPreparation}) => {
-                console.log(agentPreparation)
-                const [loadingFolio, allFolios] = useFetch('/folio/dossiers/getFolios')
+        const FolioList = ({ agentPreparation }) => {
+                const [allFolios, setAllFolios] = useState([])
+                const [loadingFolio, setLoadingFolio] = useState(false)
+
+                useEffect(() => {
+                        (async () => {
+                                try {
+                                        setLoadingFolio(true)
+                                        var url = `/folio/dossiers/getFolios`
+                                        if (agentPreparation) {
+                                                url += `?AGENT_PREPARATION=${agentPreparation.ID_USER_AILE}`
+                                        }
+                                        const res = await fetchApi(url)
+                                        setAllFolios(res.result)
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setLoadingFolio(false)
+                                }
+                        })()
+                }, [agentPreparation])
+
+
                 return (
                         <>
                                 {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -171,7 +204,7 @@ export default function AgentSuperviseurFinScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des folios</Text>
                                                 </View>
-                                                {allFolios.result.map((fol, index) => {
+                                                {allFolios.map((fol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
@@ -247,41 +280,65 @@ export default function AgentSuperviseurFinScreen() {
                 }
         }
 
-        //Fonction pour recuperer les nombre de folios par rapport du folio selectionner
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        // try {
-                        //         var url = `/absence/responsable`
-                        //         if (search) {
-                        //                 url += `?q=${search}`
-                        //         }
-                        //         const leade = await fetchApi(url)
-                        //         setProjects(leade)
-                        // }
-                        // catch (error) {
-                        //         console.log(error)
-                        // } finally {
-                        //         setLoadingProjets(false)
-                        // }
-                })()
-        }, []))
+        const submitData = async () => {
+                try {
+                        setLoading(true)
+                        const form = new FormData()
+                        form.append('NUMERO_PARCELLE', data.parcelle)
+                        form.append('LOCALITE', data.localite)
+                        form.append('NOM_PROPRIETAIRE', data.nom)
+                        form.append('PRENOM_PROPRIETAIRE', data.prenom)
+                        form.append('NUMERO_FEUILLE', data.nombre)
+                        form.append('NOMBRE_DOUBLON', data.doublon)
+                        form.append('ID_FOLIO', allFolio.ID_FOLIO)
+                        if (logoImage) {
+                                const manipResult = await manipulateAsync(
+                                        logoImage.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PHOTO_DOSSIER', {
+                                        uri: localUri, name: filename, type
+                                })
+
+                        }
+                        console.log(form)
+                        const volume = await fetchApi(`/folio/dossiers/addDetails`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                }
+        }
+
 
 
         return (
-                <View style={styles.container}>
-                        <View style={styles.cardHeader}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.backBtn}>
-                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
-                                        </View>
-                                </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Detailler la fin de traitement</Text>
-                        </View>
-                        <ScrollView>
-                                <View>
-                                        <View style={styles.selectContainer}>
+                <>
+                        {loading && <Loading/>}
+                        <View style={styles.container}>
+                                <View style={styles.cardHeader}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.backBtn}>
+                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                </View>
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.titlePrincipal}>Detailler la fin de traitement</Text>
+                                </View>
+                                <ScrollView>
+                                        <View>
+                                                {/* <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Volume
@@ -292,32 +349,32 @@ export default function AgentSuperviseurFinScreen() {
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner un agent de preparation
-                                                        </Text>
+                                        </View> */}
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
                                                         <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner un agent de preparation
                                                                 </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
                                                         </View>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner le folio
-                                                        </Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
                                                         <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {allFolio ? `${allFolio.NUMERO_FOLIO}` : 'Aucun'}
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le folio
                                                                 </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {allFolio ? `${allFolio.NUMERO_FOLIO}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
                                                         </View>
-                                                </View>
-                                        </TouchableOpacity>
-                                        <View style={styles.selectContainer}>
+                                                </TouchableOpacity>
+                                                {/* <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
                                                                 Nature du dossier
@@ -328,162 +385,199 @@ export default function AgentSuperviseurFinScreen() {
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nom du parcelle"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.parcelle}
-                                                        onChangeText={(newValue) => handleChange('parcelle', newValue)}
-                                                        onBlur={() => checkFieldData('parcelle')}
-                                                        error={hasError('parcelle') ? getError('parcelle') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="localite"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.localite}
-                                                        onChangeText={(newValue) => handleChange('localite', newValue)}
-                                                        onBlur={() => checkFieldData('localite')}
-                                                        error={hasError('localite') ? getError('localite') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nom et prenom du proprietaire"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.nom}
-                                                        onChangeText={(newValue) => handleChange('nom', newValue)}
-                                                        onBlur={() => checkFieldData('nom')}
-                                                        error={hasError('nom') ? getError('nom') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <TouchableWithoutFeedback onPress={onPhotoDocumentSelect}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <Feather name="image" size={24} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du document
-                                                                </Text>
-                                                        </View>
-                                                        {logoImage && <Image source={{ uri: logoImage.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                        </View> */}
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="Nom du parcelle"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.parcelle}
+                                                                onChangeText={(newValue) => handleChange('parcelle', newValue)}
+                                                                onBlur={() => checkFieldData('parcelle')}
+                                                                error={hasError('parcelle') ? getError('parcelle') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
                                                 </View>
-                                        </TouchableWithoutFeedback>
-                                        <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nombre de feuille"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.nombre}
-                                                        onChangeText={(newValue) => handleChange('nombre', newValue)}
-                                                        onBlur={() => checkFieldData('nombre')}
-                                                        error={hasError('nombre') ? getError('nombre') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
-                                                        <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
-                                                                </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="localite"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.localite}
+                                                                onChangeText={(newValue) => handleChange('localite', newValue)}
+                                                                onBlur={() => checkFieldData('localite')}
+                                                                error={hasError('localite') ? getError('localite') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
+                                                </View>
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="Nom du proprietaire"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.nom}
+                                                                onChangeText={(newValue) => handleChange('nom', newValue)}
+                                                                onBlur={() => checkFieldData('nom')}
+                                                                error={hasError('nom') ? getError('nom') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
+                                                </View>
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="Prenom du proprietaire"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.prenom}
+                                                                onChangeText={(newValue) => handleChange('prenom', newValue)}
+                                                                onBlur={() => checkFieldData('prenom')}
+                                                                error={hasError('prenom') ? getError('prenom') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
+                                                </View>
+                                                <TouchableWithoutFeedback onPress={onPhotoDocumentSelect}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du document
                                                                         </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                </View>
+                                                                {logoImage && <Image source={{ uri: logoImage.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableWithoutFeedback>
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="Nombre de feuille"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.nombre}
+                                                                onChangeText={(newValue) => handleChange('nombre', newValue)}
+                                                                onBlur={() => checkFieldData('nombre')}
+                                                                error={hasError('nombre') ? getError('nombre') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
+                                                </View>
+                                                <View style={{ marginVertical: 8 }}>
+                                                        <OutlinedTextField
+                                                                label="Nombre de doublon"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.doublon}
+                                                                onChangeText={(newValue) => handleChange('doublon', newValue)}
+                                                                onBlur={() => checkFieldData('doublon')}
+                                                                error={hasError('doublon') ? getError('doublon') : ''}
+                                                                autoCompleteType='off'
+                                                                blurOnSubmit={false}
+                                                        />
+                                                </View>
+                                                {/* <View>
+                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                                onPress={selectdocument}
+                                                        >
+                                                                <View>
+                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                                Importer le proces verbal
+                                                                        </Text>
+                                                                        {data.document ? <View>
                                                                                 <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                        {data.document.name}
                                                                                 </Text>
-                                                                        </View>
-                                                                </View> : null}
-                                                        </View>
-                                                </TouchableOpacity>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                        </Text>
+                                                                                </View>
+                                                                        </View> : null}
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                </View> */}
                                         </View>
-                                </View>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                        disabled={!isValidAdd()}
-                        // onPress={submitData}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                        <Portal>
-                                <Modalize ref={preparationModalizeRef}  >
-                                        <PreparationList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={folioModalizeRef}  >
-                                        <FolioList agentPreparation={agentPreparation}/>
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={modelRef}
-                                        handlePosition="inside"
-                                        adjustToContentHeight
-                                        modalStyle={{ backgroundColor: '#fff', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}
-                                        scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitData}
                                 >
-                                        <View style={styles.modalContent}>
-                                                <TouchableNativeFeedback onPress={onTakePicha}>
-                                                        <View style={[styles.modalItem, { marginTop: 10 }]}>
-                                                                <EvilIcons name="image" size={24} color="black" />
-                                                                <Text style={styles.modalItemTitle}>
-                                                                        Prendre
-                                                                </Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                                <View style={styles.separator} />
-                                                <TouchableNativeFeedback onPress={inporterImages}>
-                                                        <View style={styles.modalItem}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                                <Text style={styles.modalItemTitle}>
-                                                                        Importer
-                                                                </Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                                <View style={styles.separator} />
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </Modalize>
-                        </Portal>
-                </View>
+                                </TouchableWithoutFeedback>
+                                <Portal>
+                                        <Modalize ref={preparationModalizeRef}  >
+                                                <PreparationList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={folioModalizeRef}  >
+                                                <FolioList agentPreparation={agentPreparation} />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={modelRef}
+                                                handlePosition="inside"
+                                                adjustToContentHeight
+                                                modalStyle={{ backgroundColor: '#fff', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}
+                                                scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
+                                        >
+                                                <View style={styles.modalContent}>
+                                                        <TouchableNativeFeedback onPress={onTakePicha}>
+                                                                <View style={[styles.modalItem, { marginTop: 10 }]}>
+                                                                        <EvilIcons name="image" size={24} color="black" />
+                                                                        <Text style={styles.modalItemTitle}>
+                                                                                Prendre
+                                                                        </Text>
+                                                                </View>
+                                                        </TouchableNativeFeedback>
+                                                        <View style={styles.separator} />
+                                                        <TouchableNativeFeedback onPress={inporterImages}>
+                                                                <View style={styles.modalItem}>
+                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                        <Text style={styles.modalItemTitle}>
+                                                                                Importer
+                                                                        </Text>
+                                                                </View>
+                                                        </TouchableNativeFeedback>
+                                                        <View style={styles.separator} />
+                                                </View>
+                                        </Modalize>
+                                </Portal>
+                        </View>
+                </>
         )
 }
 

@@ -50,6 +50,8 @@ export default function AllVolumeScreen() {
 
 
     const actions = [
+    ];
+    const actionsPlanification = [
         {
             text: "Ajouter volume",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -57,6 +59,8 @@ export default function AllVolumeScreen() {
             position: 1,
             render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
         },
+    ];
+    const actionsAgentArchivages = [
         {
             text: "Agent Archivages",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -64,6 +68,8 @@ export default function AllVolumeScreen() {
             position: 2,
             render: () => <Action title={"Agent Archivages"} image={require("../../../assets/images/mail-receive-small.png")} key={"key2"} />
         },
+    ];
+    const actionsAgentSuperviseur = [
         {
             text: "Agent superviseur",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -78,6 +84,8 @@ export default function AllVolumeScreen() {
             position: 4,
             render: () => <Action title={"Agent superviseur maille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key4"} />
         },
+    ];
+    const actionsAgentSuperviseurAille = [
         {
             text: "Agent superviseur aille",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -85,6 +93,8 @@ export default function AllVolumeScreen() {
             position: 5,
             render: () => <Action title={"Agent superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key5"} />
         },
+    ];
+    const actionsAgentAille = [
         {
             text: "Superviseur aille",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -92,6 +102,8 @@ export default function AllVolumeScreen() {
             position: 6,
             render: () => <Action title={"Superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key6"} />
         },
+    ];
+    const actionsAgentchefPlateau = [
         {
             text: "Agent chef plateau",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -99,6 +111,8 @@ export default function AllVolumeScreen() {
             position: 7,
             render: () => <Action title={"Agent chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
         },
+    ];
+    const actionsAgentSuperviseurPhasePreparation = [
         {
             text: "Agent superviseur phase preparation",
             icon: require("../../../assets/images/entrant.jpg"),
@@ -171,7 +185,13 @@ export default function AllVolumeScreen() {
 
 
             <FloatingAction
-                actions={actions}
+                actions={user.ID_PROFIL ==1 ? actionsPlanification : 
+                    user.ID_PROFIL == 2 ? actionsAgentArchivages : 
+                    user.ID_PROFIL == 3 ? actionsAgentSuperviseur :
+                    user.ID_PROFIL == 29 ? actionsAgentSuperviseurAille :
+                    user.ID_PROFIL == 7 ? actionsAgentAille :
+                    user.ID_PROFIL == 15 ? actionsAgentchefPlateau :
+                    user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions }
                 onPressItem={name => {
                     if (name == 'NewVolumeScreen') {
                         navigation.navigate("NewVolumeScreen")

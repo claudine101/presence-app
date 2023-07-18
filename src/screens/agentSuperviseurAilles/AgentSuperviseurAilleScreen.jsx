@@ -101,7 +101,7 @@ export default function AgentSuperviseurAilleScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
                                                 </View>
                                                 {superviseurList.result.map((chef, index) => {
                                                         return (
