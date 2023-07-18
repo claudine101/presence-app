@@ -24,7 +24,7 @@ export default function AgentPreparationScreen() {
         const navigation = useNavigation()
         const dispatch = useDispatch()
         const folioPreparer = useSelector(folioPreparationCartSelector)
-                
+
         const [data, handleChange, setValue] = useForm({
                 folio: '',
                 dossier: ''
@@ -53,8 +53,8 @@ export default function AgentPreparationScreen() {
                 // handleChange("numero", "")
         }
 
-         //Fonction pour enlever le folio da le redux
-         const onRemoveProduct = (index) => {
+        //Fonction pour enlever le folio da le redux
+        const onRemoveProduct = (index) => {
                 Alert.alert("Enlever le details du folio", "Voulez-vous vraiment enlever ce detail du folio ?",
                         [
                                 {
@@ -80,6 +80,17 @@ export default function AgentPreparationScreen() {
                 preparationModalizeRef.current?.close();
                 setAgentPreparation(prep)
         }
+
+        // Modal folio multi select
+        const multSelectModalizeRef = useRef(null);
+        const [multiFolios, setMultiFolios] = useState([]);
+        const openMultiSelectModalize = () => {
+                multSelectModalizeRef.current?.open();
+        };
+        const submitConfimer = () => {
+                multSelectModalizeRef.current?.close();
+        }
+
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -121,6 +132,83 @@ export default function AgentPreparationScreen() {
                                                 </TouchableNativeFeedback>
                                         </ScrollView>
                                 </View>
+                        </>
+                )
+        }
+
+         //Composent pour afficher le modal de multi select des folio
+         const MultiFolioSelctList = () => {
+                const [allFolios, setAllFolios] = useState([]);
+                const [foliosLoading, setFoliosLoading] = useState(false);
+
+                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+                const setSelectedFolio = (fol) => {
+                        if (isSelected(fol.ID_FOLIO)) {
+                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                                setMultiFolios(newfolio)
+                        } else {
+                                setMultiFolios(u => [...u, fol])
+                        }
+
+                }
+
+                //fonction pour recuperer le folio par rapport de volume
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (volumes) {
+                                                setFoliosLoading(true)
+                                                const rep = await fetchApi(`/folio/dossiers/allFolio/${volumes.ID_VOLUME}`)
+                                                setAllFolios(rep.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setFoliosLoading(false)
+                                }
+                        })()
+                }, [volumes])
+                return (
+                        <>
+                                {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {allFolios.map((fol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                </View>
+                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </>
                 )
         }
@@ -188,7 +276,7 @@ export default function AgentPreparationScreen() {
                                         <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner un superviseur de preparation
+                                                                Selectioner un agent de preparation
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
@@ -197,10 +285,10 @@ export default function AgentPreparationScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <View style={{ marginBottom: 8 }}>
+                                        {/* <View style={{ marginBottom: 8 }}>
                                                 <Text style={styles.label}>Nombre de dossier</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
                                                         label="Nombre de dossier"
                                                         fontSize={14}
@@ -217,11 +305,11 @@ export default function AgentPreparationScreen() {
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
-                                        </View>
-                                        <View style={{ marginBottom: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginBottom: 8 }}>
                                                 <Text style={styles.label}>Folio</Text>
-                                        </View>
-                                        <View style={{ marginVertical: 8 }}>
+                                        </View> */}
+                                        {/* <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
                                                         label="detail de folio"
                                                         fontSize={14}
@@ -238,8 +326,8 @@ export default function AgentPreparationScreen() {
                                                         autoCompleteType='off'
                                                         blurOnSubmit={false}
                                                 />
-                                        </View>
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                        </View> */}
+                                        {/* <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                                 <View></View>
                                                 <TouchableOpacity
                                                         onPress={onAddToCart}
@@ -248,8 +336,8 @@ export default function AgentPreparationScreen() {
                                                                 <Text style={styles.buttonTextPlus}>+</Text>
                                                         </View>
                                                 </TouchableOpacity>
-                                        </View>
-                                        {folioPreparer.map((product, index) => {
+                                        </View> */}
+                                        {/* {folioPreparer.map((product, index) => {
                                                 return (
                                                         <View style={styles.headerRead}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
@@ -267,7 +355,7 @@ export default function AgentPreparationScreen() {
                                                                 </View>
                                                         </View>
                                                 )
-                                        })}
+                                        })} */}
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -302,6 +390,11 @@ export default function AgentPreparationScreen() {
                         <Portal>
                                 <Modalize ref={preparationModalizeRef}  >
                                         <PreparationList />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
+                                <Modalize ref={multSelectModalizeRef}  >
+                                        <MultiFolioSelctList />
                                 </Modalize>
                         </Portal>
                 </View>

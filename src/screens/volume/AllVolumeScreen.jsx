@@ -100,11 +100,11 @@ export default function AllVolumeScreen() {
             render: () => <Action title={"Agent chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
         },
         {
-            text: "Agent preparation",
+            text: "Agent superviseur phase preparation",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "AgentPreparationScreen",
             position: 8,
-            render: () => <Action title={"Agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+            render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
         },
         {
             text: "Agent traitement",

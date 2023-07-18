@@ -201,31 +201,6 @@ export default function AgentChefPlateauScreen() {
                 )
         }
 
-
-        //Fonction pour ajouter le folio details dans redux
-        const onAddToCart = () => {
-                // dispatch(addFolioDetailAction({ NOMBRE: data.folio }))
-                // handleChange("nbre_volume", data.nbre_volume - 1)
-                // handleChange("numero", "")
-        }
-
-        //Fonction pour enlever le folio da le redux
-        const onRemoveProduct = (index) => {
-                Alert.alert("Enlever le details du folio", "Voulez-vous vraiment enlever ce detail du folio ?",
-                        [
-                                {
-                                        text: "Annuler",
-                                        style: "cancel"
-                                },
-                                {
-                                        text: "Oui", onPress: async () => {
-                                                dispatch(removeFolioDetailAction(index))
-                                        }
-                                }
-                        ])
-        }
-
-
         //Composent pour afficher le modal des agents superviseur phase preparation
         const SupervisionPreparationList = () => {
                 // <AntDesign name="addusergroup" size={24} color="black" />
@@ -291,10 +266,8 @@ export default function AgentChefPlateauScreen() {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('USER', data.malle)
-                        form.append('USER', data.aille)
-
-                        form.append('VOLUME', JSON.stringify(multiFolios))
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('AGENT_SUPERVISEUR', supPreparations.ID_USER_AILE)
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
@@ -302,7 +275,11 @@ export default function AgentChefPlateauScreen() {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        console.log(form)
+                        const volume = await fetchApi(`/folio/dossiers/superviser`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
@@ -385,7 +362,7 @@ export default function AgentChefPlateauScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner un agent de preparation
+                                                                        Selectioner un agent superviseur phase preparation
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -406,80 +383,6 @@ export default function AgentChefPlateauScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-
-
-                                                {/* <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Nombre de dossier</Text>
-                                        </View> */}
-                                                {/* <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nombre de dossier"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.dossier}
-                                                        onChangeText={(newValue) => handleChange('dossier', newValue)}
-                                                        onBlur={() => checkFieldData('dossier')}
-                                                        error={hasError('dossier') ? getError('dossier') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View> */}
-                                                {/* <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Folio</Text>
-                                        </View> */}
-                                                {/* <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="detail de folio"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.folio}
-                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
-                                                        onBlur={() => checkFieldData('folio')}
-                                                        error={hasError('folio') ? getError('folio') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View> */}
-
-                                                {/* <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                <View></View>
-                                                <TouchableOpacity
-                                                        onPress={onAddToCart}
-                                                >
-                                                        <View style={styles.buttonPlus}>
-                                                                <Text style={styles.buttonTextPlus}>+</Text>
-                                                        </View>
-                                                </TouchableOpacity>
-                                        </View> */}
-                                                {/* {folioDetails.map((product, index) => {
-                                                return (
-                                                        <View style={styles.headerRead}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                        <View style={styles.cardFolder}>
-                                                                                <Text style={[styles.title]} numberOfLines={1}>{product.NOMBRE}</Text>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-                                                                        </View>
-                                                                        <View>
-                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                </TouchableOpacity>
-                                                                        </View>
-                                                                </View>
-                                                        </View>
-                                                )
-                                        })} */}
                                                 <View>
                                                         <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                                 onPress={selectdocument}
