@@ -14,7 +14,6 @@ import { runOnJS } from "react-native-reanimated";
 
 export default function DrawerContent({ state, navigation, descriptors }) {
     const user = useSelector(userSelector)
-    console.log(user)
     const dispacth = useDispatch()
 
     const handlePress = (routeName) => {
