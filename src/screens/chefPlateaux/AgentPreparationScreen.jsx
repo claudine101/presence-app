@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert } from "react-native";
+import { Ionicons, AntDesign, Fontisto } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -12,6 +12,9 @@ import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useDispatch, useSelector } from "react-redux";
 import { folioPreparationCartSelector } from "../../store/selectors/folioPreparationCartSelector";
 import { addFolioPreparationAction, removeFolioPreparationAction } from "../../store/actions/folioPreparationCartActions";
+import fetchApi from "../../helpers/fetchApi";
+import useFetch from "../../hooks/useFetch";
+import Loading from "../../components/app/Loading";
 
 /**
  * Le screen pour la phase de preparation
@@ -23,52 +26,29 @@ import { addFolioPreparationAction, removeFolioPreparationAction } from "../../s
 export default function AgentPreparationScreen() {
         const navigation = useNavigation()
         const dispatch = useDispatch()
-        const folioPreparer = useSelector(folioPreparationCartSelector)
+        const [countFolio, setCountFolio] = useState('')
+        const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
-                folio: '',
-                dossier: ''
+                document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                folio: {
+                document: {
                         required: true
                 },
-                dossier: {
-                        required: true
-                }
         }, {
-                folio: {
+                document: {
                         required: 'ce champ est obligatoire',
                 },
-                dossier: {
-                        required: 'ce champ est obligatoire',
-                }
         })
 
-        //Fonction pour ajouter le folio details dans redux
-        const onAddToCart = () => {
-                dispatch(addFolioPreparationAction({ NOMBRE: data.folio }))
-                // handleChange("nbre_volume", data.nbre_volume - 1)
-                // handleChange("numero", "")
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = agentPreparation != null ? true : false
+                isValid = multiFolios.length > 0 ? true : false
+                return isValid && isValidate()
         }
-
-        //Fonction pour enlever le folio da le redux
-        const onRemoveProduct = (index) => {
-                Alert.alert("Enlever le details du folio", "Voulez-vous vraiment enlever ce detail du folio ?",
-                        [
-                                {
-                                        text: "Annuler",
-                                        style: "cancel"
-                                },
-                                {
-                                        text: "Oui", onPress: async () => {
-                                                dispatch(removeFolioPreparationAction(index))
-                                        }
-                                }
-                        ])
-        }
-
 
         // Agent preparation select
         const preparationModalizeRef = useRef(null);
@@ -112,34 +92,48 @@ export default function AgentPreparationScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des platequx
+        //Composent pour afficher le modal les agents de preparation
         const PreparationList = () => {
+                const [loadingAgentPrepa, allAgentsPreparation] = useFetch('/folio/dossiers/agentPreparation')
                 return (
                         <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les agents de preparations</Text>
-
+                                {loadingAgentPrepa ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
                                         </View>
-                                        <ScrollView>
-                                                <TouchableNativeFeedback >
-                                                        <View style={styles.modalItem} >
-                                                                <View style={styles.modalImageContainer}>
-                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                </View>
-                                                                <Text style={styles.itemTitle}>dgdg</Text>
-                                                        </View>
-                                                </TouchableNativeFeedback>
-                                        </ScrollView>
-                                </View>
+                                }
                         </>
                 )
         }
 
-         //Composent pour afficher le modal de multi select des folio
-         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
+        //Composent pour afficher le modal de multi select des folio
+        const MultiFolioSelctList = () => {
+                const [loadingFolio, allFolios] = useFetch('/folio/dossiers/getFolio')
 
                 const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
                 const setSelectedFolio = (fol) => {
@@ -149,37 +143,18 @@ export default function AgentPreparationScreen() {
                         } else {
                                 setMultiFolios(u => [...u, fol])
                         }
-
                 }
 
-                //fonction pour recuperer le folio par rapport de volume
-                useEffect(() => {
-                        (async () => {
-                                try {
-
-                                        if (volumes) {
-                                                setFoliosLoading(true)
-                                                const rep = await fetchApi(`/folio/dossiers/allFolio/${volumes.ID_VOLUME}`)
-                                                setAllFolios(rep.result)
-                                        }
-                                }
-                                catch (error) {
-                                        console.log(error)
-                                } finally {
-                                        setFoliosLoading(false)
-                                }
-                        })()
-                }, [volumes])
                 return (
                         <>
-                                {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
                                                 </View>
-                                                {allFolios.map((fol, index) => {
+                                                {allFolios.result.map((fol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
@@ -215,189 +190,157 @@ export default function AgentPreparationScreen() {
 
         const submitData = async () => {
                 try {
+                        setLoading(true)
                         const form = new FormData()
-                        form.append('USER', data.malle)
-                        form.append('USER', data.aille)
-
-                        form.append('VOLUME', JSON.stringify(folioDetails))
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('AGENT_PREPARATION', agentPreparation.ID_USER_AILE)
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("document", {
+                                form.append("PV", {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        console.log(form)
+                        const volume = await fetchApi(`/folio/dossiers/preparation`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
+                } finally {
+                        setLoading(false)
                 }
         }
 
+        //Fonction pour recuperer le volume avec le count de folio existants
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                const response = await fetchApi('/folio/dossiers/nbreFolio')
+                                setCountFolio(response.result)
+                        } catch (error) {
+                                console.log(error)
+                        }
+                })()
+        }, []))
+
 
         return (
-                <View style={styles.container}>
-                        <View style={styles.cardHeader}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.backBtn}>
-                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
-                                        </View>
-                                </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Detail preparation</Text>
-                        </View>
-                        <ScrollView>
-                                <View>
-                                        <View style={styles.selectContainer}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        hdhdh
-                                                                </Text>
-                                                        </View>
+                <>
+                        {loading && <Loading/>}
+                        <View style={styles.container}>
+                                <View style={styles.cardHeader}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.backBtn}>
+                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
-                                        </View>
-                                        <View style={styles.selectContainer}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Nombres de dossiers recus
-                                                        </Text>
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.titlePrincipal}>Detail preparation</Text>
+                                </View>
+                                <ScrollView>
+                                        <View>
+                                                <View style={styles.selectContainer}>
                                                         <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        20
+                                                                <Text style={styles.selectLabel}>
+                                                                        Volume
                                                                 </Text>
-                                                        </View>
-                                                </View>
-                                        </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner un agent de preparation
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        hdhdggk
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity>
-                                        {/* <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Nombre de dossier</Text>
-                                        </View> */}
-                                        {/* <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="Nombre de dossier"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.dossier}
-                                                        onChangeText={(newValue) => handleChange('dossier', newValue)}
-                                                        onBlur={() => checkFieldData('dossier')}
-                                                        error={hasError('dossier') ? getError('dossier') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View> */}
-                                        {/* <View style={{ marginBottom: 8 }}>
-                                                <Text style={styles.label}>Folio</Text>
-                                        </View> */}
-                                        {/* <View style={{ marginVertical: 8 }}>
-                                                <OutlinedTextField
-                                                        label="detail de folio"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.folio}
-                                                        onChangeText={(newValue) => handleChange('folio', newValue)}
-                                                        onBlur={() => checkFieldData('folio')}
-                                                        error={hasError('folio') ? getError('folio') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View> */}
-                                        {/* <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                <View></View>
-                                                <TouchableOpacity
-                                                        onPress={onAddToCart}
-                                                >
-                                                        <View style={styles.buttonPlus}>
-                                                                <Text style={styles.buttonTextPlus}>+</Text>
-                                                        </View>
-                                                </TouchableOpacity>
-                                        </View> */}
-                                        {/* {folioPreparer.map((product, index) => {
-                                                return (
-                                                        <View style={styles.headerRead}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                        <View style={styles.cardFolder}>
-                                                                                <Text style={[styles.title]} numberOfLines={1}>{product.NOMBRE}</Text>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-                                                                        </View>
-                                                                        <View>
-                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                </TouchableOpacity>
-                                                                        </View>
+                                                                <View>
+                                                                        {countFolio ? <Text style={styles.selectedValue}>
+                                                                                {countFolio.NUMERO_VOLUME}
+                                                                        </Text> :
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        aucun
+                                                                                </Text>}
                                                                 </View>
                                                         </View>
-                                                )
-                                        })} */}
-                                        <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
+                                                </View>
+                                                <View style={styles.selectContainer}>
                                                         <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
+                                                                <Text style={styles.selectLabel}>
+                                                                        Nombres de dossiers recus
                                                                 </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
+                                                                <View>
+                                                                        {countFolio ? <Text style={styles.selectedValue}>
+                                                                                {countFolio.nbre}
+                                                                        </Text> :
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        aucun
+                                                                                </Text>}
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner un agent de preparation
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
                                                                         </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
+                                                                </View>
                                                         </View>
                                                 </TouchableOpacity>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner les folios
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity>
+                                                <View>
+                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                                onPress={selectdocument}
+                                                        >
+                                                                <View>
+                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                                Importer le proces verbal
+                                                                        </Text>
+                                                                        {data.document ? <View>
+                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                        {data.document.name}
+                                                                                </Text>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                        </Text>
+                                                                                </View>
+                                                                        </View> : null}
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                </View>
                                         </View>
-                                </View>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                                onPress={submitData}
-                        >
-                                <View style={styles.button}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                        <Portal>
-                                <Modalize ref={preparationModalizeRef}  >
-                                        <PreparationList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={multSelectModalizeRef}  >
-                                        <MultiFolioSelctList />
-                                </Modalize>
-                        </Portal>
-                </View>
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                                <Portal>
+                                        <Modalize ref={preparationModalizeRef}  >
+                                                <PreparationList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={multSelectModalizeRef}  >
+                                                <MultiFolioSelctList />
+                                        </Modalize>
+                                </Portal>
+                        </View>
+                </>
         )
 }
 
@@ -546,4 +489,23 @@ const styles = StyleSheet.create({
                 justifyContent: 'center',
                 alignItems: 'center'
         },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        butConfirmer: {
+                // marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                // paddingHorizontal: 10,
+                backgroundColor: "#18678E",
+                marginHorizontal: 50,
+                marginVertical: 15
+        }
 })

@@ -33,24 +33,17 @@ export default function AgentChefPlateauScreen() {
         const [loading, setLoading] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
-                folio: '',
-                dossier: ''
+                document: '',
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                folio: {
+                document: {
                         required: true
                 },
-                dossier: {
-                        required: true
-                }
         }, {
-                folio: {
+                document: {
                         required: 'ce champ est obligatoire',
                 },
-                dossier: {
-                        required: 'ce champ est obligatoire',
-                }
         })
 
         // Volume select
