@@ -1,13 +1,16 @@
-import React, { useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, StatusBar } from "react-native";
-import { Modalize } from 'react-native-modalize';
-import { Portal } from 'react-native-portalize';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
+import { COLORS } from "../../../styles/COLORS";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import { useCallback } from "react";
+import fetchApi from "../../../helpers/fetchApi";
+import moment from 'moment'
+import { Ionicons, AntDesign, Fontisto } from '@expo/vector-icons';
+import { useForm } from "../../../hooks/useForm";
+import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import { useFormErrorsHandle } from '../../../hooks/useFormErrorsHandle';
-import { useForm } from '../../../hooks/useForm';
-import { COLORS } from '../../../styles/COLORS';
-import { useNavigation } from "@react-navigation/native";
+import Loading from "../../../components/app/Loading";
+
 
 /**
  * Screen pour afficher le details de folio avec leur nature  
@@ -18,29 +21,28 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function AgentSupPhasePreparationRetourDetailsScreen() {
         const navigation = useNavigation()
-        const modelRef = useRef(null)
+        const route = useRoute()
+        const { ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_USER_AILE_AGENT_PREPARATION } = route.params
+        const [allDetails, setAllDetails] = useState([])
+        const [loading, setLoading] = useState(false)
+        const [loadingSubmit, setLoadingSubmit] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
-                document: null
+                document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-
                 document: {
                         required: true
-                }
+                },
+        }, {
+                document: {
+                        required: 'ce champ est obligatoire',
+                },
         })
 
-        const onOpenModal = async () => {
-                modelRef.current.open()
-        }
-
-        const submitDocument = () => {
-                modelRef.current.close()
-        }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
+         //Fonction pour upload un documents 
+         const selectdocument = async () => {
                 setError("document", "")
                 handleChange("document", null)
                 const document = await DocumentPicker.getDocumentAsync({
@@ -58,9 +60,50 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                 }
 
         }
+
+        const submitData = async () => {
+                try {
+                        setLoadingSubmit(true)
+                        const form = new FormData()
+                        if (data.document) {
+                                let localUri = data.document.uri;
+                                let filename = localUri.split('/').pop();
+                                form.append("PV", {
+                                        uri: data.document.uri, name: filename, type: data.document.mimeType
+                                })
+                        }
+                        const res = await fetchApi(`/folio/dossiers/retourPreparation/${ID_USER_AILE_AGENT_PREPARATION}`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoadingSubmit(false)
+                }
+        }
+
+        //Fonction pour recuperer les details de folios 
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoading(true)
+                                const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
+                                setAllDetails(res.result)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
+
         return (
                 <>
-                        <ScrollView style={styles.container}>
+                        {loadingSubmit && <Loading/>}
+                        <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
@@ -69,129 +112,73 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
+                                        <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text>
                                 </View>
-                                <View style={styles.cardDetails}>
-                                        <View style={styles.carddetailItem}>
-                                                <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <View>
-                                                                        <Text style={styles.itemVolume}>Volume</Text>
-                                                                        <Text style={styles.itemVolume}>hhh</Text>
-                                                                        <Text>333</Text>
-                                                                </View>
-                                                                <View>
-                                                                        <Text>En attente...</Text>
-                                                                        {/* <Text>sjsjsj</Text> */}
-                                                                </View>
-
-                                                        </View>
-                                                </View>
-                                        </View>
-                                        <View style={styles.separator}></View>
-                                        <View style={styles.carddetailItem}>
-                                                <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <View>
-                                                                        <Text style={styles.itemVolume}>Nombre de dossier</Text>
-                                                                        <Text>333</Text>
-                                                                        <Text>Vanny</Text>
-                                                                </View>
-                                                                <View>
-                                                                        <Text>Etape</Text>
-                                                                </View>
-
-                                                        </View>
-                                                </View>
-                                        </View>
-                                        <View style={styles.separator}></View>
-                                        <View style={styles.carddetailItem}>
-                                                <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <View>
-                                                                        <Text style={styles.itemVolume}>Folio</Text>
-                                                                        <Text>333</Text>
-                                                                </View>
-                                                                <View>
-                                                                        <Text>Nature</Text>
-                                                                </View>
-                                                        </View>
-                                                </View>
-                                        </View>
-                                        <View style={styles.carddetailItem}>
-                                                <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <View>
-                                                                        <Text style={styles.itemVolume}>Folio</Text>
-                                                                        <Text>333</Text>
-                                                                </View>
-                                                                <View>
-                                                                        <Text>Nature</Text>
-                                                                </View>
-
-                                                        </View>
-                                                </View>
-                                        </View>
-                                        <View style={styles.separator}></View>
-                                        <View style={styles.footer}>
-                                                <View>
-                                                        <Text>Pas encore etape retour</Text>
-                                                </View>
-                                                <TouchableOpacity onPress={onOpenModal}>
-                                                        <View style={styles.nextBtn}>
-                                                                <Text style={styles.nextBtnText}>
-                                                                        Valider
-                                                                </Text>
-                                                        </View>
-                                                </TouchableOpacity>
-                                        </View>
-                                </View>
-                        </ScrollView>
-                        <Portal>
-                                <Modalize ref={modelRef}
-                                        handlePosition="inside"
-                                        adjustToContentHeight
-                                        modalStyle={{ backgroundColor: '#fff', borderTopLeftRadius: 15, borderTopRightRadius: 15 }}
-                                        scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
-                                >
-                                        <View style={{ paddingHorizontal: 10, }}>
-                                                <View style={styles.modalContainer}>
-                                                        <View style={styles.modalHeader}>
-                                                                <Text style={styles.modalTitle}>Archivages</Text>
-                                                        </View>
-                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                                onPress={selectdocument}
-                                                        >
-                                                                <View>
-                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                                Importer le proces verbal
-                                                                        </Text>
-                                                                        {data.document ? <View>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {data.document.name}
-                                                                                </Text>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                        </Text>
+                                <FlatList
+                                        style={styles.contain}
+                                        data={allDetails}
+                                        renderItem={({ item: folio, index }) => {
+                                                return (
+                                                        <>
+                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                </View> :
+                                                                        <View>
+                                                                                <View style={styles.cardDetails}>
+                                                                                        <View style={styles.carddetailItem}>
+                                                                                                <View style={styles.cardImages}>
+                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.cardDescription}>
+                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                <View style={styles.cardNames}>
+                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <Text>{folio.CODE_FOLIO}</Text>
+                                                                                                                </View>
+                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </View>
                                                                                 </View>
-                                                                        </View> : null}
+                                                                        </View>
+                                                                }
+                                                        </>
+                                                )
+                                        }}
+                                        keyExtractor={(folio, index) => index.toString()}
+                                />
+                                <View>
+                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                onPress={selectdocument}
+                                        >
+                                                <View>
+                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                Importer le proces verbal
+                                                        </Text>
+                                                        {data.document ? <View>
+                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                        {data.document.name}
+                                                                </Text>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                        </Text>
                                                                 </View>
-                                                        </TouchableOpacity>
-                                                        <View style={styles.separator} />
-                                                        <TouchableWithoutFeedback
-                                                                onPress={submitDocument}
-                                                        >
-                                                                <View style={styles.button}>
-                                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                                </View>
-                                                        </TouchableWithoutFeedback>
+                                                        </View> : null}
                                                 </View>
-
-
+                                        </TouchableOpacity>
+                                </View>
+                                <TouchableWithoutFeedback
+                                disabled={!isValidate()}
+                                onPress={submitData}
+                                >
+                                        <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </Modalize>
-                        </Portal>
+                                </TouchableWithoutFeedback>
+
+                        </View>
                 </>
 
         )
@@ -201,21 +188,6 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#ddd'
-        },
-        cardHeader: {
-                flexDirection: 'row',
-                alignContent: "center",
-                alignItems: "center",
-                marginHorizontal: 10,
-                marginTop: 10
-        },
-        backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -232,47 +204,58 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center',
         },
+        cardImages: {
+                backgroundColor: '#DCE4F7',
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
         cardDescription: {
+                marginLeft: 10,
                 flex: 1
         },
         itemVolume: {
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        separator: {
-                height: 1,
-                width: "100%",
-                backgroundColor: '#F1F1F1',
+        cardHeader: {
+                flexDirection: 'row',
+                // marginTop: StatusBar.currentHeight,
+                alignContent: "center",
+                alignItems: "center",
+                marginBottom: 15,
+                marginHorizontal: 10,
                 marginVertical: 10
         },
-        footer: {
-                backgroundColor: '#FFF',
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between"
+        backBtn: {
+                backgroundColor: COLORS.ecommercePrimaryColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 50,
+                height: 50,
+                borderRadius: 50,
         },
-        nextBtn: {
-                backgroundColor: '#DCE4F7',
-                borderRadius: 10,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                alignSelf: "flex-end"
-        },
-        nextBtnText: {
-                color: '#000',
+        titlePrincipal: {
+                fontSize: 18,
                 fontWeight: "bold",
+                marginLeft: 10,
+                color: COLORS.primary
         },
-        modalHeader: {
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingVertical: 5
-        },
-        modalTitle: {
-                fontWeight: "bold",
-                textAlign: "center",
+        button: {
                 marginTop: 10,
-                fontSize: 16
+                borderRadius: 8,
+                paddingVertical: 14,
+                paddingHorizontal: 10,
+                backgroundColor: "#18678E",
+                marginHorizontal: 10
+        },
+        buttonText: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 16,
+                textAlign: "center"
         },
         selectContainer: {
                 flexDirection: "row",
@@ -283,25 +266,10 @@ const styles = StyleSheet.create({
                 borderRadius: 5,
                 borderWidth: 0.5,
                 borderColor: "#777",
-                marginVertical: 10
-        },
-        selectedValue: {
-                color: '#777'
-        },
-        selectedValue: {
-                color: '#777'
-        },
-        button: {
                 marginVertical: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 10,
-                backgroundColor: COLORS.primary
+                marginHorizontal:10
         },
-        buttonText: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 16,
-                textAlign: "center"
+        selectedValue: {
+                color: '#777'
         },
 })

@@ -11,7 +11,6 @@ import AgentChefPlateauScreen from '../screens/chefPlateaux/AgentChefPlateauScre
 import AgentPreparationScreen from '../screens/chefPlateaux/AgentPreparationScreen';
 import AgentSuperviseurFinScreen from '../screens/chefPlateaux/AgentSuperviseurFinScreen';
 import VolumeDetailsScreen from '../screens/volume/details/VolumeDetailsScreen';
-import AllFolioVolumeMalleDetailsScreen from '../screens/agentSuperviseurArchivage/details/AllFolioVolumeMalleDetailsScreen';
 import AgentSupPlateauScreen from '../screens/agentSuperviseurAilles/AgentSupPlateauScreen';
 import DescriptionEtapeScreen from '../screens/description/DescriptionEtapeScreen';
 import DescriptionEtapeSupMailleScreen from '../screens/description/DescriptionEtapeSupMailleScreen';
@@ -40,8 +39,6 @@ export default function RootNavigator() {
 
                 <Stack.Screen name='VolumeDetailsScreen' component={VolumeDetailsScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSupPhasePreparationRetourDetailsScreen' component={AgentSupPhasePreparationRetourDetailsScreen} options={{ headerShown: false }}/>
-                
-                <Stack.Screen name='AllFolioVolumeMalleDetailsScreen' component={AllFolioVolumeMalleDetailsScreen} options={{ headerShown: false }}/>
 
                 <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DescriptionEtapeSupMailleScreen' component={DescriptionEtapeSupMailleScreen} options={{ headerShown: false }}/>

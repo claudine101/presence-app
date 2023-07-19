@@ -66,16 +66,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback>
                     </>
                     : null}
-                {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllDossierArchivageScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                    Dossiers Archivees
-                                    </Text>
-                        </View>
-                    </View>
-                </TouchableNativeFeedback> */}
                 {user.ID_PROFIL == 8 ?
                     <>
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioSupAgentScreen')}>
@@ -99,18 +89,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             </View>
                         </TouchableNativeFeedback>
                     </> :null}
-
-                {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllSuperviseurAilleScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Volume ailles
-                                    </Text>
-                        </View>
-                    </View>
-                </TouchableNativeFeedback> */}
-
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('#EFEFEF')}>

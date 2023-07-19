@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AppHeader from "../../components/app/AppHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
+import moment from 'moment'
 
 /**
  * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
@@ -13,18 +14,23 @@ import fetchApi from "../../helpers/fetchApi";
  * @returns 
  */
 
+
 export default function AgentSupPhasePreparationRetourScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
+        const [loading, setLoading] = useState(false)
 
-         //Fonction pour recuperer les details
-         useFocusEffect(useCallback(() => {
+        //Fonction pour recuperer les details
+        useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                               const res = await fetchApi('/folio/dossiers/agentPreparations')
-                               console.log(res)
+                                setLoading(true)
+                                const res = await fetchApi('/folio/dossiers/agentPreparations')
+                                setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
+                        } finally {
+                                setLoading(false)
                         }
                 })()
         }, []))
@@ -33,26 +39,54 @@ export default function AgentSupPhasePreparationRetourScreen() {
                 <>
                         <AppHeader />
                         <View style={styles.container}>
-                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                        onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen")}
-                                >
-                                        <View style={styles.cardDetails}>
-                                                <View style={styles.carddetailItem}>
-                                                        <View style={styles.cardImages}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                        </View>
-                                                        <View style={styles.cardDescription}>
-                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                        <View>
-                                                                                <Text style={styles.itemVolume}>Folio</Text>
-                                                                                <Text>Dossier</Text>
-                                                                        </View>
-                                                                        <Text>Etapes</Text>
-                                                                </View>
-                                                        </View>
-                                                </View>
-                                        </View>
-                                </TouchableNativeFeedback>
+                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        allDetails.length <= 0 ? <View style={styles.emptyContaier}>
+                                                {/* <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} /> */}
+                                                <Text style={styles.emptyTitle}>
+                                                        Aucun Folio trouvé
+                                                </Text>
+                                                <Text style={styles.emptyDesc}>
+                                                        Aucun folio deja envoyes chez un agent de preparation
+                                                </Text>
+                                        </View> :
+
+                                                <FlatList
+                                                        style={styles.contain}
+                                                        data={allDetails}
+                                                        renderItem={({ item: folio, index }) => {
+                                                                return (
+                                                                        <>
+                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                </View> :
+                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen", {ID_USER_AILE_AGENT_PREPARATION: folio.ID_USER_AILE_AGENT_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM:folio.NOM, PRENOM: folio.PRENOM })}
+                                                                                        >
+                                                                                                <View style={styles.cardDetails}>
+                                                                                                        <View style={styles.carddetailItem}>
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardDescription}>
+                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                                <View style={styles.cardNames}>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NOM} {folio.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.nbre_folio}</Text>
+                                                                                                                                </View>
+                                                                                                                                <Text style={{color:"#777"}}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </TouchableNativeFeedback>
+                                                                                }
+                                                                        </>
+                                                                )
+                                                        }}
+                                                        keyExtractor={(folio, index) => index.toString()}
+                                                />}
                         </View>
                 </>
         )
@@ -94,4 +128,7 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
+        cardNames:{
+                maxWidth:"67%"
+        }
 })
