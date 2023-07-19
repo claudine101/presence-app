@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AppHeader from "../../components/app/AppHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
+import { useSelector } from "react-redux";
+import { userSelector } from "../../store/selectors/userSelector";
+import { FloatingAction } from "react-native-floating-action";
 
 /**
  * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
@@ -19,6 +22,18 @@ export default function AgentSupPhasePreparationRetourScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
+        const user = useSelector(userSelector)
+
+        const Action = ({ title, image }) => {
+                return (
+                        <View style={styles.action}>
+                                <Text style={styles.actionLabel}>{title}</Text>
+                                <View style={styles.actionIcon}>
+                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
+                                </View>
+                        </View>
+                )
+        }
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
@@ -35,6 +50,25 @@ export default function AgentSupPhasePreparationRetourScreen() {
                 })()
         }, []))
 
+        const actions = [
+        ];
+        const actionsAgentSuperviseurPhasePreparation = [
+                {
+                        text: "Agent superviseur phase preparation",
+                        icon: require("../../../assets/images/entrant.jpg"),
+                        name: "DescriptionEtapeScreen",
+                        position: 8,
+                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+                },
+                {
+                        text: "Agent traitement",
+                        icon: require("../../../assets/images/entrant.jpg"),
+                        name: "DescriptionEtapeSupMailleScreen",
+                        position: 9,
+                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
+                },
+        ];
+
         return (
                 <>
                         <AppHeader />
@@ -43,7 +77,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allDetails.length <= 0 ? <View style={styles.emptyContaier}>
-                                                {/* <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} /> */}
+                                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun Folio trouvé
                                                 </Text>
@@ -62,7 +96,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen", {ID_USER_AILE_AGENT_PREPARATION: folio.ID_USER_AILE_AGENT_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM:folio.NOM, PRENOM: folio.PRENOM })}
+                                                                                                onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen", { ID_USER_AILE_AGENT_PREPARATION: folio.ID_USER_AILE_AGENT_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO })}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -75,7 +109,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>{folio.NOM} {folio.PRENOM}</Text>
                                                                                                                                         <Text>{folio.nbre_folio}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text style={{color:"#777"}}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -88,6 +122,18 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
+                        <FloatingAction
+                                actions={
+                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
+                                onPressItem={name => {
+                                        if (name == 'DescriptionEtapeScreen') {
+                                                navigation.navigate('DescriptionEtapeScreen')
+                                        } else {
+                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
+                                        }
+                                }}
+                                color={COLORS.primary}
+                        />
                 </>
         )
 }
@@ -128,7 +174,51 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        cardNames:{
-                maxWidth:"67%"
-        }
+        cardNames: {
+                maxWidth: "67%"
+        },
+        actionLabel: {
+                backgroundColor: '#fff',
+                borderRadius: 5,
+                padding: 5,
+                marginRight: 10,
+                fontWeight: 'bold',
+        },
+        action: {
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center'
+        },
+        actionIcon: {
+                width: 45,
+                height: 45,
+                backgroundColor: COLORS.primary,
+                borderRadius: 50,
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center'
+        },
+        emptyContaier: {
+                // flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        emptyTitle: {
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: '#333',
+                marginVertical: 10,
+                fontSize: 15
+        },
+        emptyDesc: {
+                color: '#777',
+                textAlign: 'center',
+                maxWidth: 300,
+                lineHeight: 20
+        },
+        emptyImage: {
+                width: 100,
+                height: 100,
+                resizeMode: 'contain'
+            },
 })

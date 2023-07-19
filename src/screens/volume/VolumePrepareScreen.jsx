@@ -37,27 +37,83 @@ export default function VolumePrepareScreen() {
     }
 
     const actions = [
+    ];
+    const actionsPlanification = [
         {
-            text: "Courrier entrants",
+            text: "Ajouter volume",
             icon: require("../../../assets/images/entrant.jpg"),
-            name: "CourrierScreen",
+            name: "DescriptionEtapeScreen",
             position: 1,
-            render: () => <Action title={"Courrier entrants"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
+            render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
         },
+    ];
+    const actionsAgentArchivages = [
         {
-            text: "Courrier sortants",
-            icon: require("../../../assets/images/sortant.jpg"),
-            name: "CourrierSortantScreen",
+            text: "Agent Archivages",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
             position: 2,
-            render: () => <Action title={"Courrier sortants"} image={require("../../../assets/images/send-mail-small.png")} key={"key2"} />
+            render: () => <Action title={"Ajouter les dossiers"} image={require("../../../assets/images/mail-receive-small.png")} key={"key2"} />
+        },
+    ];
+    const actionsAgentSuperviseur = [
+        {
+            text: "Agent superviseur",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
+            position: 3,
+            render: () => <Action title={"Ajouter les details d'un folio"} image={require("../../../assets/images/mail-receive-small.png")} key={"key3"} />
         },
         {
-            text: "Scanner un QR",
-            icon: require("../../../assets/images/qr-code.png"),
-            name: "CourrierScanScreen",
-            position: 3,
-            render: () => <Action title={"Scanner un QR"} image={require("../../../assets/images/qr-code.png")} key={"key3"} />
-        }
+            text: "Agent superviseur maille",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeSupMailleScreen",
+            position: 4,
+            render: () => <Action title={"Ajout de volume dans une malle"} image={require("../../../assets/images/mail-receive-small.png")} key={"key4"} />
+        },
+    ];
+    const actionsAgentSuperviseurAille = [
+        {
+            text: "Agent superviseur aille",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
+            position: 5,
+            render: () => <Action title={"Nommer agnt superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key5"} />
+        },
+    ];
+    const actionsAgentAille = [
+        {
+            text: "Superviseur aille",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
+            position: 6,
+            render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key6"} />
+        },
+    ];
+    const actionsAgentchefPlateau = [
+        {
+            text: "Agent chef plateau",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
+            position: 7,
+            render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
+        },
+    ];
+    const actionsAgentSuperviseurPhasePreparation = [
+        {
+            text: "Agent superviseur phase preparation",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeScreen",
+            position: 8,
+            render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+        },
+        {
+            text: "Agent traitement",
+            icon: require("../../../assets/images/entrant.jpg"),
+            name: "DescriptionEtapeSupMailleScreen",
+            position: 9,
+            render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
+        },
     ];
     const actionsDiver = [
         {
@@ -71,27 +127,44 @@ export default function VolumePrepareScreen() {
     return (
         <>
 
-            <AppHeaderPrepare/>
-               <View style={styles.emptyContaier}>
-                    <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                        <Text style={styles.emptyTitle}>
-                            Aucun volume preparer trouvé
-                        </Text>
-                        <Text style={styles.emptyDesc}>
-                            Aucun volume prepare termine ou vous n'êtes pas affecte a aucun volume
-                        </Text>
-                </View>
+            <AppHeaderPrepare />
+            <View style={styles.emptyContaier}>
+                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                <Text style={styles.emptyTitle}>
+                    Aucun volume preparer trouvé
+                </Text>
+                <Text style={styles.emptyDesc}>
+                    Aucun volume prepare termine ou vous n'êtes pas affecte a aucun volume
+                </Text>
+            </View>
 
             <FloatingAction
-                actions={user.ID_PROFIL != 3 ? actions : actionsDiver}
+                actions={user.ID_PROFIL ==1 ? actionsPlanification : 
+                    user.ID_PROFIL == 2 ? actionsAgentArchivages : 
+                    user.ID_PROFIL == 3 ? actionsAgentSuperviseur :
+                    user.ID_PROFIL == 29 ? actionsAgentSuperviseurAille :
+                    user.ID_PROFIL == 7 ? actionsAgentAille :
+                    user.ID_PROFIL == 15 ? actionsAgentchefPlateau :
+                    user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions }
                 onPressItem={name => {
-                    if (name == 'CourrierScreen') {
-                        navigation.navigate("CourrierScreen")
-                    } else if (name == 'CourrierSortantScreen') {
-                        navigation.navigate('CourrierSortantScreen')
+                    if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate("DescriptionEtapeScreen")
+                    } else if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate('DescriptionEtapeScreen')
+                    } else if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate('DescriptionEtapeScreen')
+                    } else if (name == 'DescriptionEtapeSupMailleScreen') {
+                        navigation.navigate('DescriptionEtapeSupMailleScreen')
+                    } else if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate('DescriptionEtapeScreen')
+                    } else if(name == 'DescriptionEtapeScreen'){
+                        navigation.navigate('DescriptionEtapeScreen')
+                    }else if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate('DescriptionEtapeScreen')
+                    } else if (name == 'DescriptionEtapeScreen') {
+                        navigation.navigate('DescriptionEtapeScreen')
                     } else {
-                        // scanModalizeRef.current?.open()
-                        navigation.navigate('CourrierScanSourceScreen')
+                        navigation.navigate('DescriptionEtapeSupMailleScreen')
                     }
                 }}
                 color={COLORS.primary}

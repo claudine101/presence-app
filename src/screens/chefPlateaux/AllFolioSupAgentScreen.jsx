@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AppHeader from "../../components/app/AppHeader";
@@ -7,6 +7,9 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
+import { FloatingAction } from "react-native-floating-action";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../store/selectors/userSelector";
 
 /**
  * Screen pour afficher le details de folio avec leurs natures
@@ -19,6 +22,18 @@ export default function AllFolioSupAgentScreen() {
         const navigation = useNavigation()
         const [allFolioAgent, setAllFolioAgent] = useState([])
         const [loading, setLoading] = useState(false)
+        const user = useSelector(userSelector)
+
+        const Action = ({ title, image }) => {
+                return (
+                        <View style={styles.action}>
+                                <Text style={styles.actionLabel}>{title}</Text>
+                                <View style={styles.actionIcon}>
+                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
+                                </View>
+                        </View>
+                )
+        }
 
         //Fonction pour recuperer les folios associer a un agent superviseur phase preparation
         useFocusEffect(useCallback(() => {
@@ -34,6 +49,25 @@ export default function AllFolioSupAgentScreen() {
                         }
                 })()
         }, []))
+
+        const actions = [
+        ];
+        const actionsAgentSuperviseurPhasePreparation = [
+                {
+                        text: "Agent superviseur phase preparation",
+                        icon: require("../../../assets/images/entrant.jpg"),
+                        name: "DescriptionEtapeScreen",
+                        position: 8,
+                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+                },
+                {
+                        text: "Agent traitement",
+                        icon: require("../../../assets/images/entrant.jpg"),
+                        name: "DescriptionEtapeSupMailleScreen",
+                        position: 9,
+                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
+                },
+        ];
 
         return (
                 <>
@@ -86,6 +120,18 @@ export default function AllFolioSupAgentScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
+                        <FloatingAction
+                                actions={
+                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
+                                onPressItem={name => {
+                                        if (name == 'DescriptionEtapeScreen') {
+                                                navigation.navigate('DescriptionEtapeScreen')
+                                        } else {
+                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
+                                        }
+                                }}
+                                color={COLORS.primary}
+                        />
                 </>
         )
 }
@@ -125,5 +171,26 @@ const styles = StyleSheet.create({
         itemVolume: {
                 fontSize: 15,
                 fontWeight: "bold",
+        },
+        actionIcon: {
+                width: 45,
+                height: 45,
+                backgroundColor: COLORS.primary,
+                borderRadius: 50,
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center'
+        },
+        actionLabel: {
+                backgroundColor: '#fff',
+                borderRadius: 5,
+                padding: 5,
+                marginRight: 10,
+                fontWeight: 'bold',
+        },
+        action: {
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center'
         },
 })

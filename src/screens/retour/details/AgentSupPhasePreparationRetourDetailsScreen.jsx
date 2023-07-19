@@ -22,7 +22,8 @@ import Loading from "../../../components/app/Loading";
 export default function AgentSupPhasePreparationRetourDetailsScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_USER_AILE_AGENT_PREPARATION } = route.params
+        const { ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_USER_AILE_AGENT_PREPARATION, ID_ETAPE_FOLIO } = route.params
+        console.log(ID_ETAPE_FOLIO)
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -41,8 +42,8 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                 },
         })
 
-         //Fonction pour upload un documents 
-         const selectdocument = async () => {
+        //Fonction pour upload un documents 
+        const selectdocument = async () => {
                 setError("document", "")
                 handleChange("document", null)
                 const document = await DocumentPicker.getDocumentAsync({
@@ -102,7 +103,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
 
         return (
                 <>
-                        {loadingSubmit && <Loading/>}
+                        {loadingSubmit && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -147,36 +148,38 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                <View>
-                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                onPress={selectdocument}
-                                        >
-                                                <View>
-                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                Importer le proces verbal
-                                                        </Text>
-                                                        {data.document ? <View>
-                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                        {data.document.name}
+                                {ID_ETAPE_FOLIO == 2 ? <>
+                                        <View>
+                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
+                                                        onPress={selectdocument}
+                                                >
+                                                        <View>
+                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
+                                                                        Importer le proces verbal
                                                                 </Text>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                {data.document ? <View>
                                                                         <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                {data.document.name}
                                                                         </Text>
-                                                                </View>
-                                                        </View> : null}
-                                                </View>
-                                        </TouchableOpacity>
-                                </View>
-                                <TouchableWithoutFeedback
-                                disabled={!isValidate()}
-                                onPress={submitData}
-                                >
-                                        <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
+                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
+                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                                </Text>
+                                                                        </View>
+                                                                </View> : null}
+                                                        </View>
+                                                </TouchableOpacity>
                                         </View>
-                                </TouchableWithoutFeedback>
+                                        <TouchableWithoutFeedback
+                                                disabled={!isValidate()}
+                                                onPress={submitData}
+                                        >
+                                                <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
+                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback>
+                                </>:null}
 
                         </View>
                 </>
@@ -267,7 +270,7 @@ const styles = StyleSheet.create({
                 borderWidth: 0.5,
                 borderColor: "#777",
                 marginVertical: 10,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue: {
                 color: '#777'
