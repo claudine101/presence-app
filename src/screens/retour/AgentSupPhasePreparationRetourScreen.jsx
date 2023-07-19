@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AppHeader from "../../components/app/AppHeader";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import fetchApi from "../../helpers/fetchApi";
 
 /**
- * Screen pour afficher le details de folio avec leurs natures
+ * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 
@@ -14,6 +15,20 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function AgentSupPhasePreparationRetourScreen() {
         const navigation = useNavigation()
+        const [allDetails, setAllDetails] = useState([])
+
+         //Fonction pour recuperer les details
+         useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                               const res = await fetchApi('/folio/dossiers/agentPreparations')
+                               console.log(res)
+                        } catch (error) {
+                                console.log(error)
+                        }
+                })()
+        }, []))
+
         return (
                 <>
                         <AppHeader />
