@@ -11,12 +11,11 @@ import AgentChefPlateauScreen from '../screens/chefPlateaux/AgentChefPlateauScre
 import AgentPreparationScreen from '../screens/chefPlateaux/AgentPreparationScreen';
 import AgentSuperviseurFinScreen from '../screens/chefPlateaux/AgentSuperviseurFinScreen';
 import VolumeDetailsScreen from '../screens/volume/details/VolumeDetailsScreen';
-import DossierArchivageDetailsScreen from '../screens/agentArchivages/details/DossierArchivageDetailsScreen';
-import FolioNatureSupDetailsScreen from '../screens/agentSuperviseurArchivage/details/FolioNatureSupDetailsScreen';
 import AllFolioVolumeMalleDetailsScreen from '../screens/agentSuperviseurArchivage/details/AllFolioVolumeMalleDetailsScreen';
 import AgentSupPlateauScreen from '../screens/agentSuperviseurAilles/AgentSupPlateauScreen';
 import DescriptionEtapeScreen from '../screens/description/DescriptionEtapeScreen';
 import DescriptionEtapeSupMailleScreen from '../screens/description/DescriptionEtapeSupMailleScreen';
+import AgentSupPhasePreparationRetourDetailsScreen from '../screens/retour/details/AgentSupPhasePreparationRetourDetailsScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -40,12 +39,13 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentSupPlateauScreen' component={AgentSupPlateauScreen} options={{ headerShown: false }}/>
 
                 <Stack.Screen name='VolumeDetailsScreen' component={VolumeDetailsScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='DossierArchivageDetailsScreen' component={DossierArchivageDetailsScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='FolioNatureSupDetailsScreen' component={FolioNatureSupDetailsScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='AgentSupPhasePreparationRetourDetailsScreen' component={AgentSupPhasePreparationRetourDetailsScreen} options={{ headerShown: false }}/>
+                
                 <Stack.Screen name='AllFolioVolumeMalleDetailsScreen' component={AllFolioVolumeMalleDetailsScreen} options={{ headerShown: false }}/>
 
                 <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DescriptionEtapeSupMailleScreen' component={DescriptionEtapeSupMailleScreen} options={{ headerShown: false }}/>
+                
             </Stack.Navigator>
 
         </NavigationContainer>

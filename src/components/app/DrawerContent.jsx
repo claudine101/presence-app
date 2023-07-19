@@ -30,8 +30,8 @@ export default function DrawerContent({ state, navigation, descriptors }) {
             <TouchableNativeFeedback>
                 <View style={styles.connectedUser}>
                     <View style={styles.imageContainer}>
-                    {user.PHOTO_USER ? <Image source={{ uri: user.PHOTO_USER }} style={styles.image} />:
-                   <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
+                        {user.PHOTO_USER ? <Image source={{ uri: user.PHOTO_USER }} style={styles.image} /> :
+                            <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                     </View>
                     <View style={styles.userNames}>
                         <Text style={styles.fullName} numberOfLines={1}>{user.NOM} {user.PRENOM}</Text>
@@ -44,28 +44,28 @@ export default function DrawerContent({ state, navigation, descriptors }) {
             <DrawerContentScrollView style={styles.drawerScroller}>
                 {(user.ID_PROFIL == 1 || user.ID_PROFIL == 2 || user.ID_PROFIL == 3 || user.ID_PROFIL == 29 || user.ID_PROFIL == 7 || user.ID_PROFIL == 15) ?
                     <>
-                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeScreen')}>
-                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
-                            <View style={styles.drawerItem}>
-                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                    Volume planifie
-                                </Text>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/mail-receive.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                        Volume planifie
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumePrepareScreen')}>
-                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
-                            <View style={styles.drawerItem}>
-                                <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
-                                <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumePrepareScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
                                         Volume prépares
-                                        </Text>
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableNativeFeedback>
-                </>
-                 : null}
+                        </TouchableNativeFeedback>
+                    </>
+                    : null}
                 {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllDossierArchivageScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>
@@ -76,27 +76,31 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </TouchableNativeFeedback> */}
-                {user.ID_PROFIL == 8 ?  <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioNatureSupScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Folio et nature
+                {user.ID_PROFIL == 8 ?
+                    <>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioSupAgentScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
+                                        Mes folios
                                     </Text>
-                        </View>
-                    </View>
-                </TouchableNativeFeedback> : null}
-                {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioVolumeMalleScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Volume et Malles
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSupPhasePreparationRetourScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }, { marginBottom: 3 }]}>
+                                        Folio retour
                                     </Text>
-                        </View>
-                    </View>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllSuperviseurAilleScreen')}>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                    </> :null}
+
+                {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllSuperviseurAilleScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>
                             <Image source={require('../../../assets/images/send-mail.png')} style={styles.imageIcon} />
@@ -106,7 +110,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </TouchableNativeFeedback> */}
-               
+
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('#EFEFEF')}>

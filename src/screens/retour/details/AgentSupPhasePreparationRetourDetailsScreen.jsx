@@ -10,15 +10,15 @@ import { COLORS } from '../../../styles/COLORS';
 import { useNavigation } from "@react-navigation/native";
 
 /**
- * Screen pour afficher le details des dossier deja archives dans un volume
+ * Screen pour afficher le details de folio avec leur nature  
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 15/7/2023
+ * @date 17/7/2023
  * @returns 
  */
 
-export default function DossierArchivageDetailsScreen() {
-        const modelRef = useRef(null)
+export default function AgentSupPhasePreparationRetourDetailsScreen() {
         const navigation = useNavigation()
+        const modelRef = useRef(null)
 
         const [data, handleChange, setValue] = useForm({
                 document: null
@@ -58,7 +58,6 @@ export default function DossierArchivageDetailsScreen() {
                 }
 
         }
-
         return (
                 <>
                         <ScrollView style={styles.container}>
@@ -77,7 +76,7 @@ export default function DossierArchivageDetailsScreen() {
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
                                                                         <Text style={styles.itemVolume}>Volume</Text>
-                                                                        <Text style={styles.itemVolume}> hhh</Text>
+                                                                        <Text style={styles.itemVolume}>hhh</Text>
                                                                         <Text>333</Text>
                                                                 </View>
                                                                 <View>
@@ -93,12 +92,40 @@ export default function DossierArchivageDetailsScreen() {
                                                 <View style={styles.cardDescription}>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
-                                                                        <Text style={styles.itemVolume}> Nombre de dossier</Text>
+                                                                        <Text style={styles.itemVolume}>Nombre de dossier</Text>
                                                                         <Text>333</Text>
                                                                         <Text>Vanny</Text>
                                                                 </View>
                                                                 <View>
                                                                         <Text>Etape</Text>
+                                                                </View>
+
+                                                        </View>
+                                                </View>
+                                        </View>
+                                        <View style={styles.separator}></View>
+                                        <View style={styles.carddetailItem}>
+                                                <View style={styles.cardDescription}>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                        <Text style={styles.itemVolume}>Folio</Text>
+                                                                        <Text>333</Text>
+                                                                </View>
+                                                                <View>
+                                                                        <Text>Nature</Text>
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                        </View>
+                                        <View style={styles.carddetailItem}>
+                                                <View style={styles.cardDescription}>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                        <Text style={styles.itemVolume}>Folio</Text>
+                                                                        <Text>333</Text>
+                                                                </View>
+                                                                <View>
+                                                                        <Text>Nature</Text>
                                                                 </View>
 
                                                         </View>
@@ -166,6 +193,7 @@ export default function DossierArchivageDetailsScreen() {
                                 </Modalize>
                         </Portal>
                 </>
+
         )
 }
 
@@ -173,6 +201,21 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#ddd'
+        },
+        cardHeader: {
+                flexDirection: 'row',
+                alignContent: "center",
+                alignItems: "center",
+                marginHorizontal: 10,
+                marginTop: 10
+        },
+        backBtn: {
+                backgroundColor: COLORS.ecommercePrimaryColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 50,
+                height: 50,
+                borderRadius: 50,
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -245,6 +288,9 @@ const styles = StyleSheet.create({
         selectedValue: {
                 color: '#777'
         },
+        selectedValue: {
+                color: '#777'
+        },
         button: {
                 marginVertical: 10,
                 borderRadius: 8,
@@ -257,22 +303,5 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
-        },
-        cardHeader: {
-                flexDirection: 'row',
-                // marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginHorizontal:10,
-                marginTop:10
-                
-        },
-        backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
         },
 })

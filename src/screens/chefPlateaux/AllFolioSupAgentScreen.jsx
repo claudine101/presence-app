@@ -2,24 +2,24 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
 import AppHeader from "../../components/app/AppHeader";
+import { useNavigation } from "@react-navigation/native";
 
 /**
- * Screen pour afficher les dossiers deja archivees par un agent d'archives
+ * Screen pour afficher le details de folio avec leurs natures
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 15/7/2023
+ * @date 17/7/2023
  * @returns 
  */
 
-export default function AllDossierArchivageScreen() {
+export default function AllFolioSupAgentScreen() {
         const navigation = useNavigation()
         return (
                 <>
                         <AppHeader />
                         <View style={styles.container}>
                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                        onPress={() => navigation.navigate("DossierArchivageDetailsScreen")}
+                                        onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen")}
                                 >
                                         <View style={styles.cardDetails}>
                                                 <View style={styles.carddetailItem}>
@@ -29,7 +29,7 @@ export default function AllDossierArchivageScreen() {
                                                         <View style={styles.cardDescription}>
                                                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                         <View>
-                                                                                <Text style={styles.itemVolume}>Volume</Text>
+                                                                                <Text style={styles.itemVolume}>Folio tous</Text>
                                                                                 <Text>Dossier</Text>
                                                                         </View>
                                                                         <Text>Etapes</Text>
