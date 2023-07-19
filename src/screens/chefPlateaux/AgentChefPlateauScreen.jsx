@@ -319,7 +319,7 @@ export default function AgentChefPlateauScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Detailler dans l'aille</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer une agent superviseur</Text>
                                 </View>
                                 <ScrollView>
                                         <View>

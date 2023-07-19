@@ -225,7 +225,7 @@ export default function AgentSupPlateauScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Affecter un chef plateaux</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer le chef plateau</Text>
                                 </View>
                                 <ScrollView>
                                         <View>

@@ -212,7 +212,7 @@ export default function AgentArchivageScreen() {
                                                 <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                         </View>
                                 </TouchableNativeFeedback>
-                                <Text style={styles.titlePrincipal}>Planifier un agent</Text>
+                                <Text style={styles.titlePrincipal}>Nommer un agent archive</Text>
                         </View>
                         <ScrollView>
                                 <View>

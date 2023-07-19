@@ -334,7 +334,7 @@ export default function AgentSuperviseurFinScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Detailler la fin de traitement</Text>
+                                        <Text style={styles.titlePrincipal}>Ajout de details</Text>
                                 </View>
                                 <ScrollView>
                                         <View>

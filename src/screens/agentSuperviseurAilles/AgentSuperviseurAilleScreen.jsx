@@ -226,7 +226,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Detailler dans l'aille</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent supeviseur aille</Text>
                                 </View>
                                 <ScrollView>
                                         <View>

@@ -239,7 +239,7 @@ export default function AgentPreparationScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Detail preparation</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent preparation</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
