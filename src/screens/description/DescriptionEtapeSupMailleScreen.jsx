@@ -49,7 +49,7 @@ export default function DescriptionEtapeSupMailleScreen() {
                                         onPress={onHandleClick}
                                 >
                                         <View style={[styles.button]}>
-                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                                <Text style={styles.buttonText}>Contunuer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>

@@ -19,11 +19,13 @@ import Loading from "../../../components/app/Loading";
  * @returns 
  */
 
-export default function AgentSupPhasePreparationRetourDetailsScreen() {
+export default function AgentChefPlateauRetourDetailsScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_USER_AILE_AGENT_PREPARATION, ID_ETAPE_FOLIO } = route.params
+        const { ID_FOLIO_AILE_PREPARATION } = route.params
+        console.log(ID_FOLIO_AILE_PREPARATION)
         const [allDetails, setAllDetails] = useState([])
+        console.log(allDetails)
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
 
@@ -72,7 +74,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        const res = await fetchApi(`/folio/dossiers/retourPreparation/${ID_USER_AILE_AGENT_PREPARATION}`, {
+                        const res = await fetchApi(`/folio/dossiers/retourPreparation/${ID_FOLIO_AILE_PREPARATION}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -90,7 +92,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
+                                const res = await fetchApi(`/folio/dossiers/folioSuperviseur/${ID_FOLIO_AILE_PREPARATION}`)
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -98,7 +100,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                 setLoading(false)
                         }
                 })()
-        }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
+        }, [ID_FOLIO_AILE_PREPARATION]))
 
         return (
                 <>
@@ -112,7 +114,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text>
+                                        {/* <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text> */}
                                 </View>
                                 <FlatList
                                         style={styles.contain}
@@ -147,7 +149,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                {ID_ETAPE_FOLIO == 2 ? <>
+                                <>
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -178,7 +180,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
                                         </TouchableWithoutFeedback>
-                                </>:null}
+                                </>
 
                         </View>
                 </>

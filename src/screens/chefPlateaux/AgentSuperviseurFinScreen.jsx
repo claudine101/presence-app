@@ -172,10 +172,8 @@ export default function AgentSuperviseurFinScreen() {
 
         //Composent pour afficher le modal de listes de folio
         const FolioList = ({ agentPreparation }) => {
-                console.log(agentPreparation)
                 const [allFolios, setAllFolios] = useState([])
                 const [loadingFolio, setLoadingFolio] = useState(false)
-
                 useEffect(() => {
                         (async () => {
                                 try {
@@ -309,7 +307,6 @@ export default function AgentSuperviseurFinScreen() {
                                 })
 
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/folio/dossiers/addDetails`, {
                                 method: "PUT",
                                 body: form

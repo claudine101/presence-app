@@ -78,7 +78,7 @@ export default function DescriptionEtapeScreen() {
                                         onPress={onHandleClick}
                                 >
                                         <View style={[styles.button]}>
-                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                                <Text style={styles.buttonText}>Continuer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
