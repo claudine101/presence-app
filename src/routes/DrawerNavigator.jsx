@@ -8,6 +8,7 @@ import AllFolioSupAgentScreen from "../screens/chefPlateaux/AllFolioSupAgentScre
 import { useSelector } from "react-redux";
 import { userSelector } from "../store/selectors/userSelector";
 import AgentChefPlateauRetourScreen from "../screens/retour/AgentChefPlateauRetourScreen";
+import AgentSuperiveurAilleRetourScreen from "../screens/retour/AgentSuperiveurAilleRetourScreen";
 
 export default function DrawerNavigator() {
         const drawr = true
@@ -15,7 +16,7 @@ export default function DrawerNavigator() {
         const Drawer = createDrawerNavigator()
         return (
                 <Drawer.Navigator screenOptions={{ headerShown: false, lazy: true, unmountOnBlur: true }} useLegacyImplementation={true} drawerContent={props => <DrawerContent {...props} />}>
-                        {(user.ID_PROFIL == 1 || user.ID_PROFIL == 2 || user.ID_PROFIL == 3 || user.ID_PROFIL == 29 || user.ID_PROFIL == 7) ?
+                        {(user.ID_PROFIL == 1 || user.ID_PROFIL == 2 || user.ID_PROFIL == 3 || user.ID_PROFIL == 29) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name='VolumePrepareScreen' component={VolumePrepareScreen} />
@@ -25,6 +26,12 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AgentChefPlateauRetourScreen" component={AgentChefPlateauRetourScreen} />
+                                </>
+                                : null}
+                         {user.ID_PROFIL == 7 ?
+                                <>
+                                        <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AgentSuperiveurAilleRetourScreen" component={AgentSuperiveurAilleRetourScreen} />
                                 </>
                                 : null}
                         <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} />

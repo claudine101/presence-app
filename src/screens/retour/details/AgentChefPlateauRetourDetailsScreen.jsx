@@ -10,6 +10,7 @@ import { useForm } from "../../../hooks/useForm";
 import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
 import Loading from "../../../components/app/Loading";
+import { OutlinedTextField } from 'rn-material-ui-textfield'
 
 
 /**
@@ -22,15 +23,15 @@ import Loading from "../../../components/app/Loading";
 export default function AgentChefPlateauRetourDetailsScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { ID_FOLIO_AILE_PREPARATION } = route.params
-        console.log(ID_FOLIO_AILE_PREPARATION)
+        const { ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_ETAPE_FOLIO, nbre_folio } = route.params
         const [allDetails, setAllDetails] = useState([])
-        console.log(allDetails)
+        const [countNombre, setCountNombre] = useState('')
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 document: null,
+                motif: '',
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -42,6 +43,12 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                         required: 'ce champ est obligatoire',
                 },
         })
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = data.motif !='' ? true : false
+                return isValid && isValidate()
+            }
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -67,6 +74,9 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
+                        if(data.motif){
+                                form.append('MOTIF', data.motif)
+                        }
                         if (data.document) {
                                 let localUri = data.document.uri;
                                 let filename = localUri.split('/').pop();
@@ -102,6 +112,21 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                 })()
         }, [ID_FOLIO_AILE_PREPARATION]))
 
+        //Fonction pour recuperer le nombre de folio qui n'ont pas details
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoading(true)
+                                const res = await fetchApi(`/folio/dossiers/folioNonPrepare/${ID_FOLIO_AILE_PREPARATION}`)
+                                setCountNombre(res.result)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [ID_FOLIO_AILE_PREPARATION]))
+
         return (
                 <>
                         {loadingSubmit && <Loading />}
@@ -114,7 +139,7 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        {/* <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text> */}
+                                        <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text>
                                 </View>
                                 <FlatList
                                         style={styles.contain}
@@ -149,7 +174,26 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                <>
+                                {ID_ETAPE_FOLIO <= 4 ? <>
+                                       {countNombre ?  <View style={{ marginTop: 8, marginHorizontal: 10 }}>
+                                                <OutlinedTextField
+                                                        label="Motif"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.motif}
+                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                        onBlur={() => checkFieldData('motif')}
+                                                        error={hasError('motif') ? getError('motif') : ''}
+                                                        autoCompleteType='off'
+                                                        blurOnSubmit={false}
+                                                        multiline={true}
+                                                />
+                                        </View> :null}
                                         <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
@@ -173,14 +217,14 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                 </TouchableOpacity>
                                         </View>
                                         <TouchableWithoutFeedback
-                                                disabled={!isValidate()}
+                                                disabled={!isValidAdd()}
                                                 onPress={submitData}
                                         >
-                                                <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
+                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
                                         </TouchableWithoutFeedback>
-                                </>
+                                </> : null}
 
                         </View>
                 </>
@@ -270,7 +314,7 @@ const styles = StyleSheet.create({
                 borderRadius: 5,
                 borderWidth: 0.5,
                 borderColor: "#777",
-                marginVertical: 10,
+                marginVertical: 3,
                 marginHorizontal: 10
         },
         selectedValue: {

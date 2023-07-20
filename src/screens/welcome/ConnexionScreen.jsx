@@ -87,7 +87,7 @@ export default function ConnexionScreen() {
       {loading && <Loading />}
       <ScrollView>
           <View style={styles.container}>
-            <Image source={require('../../../assets/splash.png')} style={{...styles.image, resizeMode:"center", height: (30*height-StatusBar.currentHeight)/100}}/>
+            <Image source={require('../../../assets/images/iconLogoLogin.png')} style={{...styles.image, resizeMode:"center", height: (42*height-StatusBar.currentHeight)/100}}/>
           
             <View style={styles.cardTitle}>
               <Text style={styles.title}>Connexion</Text>

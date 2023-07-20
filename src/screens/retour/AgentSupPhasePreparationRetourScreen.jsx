@@ -55,17 +55,17 @@ export default function AgentSupPhasePreparationRetourScreen() {
         const actionsAgentSuperviseurPhasePreparation = [
                 {
                         text: "Agent superviseur phase preparation",
-                        icon: require("../../../assets/images/entrant.jpg"),
+                        icon: require("../../../assets/images/dossier.png"),
                         name: "DescriptionEtapeScreen",
                         position: 8,
-                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
                 },
                 {
                         text: "Agent traitement",
-                        icon: require("../../../assets/images/entrant.jpg"),
+                        icon: require("../../../assets/images/dossier.png"),
                         name: "DescriptionEtapeSupMailleScreen",
                         position: 9,
-                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
+                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
                 },
         ];
 

@@ -55,78 +55,78 @@ export default function AllVolumeScreen() {
     const actionsPlanification = [
         {
             text: "Ajouter volume",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 1,
-            render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/mail-receive-small.png")} key={"key1"} />
+            render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/dossier.png")} key={"key1"} />
         },
     ];
     const actionsAgentArchivages = [
         {
             text: "Agent Archivages",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 2,
-            render: () => <Action title={"Ajouter les dossiers"} image={require("../../../assets/images/mail-receive-small.png")} key={"key2"} />
+            render: () => <Action title={"Ajouter les dossiers"} image={require("../../../assets/images/dossier.png")} key={"key2"} />
         },
     ];
     const actionsAgentSuperviseur = [
         {
             text: "Agent superviseur",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 3,
-            render: () => <Action title={"Ajouter les details d'un folio"} image={require("../../../assets/images/mail-receive-small.png")} key={"key3"} />
+            render: () => <Action title={"Ajouter les details d'un folio"} image={require("../../../assets/images/dossier.png")} key={"key3"} />
         },
         {
             text: "Agent superviseur maille",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeSupMailleScreen",
             position: 4,
-            render: () => <Action title={"Ajout de volume dans une malle"} image={require("../../../assets/images/mail-receive-small.png")} key={"key4"} />
+            render: () => <Action title={"Ajout de volume dans une malle"} image={require("../../../assets/images/dossier.png")} key={"key4"} />
         },
     ];
     const actionsAgentSuperviseurAille = [
         {
             text: "Agent superviseur aille",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 5,
-            render: () => <Action title={"Nommer agnt superviseur aille"} image={require("../../../assets/images/mail-receive-small.png")} key={"key5"} />
+            render: () => <Action title={"Nommer agnt superviseur aille"} image={require("../../../assets/images/dossier.png")} key={"key5"} />
         },
     ];
     const actionsAgentAille = [
         {
             text: "Superviseur aille",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 6,
-            render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/mail-receive-small.png")} key={"key6"} />
+            render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/dossier.png")} key={"key6"} />
         },
     ];
     const actionsAgentchefPlateau = [
         {
             text: "Agent chef plateau",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 7,
-            render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key7"} />
+            render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/dossier.png")} key={"key7"} />
         },
     ];
     const actionsAgentSuperviseurPhasePreparation = [
         {
             text: "Agent superviseur phase preparation",
-            icon: require("../../../assets/images/entrant.jpg"),
+            icon: require("../../../assets/images/dossier.png"),
             name: "DescriptionEtapeScreen",
             position: 8,
-            render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
+            render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
         },
         {
             text: "Agent traitement",
             icon: require("../../../assets/images/entrant.jpg"),
             name: "DescriptionEtapeSupMailleScreen",
             position: 9,
-            render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
+            render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
         },
     ];
 

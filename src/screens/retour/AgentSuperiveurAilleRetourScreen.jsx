@@ -11,17 +11,16 @@ import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
 
 /**
- * Screen pour afficher le folio donnees a un agent de superviseur de phase preparation
+ * Screen pour afficher les volumes retourner parn un  chef plateau
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 
  */
 
 
-export default function AgentChefPlateauRetourScreen() {
+export default function AgentSuperiveurAilleRetourScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
-        console.log(allDetails)
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
 
@@ -37,19 +36,19 @@ export default function AgentChefPlateauRetourScreen() {
         }
 
         //Fonction pour recuperer les details
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const res = await fetchApi('/folio/dossiers/superviseurPreparations')
-                                setAllDetails(res.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, []))
+        // useFocusEffect(useCallback(() => {
+        //         (async () => {
+        //                 try {
+        //                         setLoading(true)
+        //                         const res = await fetchApi('/folio/dossiers/superviseurPreparations')
+        //                         setAllDetails(res.result)
+        //                 } catch (error) {
+        //                         console.log(error)
+        //                 } finally {
+        //                         setLoading(false)
+        //                 }
+        //         })()
+        // }, []))
 
         const actions = [
         ];
@@ -65,8 +64,11 @@ export default function AgentChefPlateauRetourScreen() {
 
         return (
                 <>
-                        <AppHeader />
-                        <View style={styles.container}>
+                        <AppHeader/>
+                        <View>
+                                <Text>fjhdjfhdjhf</Text>
+                        </View>
+                        {/* <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
@@ -90,7 +92,7 @@ export default function AgentChefPlateauRetourScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentChefPlateauRetourDetailsScreen", {ID_FOLIO_AILE_PREPARATION:folio.ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO, nbre_folio: folio.nbre_folio})}
+                                                                                                onPress={() => navigation.navigate("AgentChefPlateauRetourDetailsScreen", {ID_FOLIO_AILE_PREPARATION:folio.ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -115,7 +117,7 @@ export default function AgentChefPlateauRetourScreen() {
                                                         }}
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
-                        </View>
+                        </View> */}
                         <FloatingAction
                                 actions={
                                         user.ID_PROFIL == 15 ? actionsAgentchefPlateau : actions}
