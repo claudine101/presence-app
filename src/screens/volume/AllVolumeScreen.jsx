@@ -157,7 +157,7 @@ export default function AllVolumeScreen() {
                                             <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} 
-                                            onPress={()=>navigation.navigate("VolumeDetailsScreen")}
+                                            onPress={()=>navigation.navigate("VolumeDetailsScreen", {volume:volume})}
                                         >
                                             <View style={styles.cardDetails}>
                                                 <View style={styles.carddetailItem}>

@@ -84,7 +84,7 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                         uri: data.document.uri, name: filename, type: data.document.mimeType
                                 })
                         }
-                        const res = await fetchApi(`/folio/dossiers/retourPreparation/${ID_FOLIO_AILE_PREPARATION}`, {
+                        const res = await fetchApi(`/folio/dossiers/retourSuperviseurPreparation/${ID_FOLIO_AILE_PREPARATION}`, {
                                 method: "PUT",
                                 body: form
                         })

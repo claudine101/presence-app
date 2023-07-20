@@ -7,7 +7,8 @@ import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { useFormErrorsHandle } from '../../../hooks/useFormErrorsHandle';
 import { useForm } from '../../../hooks/useForm';
 import { COLORS } from '../../../styles/COLORS';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import moment from 'moment'
 
 /**
  * Screen pour afficher le details de volume de chef de division
@@ -19,6 +20,8 @@ import { useNavigation } from "@react-navigation/native";
 export default function VolumeDetailsScreen() {
         const modelRef = useRef(null)
         const navigation = useNavigation()
+        const route = useRoute()
+        const {volume} = route.params
         const [data, handleChange, setValue] = useForm({
                 document: null
         })
@@ -74,12 +77,12 @@ export default function VolumeDetailsScreen() {
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
                                                                         <Text style={styles.itemVolume}>Volume</Text>
-                                                                        <Text style={styles.itemVolume}> hhh</Text>
-                                                                        <Text>333</Text>
+                                                                        <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME}</Text>
+                                                                        <Text>{volume.CODE_VOLUME}</Text>
                                                                 </View>
                                                                 <View>
-                                                                        <Text>En attente...</Text>
-                                                                        <Text>sjsjsj</Text>
+                                                                        <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                        {/* <Text>sjsjsj</Text> */}
                                                                 </View>
 
                                                         </View>
@@ -91,18 +94,17 @@ export default function VolumeDetailsScreen() {
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
                                                                         <Text style={styles.itemVolume}> Nombre de dossier</Text>
-                                                                        <Text>333</Text>
-                                                                        <Text>Vanny</Text>
+                                                                        <Text>{volume.NOMBRE_DOSSIER}</Text>
+                                                                        {/* <Text>Vanny</Text> */}
                                                                 </View>
-                                                                <View>
+                                                                {/* <View>
                                                                         <Text>Etape</Text>
-                                                                </View>
-
+                                                                </View> */}
                                                         </View>
                                                 </View>
                                         </View>
                                         <View style={styles.separator}></View>
-                                        <View style={styles.footer}>
+                                        {/* <View style={styles.footer}>
                                                 <View>
                                                         <Text>Pas encore etape retour</Text>
                                                 </View>
@@ -113,7 +115,7 @@ export default function VolumeDetailsScreen() {
                                                                 </Text>
                                                         </View>
                                                 </TouchableOpacity>
-                                        </View>
+                                        </View> */}
                                 </View>
                         </ScrollView>
                         <Portal>
