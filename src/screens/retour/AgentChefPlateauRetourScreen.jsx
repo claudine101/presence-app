@@ -9,6 +9,7 @@ import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
+import AppHeaderChefPlateauRetour from "../../components/app/AppHeaderChefPlateauRetour";
 
 /**
  * Screen pour afficher le folio donnees a un agent de superviseur de phase preparation
@@ -65,7 +66,7 @@ export default function AgentChefPlateauRetourScreen() {
 
         return (
                 <>
-                        <AppHeader />
+                        <AppHeaderChefPlateauRetour />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />

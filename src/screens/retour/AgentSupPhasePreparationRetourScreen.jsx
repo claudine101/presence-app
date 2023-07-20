@@ -9,6 +9,7 @@ import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
+import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
  * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
@@ -71,7 +72,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
 
         return (
                 <>
-                        <AppHeader />
+                        <AppHeaderPhPreparationRetour />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />

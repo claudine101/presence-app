@@ -6,7 +6,16 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { COLORS } from "../../styles/COLORS";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
-export default function AppHeaderEnregistre({ notification,modal }) {
+
+/**
+ * Un composant pour afficher l'entente de volume planifier de l'application
+ * @author Vanny Boy <vanny@mediabox.bi>
+ * @date le 11/7/2023
+ * @param {*} param0 
+ * @returns 
+ */
+
+export default function AppHeaderPhPreparationRetour({ modal }) {
     const user = useSelector(userSelector)
     const navigation = useNavigation()
     return (
@@ -20,26 +29,19 @@ export default function AppHeaderEnregistre({ notification,modal }) {
                     <View style={[styles.menuOpenerLine, { width: 25 }]} />
                 </View>
             </TouchableNativeFeedback>
-                <Text style={styles.logo}>Courriers enregistres</Text>
-            <TouchableOpacity onPress={() => {
-                        modal.current?.open()
+           
+                <Text style={styles.logo}>Folio Retourner</Text>
+            <TouchableOpacity 
+            // onPress={() => {
+            //             modal.current?.open()
 
-                    }}>
+            //         }}
+                    >
             <View style={{ padding: 10 }}>
                 <Ionicons name="filter-sharp" size={25} color={COLORS.primary} />
             </View>
             </TouchableOpacity>
-            <TouchableNativeFeedback
-
-                onPress={() => navigation.navigate("NotificationScreen", { service: 1 })}
-                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                <View style={{ padding: 5 }}>
-                    <Ionicons name="notifications-circle" size={30} color="#18678E" />
-                    {notification > 0 ? <View style={styles.badge}>
-                        <Text style={styles.badgeText} numberOfLines={1}>{notification}</Text>
-                    </View> : null}
-                </View>
-            </TouchableNativeFeedback>
+           
         </View >
     )
 }
