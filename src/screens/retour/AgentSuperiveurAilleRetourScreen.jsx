@@ -36,20 +36,20 @@ export default function AgentSuperiveurAilleRetourScreen() {
                 )
         }
 
-        //Fonction pour recuperer les details
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoading(true)
-        //                         const res = await fetchApi('/folio/dossiers/superviseurPreparations')
-        //                         setAllDetails(res.result)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoading(false)
-        //                 }
-        //         })()
-        // }, []))
+        //Fonction pour recuperer les volumes lesquels tu as associe
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoading(true)
+                                const res = await fetchApi('/volume/dossiers/chefPlateauVolume')
+                                setAllDetails(res.result)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, []))
 
         const actions = [
         ];
@@ -66,10 +66,7 @@ export default function AgentSuperiveurAilleRetourScreen() {
         return (
                 <>
                         <AppHeaderAgSupAille/>
-                        <View>
-                                <Text>fjhdjfhdjhf</Text>
-                        </View>
-                        {/* <View style={styles.container}>
+                        <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
@@ -86,14 +83,14 @@ export default function AgentSuperiveurAilleRetourScreen() {
                                                 <FlatList
                                                         style={styles.contain}
                                                         data={allDetails}
-                                                        renderItem={({ item: folio, index }) => {
+                                                        renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentChefPlateauRetourDetailsScreen", {ID_FOLIO_AILE_PREPARATION:folio.ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO})}
+                                                                                                onPress={() => navigation.navigate("AgentSuperviseurAilleRetourDetailsScreen", {volume:volume})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -103,10 +100,11 @@ export default function AgentSuperiveurAilleRetourScreen() {
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NOM} {folio.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.nbre_folio}</Text>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{volume.NOM} {volume.PRENOM}</Text>
+                                                                                                                                        <Text style={{fontWeight:"bold"}}>{volume.NUMERO_VOLUME}</Text>
+                                                                                                                                        <Text>{volume.CODE_VOLUME}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text style={{ color: "#777" }}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -118,7 +116,7 @@ export default function AgentSuperiveurAilleRetourScreen() {
                                                         }}
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
-                        </View> */}
+                        </View>
                         <FloatingAction
                                 actions={
                                         user.ID_PROFIL == 15 ? actionsAgentchefPlateau : actions}
