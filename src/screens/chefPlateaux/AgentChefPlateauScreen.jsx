@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -16,6 +16,8 @@ import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import Loading from "../../components/app/Loading";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Le screen pour aider le superviseur de la phase preparation
@@ -31,26 +33,25 @@ export default function AgentChefPlateauScreen() {
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
         const [loading, setLoading] = useState(false)
+        const [document, setDocument] = useState(null)
 
         const [data, handleChange, setValue] = useForm({
-                document: null,
+                // document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                document: {
-                        required: true
-                },
+                // document: {
+                //         required: true
+                // },
         }, {
-                document: {
-                        required: 'ce champ est obligatoire',
-                },
+                // document: {
+                //         required: 'ce champ est obligatoire',
+                // },
         })
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volumes != null ? true : false
-                isValid = supPreparations != null ? true : false
-                isValid = multiFolios.length > 0 ? true : false
-                return isValid && isValidate()
+                isValid = volumes != null && supPreparations != null && multiFolios.length > 0 && document != null ? true : false
+                return isValid 
         }
 
         // Volume select
@@ -241,6 +242,30 @@ export default function AgentChefPlateauScreen() {
                 )
         }
 
+         //Fonction pour le prendre l'image avec l'appareil photos
+         const onTakePicha = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
+        }
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -268,13 +293,30 @@ export default function AgentChefPlateauScreen() {
                         const form = new FormData()
                         form.append('folio', JSON.stringify(multiFolios))
                         form.append('AGENT_SUPERVISEUR', supPreparations.ID_USER_AILE)
-                        if (data.document) {
-                                let localUri = data.document.uri;
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", {
-                                        uri: data.document.uri, name: filename, type: data.document.mimeType
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
                                 })
                         }
+                        // if (data.document) {
+                        //         let localUri = data.document.uri;
+                        //         let filename = localUri.split('/').pop();
+                        //         form.append("PV", {
+                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
+                        //         })
+                        // }
+                        
                         const volume = await fetchApi(`/folio/dossiers/superviser`, {
                                 method: "PUT",
                                 body: form
@@ -383,7 +425,7 @@ export default function AgentChefPlateauScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                <View>
+                                                {/* <View>
                                                         <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                                 onPress={selectdocument}
                                                         >
@@ -404,7 +446,18 @@ export default function AgentChefPlateauScreen() {
                                                                         </View> : null}
                                                                 </View>
                                                         </TouchableOpacity>
-                                                </View>
+                                                </View> */}
+                                                <TouchableOpacity onPress={onTakePicha}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du proces verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableOpacity>
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
@@ -598,6 +651,18 @@ const styles = StyleSheet.create({
                 backgroundColor: "#18678E",
                 marginHorizontal: 50,
                 marginVertical: 15
-        }
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
+        },
 
 })

@@ -77,7 +77,6 @@ export default function AgentSuperviseurFinScreen() {
                 }
         })
 
-        const modelRef = useRef(null)
         const [logoImage, setLogoImage] = useState(null)
         const [loadingCompress, setLoadingCompress] = useState(null)
 
@@ -230,15 +229,10 @@ export default function AgentSuperviseurFinScreen() {
                 )
         }
 
-        const onPhotoDocumentSelect = async () => {
-                modelRef.current.open()
-
-        }
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 try {
-                        modelRef.current.close()
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
@@ -265,18 +259,18 @@ export default function AgentSuperviseurFinScreen() {
 
         //Fonction pour importer l'image dans le galerie
 
-        const inporterImages = async () => {
-                modelRef.current.close()
-                const permission = await ImagePicker.requestCameraPermissionsAsync()
-                if (!permission.granted) return false
-                let photo = await ImagePicker.launchImageLibraryAsync({
-                        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                        allowsMultipleSelection: true
-                })
-                if (!photo.cancelled) {
-                        setLogoImage(photo)
-                }
-        }
+        // const inporterImages = async () => {
+        //         modelRef.current.close()
+        //         const permission = await ImagePicker.requestCameraPermissionsAsync()
+        //         if (!permission.granted) return false
+        //         let photo = await ImagePicker.launchImageLibraryAsync({
+        //                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        //                 allowsMultipleSelection: true
+        //         })
+        //         if (!photo.cancelled) {
+        //                 setLogoImage(photo)
+        //         }
+        // }
 
         const submitData = async () => {
                 try {
@@ -455,7 +449,7 @@ export default function AgentSuperviseurFinScreen() {
                                                                 blurOnSubmit={false}
                                                         />
                                                 </View>
-                                                <TouchableWithoutFeedback onPress={onPhotoDocumentSelect}>
+                                                <TouchableWithoutFeedback onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -544,7 +538,7 @@ export default function AgentSuperviseurFinScreen() {
                                                 <FolioList agentPreparation={agentPreparation} />
                                         </Modalize>
                                 </Portal>
-                                <Portal>
+                                {/* <Portal>
                                         <Modalize ref={modelRef}
                                                 handlePosition="inside"
                                                 adjustToContentHeight
@@ -572,7 +566,7 @@ export default function AgentSuperviseurFinScreen() {
                                                         <View style={styles.separator} />
                                                 </View>
                                         </Modalize>
-                                </Portal>
+                                </Portal> */}
                         </View>
                 </>
         )

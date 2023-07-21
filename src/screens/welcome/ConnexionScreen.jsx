@@ -58,7 +58,6 @@ export default function ConnexionScreen() {
       DEVICE: Platform.OS === 'ios' ? 1 : 0
 
     }
-    
     try {
       setLoading(true)
       setAdditionalErrors({})
