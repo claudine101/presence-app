@@ -1,8 +1,8 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "Courrier",
-    "slug": "courrier",
+    "name": "Archivage",
+    "slug": "archivage",
     "version": "1.0.0",
     "icon": "./assets/iconArch.png",
     "userInterfaceStyle": "light",
