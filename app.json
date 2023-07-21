@@ -4,10 +4,10 @@
     "name": "Courrier",
     "slug": "courrier",
     "version": "1.0.0",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iconArch.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splashArchive.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -33,7 +33,7 @@
       "favicon": "./assets/favicon.png"
     },
     "notification": {
-      "icon": "./assets/logo.png",
+      "icon": "./assets/iconArch.png",
       "color": "#dddddd",
       "androidMode": "default",
       "androidCollapsedTitle": "Cra",
