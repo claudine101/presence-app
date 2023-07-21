@@ -241,20 +241,19 @@ export default function AgentSuperviseurFinScreen() {
                         modelRef.current.close()
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
-                        const image = await launchCamera()
+                        const image = await ImagePicker.launchCameraAsync()
                         if (!image.didCancel) {
-                                setLoadingCompress(true)
-                                const photo = image.assets[0]
-                                const photoId = Date.now()
-                                const manipResult = await manipulateAsync(
-                                        photo.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.7, format: SaveFormat.JPEG }
-                                );
-                                setLogoImage(manipResult)
-                                setLoadingCompress(false)
+                                setLogoImage(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
                         }
                 }
                 catch (error) {

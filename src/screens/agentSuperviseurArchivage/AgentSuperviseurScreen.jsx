@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator, Image } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
@@ -16,6 +16,8 @@ import { userSelector } from "../../store/selectors/userSelector";
 import useFetch from "../../hooks/useFetch";
 import Loading from "../../components/app/Loading";
 import fetchApi from "../../helpers/fetchApi";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Le screen pour details le volume, le dossier utilisable par un agent superviseur
@@ -31,22 +33,23 @@ export default function AgentSuperviseurScreen() {
         const folioNatures = useSelector(folioNatureCartSelector)
         const user = useSelector(userSelector)
         const [loading, setLoading] = useState(false)
+        const [document, setDocument] = useState(null)
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
-                document: null
+                // document: null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
 
-                document: {
-                        required: true
-                }
+                // document: {
+                //         required: true
+                // }
         }, {
 
-                document: {
-                        required: 'ce champ est obligatoire',
-                }
+                // document: {
+                //         required: 'ce champ est obligatoire',
+                // }
         })
 
         const isValidAdd = () => {
@@ -55,6 +58,12 @@ export default function AgentSuperviseurScreen() {
                 isValid = natures != null ? true : false
                 return isValid
         }
+
+        const isValidFin = () => {
+                var isVal = false
+                isVal = document != null ? true : false
+                return isVal
+            }
 
 
         // Volume select
@@ -102,6 +111,31 @@ export default function AgentSuperviseurScreen() {
                                         }
                                 }
                         ])
+        }
+
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
         }
 
         //Fonction pour upload un documents 
@@ -209,11 +243,28 @@ export default function AgentSuperviseurScreen() {
                         const form = new FormData()
                         form.append('ID_VOLUME', volumes.ID_VOLUME)
                         form.append('folio', JSON.stringify(folioNatures))
-                        if (data.document) {
-                                let localUri = data.document.uri;
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV",({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
                         }
+                        // if (data.document) {
+                        //         let localUri = data.document.uri;
+                        //         let filename = localUri.split('/').pop();
+                        //         form.append("PV",({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
+                        // }
+                       
                         const volume = await fetchApi(`/folio/dossiers`, {
                                 method: "POST",
                                 body: form
@@ -345,7 +396,7 @@ export default function AgentSuperviseurScreen() {
                                                                 </View>
                                                         )
                                                 })}
-                                                <View>
+                                                {/* <View>
                                                         <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                                 onPress={selectdocument}
                                                         >
@@ -366,14 +417,25 @@ export default function AgentSuperviseurScreen() {
                                                                         </View> : null}
                                                                 </View>
                                                         </TouchableOpacity>
-                                                </View>
+                                                </View> */}
+                                                <TouchableOpacity onPress={onTakePicha}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du proces verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableOpacity>
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                        disabled={!isValidate()}
+                                        disabled={!isValidFin()}
                                         onPress={submitFolio}
                                 >
-                                        <View style={[styles.button, !isValidate() && { opacity: 0.5 }]}>
+                                        <View style={[styles.button, !isValidFin() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
@@ -504,7 +566,8 @@ const styles = StyleSheet.create({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingVertical: 5,
-                paddingHorizontal: 30
+                paddingHorizontal: 30,
+                marginBottom: 10
         },
         cardFolder: {
                 flexDirection: "row",
@@ -546,5 +609,17 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
         },
 })

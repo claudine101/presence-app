@@ -22,6 +22,7 @@ export default function VolumeDetailsScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const {volume} = route.params
+        console.log(volume)
         const [data, handleChange, setValue] = useForm({
                 document: null
         })
@@ -94,7 +95,7 @@ export default function VolumeDetailsScreen() {
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
                                                                         <Text style={styles.itemVolume}> Nombre de dossier</Text>
-                                                                        <Text>{volume.NOMBRE_DOSSIER}</Text>
+                                                                        {volume.NOMBRE_DOSSIER ? <Text>{volume.NOMBRE_DOSSIER}</Text>:<Text>N/B</Text>}
                                                                         {/* <Text>Vanny</Text> */}
                                                                 </View>
                                                                 {/* <View>

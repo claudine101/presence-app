@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
@@ -12,6 +12,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import useFetch from "../../hooks/useFetch";
 import fetchApi from "../../helpers/fetchApi";
 import Loading from "../../components/app/Loading";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Le screen pour  mettre le volume detailler dans un malle
@@ -23,29 +25,26 @@ import Loading from "../../components/app/Loading";
 export default function AgentSuperviseurMalleScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
+        const [document, setDocument] = useState(null)
 
         const [data, handleChange, setValue] = useForm({
-                document: null,
+                // document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                document: {
-                        required: true
-                }
+                // document: {
+                //         required: true
+                // }
         }, {
-                dossier: {
-                        required: 'ce champ est obligatoire',
-                }
+                // dossier: {
+                //         required: 'ce champ est obligatoire',
+                // }
         })
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volumes != null ? true : false
-                isValid = malles != null ? true : false
-                isValid = batiments != null ? true : false
-                isValid = ailles != null ? true : false
-                isValid = distributeur != null ? true : false
-                return isValid && isValidate()
+                isValid = volumes != null && malles != null && batiments != null && ailles != null && distributeur != null && document != null ? true : false
+                return isValid
         }
 
         // Volume select
@@ -101,6 +100,31 @@ export default function AgentSuperviseurMalleScreen() {
         const setSelectedDistibuteur = (distr) => {
                 distributrutModalizeRef.current?.close();
                 setDistributeur(distr)
+        }
+
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
         }
 
 
@@ -364,13 +388,29 @@ export default function AgentSuperviseurMalleScreen() {
                         const form = new FormData()
                         form.append('MAILLE', malles.ID_MAILLE)
                         form.append('AGENT_DISTRIBUTEUR', distributeur.ID_USER_AILE)
-                        if (data.document) {
-                                let localUri = data.document.uri;
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV", {
-                                        uri: data.document.uri, name: filename, type: data.document.mimeType
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
                                 })
                         }
+                        // if (data.document) {
+                        //         let localUri = data.document.uri;
+                        //         let filename = localUri.split('/').pop();
+                        //         form.append("PV", {
+                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
+                        //         })
+                        // }
                         const volume = await fetchApi(`/volume/dossiers/affectationDistributeur/${volumes.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
@@ -461,7 +501,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity> : null}
-                                                <View>
+                                                {/* <View>
                                                         <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                                 onPress={selectdocument}
                                                         >
@@ -482,7 +522,18 @@ export default function AgentSuperviseurMalleScreen() {
                                                                         </View> : null}
                                                                 </View>
                                                         </TouchableOpacity>
-                                                </View>
+                                                </View> */}
+                                                <TouchableOpacity onPress={onTakePicha}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du proces verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableOpacity>
                                         </View>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
@@ -619,5 +670,17 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
         },
 })

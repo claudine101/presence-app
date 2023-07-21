@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { Ionicons, AntDesign, Feather, Fontisto } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
@@ -12,6 +12,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import fetchApi from "../../helpers/fetchApi";
 import useFetch from "../../hooks/useFetch";
 import Loading from "../../components/app/Loading";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Le screen pour associer un volume a un agents superviseur
@@ -23,33 +25,35 @@ import Loading from "../../components/app/Loading";
 export default function AgentArchivageScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
+        const [document, setDocument] = useState(null)
 
         const [data, handleChange, setValue] = useForm({
                 numero: '',
-                document:null
+                // document:null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 numero: {
                         required: true
                 },
-                document:{
-                        required: true
-                }
+                // document:{
+                //         required: true
+                // }
         }, {
                 numero: {
                         required: 'ce champ est obligatoire',
                 },
-                document: {
-                        required: 'ce champ est obligatoire',
-                }
+                // document: {
+                //         required: 'ce champ est obligatoire',
+                // }
         })
 
         const isValidAdd = () => {
                 var isValid = false
                 isValid = data.numero > 0 ? true : false
-                isValid = volumes !=null ? true : false
-                isValid = agents !=null ? true : false
+                isValid = volumes != null ? true : false
+                isValid = agents != null ? true : false
+                isValid = document != null ? true : false
                 return isValid && isValidate()
         }
 
@@ -74,6 +78,31 @@ export default function AgentArchivageScreen() {
         const setSelectedAgent = (ag) => {
                 agentModalizeRef.current?.close();
                 setAgents(ag)
+        }
+
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
         }
 
         //Fonction pour upload un documents 
@@ -182,11 +211,27 @@ export default function AgentArchivageScreen() {
                         const form = new FormData()
                         form.append('NOMBRE_DOSSIER', data.numero)
                         form.append('ID_USERS', agents.USERS_ID)
-                        if (data.document) {
-                                let localUri = data.document.uri;
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
                                 let filename = localUri.split('/').pop();
-                                form.append("PV",({uri: data.document.uri, name: filename, type: data.document.mimeType}))
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
                         }
+                        // if (data.document) {
+                        //         let localUri = data.document.uri;
+                        //         let filename = localUri.split('/').pop();
+                        //         form.append("PV", ({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
+                        // }
                         const res = await fetchApi(`/volume/dossiers/mofidier/${volumes.ID_VOLUME}`, {
                                 method: 'PUT',
                                 body: form,
@@ -263,7 +308,7 @@ export default function AgentArchivageScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <View>
+                                        {/* <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
                                                 >
@@ -284,7 +329,18 @@ export default function AgentArchivageScreen() {
                                                                 </View> : null}
                                                         </View>
                                                 </TouchableOpacity>
-                                        </View>
+                                        </View> */}
+                                        <TouchableOpacity onPress={onTakePicha}>
+                                                <View style={[styles.addImageItem]}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <Feather name="image" size={24} color="#777" />
+                                                                <Text style={styles.addImageLabel}>
+                                                                        Photo du proces verbal
+                                                                </Text>
+                                                        </View>
+                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </View>
+                                        </TouchableOpacity>
 
                                 </View>
                         </ScrollView>
@@ -292,7 +348,7 @@ export default function AgentArchivageScreen() {
                                 disabled={!isValidAdd()}
                                 onPress={handleSubmit}
                         >
-                                <View style={[styles.button,!isValidAdd() && { opacity: 0.5 }]}>
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
                         </TouchableWithoutFeedback>
@@ -412,5 +468,17 @@ const styles = StyleSheet.create({
                 color: "#777",
                 marginLeft: 10,
                 fontSize: 11
-        }
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
+        },
 })
