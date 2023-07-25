@@ -264,6 +264,7 @@ export default function AgentPreparationScreen() {
                         try {
                                 const response = await fetchApi('/folio/dossiers/nbreFolio')
                                 setCountFolio(response.result)
+
                         } catch (error) {
                                 console.log(error)
                         }
@@ -287,7 +288,7 @@ export default function AgentPreparationScreen() {
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <View style={styles.selectContainer}>
+                                                {/* <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
@@ -301,11 +302,11 @@ export default function AgentPreparationScreen() {
                                                                                 </Text>}
                                                                 </View>
                                                         </View>
-                                                </View>
+                                                </View> */}
                                                 <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Nombres de dossiers recus
+                                                                        Nombres de dossiers
                                                                 </Text>
                                                                 <View>
                                                                         {countFolio ? <Text style={styles.selectedValue}>

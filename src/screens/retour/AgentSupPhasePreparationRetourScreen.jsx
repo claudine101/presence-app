@@ -22,6 +22,7 @@ import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPrepar
 export default function AgentSupPhasePreparationRetourScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
+        
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
 
@@ -42,6 +43,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                         try {
                                 setLoading(true)
                                 const res = await fetchApi('/folio/dossiers/agentPreparations')
+                                console.log(res)
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
