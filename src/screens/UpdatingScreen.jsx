@@ -15,7 +15,7 @@ export default function UpdatingScreen() {
         }))
 
         codePush.sync({
-                  deploymentKey: "fcDUs9CEYCnOZ600DYRK7DOlfATjqW5taF0kn",
+                  deploymentKey: "Hrj8IFSGTR-G_Eu_LTeZ-O621NISbnS5j4pfX",
                   installMode: codePush.InstallMode.IMMEDIATE
         }, status => {
                   // console.log("status", status, codePush.SyncStatus.DOWNLOADING_PACKAGE)

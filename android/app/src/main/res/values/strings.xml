@@ -1,6 +1,6 @@
 <resources>
   <string name="app_name">Courrier</string>
-  <string moduleConfig="true" name="CodePushDeploymentKey">fcDUs9CEYCnOZ600DYRK7DOlfATjqW5taF0kn</string>
+  <string moduleConfig="true" name="CodePushDeploymentKey">Hrj8IFSGTR-G_Eu_LTeZ-O621NISbnS5j4pfX</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
   <string name="expo_system_ui_user_interface_style" translatable="false">light</string>
