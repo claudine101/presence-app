@@ -22,7 +22,6 @@ import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPrepar
 export default function AgentSupPhasePreparationRetourScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
-        
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
 
