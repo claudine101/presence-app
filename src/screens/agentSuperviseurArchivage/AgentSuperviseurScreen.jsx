@@ -161,6 +161,7 @@ export default function AgentSuperviseurScreen() {
         //Composent pour afficher le modal de volume associer a un agent superviceur
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
+                console.log(volumesAll)
                 return (
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -170,6 +171,7 @@ export default function AgentSuperviseurScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
+                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
                                                 {volumesAll.result.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
