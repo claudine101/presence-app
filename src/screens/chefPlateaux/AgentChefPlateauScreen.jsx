@@ -213,7 +213,7 @@ export default function AgentChefPlateauScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseur</Text>
                                                 </View>
                                                 {allSuperviseur.result.map((prep, index) => {
                                                         return (
@@ -361,7 +361,7 @@ export default function AgentChefPlateauScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer une agent superviseur</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent superviseur</Text>
                                 </View>
                                 <ScrollView>
                                         <View>

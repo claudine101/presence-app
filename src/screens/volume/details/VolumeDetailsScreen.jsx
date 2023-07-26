@@ -85,7 +85,6 @@ export default function VolumeDetailsScreen() {
                                                                         <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                         {/* <Text>sjsjsj</Text> */}
                                                                 </View>
-
                                                         </View>
                                                 </View>
                                         </View>
@@ -94,7 +93,7 @@ export default function VolumeDetailsScreen() {
                                                 <View style={styles.cardDescription}>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                 <View>
-                                                                        <Text style={styles.itemVolume}> Nombre de dossier</Text>
+                                                                        <Text style={styles.itemVolume}>Nombre de dossier</Text>
                                                                         {volume.NOMBRE_DOSSIER ? <Text>{volume.NOMBRE_DOSSIER}</Text>:<Text>N/B</Text>}
                                                                         {/* <Text>Vanny</Text> */}
                                                                 </View>

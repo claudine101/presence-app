@@ -51,8 +51,7 @@ export default function NewVolumeScreen() {
     })
     const isValidAdd = () => {
         var isValid = false
-        isValid = (data.nbre_volume == '' && activity.length > 0) ? true : false
-        isValid = document != null ? true : false
+        isValid = (data.nbre_volume == '' && activity.length > 0) && document != null ? true : false
         return isValid && isValidate()
     }
 

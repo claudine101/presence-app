@@ -42,6 +42,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                         try {
                                 setLoading(true)
                                 const res = await fetchApi('/folio/dossiers/agentPreparations')
+                                console.log(res)
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)

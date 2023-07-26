@@ -53,13 +53,13 @@ export default function AgentSuperiveurAilleRetourScreen() {
 
         const actions = [
         ];
-        const actionsAgentchefPlateau = [
+        const actionsAgentAille = [
                 {
-                    text: "Agent chef plateau",
+                    text: "Superviseur aille",
                     icon: require("../../../assets/images/dossier.png"),
                     name: "DescriptionEtapeScreen",
-                    position: 7,
-                    render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/dossier.png")} key={"key7"} />
+                    position: 6,
+                    render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/dossier.png")} key={"key6"} />
                 },
             ];
 
@@ -119,7 +119,7 @@ export default function AgentSuperiveurAilleRetourScreen() {
                         </View>
                         <FloatingAction
                                 actions={
-                                        user.ID_PROFIL == 15 ? actionsAgentchefPlateau : actions}
+                                        user.ID_PROFIL == 7 ? actionsAgentAille : actions}
                                 onPressItem={name => {
                                         if (name == 'DescriptionEtapeScreen') {
                                                 navigation.navigate('DescriptionEtapeScreen')
