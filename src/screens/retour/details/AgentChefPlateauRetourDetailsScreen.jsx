@@ -28,7 +28,6 @@ export default function AgentChefPlateauRetourDetailsScreen() {
         const { ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_ETAPE_FOLIO, nbre_folio } = route.params
         const [allDetails, setAllDetails] = useState([])
         const [countNombre, setCountNombre] = useState('')
-        console.log(countNombre)
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)

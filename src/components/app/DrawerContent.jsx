@@ -67,6 +67,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </TouchableNativeFeedback> : null}
+                {user.ID_PROFIL == 2 ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
+                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                        <View style={styles.drawerItem}>
+                            <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                            <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
+                                Volume retourner
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableNativeFeedback> : null}
                 {user.ID_PROFIL == 8 ?
                     <>
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioSupAgentScreen')}>

@@ -19,6 +19,7 @@ import moment from 'moment'
 export default function AllVolumeScreen() {
     const navigation = useNavigation()
     const user = useSelector(userSelector)
+    console.log(user)
     const [allVolumes, setAllVolumes] = useState([])
     const [loading, setLoading] = useState(false)
 
