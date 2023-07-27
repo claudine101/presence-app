@@ -18,7 +18,9 @@ export default function AgentDesarchivagesRetourScreen() {
                 <>
                         <AppHeaderAgentDesarchivageRetour />
                         <View style={styles.container}>
-                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}>
+                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                        onPress={() => navigation.navigate("AgentDesarchivagesRetourDetailsScreen")}
+                                >
                                         <View style={styles.cardDetails}>
                                                 <View style={styles.carddetailItem}>
                                                         <View style={styles.cardImages}>
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
         },
         cardDescription: {
                 marginLeft: 10,
-                flex:1
+                flex: 1
         },
         itemVolume: {
                 fontSize: 15,
