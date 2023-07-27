@@ -22,7 +22,6 @@ export default function VolumeDetailsScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const {volume} = route.params
-        console.log(volume)
         const [data, handleChange, setValue] = useForm({
                 document: null
         })

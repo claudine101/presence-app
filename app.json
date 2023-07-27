@@ -24,7 +24,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splashArchive.png",
+        "foregroundImage": "./assets/iconArch.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.mediabox.courrier"
