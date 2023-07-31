@@ -76,7 +76,6 @@ export default function AgentSuperviseurAilleScreen() {
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 try {
-                    console.log({ status })
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!status.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
