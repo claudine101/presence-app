@@ -71,13 +71,12 @@ export default function AgentSuperviseurAilleScreen() {
                 chefplateauModalizeRef.current?.close();
                 setChefPlateaux(chef)
         }
-        const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 try {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!status.granted) return false
+                        if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.didCancel) {
                                 setDocument(image)
