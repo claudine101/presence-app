@@ -210,7 +210,7 @@ export default function NewVolumeScreen() {
                 </View>
                 {data.nbre_volume > 0 ? <View style={{ marginVertical: 8 }}>
                     <OutlinedTextField
-                        label="Numero"
+                        label="Nom du volume"
                         fontSize={14}
                         baseColor={COLORS.smallBrown}
                         tintColor={COLORS.primary}
