@@ -3,7 +3,7 @@ import cache from "../utils/cache";
 export const API_URL = false
           ? "https://dev.mediabox.bi:1441"
           : "http://192.168.43.134:3000";
-        /**
+/**
          * consomer une api avec les options par défaut
          * @param {string} url - le lien à appeler
          * @param {object} options - autres options comme les headers et le body
