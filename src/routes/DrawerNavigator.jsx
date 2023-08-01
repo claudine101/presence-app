@@ -25,6 +25,12 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name='VolumePrepareScreen' component={VolumePrepareScreen} />
                                 </>
                                 : null}
+                                {(user.ID_PROFIL == 4) ?
+                                <>
+                                        <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name='VolumePrepareScreen' component={VolumePrepareScreen} />
+                                </>
+                                : null}
                         {user.ID_PROFIL == 15 ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
@@ -49,7 +55,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AgentSupArchiveRetourScreen" component={AgentSupArchiveRetourScreen} />
                                 </>
                                 : null}
-                        {user.ID_PROFIL == 29 ?
+                        {user.ID_PROFIL == 5?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AgentDistributionRetourScreen" component={AgentDistributionRetourScreen} />

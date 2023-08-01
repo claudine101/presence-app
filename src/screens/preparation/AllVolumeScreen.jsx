@@ -62,6 +62,12 @@ export default function AllVolumeScreen() {
         else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
             setNextRouteName('DetaillerFolioScreen')
         }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_DISTRIBUTEUR){
+            setNextRouteName('AddSuperviseurAileVolumeScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_AILE){
+            setNextRouteName('AddChefPlateauVolumeScreen')
+        }
     }, [user]))
 
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather,FontAwesome5} from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
@@ -19,6 +19,7 @@ import fetchApi from "../../helpers/fetchApi";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useEffect } from "react";
+import ETAPES_VOLUME from "../../constants/ETAPES_VOLUME";
 
 /**
  * Le screen pour details le volume, le dossier utilisable par un agent superviseur
@@ -31,6 +32,7 @@ import { useEffect } from "react";
 export default function AddFolioScreen() {
         const route = useRoute()
         const { volume } = route.params
+
         const navigation = useNavigation()
         const dispatch = useDispatch()
         const folioNatures = useSelector(folioNatureCartSelector)
@@ -38,6 +40,8 @@ export default function AddFolioScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingCount, setLoadingCount] = useState(false)
         const [document, setDocument] = useState(null)
+        const [documentDist, setDocumentDist] = useState(null)
+
         const [nbre, setNbre] = useState(null)
 
         useFocusEffect(useCallback(() => {
@@ -155,6 +159,30 @@ export default function AddFolioScreen() {
                         console.log(error)
                 }
         }
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePichaDistributeur = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocumentDist(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
+        }
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -255,105 +283,64 @@ export default function AddFolioScreen() {
                         </>
                 )
         }
-// Malle select
-const maleModalizeRef = useRef(null);
-const [malles, setMalles] = useState(null);
-const openMallesModalize = () => {
-        maleModalizeRef.current?.open();
-};
-const setSelectedMalle = (mal) => {
-        maleModalizeRef.current?.close();
-        setMalles(mal)
-}
+        // Malle select
+        const maleModalizeRef = useRef(null);
+        const [malles, setMalles] = useState(null);
+        const openMallesModalize = () => {
+                maleModalizeRef.current?.open();
+        };
+        const setSelectedMalle = (mal) => {
+                maleModalizeRef.current?.close();
+                setMalles(mal)
+        }
 
-// Batiment select
-const batimentModalizeRef = useRef(null);
-const [batiments, setBatiments] = useState(null);
-const openBatimentModalize = () => {
-        batimentModalizeRef.current?.open();
-};
-const setSelectedBatiment = (bat) => {
-        batimentModalizeRef.current?.close();
-        setBatiments(bat)
-}
+        // Batiment select
+        const batimentModalizeRef = useRef(null);
+        const [batiments, setBatiments] = useState(null);
+        const openBatimentModalize = () => {
+                batimentModalizeRef.current?.open();
+        };
+        const setSelectedBatiment = (bat) => {
+                batimentModalizeRef.current?.close();
+                setBatiments(bat)
+        }
 
-// Ailles select
-const aillesModalizeRef = useRef(null);
-const [ailles, setAilles] = useState(null);
-const openAilleModalize = () => {
-        aillesModalizeRef.current?.open();
-};
-const setSelectedAille = (ail) => {
-        aillesModalizeRef.current?.close();
-        setAilles(ail)
-}
-//Composent pour afficher le maille existant
-const MalleList = () => {
-        const [loadingMalle, mallesAll] = useFetch('/preparation/batiment/mailles')
-        return (
-                <>
-                        {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View> :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Listes des malles</Text>
-                                        </View>
-                                        {mallesAll.result.map((mal, index) => {
-                                                return (
-                                                        <ScrollView key={index}>
-                                                                <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
-                                                                        <View style={styles.modalItem} >
-                                                                                <View style={styles.modalImageContainer}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.modalItemCard}>
-                                                                                        <View>
-                                                                                                <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
-                                                                                                {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
-                                                                                        </View>
-                                                                                        {malles?.ID_MAILLE == mal.ID_MAILLE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                </View>
-                                                                        </View>
-                                                                </TouchableNativeFeedback>
-                                                        </ScrollView>
-                                                )
-                                        })}
-                                </View>
-                        }
-                </>
-        )
-}
-
-
-
-//Composent pour afficher le modal des batiments 
-const BatimentList = () => {
-        const [loadingBatiment, batimentsAll] = useFetch('/preparation/batiment')
-        return (
-                <>
+        // Ailles select
+        const aillesModalizeRef = useRef(null);
+        const [ailles, setAilles] = useState(null);
+        const openAilleModalize = () => {
+                aillesModalizeRef.current?.open();
+        };
+        const setSelectedAille = (ail) => {
+                aillesModalizeRef.current?.close();
+                setAilles(ail)
+        }
+        //Composent pour afficher le maille existant
+        const MalleList = () => {
+                const [loadingMalle, mallesAll] = useFetch('/preparation/batiment/mailles')
+                return (
                         <>
-                                {loadingBatiment ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des batiments</Text>
+                                                        <Text style={styles.modalTitle}>Listes des malles</Text>
                                                 </View>
-                                                {batimentsAll.result.map((bat, index) => {
+                                                {mallesAll.result.map((mal, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
                                                                                 <View style={styles.modalItem} >
                                                                                         <View style={styles.modalImageContainer}>
-                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
-                                                                                                        <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
                                                                                                 </View>
-                                                                                                {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -364,133 +351,174 @@ const BatimentList = () => {
                                         </View>
                                 }
                         </>
-                </>
-        )
-}
+                )
+        }
 
-//Composent pour afficher le modal de liste des ailles
-const AillesList = ({ batiments }) => {
-        const [allailles, setAllailles] = useState([]);
-        const [aillesLoading, setAillesLoading] = useState(false);
-        useEffect(() => {
-                (async () => {
-                        try {
 
-                                if (batiments) {
-                                        setAillesLoading(true)
-                                        const aie = await fetchApi(`/preparation/batiment/aile/${batiments.ID_BATIMENT}`)
-                                        setAllailles(aie.result)
-                                }
-                        }
-                        catch (error) {
-                                console.log(error)
-                        } finally {
-                                setAillesLoading(false)
-                        }
-                })()
-        }, [batiments])
-        return (
-                <>
-                        {aillesLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View> :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Listes des ailles</Text>
-                                        </View>
-                                        {allailles.map((ail, index) => {
-                                                return (
-                                                        <ScrollView key={index}>
-                                                                <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
-                                                                        <View style={styles.modalItem} >
-                                                                                <View style={styles.modalImageContainer}>
-                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.modalItemCard}>
-                                                                                        <View>
-                                                                                                <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+
+        //Composent pour afficher le modal des batiments 
+        const BatimentList = () => {
+                const [loadingBatiment, batimentsAll] = useFetch('/preparation/batiment')
+                return (
+                        <>
+                                <>
+                                        {loadingBatiment ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des batiments</Text>
+                                                        </View>
+                                                        {batimentsAll.result.map((bat, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                        </View>
+                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                        {ailles?.ID_AILE == ail.ID_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                </View>
-                                                                        </View>
-                                                                </TouchableNativeFeedback>
-                                                        </ScrollView>
-                                                )
-                                        })}
-                                </View>
-                        }
-                </>
-        )
-}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
 
-//Composent pour afficher le modal de liste des distrubuteur 
-const DistributeurAgentList = ({ ailles }) => {
-        const [allDistributeur, setAllDistributeur] = useState([]);
-        const [distributeurLoading, setDistributeurLoading] = useState(false);
+        //Composent pour afficher le modal de liste des ailles
+        const AillesList = ({ batiments }) => {
+                const [allailles, setAllailles] = useState([]);
+                const [aillesLoading, setAillesLoading] = useState(false);
+                useEffect(() => {
+                        (async () => {
+                                try {
 
-        useEffect(() => {
-                (async () => {
-                        try {
-
-                                if (ailles) {
-                                        setDistributeurLoading(true)
-                                        const distr = await fetchApi(`/preparation/batiment/distributeur/${ailles.ID_AILE}`)
-                                        setAllDistributeur(distr.result)
+                                        if (batiments) {
+                                                setAillesLoading(true)
+                                                const aie = await fetchApi(`/preparation/batiment/aile/${batiments.ID_BATIMENT}`)
+                                                setAllailles(aie.result)
+                                        }
                                 }
-                        }
-                        catch (error) {
-                                console.log(error)
-                        } finally {
-                                setDistributeurLoading(false)
-                        }
-                })()
-        }, [ailles])
-        return (
-                <>
-                        {distributeurLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View> :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Listes des distributeurs</Text>
-                                        </View>
-                                        {allDistributeur.map((distr, index) => {
-                                                return (
-                                                        <ScrollView key={index}>
-                                                                <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
-                                                                        <View style={styles.modalItem} >
-                                                                                <View style={styles.modalImageContainer}>
-                                                                                        <AntDesign name="addusergroup" size={24} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.modalItemCard}>
-                                                                                        <View>
-                                                                                                <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
-                                                                                                <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setAillesLoading(false)
+                                }
+                        })()
+                }, [batiments])
+                return (
+                        <>
+                                {aillesLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des ailles</Text>
+                                                </View>
+                                                {allailles.map((ail, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                         </View>
-                                                                                        {distributeur?.ID_USER_AILE == distr.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                </View>
+                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
                                                                                 </View>
-                                                                        </View>
-                                                                </TouchableNativeFeedback>
-                                                        </ScrollView>
-                                                )
-                                        })}
-                                </View>
-                        }
-                </>
-        )
-}
-// Distributeur select
-const distributrutModalizeRef = useRef(null);
-const [distributeur, setDistributeur] = useState(null);
-const openDistributeurModalize = () => {
-        distributrutModalizeRef.current?.open();
-};
-const setSelectedDistibuteur = (distr) => {
-        distributrutModalizeRef.current?.close();
-        setDistributeur(distr)
-}
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de liste des distrubuteur 
+        const DistributeurAgentList = ({ ailles }) => {
+                const [allDistributeur, setAllDistributeur] = useState([]);
+                const [distributeurLoading, setDistributeurLoading] = useState(false);
+
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (ailles) {
+                                                setDistributeurLoading(true)
+                                                const distr = await fetchApi(`/preparation/batiment/distributeur/${ailles.ID_AILE}`)
+                                                setAllDistributeur(distr.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setDistributeurLoading(false)
+                                }
+                        })()
+                }, [ailles])
+                return (
+                        <>
+                                {distributeurLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des distributeurs</Text>
+                                                </View>
+                                                {allDistributeur.map((distr, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {distributeur?.ID_USER_AILE == distr.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+        // Distributeur select
+        const distributrutModalizeRef = useRef(null);
+        const [distributeur, setDistributeur] = useState(null);
+        const openDistributeurModalize = () => {
+                distributrutModalizeRef.current?.open();
+        };
+        const setSelectedDistibuteur = (distr) => {
+                distributrutModalizeRef.current?.close();
+                setDistributeur(distr)
+        }
 
         //fonction pour envoyer les donnees dans la base
         const submitFolio = async () => {
@@ -537,6 +565,48 @@ const setSelectedDistibuteur = (distr) => {
                 }
         }
 
+        //fonction pour envoyer les donnees dans la base
+        const submitInMalle = async () => {
+                try {
+                        setLoading(true)
+                        const form = new FormData()
+                        form.append('MAILLE', malles.ID_MAILLE)
+                        form.append('AGENT_DISTRIBUTEUR', distributeur.USERS_ID)
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
+                        }
+                        // if (data.document) {
+                        //         let localUri = data.document.uri;
+                        //         let filename = localUri.split('/').pop();
+                        //         form.append("PV", {
+                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
+                        //         })
+                        // }
+                        const vol = await fetchApi(`/preparation/volume/nommerDistributeur/${volume.volume.ID_VOLUME}`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoading(false)
+                }
+        }
 
         return (
                 <>
@@ -550,7 +620,7 @@ const setSelectedDistibuteur = (distr) => {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        {nbre == volume.volume.NOMBRE_DOSSIER ?
+                                        {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
                                                 <Text style={styles.titlePrincipal2}>Ajouter le volume dans une maille</Text> :
                                                 <Text style={styles.titlePrincipal}>Detailler le volume</Text>
                                         }
@@ -593,7 +663,7 @@ const setSelectedDistibuteur = (distr) => {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {nbre == volume.volume.NOMBRE_DOSSIER ?
+                                                {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
                                                         <>
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
                                                                         <View>
@@ -643,6 +713,17 @@ const setSelectedDistibuteur = (distr) => {
                                                                                 </View>
                                                                         </View>
                                                                 </TouchableOpacity> : null}
+                                                                <TouchableOpacity onPress={onTakePicha}>
+                                                                        <View style={[styles.addImageItem]}>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                        <Feather name="image" size={24} color="#777" />
+                                                                                        <Text style={styles.addImageLabel}>
+                                                                                                Photo du proces verbal
+                                                                                        </Text>
+                                                                                </View>
+                                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                                        </View>
+                                                                </TouchableOpacity>
                                                         </> :
                                                         <>{((folioNatures.length == volume.volume.NOMBRE_DOSSIER)) ? null : <>
                                                                 <View style={{ marginBottom: 8 }}>
@@ -692,80 +773,66 @@ const setSelectedDistibuteur = (distr) => {
                                                                                 </View>
                                                                         </TouchableOpacity>
                                                                 </View>
-                                                        </>}</>
-                                                }
-                                                
+                                                        </>}
+                                                                {folioNatures.map((product, index) => {
+                                                                        return (
+                                                                                <View style={styles.headerRead} key={index}>
+                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                                <View style={styles.cardFolder}>
+                                                                                                        <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
+                                                                                                        <View style={styles.cardDescription}>
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
 
-                                                {folioNatures.map((product, index) => {
-                                                        return (
-                                                                <View style={styles.headerRead} key={index}>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                                <View style={styles.cardFolder}>
-                                                                                        <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
-                                                                                        <View style={styles.cardDescription}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View>
+                                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
+                                                                                                </View>
+                                                                                                <View>
+                                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_NATURE_FOLIO}</Text>
+                                                                                                </View>
+                                                                                                <View>
+                                                                                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
+                                                                                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                                                                                        </TouchableOpacity>
+                                                                                                </View>
                                                                                         </View>
-
                                                                                 </View>
-                                                                                <View>
-                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
-                                                                                </View>
-                                                                                <View>
-                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_NATURE_FOLIO}</Text>
-                                                                                </View>
-                                                                                <View>
-                                                                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                        </TouchableOpacity>
-                                                                                </View>
-                                                                        </View>
-                                                                </View>
-                                                        )
-                                                })}
-                                                {/* <View>
-                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                                onPress={selectdocument}
-                                                        >
-                                                                <View>
-                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                                Importer le proces verbal
-                                                                        </Text>
-                                                                        {data.document ? <View>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {data.document.name}
-                                                                                </Text>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
+                                                                        )
+                                                                })}
+                                                                <TouchableOpacity onPress={onTakePicha}>
+                                                                        <View style={[styles.addImageItem]}>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                        <Feather name="image" size={24} color="#777" />
+                                                                                        <Text style={styles.addImageLabel}>
+                                                                                                Photo du proces verbal
                                                                                         </Text>
                                                                                 </View>
-                                                                        </View> : null}
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                </View> */}
-                                                <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
-                                                                </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                        </View>
-                                                </TouchableOpacity>
+                                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                                        </View>
+                                                                </TouchableOpacity>
+                                                        </>
+                                                }
                                         </View>
                                 </ScrollView>
-                                <TouchableWithoutFeedback
-                                        disabled={!isValidFin()}
-                                        onPress={submitFolio}
-                                >
-                                        <View style={[styles.button, !isValidFin() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
-                                
+                                {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
+                                        <TouchableWithoutFeedback
+                                                disabled={!isValidFin()}
+                                                onPress={submitInMalle}
+                                        >
+                                                <View style={[styles.button, !isValidFin() && { opacity: 0.5 }]}>
+                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback> : <TouchableWithoutFeedback
+                                                disabled={!isValidFin()}
+                                                onPress={submitFolio}
+                                        >
+                                                <View style={[styles.button, !isValidFin() && { opacity: 0.5 }]}>
+                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback>}
+
+
                                 <Portal>
                                         <Modalize ref={natureModalizeRef}  >
                                                 <NatureDossierList />
