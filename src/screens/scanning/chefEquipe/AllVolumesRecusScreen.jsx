@@ -20,7 +20,7 @@ export default function AllVolumesRecusScreen() {
                         <AppHeader />
                         <View style={styles.container}>
                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} 
-                                        onPress={()=>navigation.navigate("NewAgentSupAIlleScanScreen")}
+                                        onPress={()=>navigation.navigate("NewChefPlateauScreen")}
                                 >
                                         <View style={styles.cardDetails}>
                                                 <View style={styles.carddetailItem}>

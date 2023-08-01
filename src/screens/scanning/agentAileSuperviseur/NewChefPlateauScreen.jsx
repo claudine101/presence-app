@@ -10,34 +10,34 @@ import { Portal } from 'react-native-portalize';
 import useFetch from "../../../hooks/useFetch";
 
 /**
- * Le screen pour de donner les volumes a un agent superviseur aile scanning
+ * Le screen pour de donner les volumes a un chef du plateau
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 1/8/2021
  * @returns 
  */
 
-export default function NewAgentSupAIlleScanScreen() {
+export default function NewChefPlateauScreen() {
         const navigation = useNavigation()
 
         // Aile superviseur select
-        const superviseurModalizeRef = useRef(null);
-        const [ailleSuperviseur, setAilleSuperviseur] = useState(null);
-        const openAilleSUperviseurModalize = () => {
-                superviseurModalizeRef.current?.open();
+        const chefPlateauModalizeRef = useRef(null);
+        const [chefPlateau, setChefPlateau] = useState(null);
+        const openChefPlateuModalize = () => {
+                chefPlateauModalizeRef.current?.open();
         };
-        const setSelectedDistibuteur = (sup) => {
-                superviseurModalizeRef.current?.close();
-                setDistributeur(sup)
+        const setSelectedChefPlateu = (chef) => {
+                chefPlateauModalizeRef.current?.close();
+                setChefPlateau(chef)
         }
 
-        //Composent pour afficher la listes des agents aille superviseur 
-        const AilleSuperviseurList = () => {
+        //Composent pour afficher la listes les chefs plateaux
+        const ChefPlateauList = () => {
                 // const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/VolumesInMaille')
                 return (
                         <>
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les agents aille superviseur</Text>
+                                                <Text style={styles.modalTitle}>Les chefs des plateaux</Text>
                                         </View>
                                         {/* {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null} */}
 
@@ -75,7 +75,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Selection d'un agent superviseur aile scanning</Text>
+                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Selection d'un chef plateau</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
@@ -108,10 +108,10 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openAilleSUperviseurModalize}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner le distributeur
+                                                                Selectioner le chef du plateau
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
@@ -124,8 +124,8 @@ export default function NewAgentSupAIlleScanScreen() {
                                 </ScrollView>
                         </View>
                         <Portal>
-                                <Modalize ref={superviseurModalizeRef}  >
-                                        <AilleSuperviseurList />
+                                <Modalize ref={chefPlateauModalizeRef}  >
+                                        <ChefPlateauList />
                                 </Modalize>
                         </Portal>
                 </>
