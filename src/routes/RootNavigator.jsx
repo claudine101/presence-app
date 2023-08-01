@@ -2,9 +2,11 @@ import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import DrawerNavigator from './DrawerNavigator';
-import NewVolumeScreen from '../screens/volume/NewVolumeScreen';
+import NewVolumeScreen from '../screens/preparation/NewVolumeScreen';
+import DetailsVolumeScreen from '../screens/preparation/DetailsVolumeScreen';
+import AddNombreFolioScreen from '../screens/preparation/AddNombreFolioScreen';
 import AgentArchivageScreen from '../screens/agentArchivages/AgentArchivageScreen';
-import AgentSuperviseurScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurScreen';
+import DetaillerFolioScreen from '../screens/preparation/DetaillerFolioScreen';
 import AgentSuperviseurMalleScreen from '../screens/agentSuperviseurArchivage/AgentSuperviseurMalleScreen';
 import AgentSuperviseurAilleScreen from '../screens/agentSuperviseurAilles/AgentSuperviseurAilleScreen';
 import AgentChefPlateauScreen from '../screens/chefPlateaux/AgentChefPlateauScreen';
@@ -31,8 +33,11 @@ export default function RootNavigator() {
             <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}>
                 <Stack.Screen name='Root' component={DrawerNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name='NewVolumeScreen' component={NewVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeScreen' component={DetailsVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddNombreFolioScreen' component={AddNombreFolioScreen} options={{ headerShown: false }} />
+                
                 <Stack.Screen name='AgentArchivageScreen' component={AgentArchivageScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='AgentSuperviseurScreen' component={AgentSuperviseurScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetaillerFolioScreen' component={DetaillerFolioScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurMalleScreen' component={AgentSuperviseurMalleScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentSuperviseurAilleScreen' component={AgentSuperviseurAilleScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='AgentChefPlateauScreen' component={AgentChefPlateauScreen} options={{ headerShown: false }}/>

@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import React from "react";
 import DrawerContent from "../components/app/DrawerContent";
-import AllVolumeScreen from "../screens/volume/AllVolumeScreen";
+import AllVolumeScreen from "../screens/preparation/AllVolumeScreen";
 import VolumePrepareScreen from "../screens/volume/VolumePrepareScreen";
 import AgentSupPhasePreparationRetourScreen from "../screens/retour/AgentSupPhasePreparationRetourScreen";
 import AllFolioSupAgentScreen from "../screens/chefPlateaux/AllFolioSupAgentScreen";

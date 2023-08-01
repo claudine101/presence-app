@@ -438,7 +438,7 @@ export default function AgentSuperviseurMalleScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Ajout de volume dans une malle</Text>
+                                        <Text style={styles.titlePrincipal}>Ajout àààde volume dans une malle</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
