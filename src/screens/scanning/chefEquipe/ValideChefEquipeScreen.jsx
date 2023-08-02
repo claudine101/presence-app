@@ -28,7 +28,7 @@ export default function ValideChefEquipeScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                document != null ? true : false
+                isValid = document != null ? true : false
                 return isValid 
         }
 
@@ -55,7 +55,6 @@ export default function ValideChefEquipeScreen() {
                 catch (error) {
                         console.log(error)
                 }
-
         }
 
         const submitDataPreparation = async () => {
@@ -153,10 +152,10 @@ export default function ValideChefEquipeScreen() {
                                         </TouchableOpacity>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                // disabled={!isValidAdd()}
+                                disabled={!isValidAdd()}
                                 onPress={submitDataPreparation}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>

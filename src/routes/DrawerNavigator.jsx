@@ -17,9 +17,9 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="AllVolumesRecusScreen" component={AllVolumesRecusScreen} />
                                         <Drawer.Screen name="AgentSuperiveurAilleRetourScreen" component={AgentSuperiveurAilleRetourScreen} />
-                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen}/>
                                 </>
                                 : null}
+                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen}/>
                 </Drawer.Navigator>
         )
 }

@@ -8,11 +8,13 @@ import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
 
 export default function AllVolumeRecusChefEquiScreen() {
-
         const navigation = useNavigation()
         const [allVolumes, setAllVolumes] = useState([])
-        console.log(allVolumes)
         const [loading, setLoading] = useState(false)
+
+        const handleSubmit = (volume) => {
+                navigation.navigate("NewAgentSupAIlleScanScreen",{volume:volume, id:volume.volume.ID_VOLUME})
+        }
 
         //fonction pour recuperer les volumes associer a un chef d'equipe
         useFocusEffect(useCallback(() => {
@@ -35,15 +37,15 @@ export default function AllVolumeRecusChefEquiScreen() {
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        //  <View style={styles.emptyContaier}>
-                                        //         <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                        //         <Text style={styles.emptyTitle}>
-                                        //                 Aucun volume trouvé
-                                        //         </Text>
-                                        //         <Text style={styles.emptyDesc}>
-                                        //                 Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                        //         </Text>
-                                        // </View>
+                                         allVolumes.length == 0 ? <View style={styles.emptyContaier}>
+                                                <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Text style={styles.emptyTitle}>
+                                                        Aucun volume trouvé
+                                                </Text>
+                                                <Text style={styles.emptyDesc}>
+                                                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                                                </Text>
+                                        </View>:
                                         <FlatList
                                                 style={styles.contain}
                                                 data={allVolumes}
@@ -54,7 +56,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                         </View> :
                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate("ValideChefEquipeScreen", { details: volume })}
+                                                                                        onPress={()=>handleSubmit(volume)}
                                                                                 >
                                                                                         <View style={styles.cardDetails}>
                                                                                                 <View style={styles.carddetailItem}>
