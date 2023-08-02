@@ -6,6 +6,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { COLORS } from "../../styles/COLORS";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
+import PROFILS from "../../constants/PROFILS";
 
 /**
  * Un composant pour afficher l'entente de volume planifier de l'application
@@ -29,8 +30,13 @@ export default function AppHeaderPhPreparationRetour({ modal }) {
                     <View style={[styles.menuOpenerLine, { width: 25 }]} />
                 </View>
             </TouchableNativeFeedback>
-           
-                <Text style={styles.logo}>Folio Retourner</Text>
+           {
+            user.ID_PROFIL=PROFILS.AGENT_SUPERVISEUR ?
+                <Text style={styles.logo}>Agents préparations</Text>:
+                user.ID_PROFIL=PROFILS.CHEF_PLATEAU ?
+                <Text style={styles.logo}>Agents superviseurs</Text>:<Text style={styles.logo}></Text>
+
+           }
             <TouchableOpacity 
             // onPress={() => {
             //             modal.current?.open()

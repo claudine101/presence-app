@@ -13,17 +13,20 @@ import PROFILS from "../../constants/PROFILS";
 
 
 /**
- * Screen pour la listes des volume planifier pour vous
+ * Screen pour la listes des volume 
  * @author claudine NDAYISABA <claudine@mediabox.bi>
  * @date 1/08/2023
  * @returns 
  */
-export default function AllVolumeScreen() {
+export default function AllFolioScreen() {
+    console.log('qsdfghjklm:ùdfghjklmùcgvbhn,')
+
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
     const [loading, setLoading] = useState(false)
+
     const Action = ({ title, image }) => {
         return (
             <View style={styles.action}>
@@ -36,20 +39,12 @@ export default function AllVolumeScreen() {
     }
 
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
-
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
                 setLoading(true)
-                if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR) {
-                    const vol = await fetchApi(`/preparation/folio/folios`)
-                    setAllVolumes(vol.result)
-                }
-                else {
-                    const vol = await fetchApi(`/preparation/volume`)
-                    setAllVolumes(vol.result.data)
-                }
-
+                const vol = await fetchApi(`/preparation/folio/folios`)
+                setAllVolumes(vol.result.data)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -60,28 +55,27 @@ export default function AllVolumeScreen() {
 
     //fonction pour recuperer screen pour  detaillers
     useFocusEffect(useCallback(() => {
-        if (user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES) {
-            setNextRouteName('DetailsVolumeScreen')
+        if(user.ID_PROFIL==PROFILS.CHEF_DIVISION_ARCHIGES){
+         setNextRouteName('DetailsVolumeScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
+        else if(user.ID_PROFIL==PROFILS.AGENTS_DESARCHIVAGES){
             setNextRouteName('AddNombreFolioScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
+        else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
             setNextRouteName('DetaillerFolioScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
+        else if(user.ID_PROFIL==PROFILS.AGENTS_DISTRIBUTEUR){
             setNextRouteName('AddSuperviseurAileVolumeScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE) {
+        else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_AILE){
             setNextRouteName('AddChefPlateauVolumeScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU) {
+        else if(user.ID_PROFIL==PROFILS.CHEF_PLATEAU){
             setNextRouteName('AddSupervisurPreparationFolioScreen')
         }
-        else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR) {
+        else if(user.ID_PROFIL==PROFILS.AGENT_SUPERVISEUR){
             setNextRouteName('AddAgentPreparationFolioScreen')
         }
-        
     }, [user]))
 
 
@@ -139,15 +133,6 @@ export default function AllVolumeScreen() {
             render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/dossier.png")} key={"key6"} />
         },
     ];
-    const addDetails = [
-        {
-            text: "Ajouter  les",
-            icon: require("../../../assets/images/dossier.png"),
-            name: "DescriptionEtapeScreen",
-            position: 6,
-            render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/dossier.png")} key={"key6"} />
-        },
-    ];
     const actionsAgentchefPlateau = [
         {
             text: "Agent chef plateau",
@@ -173,115 +158,60 @@ export default function AllVolumeScreen() {
             render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
         },
     ];
-   
 
     return (
         <>
             <AppHeader />
-            {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ? <View style={styles.container}>
+            <View style={styles.container}>
                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-
-                </View> : allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                    <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                    <Text style={styles.emptyTitle}>
-                        Aucun volume trouvé
-                    </Text>
-                    <Text style={styles.emptyDesc}>
-                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                    </Text>
+                    <ActivityIndicator animating size={'large'} color={'#777'} />
                 </View> :
+                    allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
+                        <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                        <Text style={styles.emptyTitle}>
+                            Aucun volume trouvé
+                        </Text>
+                        <Text style={styles.emptyDesc}>
+                            Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                        </Text>
+                    </View> :
 
-                    <FlatList
-                        style={styles.contain}
-                        data={allVolumes}
-                        renderItem={({ item: volume, index }) => {
-                            return (
-                                <>
-                                    {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                    </View> :
-
-                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                            onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                        >
-                                            {<View style={styles.cardDetails}>
-                                                <View style={styles.carddetailItem}>
-                                                    <View style={styles.cardImages}>
-                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                    </View>
-                                                    <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                        <FlatList
+                            style={styles.contain}
+                            data={allVolumes}
+                            renderItem={({ item: volume, index }) => {
+                                return (
+                                    <>
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                            <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                        
+                                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
+                                            >
+                                                <View style={styles.cardDetails}>
+                                                    <View style={styles.carddetailItem}>
+                                                        <View style={styles.cardImages}>
+                                                            <AntDesign name="folderopen" size={24} color="black" />
+                                                        </View>
+                                                        <View style={styles.cardDescription}>
+                                                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                    <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                </View>
+                                                                <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                             </View>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.folios.length}</Text>
-                                                            
-                                                            </View>
-                                                            <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>}
-                                        </TouchableNativeFeedback>
-                                    }
-                                </>
-                            )
-                        }}
-                        keyExtractor={(volume, index) => index.toString()}
-                    />}
-            </View> :
-            
-                <View style={styles.container}>
-                    {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                    </View> :
-                        allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                            <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                            <Text style={styles.emptyTitle}>
-                                Aucun volume trouvé
-                            </Text>
-                            <Text style={styles.emptyDesc}>
-                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                            </Text>
-                        </View> :
-
-                            <FlatList
-                                style={styles.contain}
-                                data={allVolumes}
-                                renderItem={({ item: volume, index }) => {
-                                    return (
-                                        <>
-                                            {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                                            </View> :
-
-                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                    onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                                >
-                                                    <View style={styles.cardDetails}>
-                                                        <View style={styles.carddetailItem}>
-                                                            <View style={styles.cardImages}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                            </View>
-                                                            <View style={styles.cardDescription}>
-                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                    <View>
-                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                    </View>
-                                                                    <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                </TouchableNativeFeedback>
-                                            }
-                                        </>
-                                    )
-                                }}
-                                keyExtractor={(volume, index) => index.toString()}
-                            />}
-                </View>}
+                                            </TouchableNativeFeedback>
+                                        }
+                                    </>
+                                )
+                            }}
+                            keyExtractor={(volume, index) => index.toString()}
+                        />}
+            </View>
 
 
             <FloatingAction

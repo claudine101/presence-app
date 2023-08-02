@@ -1,36 +1,41 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
+import { OutlinedTextField } from 'rn-material-ui-textfield'
+import { useDispatch, useSelector } from "react-redux";
+import { folioDetailsCartSelector } from "../../store/selectors/folioDetailsCartSelector";
+import { addFolioDetailAction, removeFolioDetailAction } from "../../store/actions/folioDetailsCartActions";
 import useFetch from "../../hooks/useFetch";
-import Loading from "../../components/app/Loading";
 import { useEffect } from "react";
 import fetchApi from "../../helpers/fetchApi";
+import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
- * Le screen pour aider un superviseur aille affecter un chef du plateaux
+ * Le screen pour aider le superviseur de la phase preparation
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2021
+ * @date 12/7/2021
  * @returns 
  */
 
-export default function AddChefPlateauVolumeScreen() {
+export default function AddSupervisurPreparationFolioScreen() {
         const navigation = useNavigation()
-        const [loading, setLoading] = useState(false)
-        const route = useRoute()
-        const { volume } = route.params
+        const dispatch = useDispatch()
+        const folioDetails = useSelector(folioDetailsCartSelector)
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
+        const [loading, setLoading] = useState(false)
         const [document, setDocument] = useState(null)
-
+        const route = useRoute()
+        const { volume } = route.params
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -38,19 +43,16 @@ export default function AddChefPlateauVolumeScreen() {
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
-                // }
+                // },
         }, {
                 // document: {
                 //         required: 'ce champ est obligatoire',
-                // }
+                // },
         })
-
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volumes != null ? true : false
-                isValid = chefPlateaux != null ? true : false
-                isValid = document != null ? true : false
-                return isValid && isValidate()
+                isValid = volume != null && supPreparations != null && multiFolios.length > 0 && document != null ? true : false
+                return isValid 
         }
 
         // Volume select
@@ -64,15 +66,179 @@ export default function AddChefPlateauVolumeScreen() {
                 setVolumes(vol)
         }
 
-        // Chef du plateau select
-        const chefplateauModalizeRef = useRef(null);
-        const [chefPlateaux, setChefPlateaux] = useState(null);
-        const openChefPlateauModalize = () => {
-                chefplateauModalizeRef.current?.open();
+        // Agent superviseur preparation select
+        const preparationModalizeRef = useRef(null);
+        const [supPreparations, setSupPreparations] = useState(null);
+        const openSupPreparationModalize = () => {
+                preparationModalizeRef.current?.open();
         };
-        const setSelectedChefPlateau = (chef) => {
-                chefplateauModalizeRef.current?.close();
-                setChefPlateaux(chef)
+        const setSelectedSupPreparation = (prep) => {
+                preparationModalizeRef.current?.close();
+                setSupPreparations(prep)
+        }
+
+        // Modal folio multi select
+        const multSelectModalizeRef = useRef(null);
+        const [multiFolios, setMultiFolios] = useState([]);
+        const openMultiSelectModalize = () => {
+                multSelectModalizeRef.current?.open();
+        };
+        const submitConfimer = () => {
+                multSelectModalizeRef.current?.close();
+        }
+
+        //Composent pour afficher le modal de volume 
+        const VolumeAgentSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                </View>
+                                                {volumesAll.result.map((vol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
+                                                                                                </View>
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+        //Composent pour afficher le modal de multi select des folio
+        const MultiFolioSelctList = () => {
+                const [allFolios, setAllFolios] = useState([]);
+                const [foliosLoading, setFoliosLoading] = useState(false);
+
+                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+                const setSelectedFolio = (fol) => {
+                        if (isSelected(fol.ID_FOLIO)) {
+                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                                setMultiFolios(newfolio)
+                        } else {
+                                setMultiFolios(u => [...u, fol])
+                        }
+
+                }
+                //fonction pour recuperer le folio par rapport de volume
+                useEffect(() => {
+                        (async () => {
+                                try {
+                                        if (volume.volume) {
+                                                setFoliosLoading(true)
+                                                const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
+                                                setAllFolios(rep.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setFoliosLoading(false)
+                                }
+                        })()
+                }, [volumes])
+                return (
+                        <>
+                                {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                </View>
+                                                {allFolios.map((fol, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                </View>
+                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal des agents superviseur phase preparation
+        const SupervisionPreparationList = () => {
+                // <AntDesign name="addusergroup" size={24} color="black" />
+                const [loadingSuper, allSuperviseur] = useFetch('/preparation/batiment/superviseurPreparation')
+               console.log(allSuperviseur)
+                return (
+                        <>
+                                {loadingSuper ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseur</Text>
+                                                </View>
+                                                {allSuperviseur.result.map((prep, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
+                                                                                                </View>
+                                                                                                {supPreparations?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
         }
 
          //Fonction pour le prendre l'image avec l'appareil photos
@@ -83,6 +249,16 @@ export default function AddChefPlateauVolumeScreen() {
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.didCancel) {
                                 setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
                         }
                 }
                 catch (error) {
@@ -110,84 +286,41 @@ export default function AddChefPlateauVolumeScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des plateaux
-        const ChefPlateauList = () => {
-                const [loadingSuperviseur, superviseurList] = useFetch('/preparation/batiment/chefPlateau')
-                return (
-                        <>
-                                {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View> :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
-                                                </View>
-                                                {superviseurList.result.map((chef, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
-                                                                                                </View>
-                                                                                                {chefPlateaux?.ID_USER_AILE == chef.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                        </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
-                                        </View>
-                                }
-                        </>
-                )
+        const submitDataPreparation = async () => {
+                try {
+                        setLoading(true)
+                        const form = new FormData()
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('AGENT_SUPERVISEUR', supPreparations.USERS_ID)
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
+                        }
+                        const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoading(false)
+                }
         }
 
-        //Composent pour afficher le modal de volume 
-        const VolumeAgentSuperviseurList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
-                return (
-                        <>
-                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View> :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
-                                                </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
-                                                {volumesAll.result.map((vol, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
-                                                                                                </View>
-                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                        </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
-                                        </View>
-                                }
-                        </>
-                )
-        }
         //Fonction pour appeller les autres information en passant l'id de volume selectionner
         useEffect(() => {
                 (async () => {
@@ -207,44 +340,9 @@ export default function AddChefPlateauVolumeScreen() {
                 })()
         }, [volumes])
 
-        const submitInAille = async () => {
-                try {
-                        setLoading(true)
-                        const form = new FormData()
-                        form.append('CHEF_PLATEAU', chefPlateaux.USERS_ID)
-                        if (document) {
-                                const manipResult = await manipulateAsync(
-                                        document.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.8, format: SaveFormat.JPEG }
-                                );
-                                let localUri = manipResult.uri;
-                                let filename = localUri.split('/').pop();
-                                let match = /\.(\w+)$/.exec(filename);
-                                let type = match ? `image/${match[1]}` : `image`;
-                                form.append('PV', {
-                                        uri: localUri, name: filename, type
-                                })
-                        }
-                        const vol= await fetchApi(`/preparation/volume/nommerChefPlateau/${volume.volume.ID_VOLUME}`, {
-                                method: "PUT",
-                                body: form
-                        })
-                        navigation.goBack()
-                }
-                catch (error) {
-                        console.log(error)
-                } finally {
-                        setLoading(false)
-                }
-        }
-
-
         return (
                 <>
-                        {loading && <Loading />}
+                        {loading && <Loading/>}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -254,7 +352,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer le chef plateau</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent superviseur</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
@@ -294,38 +392,26 @@ export default function AddChefPlateauVolumeScreen() {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Batiments
+                                                                        Selectioner un agent superviseur
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_BATIMENT}` : 'N/B'}
+                                                                                {supPreparations ? `${supPreparations.NOM}` + `${supPreparations.PRENOM}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Ailles
+                                                                        Selectioner les folios
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_AILE}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Selectioner un chef de plateau
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {chefPlateaux ? `${chefPlateaux.NOM}` + `${chefPlateaux.PRENOM}` : 'Aucun'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -352,7 +438,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                                 </View>
                                                         </TouchableOpacity>
                                                 </View> */}
-                                                 <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -367,20 +453,25 @@ export default function AddChefPlateauVolumeScreen() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitInAille}
+                                        onPress={submitDataPreparation}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                                 <Portal>
-                                        <Modalize ref={chefplateauModalizeRef}  >
-                                                <ChefPlateauList />
+                                        <Modalize ref={preparationModalizeRef}  >
+                                                <SupervisionPreparationList />
                                         </Modalize>
                                 </Portal>
                                 <Portal>
                                         <Modalize ref={volumeModalizeRef}  >
                                                 <VolumeAgentSuperviseurList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={multSelectModalizeRef}  >
+                                                <MultiFolioSelctList />
                                         </Modalize>
                                 </Portal>
                         </View>
@@ -410,7 +501,7 @@ const styles = StyleSheet.create({
                 borderRadius: 50,
         },
         titlePrincipal: {
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: "bold",
                 marginLeft: 10,
                 color: COLORS.primary
@@ -461,6 +552,10 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
+        label: {
+                fontSize: 16,
+                fontWeight: 'bold'
+        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
@@ -474,6 +569,61 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
+        buttonPlus: {
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                backgroundColor: COLORS.primary,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center"
+        },
+        buttonTextPlus: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 25
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#ddd",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 5,
+                paddingHorizontal: 30
+        },
+        cardFolder: {
+                flexDirection: "row",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: '#FFF',
+                maxHeight: 50,
+                borderRadius: 20,
+                padding: 3,
+                paddingVertical: 2,
+                elevation: 10,
+                shadowColor: '#c4c4c4',
+        },
+        cardDescription: {
+                marginLeft: 10,
+                width: 30,
+                height: 30,
+                borderRadius: 30,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: "#ddd"
+        },
+        reomoveBtn: {
+                width: 30,
+                height: 30,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
         itemTitleDesc: {
                 color: "#777",
                 marginLeft: 10,
@@ -483,6 +633,15 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
+        },
+        butConfirmer: {
+                // marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                // paddingHorizontal: 10,
+                backgroundColor: "#18678E",
+                marginHorizontal: 50,
+                marginVertical: 15
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -496,4 +655,5 @@ const styles = StyleSheet.create({
                 marginLeft: 5,
                 opacity: 0.8
         },
+
 })
