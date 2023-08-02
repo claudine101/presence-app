@@ -61,7 +61,7 @@ export default function AllVolumesRecusScreen() {
                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                 </View> :
                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                onPress={() => navigation.navigate("NewChefPlateauScreen")}
+                                                                                onPress={() => navigation.navigate("ValideChefEquipeScreen", {details:volume})}
                                                                         >
                                                                                 <View style={styles.cardDetails}>
                                                                                         <View style={styles.carddetailItem}>
@@ -74,7 +74,7 @@ export default function AllVolumesRecusScreen() {
                                                                                                                         <Text style={styles.itemVolume}>{volume.NOM} {volume.PRENOM}</Text>
                                                                                                                         {/* <Text>{volume.CODE_VOLUME}</Text> */}
                                                                                                                 </View>
-                                                                                                                <Text>12/12/2023</Text>
+                                                                                                                {/* <Text>12/12/2023</Text> */}
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </View>
