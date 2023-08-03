@@ -1,0 +1,1 @@
+export const planificationCartSelector = ({ planificationCart }) => planificationCart
