@@ -77,7 +77,7 @@ export default function DetailsAgentPreparationScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()

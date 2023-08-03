@@ -23,6 +23,8 @@ export default function AgentSuperviseurAileScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
+        const [header, setHeader] = useState("Agents superviseurs ailes")
+
         const user = useSelector(userSelector)
 
 
@@ -42,7 +44,7 @@ export default function AgentSuperviseurAileScreen() {
         }, []))
         return (
                 <>
-                        <AppHeaderPhPreparationRetour />
+                        <AppHeaderPhPreparationRetour header={header} />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />

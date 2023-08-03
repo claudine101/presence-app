@@ -16,7 +16,7 @@ import PROFILS from "../../constants/PROFILS";
  * @returns 
  */
 
-export default function AppHeaderPhPreparationRetour({ modal }) {
+export default function AppHeaderPhPreparationRetour({ header }) {
     const user = useSelector(userSelector)
     const navigation = useNavigation()
     return (
@@ -30,7 +30,7 @@ export default function AppHeaderPhPreparationRetour({ modal }) {
                     <View style={[styles.menuOpenerLine, { width: 25 }]} />
                 </View>
             </TouchableNativeFeedback>
-            <Text style={styles.logo}>Agents préparations</Text>
+            <Text style={styles.logo}>{header}</Text>
             
            {/* {
             user.ID_PROFIL=PROFILS.AGENT_SUPERVISEUR ?
