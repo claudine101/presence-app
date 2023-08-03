@@ -75,13 +75,13 @@ export default function AddChefPlateauVolumeScreen() {
                 setChefPlateaux(chef)
         }
 
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
                 try {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                         }
                 }
@@ -127,8 +127,9 @@ export default function AddChefPlateauVolumeScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        <View style={styles.imageContainer}>
+                                                                                                {chef.PHOTO_USER ? <Image source={{ uri: chef.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -161,7 +162,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
                                                 {volumesAll.result.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
@@ -228,7 +229,7 @@ export default function AddChefPlateauVolumeScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const vol= await fetchApi(`/preparation/volume/nommerChefPlateau/${volume.volume.ID_VOLUME}`, {
+                        const vol = await fetchApi(`/preparation/volume/nommerChefPlateau/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -352,7 +353,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                                 </View>
                                                         </TouchableOpacity>
                                                 </View> */}
-                                                 <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -495,5 +496,18 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
 })

@@ -1,22 +1,16 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import React from "react";
+import { useSelector } from "react-redux";
 import DrawerContent from "../components/app/DrawerContent";
 import AllVolumeScreen from "../screens/preparation/AllVolumeScreen";
-import VolumePrepareScreen from "../screens/volume/VolumePrepareScreen";
 import AgentPreparationFolioScreen from "../screens/preparation/AgentPreparationFolioScreen";
 import FolioRetourScreen from "../screens/preparation/FolioRetourScreen";
 import AgentSuperviseurScreen from "../screens/preparation/AgentSuperviseurScreen";
 import ChefPlateauScreen from "../screens/preparation/ChefPlateauScreen";
 import AgentSuperviseurAileScreen from "../screens/preparation/AgentSuperviseurAileScreen";
-
-
-import { useSelector } from "react-redux";
-import { userSelector } from "../store/selectors/userSelector";
 import AllVolumeDetaillerScreen from "../screens/preparation/AllVolumeDetaillerScreen";
-import AgentDesarchivagesRetourScreen from "../screens/retour/AgentDesarchivagesRetourScreen";
-import AgentSupArchiveRetourScreen from "../screens/retour/AgentSupArchiveRetourScreen";
+import { userSelector } from "../store/selectors/userSelector";
 import PROFILS from "../constants/PROFILS";
-
 export default function DrawerNavigator() {
         const drawr = true
         const user = useSelector(userSelector)
@@ -26,28 +20,23 @@ export default function DrawerNavigator() {
                         {(user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name='VolumePrepareScreen' component={VolumePrepareScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name="AgentDesarchivagesRetourScreen" component={AgentDesarchivagesRetourScreen} />
                                 </>
                                 : null}
 
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name="AgentSupArchiveRetourScreen" component={AgentSupArchiveRetourScreen} />
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
-
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name='VolumePrepareScreen' component={VolumePrepareScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU ?
@@ -74,10 +63,6 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AgentSuperviseurAileScreen" component={AgentSuperviseurAileScreen} />
                                 </>
                                 : null}
-
-
-
-
                 </Drawer.Navigator>
         )
 }

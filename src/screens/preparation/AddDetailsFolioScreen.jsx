@@ -149,8 +149,9 @@ export default function AddDetailsFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -238,7 +239,7 @@ export default function AddDetailsFolioScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setLogoImage(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -893,4 +894,17 @@ const styles = StyleSheet.create({
                 justifyContent: "space-between",
                 flex: 1
         },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+            },
+            image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
+            },
 })

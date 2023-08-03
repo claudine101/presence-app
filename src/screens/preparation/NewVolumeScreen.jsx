@@ -114,18 +114,8 @@ export default function NewVolumeScreen() {
             const permission = await ImagePicker.requestCameraPermissionsAsync()
             if (!permission.granted) return false
             const image = await ImagePicker.launchCameraAsync()
-            if (!image.didCancel) {
+            if (!image.canceled) {
                 setDocument(image)
-                // const photo = image.assets[0]
-                // const photoId = Date.now()
-                // const manipResult = await manipulateAsync(
-                //         photo.uri,
-                //         [
-                //                 { resize: { width: 500 } }
-                //         ],
-                //         { compress: 0.7, format: SaveFormat.JPEG }
-                // );
-                // setLogoImage(manipResult)
             }
         }
         catch (error) {
@@ -156,11 +146,6 @@ export default function NewVolumeScreen() {
                     uri: localUri, name: filename, type
                 })
             }
-            // if (data.document) {
-            //     let localUri = data.document.uri;
-            //     let filename = localUri.split('/').pop();
-            //     form.append("PV", ({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
-            // }
             const volume = await fetchApi(`/preparation/volume`, {
                 method: "POST",
                 body: form
@@ -240,9 +225,6 @@ export default function NewVolumeScreen() {
 
                                         </View>
                                         <View>
-                                            <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_VOLUME}</Text>
-                                        </View>
-                                        <View>
                                             <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
                                                 <MaterialCommunityIcons name="delete" size={24} color="#777" />
                                             </TouchableOpacity>
@@ -251,30 +233,6 @@ export default function NewVolumeScreen() {
                                 </View>
                             )
                         })}
-
-                        {/* <View>
-                            <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                onPress={selectdocument}
-                            >
-                                <View>
-                                    <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                        Importer le proces verbal
-                                    </Text>
-                                    {data.document ? <View>
-                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                            {data.document.name}
-                                        </Text>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                            <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                            </Text>
-                                        </View>
-                                    </View> : null}
-                                </View>
-                            </TouchableOpacity>
-                        </View> */}
-
                         <TouchableOpacity onPress={onTakePicha}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>

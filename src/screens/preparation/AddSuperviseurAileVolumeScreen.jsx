@@ -79,7 +79,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -136,8 +136,9 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedagentSuperviseur(chef)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {chef.PHOTO_USER ? <Image source={{ uri: chef.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -473,4 +474,17 @@ const styles = StyleSheet.create({
                 marginLeft: 5,
                 opacity: 0.8
         },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+            },
+            image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
+            },
 })

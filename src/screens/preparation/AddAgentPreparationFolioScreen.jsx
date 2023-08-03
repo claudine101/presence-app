@@ -79,7 +79,7 @@ export default function AddAgentPreparationFolioScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -136,8 +136,9 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -175,7 +176,7 @@ export default function AddAgentPreparationFolioScreen() {
                                 {
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
                                                 {allFolios.map((fol, index) => {
                                                         return (
@@ -321,7 +322,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner les folios
+                                                                        Selectionner les dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -549,7 +550,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 // paddingHorizontal: 10,
                 backgroundColor: "#18678E",
-                marginHorizontal: 50,
+                marginHorizontal: 10,
                 marginVertical: 15
         },
         addImageItem: {
@@ -563,5 +564,18 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
 })

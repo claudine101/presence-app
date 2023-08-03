@@ -76,7 +76,7 @@ export default function VolumeRetourChefPlateau() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                         }
                 }

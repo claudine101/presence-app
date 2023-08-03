@@ -164,7 +164,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
                                                 {allFolios.map((fol, index) => {
                                                         return (
@@ -219,8 +219,9 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -247,7 +248,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -395,7 +396,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner un agent superviseur
+                                                                        Selectionner un agent superviseur
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -407,7 +408,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner les folios
+                                                                        Selectionner les dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -638,10 +639,11 @@ const styles = StyleSheet.create({
                 // marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
-                // paddingHorizontal: 10,
+                paddingHorizontal: 10,
                 backgroundColor: "#18678E",
-                marginHorizontal: 50,
-                marginVertical: 15
+                marginHorizontal: 10
+                // marginHorizontal: 50,
+                // marginVertical: 15
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -655,5 +657,18 @@ const styles = StyleSheet.create({
                 marginLeft: 5,
                 opacity: 0.8
         },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+            },
+            image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
+            },
 
 })

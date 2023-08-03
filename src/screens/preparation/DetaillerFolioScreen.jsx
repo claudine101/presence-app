@@ -141,7 +141,7 @@ export default function AddFolioScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -165,7 +165,7 @@ export default function AddFolioScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocumentDist(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -488,8 +488,10 @@ export default function AddFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+
+                                                                                        <View style={styles.imageContainer}>
+                                                                                                {distr.PHOTO_USER ? <Image source={{ uri: distr.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
@@ -727,7 +729,7 @@ export default function AddFolioScreen() {
                                                         </> :
                                                         <>{((folioNatures.length == volume.volume.NOMBRE_DOSSIER)) ? null : <>
                                                                 <View style={{ marginBottom: 8 }}>
-                                                                        <Text style={styles.label}>Folio</Text>
+                                                                        <Text style={styles.label}>Dossier</Text>
                                                                 </View>
                                                                 <View style={{ marginVertical: 8 }}>
                                                                         <OutlinedTextField
@@ -942,6 +944,19 @@ const styles = StyleSheet.create({
                 borderRadius: 50,
                 justifyContent: "center",
                 alignItems: "center"
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
         modalTitle: {
                 fontWeight: "bold",
