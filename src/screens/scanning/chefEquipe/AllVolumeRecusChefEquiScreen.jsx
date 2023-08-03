@@ -22,6 +22,7 @@ export default function AllVolumeRecusChefEquiScreen() {
         const [allVolumes, setAllVolumes] = useState([])
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
+        console.log(user)
 
         const handleSubmit = (volume) => {
                 if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE){

@@ -24,6 +24,7 @@ import ValideChefEquipeScreen from '../screens/scanning/chefEquipe/ValideChefEqu
 import NewAgentSupScanScreen from '../screens/scanning/agentAileSuperviseur/NewAgentSupScanScreen';
 import NewEquipeScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeScanScreen';
 import NewFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/NewFolioRetourScreen';
+import DetailsFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFolioRetourScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -42,6 +43,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='NewAgentSupScanScreen' component={NewAgentSupScanScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='NewEquipeScanScreen' component={NewEquipeScanScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>

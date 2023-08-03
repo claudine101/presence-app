@@ -25,102 +25,40 @@ import { useForm } from "../../../../hooks/useForm";
 
 export default function NewFolioRetourScreen() {
         const navigation = useNavigation()
-        const [document, setDocument] = useState(null)
-        const [data, handleChange, setValue] = useForm({
-                chaine: '',
-                ordinateur: ''
-        })
+        const route = useRoute()
+        const { details } = route.params
+        const [sexe, setSexe] = useState(null)
+        const [loadingData, setLoadingData] = useState(false)
 
-        const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                chaine: {
-                        required: true
-                },
-                ordinateur: {
-                        required: true
-                }
-        }, {
-                chaine: {
-                        required: 'ce champ est obligatoire',
-                },
-                ordinateur: {
-                        required: 'ce champ est obligatoire',
-                }
-        })
-
-        // Equipe scanning select
-        const equipeModalizeRef = useRef(null);
-        const [equipe, setEquipe] = useState(null);
-        const openEquipeModalize = () => {
-                equipeModalizeRef.current?.open();
-        };
-        const setSelectedEquipe = (equi) => {
-                equipeModalizeRef.current?.close();
-                setEquipe(equi)
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = sexe != null ? true : false
+                return isValid 
         }
 
-        //Composent pour afficher la listes des equipe scanning
-        const EquipeScanningList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/allEquipe')
-                return (
-                        <>
-                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View> :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des chefs plateaux</Text>
-                                                </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun equipe scanning trouves</Text></View> : null}
-                                                {volumesAll.result.map((chef, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
-                                                                                                </View>
-                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                        </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
-                                        </View>}
-                        </>
-                )
-        }
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
+         const submitEquipeData = async () => {
                 try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
+                        setLoadingData(true)
+                        const form = new FormData()
+                        form.append('IS_RECONCILIE', sexe)
+                        form.append('ID_FOLIO', details.folio.ID_FOLIO)
+                        const volume = await fetchApi(`/scanning/folio/renconsilier`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
+                } finally {
+                        setLoadingData(false)
                 }
         }
+
+
         return (
                 <>
+                         {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -135,110 +73,83 @@ export default function NewFolioRetourScreen() {
                                         </View>
                                 </View>
                                 <ScrollView>
-                                        <View style={{ marginVertical: 5 }}>
-                                                <OutlinedTextField
-                                                        label="chaine"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.chaine}
-                                                        onChangeText={(newValue) => handleChange('chaine', newValue)}
-                                                        onBlur={() => checkFieldData('chaine')}
-                                                        error={hasError('chaine') ? getError('chaine') : ''}
-                                                        autoCompleteType='off'
-                                                        keyboardType='number-pad'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <View style={{ marginVertical: 5 }}>
-                                                <OutlinedTextField
-                                                        label="ordinateur"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.ordinateur}
-                                                        onChangeText={(newValue) => handleChange('ordinateur', newValue)}
-                                                        onBlur={() => checkFieldData('ordinateur')}
-                                                        error={hasError('ordinateur') ? getError('ordinateur') : ''}
-                                                        autoCompleteType='off'
-                                                        keyboardType='number-pad'
-                                                        blurOnSubmit={false}
-                                                />
-                                        </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner une equipe scanning
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {equipe ? `${equipe.NOM_EQUIPE}` : 'Aucun'}
-                                                                </Text>
-                                                        </View>
-                                                </View>
-                                        </TouchableOpacity>
                                         <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Volume
+                                                                Chaine
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        sdhhs
-                                                                        {/* {folio.volume.NUMERO_VOLUME} */}
+                                                                        {details.folio.equipe.CHAINE}
                                                                 </Text>
                                                         </View>
                                                 </View>
                                         </View>
-                                        <View>
-                                                <View style={styles.selectContainer}>
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Odinateur
+                                                        </Text>
                                                         <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Nombre de dossiers
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.folio.equipe.ORDINATEUR}
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                sjdjshd
-                                                                                {/* {folio.volume.NOMBRE_DOSSIER} */}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity onPress={onTakePicha}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <Feather name="image" size={24} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du proces verbal
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Nom du dossier
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.folio.NUMERO_FOLIO}
                                                                 </Text>
                                                         </View>
-                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
-                                        </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Equipe scanning
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.folio.equipe.NOM_EQUIPE}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </View>
+                                        {details.folio.IS_RECONCILIE == null ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Text style={styles.inputLabel}>Scan et rencocilier</Text>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <TouchableWithoutFeedback onPress={() => setSexe(1)}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 15 }} >
+                                                                        <Text style={{ color: "#000" }}>Qui</Text>
+                                                                        {sexe == 1 ? <MaterialCommunityIcons name="radiobox-marked" size={20} color="#007bff" style={{ marginLeft: 5 }} /> :
+                                                                                <MaterialCommunityIcons name="radiobox-blank" size={20} color="#777" style={{ marginLeft: 5 }} />}
+                                                                </View>
+                                                        </TouchableWithoutFeedback>
+                                                        <TouchableWithoutFeedback s onPress={() => setSexe(0)}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 15 }}>
+                                                                        <Text style={{ color: "#000" }}>Non</Text>
+                                                                        {sexe == 0 ? <MaterialCommunityIcons name="radiobox-marked" size={20} color="#007bff" style={{ marginLeft: 5 }} /> :
+                                                                                <MaterialCommunityIcons name="radiobox-blank" size={20} color="#777" style={{ marginLeft: 5 }} />}
+                                                                </View>
+                                                        </TouchableWithoutFeedback>
+                                                </View>
+                                        </View>:null}
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                // disabled={!isValidAdd()}
-                                // onPress={submitEquipeData}
+                                disabled={!isValidAdd()}
+                                onPress={submitEquipeData}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Portal>
-                                <Modalize ref={equipeModalizeRef}  >
-                                        <EquipeScanningList />
-                                </Modalize>
-                        </Portal>
                 </>
         )
 }
@@ -362,4 +273,10 @@ const styles = StyleSheet.create({
                 marginHorizontal: 50,
                 marginVertical: 15
         },
+        inputLabel: {
+                color: '#000',
+                fontWeight: 'bold',
+                marginVertical: 5,
+                marginTop: 10
+      },
 })

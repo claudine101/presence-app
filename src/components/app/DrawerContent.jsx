@@ -65,16 +65,30 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             </View>
                         </TouchableNativeFeedback>
                     </> : null}
-                {user.ID_PROFIL == 9 || user.ID_PROFIL == 11 || user.ID_PROFIL == 12 ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeRecusChefEquiScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
-                                Volume recus
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableNativeFeedback> : null}
+                {user.ID_PROFIL == 9 || user.ID_PROFIL == 11 || user.ID_PROFIL == 12 ?
+                    <>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeRecusChefEquiScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
+                                        Volume recus
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeRetourScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
+                                        Volume retourner
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                    </>
+                    : null}
                 {user.ID_PROFIL == 13 ?
                     <>
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioRecusScanScreen')}>
@@ -82,7 +96,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                        Folios recus
+                                        Folios
                                     </Text>
                                 </View>
                             </View>
@@ -93,6 +107,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
                                         Folios Retourner
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFoliosSuperviseurPvScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
+                                        Folios recus
                                     </Text>
                                 </View>
                             </View>

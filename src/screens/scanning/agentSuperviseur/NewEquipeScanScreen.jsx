@@ -196,7 +196,6 @@ export default function NewEquipeScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/scanning/folio/equipeScanning`, {
                                 method: "PUT",
                                 body: form

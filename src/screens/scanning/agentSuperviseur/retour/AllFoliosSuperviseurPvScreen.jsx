@@ -7,13 +7,13 @@ import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
 
 /**
- * Screen pour afficher les folios retourner par une equipe a un agent superviseur scanning
+ * Screen pour afficher les folios pres a etre reconsillier
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 3/8/2023
  * @returns 
  */
 
-export default function AllFolioEquipeRetourScreen() {
+export default function AllFoliosSuperviseurPvScreen() {
         const navigation = useNavigation()
         const [allFolios, setAllFolios] = useState([])
         const [loading, setLoading] = useState(false)
@@ -26,7 +26,7 @@ export default function AllFolioEquipeRetourScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const fol = await fetchApi(`/scanning/volume/equipeScanning`)
+                                const fol = await fetchApi(`/scanning/volume/allFoliosScanning`)
                                 setAllFolios(fol.UserFolios)
                         } catch (error) {
                                 console.log(error)
