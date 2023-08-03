@@ -12,14 +12,14 @@ import { FloatingAction } from "react-native-floating-action";
 import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * Screen pour afficher les chef plateau et  les nombre des dossiers recu
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 03/08/2023
  * @returns 
  */
 
 
-export default function AgentSuperviseurScreen() {
+export default function ChefPlateauScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
@@ -41,7 +41,7 @@ export default function AgentSuperviseurScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/preparation/folio/superviseur')
+                                const res = await fetchApi('/preparation/volume/chefPlateau')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -77,7 +77,7 @@ export default function AgentSuperviseurScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio:folio,users:folio.users})}
+                                                                                                onPress={() => navigation.navigate("VolumeRetourChefPlateau", { volume:folio,users:folio.users})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -89,7 +89,7 @@ export default function AgentSuperviseurScreen() {
                                                                                                                                 <View style={styles.cardNames}>
                                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>
                                                                                                                                             {folio.users?.NOM} {folio.users?.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.folios?.length}</Text>
+                                                                                                                                        <Text>{folio.volumes?.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>

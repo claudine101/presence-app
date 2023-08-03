@@ -12,36 +12,26 @@ import { FloatingAction } from "react-native-floating-action";
 import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * Screen pour afficher les chef plateau et  les nombre des dossiers recu
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 03/08/2023
  * @returns 
  */
 
 
-export default function AgentSuperviseurScreen() {
+export default function AgentSuperviseurAileScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
 
-        const Action = ({ title, image }) => {
-                return (
-                        <View style={styles.action}>
-                                <Text style={styles.actionLabel}>{title}</Text>
-                                <View style={styles.actionIcon}>
-                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                                </View>
-                        </View>
-                )
-        }
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/preparation/folio/superviseur')
+                                const res = await fetchApi('/preparation/volume/agentSuperviseurAile')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -77,7 +67,7 @@ export default function AgentSuperviseurScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio:folio,users:folio.users})}
+                                                                                                onPress={() => navigation.navigate("VolumeRetourAgentSuperviseur", { volume:folio,users:folio.users})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -89,7 +79,7 @@ export default function AgentSuperviseurScreen() {
                                                                                                                                 <View style={styles.cardNames}>
                                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>
                                                                                                                                             {folio.users?.NOM} {folio.users?.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.folios?.length}</Text>
+                                                                                                                                        <Text>{folio.volumes?.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>

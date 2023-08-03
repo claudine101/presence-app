@@ -496,7 +496,7 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {distributeur?.ID_USER_AILE == distr.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {distributeur?.USERS_ID == distr.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>

@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, Feather, EvilIcons, Fontisto } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Feather, EvilIcons, Fontisto, FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
@@ -28,7 +28,7 @@ export default function AddDetailsFolioScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
         const route = useRoute()
-        const {folio,users } = route.params
+        const { folio, users } = route.params
         console.log(users)
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
@@ -285,6 +285,8 @@ export default function AddDetailsFolioScreen() {
                         form.append('NUMERO_FEUILLE', data.nombre)
                         form.append('NOMBRE_DOUBLON', data.doublon)
                         form.append('ID_FOLIO', folio.ID_FOLIO)
+                        form.append('COLLINE_ID', collines.COLLINE_ID)
+
                         if (logoImage) {
                                 const manipResult = await manipulateAsync(
                                         logoImage.uri,
@@ -314,12 +316,211 @@ export default function AddDetailsFolioScreen() {
                         setLoading(false)
                 }
         }
+        // Provinces select
+        const provinceModalizeRef = useRef(null);
+        const [provinces, setProvinces] = useState(null);
+        const openProvinceModalize = () => {
+                provinceModalizeRef.current?.open();
+        };
+        const setSelectedProvinces = (prov) => {
+                provinceModalizeRef.current?.close();
+                setProvinces(prov)
+        }
+        //Composent pour afficher le modal des Provincess 
+        const ProvincesList = () => {
+                const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
+                return (
+                        <>
+                                <>
+                                        {loadingProvinces ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des Provinces</Text>
+                                                        </View>
+                                                        {ProvincessAll.result.map((prov, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedProvinces(prov)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{prov.PROVINCE_NAME}</Text>
+                                                                                                        </View>
+                                                                                                        {provinces?.PROVINCE_ID == prov.PROVINCE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
+
+        // Communes select
+        const communeModalizeRef = useRef(null);
+        const [communes, setCommunes] = useState(null);
+        const openCommuneModalize = () => {
+                communeModalizeRef.current?.open();
+        };
+        const setSelectedCommunes = (comm) => {
+                communeModalizeRef.current?.close();
+                setCommunes(comm)
+        }
+        //Composent pour afficher le modal des communes 
+        const CommunesList = ({ provinces }) => {
+                const [loadingCommunes, CommunesAll] = useFetch(`/preparation/batiment/communes/${provinces.PROVINCE_ID}`)
+                return (
+                        <>
+                                <>
+                                        {loadingCommunes ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des communes</Text>
+                                                        </View>
+                                                        {CommunesAll.result.map((comm, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedCommunes(comm)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{comm.COMMUNE_NAME}</Text>
+                                                                                                        </View>
+                                                                                                        {communes?.COMMUNE_ID == comm.COMMUNE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
+
+        // zones select
+        const zoneModalizeRef = useRef(null);
+        const [zones, setZones] = useState(null);
+        const openZoneModalize = () => {
+                zoneModalizeRef.current?.open();
+        };
+        const setSelectedZones = (zone) => {
+                zoneModalizeRef.current?.close();
+                setZones(zone)
+        }
+        //Composent pour afficher le modal des zones 
+        const ZonesList = ({ communes }) => {
+                const [loadingZones, zonesAll] = useFetch(`/preparation/batiment/zones/${communes.COMMUNE_ID}`)
+                return (
+                        <>
+                                <>
+                                        {loadingZones ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des zones</Text>
+                                                        </View>
+                                                        {zonesAll.result.map((zone, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedZones(zone)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{zone.ZONE_NAME}</Text>
+                                                                                                        </View>
+                                                                                                        {zones?.ZONE_ID == zone.ZONE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
+
+         // collines select
+         const collineModalizeRef = useRef(null);
+         const [collines, setCollines] = useState(null);
+         const openCollineModalize = () => {
+                 collineModalizeRef.current?.open();
+         };
+         const setSelectedCollines = (colline) => {
+                 collineModalizeRef.current?.close();
+                 setCollines(colline)
+         }
+         //Composent pour afficher le modal des collines 
+         const  CollinesList = ({ zones }) => {
+                 const [loadingCollines, collinesAll] = useFetch(`/preparation/batiment/collines/${zones.ZONE_ID}`)
+                 return (
+                         <>
+                                 <>
+                                         {loadingCollines ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
+                                         </View> :
+                                                 <View style={styles.modalContainer}>
+                                                         <View style={styles.modalHeader}>
+                                                                 <Text style={styles.modalTitle}>Listes des collines</Text>
+                                                         </View>
+                                                         {collinesAll.result.map((colline, index) => {
+                                                                 return (
+                                                                         <ScrollView key={index}>
+                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCollines(colline)}>
+                                                                                         <View style={styles.modalItem} >
+                                                                                                 <View style={styles.modalImageContainer}>
+                                                                                                         <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                 </View>
+                                                                                                 <View style={styles.modalItemCard}>
+                                                                                                         <View>
+                                                                                                                 <Text style={styles.itemTitle}>{colline.COLLINE_NAME}</Text>
+                                                                                                         </View>
+                                                                                                         {collines?.COLLINE_ID == colline.COLLINE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                 <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                 </View>
+                                                                                         </View>
+                                                                                 </TouchableNativeFeedback>
+                                                                         </ScrollView>
+                                                                 )
+                                                         })}
+                                                 </View>
+                                         }
+                                 </>
+                         </>
+                 )
+         }
 
 
 
         return (
                 <>
-                        {loading && <Loading/>}
+                        {loading && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -405,6 +606,60 @@ export default function AddDetailsFolioScreen() {
                                                                 blurOnSubmit={false}
                                                         />
                                                 </View>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openProvinceModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le provinces
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {provinces ? `${provinces.PROVINCE_NAME}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity>
+                                                {provinces ? <TouchableOpacity style={styles.selectContainer} onPress={openCommuneModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le communes
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {communes ? `${communes.COMMUNE_NAME}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity> : null
+
+                                                }
+                                                {communes ? <TouchableOpacity style={styles.selectContainer} onPress={openZoneModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le zone
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {zones ? `${zones.ZONE_NAME}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity> : null
+
+                                                }
+                                                 {zones ? <TouchableOpacity style={styles.selectContainer} onPress={openCollineModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectioner le colline
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Aucun'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </TouchableOpacity> : null
+
+                                                }
                                                 <TouchableWithoutFeedback onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -452,9 +707,29 @@ export default function AddDetailsFolioScreen() {
                                                                 blurOnSubmit={false}
                                                         />
                                                 </View>
-                                               
+
                                         </View>
                                 </ScrollView>
+                                <Portal>
+                                        <Modalize ref={provinceModalizeRef}  >
+                                                <ProvincesList />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={communeModalizeRef}  >
+                                                <CommunesList provinces={provinces} />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={zoneModalizeRef}  >
+                                                <ZonesList communes={communes} />
+                                        </Modalize>
+                                </Portal>
+                                <Portal>
+                                        <Modalize ref={collineModalizeRef}  >
+                                                <CollinesList zones={zones} />
+                                        </Modalize>
+                                </Portal>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitData}
@@ -473,8 +748,10 @@ export default function AddDetailsFolioScreen() {
                                                 <FolioList agentPreparation={agentPreparation} />
                                         </Modalize>
                                 </Portal>
-                              
+
                         </View>
+
+
                 </>
         )
 }

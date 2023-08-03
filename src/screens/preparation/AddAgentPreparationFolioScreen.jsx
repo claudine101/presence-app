@@ -237,7 +237,7 @@ export default function AddAgentPreparationFolioScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        // navigation.goBack()
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)

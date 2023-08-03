@@ -135,7 +135,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.ID_USER_AILE == chef.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>

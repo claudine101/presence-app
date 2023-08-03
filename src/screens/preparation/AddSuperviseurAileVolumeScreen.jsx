@@ -144,7 +144,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {agentSuperviseur?.ID_USER_AILE == chef.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {agentSuperviseur?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>

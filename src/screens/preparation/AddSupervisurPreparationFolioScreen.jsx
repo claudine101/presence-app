@@ -227,7 +227,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {supPreparations?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>

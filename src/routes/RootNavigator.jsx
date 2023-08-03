@@ -15,6 +15,11 @@ import AddAgentPreparationFolioScreen from '../screens/preparation/AddAgentPrepa
 import DetailsAgentPreparationScreen from '../screens/preparation/DetailsAgentPreparationScreen';
 import AddDetailsFolioScreen from '../screens/preparation/AddDetailsFolioScreen';
 import DetailsFolioScreen from '../screens/preparation/DetailsFolioScreen';
+import FolioRetourSuperviseurScreen from '../screens/preparation/FolioRetourSuperviseurScreen';
+import VolumeRetourChefPlateau from '../screens/preparation/VolumeRetourChefPlateau';
+import VolumeRetourAgentSuperviseur from '../screens/preparation/VolumeRetourAgentSuperviseur';
+
+
 
 
 
@@ -52,6 +57,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsAgentPreparationScreen' component={DetailsAgentPreparationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AddDetailsFolioScreen' component={AddDetailsFolioScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsFolioScreen' component={DetailsFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FolioRetourSuperviseurScreen' component={FolioRetourSuperviseurScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='VolumeRetourChefPlateau' component={VolumeRetourChefPlateau} options={{ headerShown: false }} />
+                <Stack.Screen name='VolumeRetourAgentSuperviseur' component={VolumeRetourAgentSuperviseur} options={{ headerShown: false }} />
 
                 <Stack.Screen name='VolumeDetailsScreen' component={VolumeDetailsScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AgentSupPhasePreparationRetourDetailsScreen' component={AgentSupPhasePreparationRetourDetailsScreen} options={{ headerShown: false }} />
