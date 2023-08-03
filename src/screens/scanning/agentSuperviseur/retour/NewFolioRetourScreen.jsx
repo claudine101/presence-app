@@ -2,46 +2,50 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import React, { useCallback } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../../../styles/COLORS";
+import { useFormErrorsHandle } from '../../../../hooks/useFormErrorsHandle';
 import { useRef } from "react";
 import { useState } from "react";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../../../hooks/useFetch";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import fetchApi from "../../../helpers/fetchApi";
-import Loading from "../../../components/app/Loading";
+import fetchApi from "../../../../helpers/fetchApi";
+import Loading from "../../../../components/app/Loading";
+import { OutlinedTextField } from 'rn-material-ui-textfield'
+import { useForm } from "../../../../hooks/useForm";
 
 /**
- * Le screen pour de donner les folios au chef equipe
+ * Le screen pour completer le retour de folios d'une equipe scanning
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 2/8/2021
+ * @date 3/8/2021
  * @returns 
  */
 
-export default function NewEquipeScanScreen() {
+export default function NewFolioRetourScreen() {
         const navigation = useNavigation()
-        const route = useRoute()
-        const { folio } = route.params
         const [document, setDocument] = useState(null)
-        const [loadingData, setLoadingData] = useState(false)
+        const [data, handleChange, setValue] = useForm({
+                chaine: '',
+                ordinateur: ''
+        })
 
-        const isValidAdd = () => {
-                var isValid = false
-                isValid =  equipe != null && multiFolios.length > 0 && document != null ? true : false
-                return isValid 
-        }
-
-        // Modal folio multi select
-        const multSelectModalizeRef = useRef(null);
-        const [multiFolios, setMultiFolios] = useState([]);
-        const openMultiSelectModalize = () => {
-                multSelectModalizeRef.current?.open();
-        };
-        const submitConfimer = () => {
-                multSelectModalizeRef.current?.close();
-        }
+        const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
+                chaine: {
+                        required: true
+                },
+                ordinateur: {
+                        required: true
+                }
+        }, {
+                chaine: {
+                        required: 'ce champ est obligatoire',
+                },
+                ordinateur: {
+                        required: 'ce champ est obligatoire',
+                }
+        })
 
         // Equipe scanning select
         const equipeModalizeRef = useRef(null);
@@ -54,31 +58,6 @@ export default function NewEquipeScanScreen() {
                 setEquipe(equi)
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
-                }
-                catch (error) {
-                        console.log(error)
-                }
-        }
-
         //Composent pour afficher la listes des equipe scanning
         const EquipeScanningList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/scanning/volume/allEquipe')
@@ -89,7 +68,7 @@ export default function NewEquipeScanScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des equipe scanning</Text>
+                                                        <Text style={styles.modalTitle}>Listes des chefs plateaux</Text>
                                                 </View>
                                                 {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun equipe scanning trouves</Text></View> : null}
                                                 {volumesAll.result.map((chef, index) => {
@@ -116,102 +95,32 @@ export default function NewEquipeScanScreen() {
                         </>
                 )
         }
-
-        //Composent pour afficher le modal de multi select des folio
-        const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
-
-                const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.folio.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != fol.folio.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-
-                }
-
-
-                return (
-                        <>
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Listes des folios</Text>
-                                        </View>
-                                        {folio.folios.map((fol, index) => {
-                                                return (
-                                                        <ScrollView key={index}>
-                                                                <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
-                                                                        <View style={styles.modalItem} >
-                                                                                <View style={styles.modalImageContainer}>
-                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.modalItemCard}>
-                                                                                        <View>
-                                                                                                <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                {/* <Text style={styles.itemTitleDesc}>{fol?.folio.CODE_FOLIO}</Text> */}
-                                                                                        </View>
-                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                </View>
-                                                                        </View>
-                                                                </TouchableNativeFeedback>
-                                                        </ScrollView>
-                                                )
-                                        })}
-                                </View>
-                                <TouchableWithoutFeedback
-                                        onPress={submitConfimer}
-                                >
-                                        <View style={styles.butConfirmer}>
-                                                <Text style={styles.buttonText}>Confirmer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
-                        </>
-                )
-        }
-
-        const submitEquipeData = async () => {
+         //Fonction pour le prendre l'image avec l'appareil photos
+         const onTakePicha = async () => {
                 try {
-                        setLoadingData(true)
-                        const form = new FormData()
-                        form.append('ID_VOLUME', folio.ID_VOLUME)
-                        form.append('folio', JSON.stringify(multiFolios))
-                        form.append('USER_TRAITEMENT', equipe.ID_EQUIPE)
-                        if (document) {
-                                const manipResult = await manipulateAsync(
-                                        document.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.8, format: SaveFormat.JPEG }
-                                );
-                                let localUri = manipResult.uri;
-                                let filename = localUri.split('/').pop();
-                                let match = /\.(\w+)$/.exec(filename);
-                                let type = match ? `image/${match[1]}` : `image`;
-                                form.append('PV', {
-                                        uri: localUri, name: filename, type
-                                })
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.didCancel) {
+                                setDocument(image)
+                                // const photo = image.assets[0]
+                                // const photoId = Date.now()
+                                // const manipResult = await manipulateAsync(
+                                //         photo.uri,
+                                //         [
+                                //                 { resize: { width: 500 } }
+                                //         ],
+                                //         { compress: 0.7, format: SaveFormat.JPEG }
+                                // );
+                                // setLogoImage(manipResult)
                         }
-                        console.log(form)
-                        const volume = await fetchApi(`/scanning/folio/equipeScanning`, {
-                                method: "PUT",
-                                body: form
-                        })
-                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
-                } finally {
-                        setLoadingData(false)
                 }
         }
         return (
                 <>
-                         {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -222,37 +131,47 @@ export default function NewEquipeScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Selection d'equipe scanning</Text>
+                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Details des folios</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
-                                        <View>
-                                                <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Volume
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {folio.volume.NUMERO_VOLUME}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View>
+                                        <View style={{ marginVertical: 5 }}>
+                                                <OutlinedTextField
+                                                        label="chaine"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.chaine}
+                                                        onChangeText={(newValue) => handleChange('chaine', newValue)}
+                                                        onBlur={() => checkFieldData('chaine')}
+                                                        error={hasError('chaine') ? getError('chaine') : ''}
+                                                        autoCompleteType='off'
+                                                        keyboardType='number-pad'
+                                                        blurOnSubmit={false}
+                                                />
                                         </View>
-                                        <View>
-                                                <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Nombre de dossiers
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {folio.volume.NOMBRE_DOSSIER}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View>
+                                        <View style={{ marginVertical: 5 }}>
+                                                <OutlinedTextField
+                                                        label="ordinateur"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.ordinateur}
+                                                        onChangeText={(newValue) => handleChange('ordinateur', newValue)}
+                                                        onBlur={() => checkFieldData('ordinateur')}
+                                                        error={hasError('ordinateur') ? getError('ordinateur') : ''}
+                                                        autoCompleteType='off'
+                                                        keyboardType='number-pad'
+                                                        blurOnSubmit={false}
+                                                />
                                         </View>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
                                                 <View>
@@ -266,18 +185,34 @@ export default function NewEquipeScanScreen() {
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                        <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner les folios
+                                                                Volume
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                        sdhhs
+                                                                        {/* {folio.volume.NUMERO_VOLUME} */}
                                                                 </Text>
                                                         </View>
                                                 </View>
-                                        </TouchableOpacity>
+                                        </View>
+                                        <View>
+                                                <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Nombre de dossiers
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                sjdjshd
+                                                                                {/* {folio.volume.NOMBRE_DOSSIER} */}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                        </View>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -291,10 +226,10 @@ export default function NewEquipeScanScreen() {
                                         </TouchableOpacity>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={submitEquipeData}
+                                // disabled={!isValidAdd()}
+                                // onPress={submitEquipeData}
                                 >
-                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                        <View style={styles.button}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
@@ -304,14 +239,10 @@ export default function NewEquipeScanScreen() {
                                         <EquipeScanningList />
                                 </Modalize>
                         </Portal>
-                        <Portal>
-                                <Modalize ref={multSelectModalizeRef}  >
-                                        <MultiFolioSelctList />
-                                </Modalize>
-                        </Portal>
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
