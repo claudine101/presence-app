@@ -25,6 +25,13 @@ export default function NewEquipeScanScreen() {
         const route = useRoute()
         const { folio } = route.params
         const [document, setDocument] = useState(null)
+        const [loadingData, setLoadingData] = useState(false)
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid =  equipe != null && multiFolios.length > 0 && document != null ? true : false
+                return isValid 
+        }
 
         // Modal folio multi select
         const multSelectModalizeRef = useRef(null);
@@ -75,6 +82,7 @@ export default function NewEquipeScanScreen() {
         //Composent pour afficher la listes des equipe scanning
         const EquipeScanningList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/scanning/volume/allEquipe')
+                console.log(volumesAll)
                 return (
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -97,8 +105,8 @@ export default function NewEquipeScanScreen() {
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
                                                                                                 </View>
-                                                                                                {/* {chefPlateau?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />} */}
+                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -115,10 +123,10 @@ export default function NewEquipeScanScreen() {
                 const [allFolios, setAllFolios] = useState([]);
                 const [foliosLoading, setFoliosLoading] = useState(false);
 
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+                const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
                 const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                        if (isSelected(fol.folio.ID_FOLIO)) {
+                                const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != fol.folio.ID_FOLIO)
                                 setMultiFolios(newfolio)
                         } else {
                                 setMultiFolios(u => [...u, fol])
@@ -146,7 +154,7 @@ export default function NewEquipeScanScreen() {
                                                                                                 <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
                                                                                                 {/* <Text style={styles.itemTitleDesc}>{fol?.folio.CODE_FOLIO}</Text> */}
                                                                                         </View>
-                                                                                        {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                 <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                 </View>
                                                                         </View>
@@ -165,8 +173,46 @@ export default function NewEquipeScanScreen() {
                         </>
                 )
         }
+
+        const submitEquipeData = async () => {
+                try {
+                        setLoadingData(true)
+                        const form = new FormData()
+                        form.append('ID_VOLUME', folio.ID_VOLUME)
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('USER_TRAITEMENT', equipe.ID_EQUIPE)
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
+                        }
+                        console.log(form)
+                        const volume = await fetchApi(`/scanning/folio/equipeScanning`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoadingData(false)
+                }
+        }
         return (
                 <>
+                         {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -216,8 +262,7 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        fff
-                                                                        {/* {ailleSuperviseur ? `${ailleSuperviseur.NOM}` + `${ailleSuperviseur.PRENOM}` : 'Aucun'} */}
+                                                                        {equipe ? `${equipe.NOM_EQUIPE}` : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -229,7 +274,7 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {/* {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} */}
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -247,10 +292,10 @@ export default function NewEquipeScanScreen() {
                                         </TouchableOpacity>
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                // disabled={!isValidAdd()}
-                                // onPress={submitAgSupAilleData}
+                                disabled={!isValidAdd()}
+                                onPress={submitEquipeData}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
