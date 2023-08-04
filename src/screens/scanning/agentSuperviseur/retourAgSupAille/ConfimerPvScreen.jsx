@@ -1,21 +1,27 @@
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
-import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { COLORS } from "../../../../styles/COLORS";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import moment from 'moment'
-import { useState } from "react";
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import IDS_ETAPES_FOLIO from "../../../../constants/IDS_ETAPES_FOLIO"
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import fetchApi from "../../../../helpers/fetchApi";
+import { useState } from "react";
 import Loading from "../../../../components/app/Loading";
+import fetchApi from "../../../../helpers/fetchApi";
 
-export default function DetailsFolioRetourChefPlateau() {
-        const route = useRoute()
-        const { folio, ID_ETAPE_FOLIO } = route.params
+/**
+ * Screen pour signer le pv entre chef plateau et agent superviseur aille
+ * @author Vanny Boy <vanny@mediabox.bi>
+ * @date 4/8/2023
+ * @returns 
+ */
+
+
+export default function ConfimerPvScreen() {
         const navigation = useNavigation()
         const [document, setDocument] = useState(null)
+        const route = useRoute()
+        const {volume, id} = route.params
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
@@ -23,6 +29,7 @@ export default function DetailsFolioRetourChefPlateau() {
                 isValid = document != null ? true : false
                 return isValid
         }
+
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -39,11 +46,10 @@ export default function DetailsFolioRetourChefPlateau() {
                 }
         }
 
-        const submitPlateauData = async () => {
+        const submitAgentSup = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('folio', JSON.stringify(folio))
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -61,7 +67,7 @@ export default function DetailsFolioRetourChefPlateau() {
                                 })
                         }
                         console.log(form)
-                        const folioss = await fetchApi(`/scanning/volume/retour/plateau`, {
+                        const volume = await fetchApi(`/scanning/volume/retour/agent/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -74,7 +80,10 @@ export default function DetailsFolioRetourChefPlateau() {
                 }
         }
 
+
         return (
+                <>
+                {loadingData && <Loading />}
                 <View style={styles.container}>
                         <View style={styles.cardHeader}>
                                 <TouchableNativeFeedback
@@ -85,39 +94,38 @@ export default function DetailsFolioRetourChefPlateau() {
                                         </View>
                                 </TouchableNativeFeedback>
                                 <View style={styles.cardTitle}>
-                                        <Text numberOfLines={2} style={styles.titlePrincipal}>Listes des folios</Text>
+                                        <Text numberOfLines={2} style={styles.titlePrincipal}>Confirmer le retour</Text>
                                 </View>
                         </View>
-                        <ScrollView>
-                                {folio.map((fol, index) => {
-                                        console.log(fol)
-                                        return (
-                                                <>
-                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} key={index}
-                                                        // onPress={() => handleSubmit(fol)}
-                                                        >
-                                                                <View style={styles.cardDetails}>
-                                                                        <View style={styles.carddetailItem}>
-                                                                                <View style={styles.cardImages}>
-                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        {/* <Text>sjjjs</Text> */}
-                                                                                                </View>
-                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
-                                                                                        </View>
-                                                                                </View>
-                                                                        </View>
-                                                                </View>
-                                                        </TouchableNativeFeedback>
-                                                </>
-                                        )
-                                })}
-                        </ScrollView>
-                        {ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.RETOUR_EQUIPE_SCANNING_V_AGENT_SUP_SCANNING ? <View style={{ marginHorizontal: 10 }}>
+                         <ScrollView>
+                                <View>
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Volume
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {volume.volume.NUMERO_VOLUME}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+                                <View>
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Malle
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {volume.volume.ID_MALLE}
+                                                                </Text> 
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
                                 <TouchableOpacity onPress={onTakePicha}>
                                         <View style={[styles.addImageItem]}>
                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -129,32 +137,31 @@ export default function DetailsFolioRetourChefPlateau() {
                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
                                 </TouchableOpacity>
-                                <TouchableWithoutFeedback
-                                        disabled={!isValidAdd()}
-                                        onPress={submitPlateauData}
+                        </ScrollView>
+                        <TouchableWithoutFeedback
+                                disabled={!isValidAdd()}
+                                onPress={submitAgentSup}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                        </View>:null}
                 </View>
+                </>
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginTop: -20,
-                backgroundColor: "#ddd"
+                marginHorizontal: 10,
+                marginTop: -20
         },
         cardHeader: {
                 flexDirection: 'row',
                 marginTop: StatusBar.currentHeight,
                 alignContent: "center",
                 alignItems: "center",
-                marginBottom: 15,
-                marginHorizontal: 10
+                marginBottom: 15
         },
         backBtn: {
                 backgroundColor: COLORS.ecommercePrimaryColor,
@@ -173,35 +180,61 @@ const styles = StyleSheet.create({
         cardTitle: {
                 maxWidth: "85%"
         },
-        cardDetails: {
-                borderRadius: 10,
-                elevation: 5,
-                shadowColor: '#c4c4c4',
-                marginTop: 10,
-                backgroundColor: '#fff',
-                padding: 10,
-                overflow: 'hidden',
-                marginHorizontal: 10
+        selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10
         },
-        carddetailItem: {
-                flexDirection: 'row',
-                alignItems: 'center',
+        selectedValue: {
+                color: '#777'
         },
-        cardImages: {
-                backgroundColor: '#DCE4F7',
-                width: 50,
-                height: 50,
+        modalHeader: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 10,
+                paddingVertical: 5
+        },
+        modalItem: {
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                paddingVertical: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: '#F1F1F1'
+        },
+        modalImageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: '#F1F1F1',
                 borderRadius: 50,
-                justifyContent: 'center',
-                alignItems: 'center'
+                justifyContent: "center",
+                alignItems: "center"
         },
-        cardDescription: {
-                marginLeft: 10,
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
                 flex: 1
         },
-        itemVolume: {
-                fontSize: 15,
+        itemTitle: {
+                marginLeft: 10
+        },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalTitle: {
                 fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 16
         },
         addImageItem: {
                 borderWidth: 0.5,

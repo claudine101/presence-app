@@ -26,6 +26,7 @@ import NewEquipeScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeS
 import NewFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/NewFolioRetourScreen';
 import DetailsFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFolioRetourScreen';
 import DetailsFolioRetourChefPlateau from '../screens/scanning/agentAileSuperviseur/retour/DetailsFolioRetourChefPlateau';
+import ConfimerPvScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfimerPvScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -46,6 +47,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }}/>
+                <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>

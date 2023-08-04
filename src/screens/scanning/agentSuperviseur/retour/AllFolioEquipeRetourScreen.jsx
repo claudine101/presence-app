@@ -22,7 +22,7 @@ export default function AllFolioEquipeRetourScreen() {
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
                 if(PROFILS.CHEF_PLATEAU){
-                        navigation.navigate("DetailsFolioRetourChefPlateau", {folio: folio.folios})
+                        navigation.navigate("DetailsFolioRetourChefPlateau", {folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO})
                 }else{
                         navigation.navigate("DetailsFolioRetourScreen", { folio: folio, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
                 }
