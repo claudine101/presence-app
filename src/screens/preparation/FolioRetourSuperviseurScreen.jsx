@@ -26,10 +26,15 @@ export default function FolioRetourSuperviseurScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio } = route.params
+
         // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
+        const [check, setCheck] = useState([])
+        const [loadingCheck, setLoadingCheck] = useState(false)
+
+
 
         const [data, handleChange, setValue] = useForm({
                 // document: null,
@@ -120,9 +125,24 @@ export default function FolioRetourSuperviseurScreen() {
                         setLoadingSubmit(false)
                 }
         }
+         //Fonction pour recuperer les details
+         useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
+                                setCheck(res.result)
+                               
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
+                        }
+                })()
+        }, []))
         return (
                 <>
-                        {loadingSubmit && <Loading />}
+                        {(loadingSubmit && loadingCheck)&& <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -138,7 +158,6 @@ export default function FolioRetourSuperviseurScreen() {
                                         style={styles.contain}
                                         data={folio.folios}
                                         renderItem={({ item: folio, index }) => {
-                                                const isExists = folio.folio.ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION ? true : false
                                                 return (
                                                         <>
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -154,7 +173,6 @@ export default function FolioRetourSuperviseurScreen() {
                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                 <View style={styles.cardNames}>
                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text>{folio.folio.CODE_FOLIO} {isExists}</Text>
                                                                                                                 </View>
                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                         </View>
@@ -171,29 +189,9 @@ export default function FolioRetourSuperviseurScreen() {
                                 {
                                         // ID_ETAPE_FOLIO == 2 ?
                                         <>
-                                                {/* <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
-                                                        <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
-                                                                </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
-                                                                        </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
-                                                        </View>
-                                                </TouchableOpacity>
-                                        </View> */}
-                                                <TouchableOpacity onPress={onTakePicha}>
+                                                
+
+                                               { check.length>0? <><TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -211,7 +209,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                                         </View>
-                                                </TouchableWithoutFeedback>
+                                                </TouchableWithoutFeedback></>:null}
                                         </>
                                         // : null
                                 }

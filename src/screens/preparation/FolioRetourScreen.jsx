@@ -12,7 +12,7 @@ import { FloatingAction } from "react-native-floating-action";
 import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
+ * Screen pour afficher agents de preparation et leurs folio
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 

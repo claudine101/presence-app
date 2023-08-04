@@ -30,11 +30,9 @@ export default function AddSuperviseurAileVolumeScreen() {
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
         const [document, setDocument] = useState(null)
-
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
-
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
@@ -50,7 +48,6 @@ export default function AddSuperviseurAileVolumeScreen() {
                 isValid = volume != null && agentSuperviseur != null  && document != null ? true : false
                 return isValid
         }
-
         // Volume select
         const volumeModalizeRef = useRef(null);
         const [volumes, setVolumes] = useState(null);
@@ -61,7 +58,6 @@ export default function AddSuperviseurAileVolumeScreen() {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
         }
-
         // Chef du plateau select
         const agentSuperviseurModalizeRef = useRef(null);
         const [agentSuperviseur, setagentSuperviseur] = useState(null);
@@ -281,14 +277,14 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 </View>
                                                         </View>
                                                 </View>
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Malle
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.maille ? `${volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -320,7 +316,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner agent superviseur aille
+                                                                Sélectionner agent superviseur aille
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>

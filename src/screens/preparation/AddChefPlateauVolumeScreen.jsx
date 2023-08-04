@@ -322,7 +322,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner un chef de plateau
+                                                                        Sélectionner un chef de plateau
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>

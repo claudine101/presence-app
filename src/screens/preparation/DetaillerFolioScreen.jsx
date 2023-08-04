@@ -670,7 +670,7 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Selectioner le malle
+                                                                                Sélectionner le malle
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -682,7 +682,7 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Selectioner le batiment
+                                                                                Sélectionner le batiment
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -694,7 +694,7 @@ export default function AddFolioScreen() {
                                                                 {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Selectioner ailles
+                                                                                Sélectionner ailles
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -706,7 +706,7 @@ export default function AddFolioScreen() {
                                                                 {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Selectioner le distributeur
+                                                                                Sélectionner le distributeur
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -755,7 +755,7 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Selectioner la nature
+                                                                                Sélectionner la nature
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>

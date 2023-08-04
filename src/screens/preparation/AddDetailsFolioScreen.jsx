@@ -149,7 +149,7 @@ export default function AddDetailsFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                <View style={styles.imageContainer}>
+                                                                                        <View style={styles.imageContainer}>
                                                                                                 {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
                                                                                                         <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
@@ -232,7 +232,6 @@ export default function AddDetailsFolioScreen() {
                 )
         }
 
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 try {
@@ -241,16 +240,6 @@ export default function AddDetailsFolioScreen() {
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
                                 setLogoImage(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
                         }
                 }
                 catch (error) {
@@ -467,55 +456,55 @@ export default function AddDetailsFolioScreen() {
                 )
         }
 
-         // collines select
-         const collineModalizeRef = useRef(null);
-         const [collines, setCollines] = useState(null);
-         const openCollineModalize = () => {
-                 collineModalizeRef.current?.open();
-         };
-         const setSelectedCollines = (colline) => {
-                 collineModalizeRef.current?.close();
-                 setCollines(colline)
-         }
-         //Composent pour afficher le modal des collines 
-         const  CollinesList = ({ zones }) => {
-                 const [loadingCollines, collinesAll] = useFetch(`/preparation/batiment/collines/${zones.ZONE_ID}`)
-                 return (
-                         <>
-                                 <>
-                                         {loadingCollines ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
-                                         </View> :
-                                                 <View style={styles.modalContainer}>
-                                                         <View style={styles.modalHeader}>
-                                                                 <Text style={styles.modalTitle}>Listes des collines</Text>
-                                                         </View>
-                                                         {collinesAll.result.map((colline, index) => {
-                                                                 return (
-                                                                         <ScrollView key={index}>
-                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCollines(colline)}>
-                                                                                         <View style={styles.modalItem} >
-                                                                                                 <View style={styles.modalImageContainer}>
-                                                                                                         <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                                 </View>
-                                                                                                 <View style={styles.modalItemCard}>
-                                                                                                         <View>
-                                                                                                                 <Text style={styles.itemTitle}>{colline.COLLINE_NAME}</Text>
-                                                                                                         </View>
-                                                                                                         {collines?.COLLINE_ID == colline.COLLINE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                 <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                                 </View>
-                                                                                         </View>
-                                                                                 </TouchableNativeFeedback>
-                                                                         </ScrollView>
-                                                                 )
-                                                         })}
-                                                 </View>
-                                         }
-                                 </>
-                         </>
-                 )
-         }
+        // collines select
+        const collineModalizeRef = useRef(null);
+        const [collines, setCollines] = useState(null);
+        const openCollineModalize = () => {
+                collineModalizeRef.current?.open();
+        };
+        const setSelectedCollines = (colline) => {
+                collineModalizeRef.current?.close();
+                setCollines(colline)
+        }
+        //Composent pour afficher le modal des collines 
+        const CollinesList = ({ zones }) => {
+                const [loadingCollines, collinesAll] = useFetch(`/preparation/batiment/collines/${zones.ZONE_ID}`)
+                return (
+                        <>
+                                <>
+                                        {loadingCollines ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des collines</Text>
+                                                        </View>
+                                                        {collinesAll.result.map((colline, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedCollines(colline)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{colline.COLLINE_NAME}</Text>
+                                                                                                        </View>
+                                                                                                        {collines?.COLLINE_ID == colline.COLLINE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
 
 
 
@@ -610,7 +599,7 @@ export default function AddDetailsFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openProvinceModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner le provinces
+                                                                        Sélectionner le province
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -622,7 +611,7 @@ export default function AddDetailsFolioScreen() {
                                                 {provinces ? <TouchableOpacity style={styles.selectContainer} onPress={openCommuneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner le communes
+                                                                Sélectionner le commune
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -636,7 +625,7 @@ export default function AddDetailsFolioScreen() {
                                                 {communes ? <TouchableOpacity style={styles.selectContainer} onPress={openZoneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner le zone
+                                                                        Sélectionner le zone
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -647,10 +636,10 @@ export default function AddDetailsFolioScreen() {
                                                 </TouchableOpacity> : null
 
                                                 }
-                                                 {zones ? <TouchableOpacity style={styles.selectContainer} onPress={openCollineModalize}>
+                                                {zones ? <TouchableOpacity style={styles.selectContainer} onPress={openCollineModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner le colline
+                                                                        Sélectionner le colline
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -900,11 +889,11 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.handleColor,
                 borderRadius: 10,
                 padding: 5
-            },
-            image: {
+        },
+        image: {
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
                 resizeMode: "center"
-            },
+        },
 })

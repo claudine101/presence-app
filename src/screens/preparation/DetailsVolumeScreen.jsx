@@ -286,7 +286,7 @@ export default function DetailsVolumeScreen() {
                     <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
                         <View>
                             <Text style={styles.selectLabel}>
-                                Selectioner un agent d'archive
+                              Sélectionner un agent d'archive
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
