@@ -32,7 +32,6 @@ export default function AllVolumeRecusChefEquiScreen() {
                 }else{
                         navigation.navigate("NewAgentSupScanScreen",{volume:volume, id:volume.volume.ID_VOLUME})
                 }
-                
         }
 
         //fonction pour recuperer les volumes associer a un chef d'equipe
