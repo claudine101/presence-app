@@ -137,11 +137,11 @@ export default function ConnexionScreen() {
                   error={hasError('password') ? getError('password') : ''}
                   ref={passwordInputRef}
                   onSubmitEditing={() => {
-                    password_confirmInputRef.current.focus()
+                    // password_confirmInputRef.current.focus()
                   }}
-                  autoCompleteType='off'
-                  returnKeyType="next"
-                  blurOnSubmit={false}
+          //         autoCompleteType='off'
+          //         returnKeyType="next"
+          //         blurOnSubmit={false}
                 />
               </View>
 

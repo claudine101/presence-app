@@ -1,5 +1,5 @@
 export const COLORS = {
-          primary: "#18678E",
+          primary: "#0E8F46",
           primaryPicker: "#49b7b7",
           smallBrown: "#a2a2a2",
           error: "#D2001A",

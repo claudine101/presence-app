@@ -15,7 +15,7 @@ import { userSelector } from '../../store/selectors/userSelector';
  * @returns 
  */
 
-export default function AppHeader({ modal }) {
+export default function AppHeader({ title }) {
     const user = useSelector(userSelector)
     const navigation = useNavigation()
     return (
@@ -30,7 +30,7 @@ export default function AppHeader({ modal }) {
                 </View>
             </TouchableNativeFeedback>
            
-                <Text style={styles.logo}>Volume planifie</Text>
+                {/* <Text style={styles.logo}>{title || 'Volume planifie'}</Text> */}
             <TouchableOpacity 
             // onPress={() => {
             //             modal.current?.open()
