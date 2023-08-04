@@ -30,6 +30,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                 </>
                                 : null}
+                                {user.ID_PROFIL == 12 ? <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />:null}
                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                         <Drawer.Screen name="AllVolumeRetourScreen" component={AllVolumeRetourScreen} />
                 </Drawer.Navigator>

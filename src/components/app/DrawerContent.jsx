@@ -123,6 +123,18 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback>
                     </>
                     : null}
+               {user.ID_PROFIL == 12 ? <>
+                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioEquipeRetourScreen')}>
+                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                            <View style={styles.drawerItem}>
+                                <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
+                                    Folios Retourner
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableNativeFeedback>
+                </>:null}
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('#EFEFEF')}>

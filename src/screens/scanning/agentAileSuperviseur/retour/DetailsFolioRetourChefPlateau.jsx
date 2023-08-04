@@ -10,19 +10,11 @@ import IDS_ETAPES_FOLIO from "../../../../constants/IDS_ETAPES_FOLIO"
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import fetchApi from "../../../../helpers/fetchApi";
 import Loading from "../../../../components/app/Loading";
-import PROFILS from "../../../../constants/PROFILS";
 
-/**
- * Screen pour afficher les details des folios par equipe
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 3/8/2023
- * @returns 
- */
-
-export default function DetailsFolioRetourScreen() {
-        const navigation = useNavigation()
+export default function DetailsFolioRetourChefPlateau() {
         const route = useRoute()
-        const { folio, ID_ETAPE_FOLIO, ID_EQUIPE } = route.params
+        const { folio } = route.params
+        const navigation = useNavigation()
         const [document, setDocument] = useState(null)
         const [loadingData, setLoadingData] = useState(false)
 
@@ -30,9 +22,6 @@ export default function DetailsFolioRetourScreen() {
                 var isValid = false
                 isValid = document != null ? true : false
                 return isValid
-        }
-        const handleSubmit = (fol) => {
-                navigation.navigate("NewFolioRetourScreen",{details:fol})
         }
 
         //Fonction pour le prendre l'image avec l'appareil photos
@@ -43,16 +32,6 @@ export default function DetailsFolioRetourScreen() {
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.didCancel) {
                                 setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
                         }
                 }
                 catch (error) {
@@ -60,62 +39,27 @@ export default function DetailsFolioRetourScreen() {
                 }
         }
 
-        const submitEquipeData = async () => {
-                try {
-                        setLoadingData(true)
-                        const form = new FormData()
-                        form.append('folio', JSON.stringify(folio.folios))
-                        if (document) {
-                                const manipResult = await manipulateAsync(
-                                        document.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.8, format: SaveFormat.JPEG }
-                                );
-                                let localUri = manipResult.uri;
-                                let filename = localUri.split('/').pop();
-                                let match = /\.(\w+)$/.exec(filename);
-                                let type = match ? `image/${match[1]}` : `image`;
-                                form.append('PV', {
-                                        uri: localUri, name: filename, type
-                                })
-                        }
-                        console.log(form)
-                        const folioss = await fetchApi(`/scanning/volume/retour`, {
-                                method: "PUT",
-                                body: form
-                        })
-                        navigation.goBack()
-                }
-                catch (error) {
-                        console.log(error)
-                } finally {
-                        setLoadingData(false)
-                }
-        }
         return (
-                <>
-                        {loadingData && <Loading />}
-                        <View style={styles.container}>
-                                <View style={styles.cardHeader}>
-                                        <TouchableNativeFeedback
-                                                onPress={() => navigation.goBack()}
-                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
-                                                </View>
-                                        </TouchableNativeFeedback>
-                                        <View style={styles.cardTitle}>
-                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Listes des folios</Text>
+                <View style={styles.container}>
+                        <View style={styles.cardHeader}>
+                                <TouchableNativeFeedback
+                                        onPress={() => navigation.goBack()}
+                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                        <View style={styles.backBtn}>
+                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                         </View>
+                                </TouchableNativeFeedback>
+                                <View style={styles.cardTitle}>
+                                        <Text numberOfLines={2} style={styles.titlePrincipal}>Listes des folios</Text>
                                 </View>
-                                <ScrollView>
-                                        {folio.folios.map((fol, index) => {
-                                                return (
-                                                        <>
+                        </View>
+                        <ScrollView>
+                                {folio.map((fol, index) => {
+                                        console.log(fol)
+                                        return (
+                                                <>
                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} key={index}
-                                                        onPress={() => handleSubmit(fol)}
+                                                        // onPress={() => handleSubmit(fol)}
                                                         >
                                                                 <View style={styles.cardDetails}>
                                                                         <View style={styles.carddetailItem}>
@@ -126,7 +70,7 @@ export default function DetailsFolioRetourScreen() {
                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text>{fol.folio.CODE_FOLIO}</Text>
+                                                                                                        {/* <Text>sjjjs</Text> */}
                                                                                                 </View>
                                                                                                 <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                         </View>
@@ -134,35 +78,35 @@ export default function DetailsFolioRetourScreen() {
                                                                         </View>
                                                                 </View>
                                                         </TouchableNativeFeedback>
-                                                        </>
-                                                )
-                                        })}
-                                </ScrollView>
-                               {ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_EQUIPE_SCANNIMG ? <View style={{ marginHorizontal: 10 }}>
-                                        <TouchableOpacity onPress={onTakePicha}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <Feather name="image" size={24} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du proces verbal
-                                                                </Text>
-                                                        </View>
-                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </>
+                                        )
+                                })}
+                        </ScrollView>
+                        <View style={{ marginHorizontal: 10 }}>
+                                <TouchableOpacity onPress={onTakePicha}>
+                                        <View style={[styles.addImageItem]}>
+                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                        <Feather name="image" size={24} color="#777" />
+                                                        <Text style={styles.addImageLabel}>
+                                                                Photo du proces verbal
+                                                        </Text>
                                                 </View>
-                                        </TouchableOpacity>
-                                        <TouchableWithoutFeedback
-                                                disabled={!isValidAdd()}
-                                        onPress={submitEquipeData}
-                                        >
-                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                </View>
-                                        </TouchableWithoutFeedback>
-                                </View>:null}
+                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                        </View>
+                                </TouchableOpacity>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        // onPress={submitEquipeData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </View>
-                </>
+                </View>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
