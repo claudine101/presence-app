@@ -123,7 +123,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback>
                     </>
                     : null}
-               {user.ID_PROFIL == 12 ? <>
+               {user.ID_PROFIL == 12  ? <>
                     <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFolioEquipeRetourScreen')}>
                         <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                             <View style={styles.drawerItem}>
@@ -135,7 +135,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </TouchableNativeFeedback>
                 </>:null}
-                {user.ID_PROFIL == 11 ? <>
+                {user.ID_PROFIL == 11 || user.ID_PROFIL == 10 || user.ID_PROFIL == 4 || user.ID_PROFIL == 3 ? <>
                     <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeFolioRetourSupAilleScreen')}>
                         <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                             <View style={styles.drawerItem}>

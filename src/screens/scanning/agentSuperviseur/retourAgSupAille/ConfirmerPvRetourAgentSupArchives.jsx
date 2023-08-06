@@ -1,5 +1,5 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { COLORS } from "../../../../styles/COLORS";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
@@ -8,31 +8,36 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useState } from "react";
 import Loading from "../../../../components/app/Loading";
 import fetchApi from "../../../../helpers/fetchApi";
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import useFetch from "../../../../hooks/useFetch";
 
-/**
- * Screen pour signer le pv entre chef plateau et agent superviseur aille
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 4/8/2023
- * @returns 
- */
-
-
-export default function ConfimerPvScreen() {
+export default function ConfirmerPvRetourAgentSupArchives(){
+        const route = useRoute()
         const navigation = useNavigation()
         const [document, setDocument] = useState(null)
-        const route = useRoute()
-        const {volume, id} = route.params
+        const { volume, id } = route.params
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = document != null ? true : false
+                isValid = document != null && equipe != null ? true : false
                 return isValid
         }
 
+        // Agent distributeur select
+        const equipeModalizeRef = useRef(null);
+        const [equipe, setEquipe] = useState(null);
+        const openEquipeModalize = () => {
+                equipeModalizeRef.current?.open();
+        };
+        const setSelectedEquipe = (equi) => {
+                equipeModalizeRef.current?.close();
+                setEquipe(equi)
+        }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
+         //Fonction pour le prendre l'image avec l'appareil photos
+         const onTakePicha = async () => {
                 try {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
@@ -45,11 +50,51 @@ export default function ConfimerPvScreen() {
                         console.log(error)
                 }
         }
+        
+         //Composent pour afficher la listes des agents superviseurs archives
+         const EquipeScanningList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/superviseurArchives')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs archives</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur archive trouves</Text></View> : null}
+                                                {volumesAll.result.map((chef, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                        {/* <Text style={styles.itemTitle}>{chef.EMAIL}</Text> */}
+                                                                                                </View>
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>}
+                        </>
+                )
+        }
 
-        const submitAgentSup = async () => {
+        const submitAgSupArchivesScan = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
+                        form.append('USER_TRAITEMENT', equipe.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -66,7 +111,8 @@ export default function ConfimerPvScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/${id}`, {
+                        console.log(form)
+                        const volume = await fetchApi(`/scanning/retour/agent/archives/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -78,9 +124,7 @@ export default function ConfimerPvScreen() {
                         setLoadingData(false)
                 }
         }
-
-
-        return (
+        return(
                 <>
                 {loadingData && <Loading />}
                 <View style={styles.container}>
@@ -96,7 +140,7 @@ export default function ConfimerPvScreen() {
                                         <Text numberOfLines={2} style={styles.titlePrincipal}>Confirmer le retour</Text>
                                 </View>
                         </View>
-                         <ScrollView>
+                        <ScrollView>
                                 <View>
                                         <View style={styles.selectContainer}>
                                                 <View>
@@ -115,16 +159,42 @@ export default function ConfimerPvScreen() {
                                         <View style={styles.selectContainer}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
+                                                                Dossier
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {volume.volume.NOMBRE_DOSSIER}
+                                                                </Text>
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+                                <View>
+                                        <View style={styles.selectContainer}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
                                                                 Malle
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         {volume.volume.ID_MALLE}
-                                                                </Text> 
+                                                                </Text>
                                                         </View>
                                                 </View>
                                         </View>
                                 </View>
+                                <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                        <View>
+                                                <Text style={styles.selectLabel}>
+                                                        Selectioner une equipe scanning
+                                                </Text>
+                                                <View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {equipe ? `${equipe.NOM}` + `${equipe.PRENOM}` : 'Aucun'}
+                                                        </Text>
+                                                </View>
+                                        </View>
+                                </TouchableOpacity>
                                 <TouchableOpacity onPress={onTakePicha}>
                                         <View style={[styles.addImageItem]}>
                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -139,16 +209,22 @@ export default function ConfimerPvScreen() {
                         </ScrollView>
                         <TouchableWithoutFeedback
                                 disabled={!isValidAdd()}
-                                onPress={submitAgentSup}
-                                >
-                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
+                                onPress={submitAgSupArchivesScan}
+                        >
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                </View>
+                        </TouchableWithoutFeedback>
                 </View>
-                </>
+                <Portal>
+                        <Modalize ref={equipeModalizeRef}  >
+                                <EquipeScanningList />
+                        </Modalize>
+                </Portal>
+        </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,

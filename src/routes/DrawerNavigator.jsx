@@ -32,7 +32,7 @@ export default function DrawerNavigator() {
                                 </>
                                 : null}
                                 {user.ID_PROFIL == 12 ? <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />:null}
-                                {user.ID_PROFIL == 11 ? <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />:null}
+                                {user.ID_PROFIL == 11 || user.ID_PROFIL == 10 || user.ID_PROFIL == 4 ||  user.ID_PROFIL == 3 ? <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />:null}
                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                         <Drawer.Screen name="AllVolumeRetourScreen" component={AllVolumeRetourScreen} />
                 </Drawer.Navigator>
