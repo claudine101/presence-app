@@ -51,17 +51,16 @@ export default function AllFolioRecusScanScreen() {
                                          allFolios.length == 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun volume trouvé
+                                                        Aucun folio trouvé
                                                 </Text>
                                                 <Text style={styles.emptyDesc}>
-                                                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
                                                 </Text>
                                         </View>:
                                         <FlatList
                                                 style={styles.contain}
                                                 data={allFolios}
                                                 renderItem={({ item: folio, index }) => {
-                                                        console.log(folio.folio)
                                                         return (
                                                                 <>
                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

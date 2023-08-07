@@ -30,7 +30,7 @@ export default function AppHeader({ title }) {
                 </View>
             </TouchableNativeFeedback>
            
-                {/* <Text style={styles.logo}>{title || 'Volume planifie'}</Text> */}
+                <Text style={styles.logo}>{title || 'Volume recus'}</Text>
             <TouchableOpacity 
             // onPress={() => {
             //             modal.current?.open()

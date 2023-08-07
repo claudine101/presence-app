@@ -20,10 +20,8 @@ import { userSelector } from "../../../store/selectors/userSelector";
 export default function AllVolumesRecusScreen() {
         const navigation = useNavigation()
         const [allVolumes, setAllVolumes] = useState([])
-        console.log(allVolumes)
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
-        console.log(user)
 
         //fonction pour recuperer les volumes associer a un chef d'equipe
         useFocusEffect(useCallback(() => {

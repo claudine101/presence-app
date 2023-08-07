@@ -6,6 +6,8 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
 import PROFILS from "../../../../constants/PROFILS";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../../../store/selectors/userSelector";
 
 
 /**
@@ -17,11 +19,12 @@ import PROFILS from "../../../../constants/PROFILS";
 
 export default function AllFolioEquipeRetourScreen() {
         const navigation = useNavigation()
+        const user = useSelector(userSelector)
         const [allFolios, setAllFolios] = useState([])
         const [allFoliosRetour, setAllFoliosRetour] = useState([])
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
-                if(PROFILS.CHEF_PLATEAU){
+                if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
                         navigation.navigate("DetailsFolioRetourChefPlateau", {folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO})
                 }else{
                         navigation.navigate("DetailsFolioRetourScreen", { folio: folio, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
@@ -44,7 +47,7 @@ export default function AllFolioEquipeRetourScreen() {
         }, []))
 
 
-        //fonction pour recuperer les folios d'un agent qui est connecter
+        // fonction pour recuperer les folios d'un agent qui est connecter
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
@@ -60,7 +63,7 @@ export default function AllFolioEquipeRetourScreen() {
         }, []))
         return (
                 <>
-                        {PROFILS.CHEF_PLATEAU ?
+                        {(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ?
                                 <>
                                         <AppHeaderPhPreparationRetour />
                                         <View style={styles.container}>
@@ -80,7 +83,6 @@ export default function AllFolioEquipeRetourScreen() {
                                                                         style={styles.contain}
                                                                         data={allFoliosRetour}
                                                                         renderItem={({ item: folio, index }) => {
-                                                                                console.log(folio)
                                                                                 return (
                                                                                         <>
                                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -97,10 +99,9 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                                 <View>
-                                                                                                                                                        <Text style={styles.itemVolume}>{folio.users.NOM} {folio.users.PRENOM}</Text>
+                                                                                                                                                        <Text style={styles.itemVolume}>{folio.folios[0].traitement.NOM} {folio.folios[0].traitement.PRENOM}</Text>
                                                                                                                                                         <Text>{folio.folios.length}</Text>
                                                                                                                                                 </View>
-                                                                                                                                                {/* <Text>djjje</Text> */}
                                                                                                                                         </View>
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -151,7 +152,6 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                                         <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
                                                                                                                                                         <Text>{folio.folios.length}</Text>
                                                                                                                                                 </View>
-                                                                                                                                                {/* <Text>djjje</Text> */}
                                                                                                                                         </View>
                                                                                                                                 </View>
                                                                                                                         </View>
