@@ -12,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unsetUserAction } from "../../store/actions/userActions";
 import { runOnJS } from "react-native-reanimated";
 import PROFILS from "../../constants/PROFILS";
-import PROFILS from "../../constants/PROFILS";
 
 export default function DrawerContent({ state, navigation, descriptors }) {
     const user = useSelector(userSelector)
@@ -37,7 +36,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                     </View>
                     <View style={styles.userNames}>
                         <Text style={styles.fullName} numberOfLines={1}>{user.NOM} {user.PRENOM}</Text>
-                        <Text style={styles.email}>{user.profil.DESCRIPTION}</Text>
+                        {/* <Text style={styles.email}>{user.profil.DESCRIPTION}</Text> */}
                         {/* <Text style={styles.email}>{user.EMAIL}</Text> */}
                         {/* <Text style={styles.email}>{user.societe}. {user.departement}</Text> */}
                     </View>
