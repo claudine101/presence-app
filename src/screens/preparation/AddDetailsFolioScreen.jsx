@@ -29,7 +29,6 @@ export default function AddDetailsFolioScreen() {
         const [loading, setLoading] = useState(false)
         const route = useRoute()
         const { folio, users } = route.params
-        console.log(users)
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
@@ -89,26 +88,6 @@ export default function AddDetailsFolioScreen() {
                 isValid = logoImage != null ? true : false
                 return isValid && isValidate()
         }
-
-        //Fonction pour upload un documents 
-        // const selectdocument = async () => {
-        //         setError("document", "")
-        //         handleChange("document", null)
-        //         const document = await DocumentPicker.getDocumentAsync({
-        //                 type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-        //         })
-        //         if (document.type == 'cancel') {
-        //                 return false
-        //         }
-        //         var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-        //         if (sizeDocument <= 2) {
-        //                 handleChange("document", document)
-        //         }
-        //         else {
-        //                 setError("document", ["Document trop volumineux(max:2M)"])
-        //         }
-
-        // }
 
         // Agent preparation select
         const preparationModalizeRef = useRef(null);
@@ -611,7 +590,7 @@ export default function AddDetailsFolioScreen() {
                                                 {provinces ? <TouchableOpacity style={styles.selectContainer} onPress={openCommuneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                Sélectionner le commune
+                                                                        Sélectionner le commune
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -677,6 +656,8 @@ export default function AddDetailsFolioScreen() {
                                                                 error={hasError('nombre') ? getError('nombre') : ''}
                                                                 autoCompleteType='off'
                                                                 blurOnSubmit={false}
+                                                                keyboardType='number-pad'
+
                                                         />
                                                 </View>
                                                 <View style={{ marginVertical: 8 }}>
@@ -695,6 +676,8 @@ export default function AddDetailsFolioScreen() {
                                                                 error={hasError('doublon') ? getError('doublon') : ''}
                                                                 autoCompleteType='off'
                                                                 blurOnSubmit={false}
+                                                                keyboardType='number-pad'
+
                                                         />
                                                 </View>
 
@@ -760,7 +743,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -838,7 +821,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor: COLORS.primary,
         },
         buttonText: {
                 color: "#fff",

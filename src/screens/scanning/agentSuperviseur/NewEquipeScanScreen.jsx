@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
         },
         buttonText: {
                 color: "#fff",
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
         butConfirmer: {
                 borderRadius: 8,
                 paddingVertical: 14,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
                 marginHorizontal: 50,
                 marginVertical: 15
         },

@@ -26,7 +26,6 @@ export default function DetailsAgentPreparationScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const {folio } = route.params
-        console.log(folio.folios)
         // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -302,7 +301,7 @@ const styles = StyleSheet.create({
                 marginVertical: 10
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor:COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -320,7 +319,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
                 marginHorizontal: 10
         },
         buttonText: {

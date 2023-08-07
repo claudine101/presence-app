@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,

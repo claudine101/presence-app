@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     amountChanger: {
         width: 100,
         height: 50,
-        backgroundColor: COLORS.ecommercePrimaryColor,
+        backgroundColor:COLORS.primary,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
 
     },
     backBtn: {
-        backgroundColor: COLORS.ecommercePrimaryColor,
+        backgroundColor: COLORS.primary,
         justifyContent: 'center',
         alignItems: 'center',
         width: 50,

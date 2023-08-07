@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 10,
-    backgroundColor: "#18678E",
+    backgroundColor: COLORS.primary,
     marginHorizontal: 20,
     marginVertical:30
   },
@@ -214,7 +214,8 @@ title: {
   fontSize: 25,
   fontWeight: 'bold',
   marginBottom: 25,
-  opacity: 0.8
+  opacity: 0.8,
+  color:COLORS.primary
 },
 cardTitle: {
   flexDirection: "row",

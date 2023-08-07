@@ -284,7 +284,19 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.maille ? `${volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                {volume? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Dossier
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -376,7 +388,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -440,7 +452,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
         },
         buttonText: {
                 color: "#fff",

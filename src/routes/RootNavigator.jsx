@@ -20,6 +20,9 @@ import VolumeRetourChefPlateau from '../screens/preparation/VolumeRetourChefPlat
 import VolumeRetourAgentSuperviseur from '../screens/preparation/VolumeRetourAgentSuperviseur';
 import AddChefPlateauVolumeScreen from '../screens/preparation/AddChefPlateauVolumeScreen';
 import DescriptionEtapeScreen from '../screens/preparation/DescriptionEtapeScreen';
+import DetailsAgentPreparationScreen from '../screens/preparation/DetailsAgentPreparationScreen';
+
+
 import NewAgentSupAIlleScanScreen from '../screens/scanning/chefEquipe/NewAgentSupAIlleScanScreen';
 import NewChefPlateauScreen from '../screens/scanning/agentAileSuperviseur/NewChefPlateauScreen';
 import ValideChefEquipeScreen from '../screens/scanning/chefEquipe/ValideChefEquipeScreen';
@@ -53,7 +56,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='SelectAgentIndexationScreen' component={SelectAgentIndexationScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='ChefEquipeFlashDetailScreen' component={ChefEquipeFlashDetailScreen} options={{ headerShown: false }}/>
-
+                <Stack.Screen name='DetailsAgentPreparationScreen' component={DetailsAgentPreparationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeScreen' component={DetailsVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AddNombreFolioScreen' component={AddNombreFolioScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetaillerFolioScreen' component={DetaillerFolioScreen} options={{ headerShown: false }} />

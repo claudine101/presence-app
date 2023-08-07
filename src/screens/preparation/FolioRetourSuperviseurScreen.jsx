@@ -13,6 +13,8 @@ import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
+import { OutlinedTextField } from 'rn-material-ui-textfield'
+
 
 
 /**
@@ -31,11 +33,9 @@ export default function FolioRetourSuperviseurScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
+        const [nbre, setNbre] = useState(null)
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
-
-
-
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -54,6 +54,20 @@ export default function FolioRetourSuperviseurScreen() {
                 isValid = document != null ? true : false
                 return isValid
         }
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoading(true)
+                                const res = await fetchApi(`/preparation/folio/nbrefolios/${folio.users.USERS_ID}`)
+                                setNbre(res.result[0].folios.length)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [folio.users]))
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -112,7 +126,6 @@ export default function FolioRetourSuperviseurScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const res = await fetchApi(`/preparation/folio/retourAgentSuperviseur`, {
                                 method: "PUT",
                                 body: form
@@ -125,14 +138,14 @@ export default function FolioRetourSuperviseurScreen() {
                         setLoadingSubmit(false)
                 }
         }
-         //Fonction pour recuperer les details
-         useFocusEffect(useCallback(() => {
+        //Fonction pour recuperer les details
+        useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoadingCheck(true)
                                 const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
                                 setCheck(res.result)
-                               
+
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -142,7 +155,7 @@ export default function FolioRetourSuperviseurScreen() {
         }, []))
         return (
                 <>
-                        {(loadingSubmit && loadingCheck)&& <Loading />}
+                        {(loadingSubmit && loadingCheck) && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <TouchableNativeFeedback
@@ -189,9 +202,28 @@ export default function FolioRetourSuperviseurScreen() {
                                 {
                                         // ID_ETAPE_FOLIO == 2 ?
                                         <>
-                                                
 
-                                               { check.length>0? <><TouchableOpacity onPress={onTakePicha}>
+                                                {!(folio.folios.length==nbre)?<View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                        <OutlinedTextField
+                                                                label="Motif"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.nbre_volume}
+                                                                onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
+                                                                onBlur={() => checkFieldData('nbre_volume')}
+                                                                error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
+                                                                autoCompleteType='off'
+                                                                // keyboardType='number-pad'
+                                                                blurOnSubmit={false}
+                                                                multiline={true}
+                                                        />
+                                                </View>:null}
+                                                {check.length > 0 ? <><TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -202,14 +234,14 @@ export default function FolioRetourSuperviseurScreen() {
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
                                                 </TouchableOpacity>
-                                                <TouchableWithoutFeedback
-                                                        disabled={!isValidAdd()}
-                                                        onPress={submitData}
-                                                >
-                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                                        </View>
-                                                </TouchableWithoutFeedback></>:null}
+                                                        <TouchableWithoutFeedback
+                                                                disabled={!isValidAdd()}
+                                                                onPress={submitData}
+                                                        >
+                                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                                </View>
+                                                        </TouchableWithoutFeedback></> : null}
                                         </>
                                         // : null
                                 }
@@ -266,7 +298,7 @@ const styles = StyleSheet.create({
                 marginVertical: 10
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -284,7 +316,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor: COLORS.primary,
                 marginHorizontal: 10
         },
         buttonText: {

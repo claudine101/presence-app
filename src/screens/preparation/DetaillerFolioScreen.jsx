@@ -573,7 +573,7 @@ export default function AddFolioScreen() {
                         setLoading(true)
                         const form = new FormData()
                         form.append('MAILLE', malles.ID_MAILLE)
-                        form.append('AGENT_DISTRIBUTEUR', distributeur.USERS_ID)
+                        form.append('AGENT_DISTRIBUTEUR', distributeur?.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -623,7 +623,7 @@ export default function AddFolioScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
-                                                <Text style={styles.titlePrincipal2}>Ajouter le volume dans une maille</Text> :
+                                                <Text style={styles.titlePrincipal2}>Ajouter le volume dans une malle</Text> :
                                                 <Text style={styles.titlePrincipal}>Detailler le volume</Text>
                                         }
                                 </View>
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor:COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,

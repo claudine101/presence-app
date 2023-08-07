@@ -125,18 +125,7 @@ export default function AgentPreparationFolioScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
-                        <FloatingAction
-                                actions={
-                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
-                                onPressItem={name => {
-                                        if (name == 'DescriptionEtapeScreen') {
-                                                navigation.navigate('DescriptionEtapeScreen')
-                                        } else {
-                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
-                                        }
-                                }}
-                                color={COLORS.primary}
-                        />
+                       
                 </>
         )
 }

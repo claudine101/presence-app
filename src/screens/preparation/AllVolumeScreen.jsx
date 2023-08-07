@@ -46,7 +46,7 @@ export default function AllVolumeScreen() {
                     setAllVolumes(vol.result)
                 }
                 else {
-                setLoading(true)
+                    setLoading(true)
                     const vol = await fetchApi(`/preparation/volume`)
                     setAllVolumes(vol.result.data)
                 }
@@ -82,7 +82,7 @@ export default function AllVolumeScreen() {
         else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR) {
             setNextRouteName('AddAgentPreparationFolioScreen')
         }
-        
+
     }, [user]))
 
     const actionsPlanification = [
@@ -135,7 +135,7 @@ export default function AllVolumeScreen() {
                                                             </View>
                                                             <View>
                                                                 <Text style={styles.itemVolume}>{volume.folios.length}</Text>
-                                                            
+
                                                             </View>
                                                             <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
@@ -150,7 +150,7 @@ export default function AllVolumeScreen() {
                         keyExtractor={(volume, index) => index.toString()}
                     />}
             </View> :
-            
+
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -202,32 +202,16 @@ export default function AllVolumeScreen() {
                             />}
                 </View>}
 
-
-            <FloatingAction
-                actions={actionsPlanification }
-                onPressItem={name => {
-                    if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate("DescriptionEtapeScreen")
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else if (name == 'DescriptionEtapeSupMailleScreen') {
-                        navigation.navigate('DescriptionEtapeSupMailleScreen')
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else if (name == 'DescriptionEtapeScreen') {
-                        navigation.navigate('DescriptionEtapeScreen')
-                    } else {
-                        navigation.navigate('DescriptionEtapeSupMailleScreen')
-                    }
-                }}
-                color={COLORS.primary}
-            />
+            {
+                user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <FloatingAction
+                    actions={actionsPlanification}
+                    onPressItem={name => {
+                        if (name == 'DescriptionEtapeScreen') {
+                            navigation.navigate("DescriptionEtapeScreen")
+                        }
+                    }}
+                    color={COLORS.primary}
+                /> : null}
         </>
     )
 }

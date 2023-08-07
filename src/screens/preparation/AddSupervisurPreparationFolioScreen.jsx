@@ -200,6 +200,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                 )
         }
 
+      
+        
         //Composent pour afficher le modal des agents superviseur phase preparation
         const SupervisionPreparationList = () => {
                 // <AntDesign name="addusergroup" size={24} color="black" />
@@ -369,26 +371,26 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Malle
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                {volume? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Dossier
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
+                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -417,28 +419,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                {/* <View>
-                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                                onPress={selectdocument}
-                                                        >
-                                                                <View>
-                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                                Importer le proces verbal
-                                                                        </Text>
-                                                                        {data.document ? <View>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {data.document.name}
-                                                                                </Text>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                        </Text>
-                                                                                </View>
-                                                                        </View> : null}
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                </View> */}
+                                               
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -494,7 +475,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor: COLORS.ecommercePrimaryColor,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -562,7 +543,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
         },
         buttonText: {
                 color: "#fff",
@@ -640,7 +621,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: "#18678E",
+                backgroundColor:COLORS.primary,
                 marginHorizontal: 10
                 // marginHorizontal: 50,
                 // marginVertical: 15
