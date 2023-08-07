@@ -23,7 +23,6 @@ export default function AllVolumeRetourScreen() {
                         try {
                                 setLoading(true)
                                 const fol = await fetchApi(`/scanning/volume/retour/plateau`)
-                                console.log(fol)
                                 setAllFolios(fol.result)
                         } catch (error) {
                                 console.log(error)
