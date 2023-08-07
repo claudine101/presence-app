@@ -54,7 +54,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
-                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperiveurAilleRetourScreen')}>
+                        {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperiveurAilleRetourScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
@@ -63,7 +63,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     </Text>
                                 </View>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableNativeFeedback> */}
                     </> : null}
                 {user.ID_PROFIL == 9 || user.ID_PROFIL == 11 || user.ID_PROFIL == 12 ?
                     <>

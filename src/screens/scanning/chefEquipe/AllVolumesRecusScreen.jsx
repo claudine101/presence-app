@@ -20,6 +20,7 @@ import { userSelector } from "../../../store/selectors/userSelector";
 export default function AllVolumesRecusScreen() {
         const navigation = useNavigation()
         const [allVolumes, setAllVolumes] = useState([])
+        console.log(allVolumes)
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
         console.log(user)
@@ -59,7 +60,6 @@ export default function AllVolumesRecusScreen() {
                                         style={styles.contain}
                                         data={allVolumes}
                                         renderItem={({ item: volume, index }) => {
-                                                console.log(volume)
                                                 return (
                                                         <>
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
