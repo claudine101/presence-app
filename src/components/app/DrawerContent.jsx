@@ -50,12 +50,12 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                 || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR
                 || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE|| user.ID_PROFIL == PROFILS.CHEF_PLATEAU) ?
                     <>
-                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeScreen')}>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumesRecusScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                        Volume planifie
+                                        Volume amener
                                     </Text>
                                 </View>
                             </View>

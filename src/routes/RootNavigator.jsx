@@ -37,6 +37,14 @@ import VolumeRetourChefPlateau from '../screens/preparation/VolumeRetourChefPlat
 import VolumeRetourAgentSuperviseur from '../screens/preparation/VolumeRetourAgentSuperviseur';
 import AddChefPlateauVolumeScreen from '../screens/preparation/AddChefPlateauVolumeScreen';
 import DescriptionEtapeScreen from '../screens/preparation/DescriptionEtapeScreen';
+import NewAgentSupAIlleScanScreen from '../screens/scanning/chefEquipe/NewAgentSupAIlleScanScreen';
+import NewChefPlateauScreen from '../screens/scanning/agentAileSuperviseur/NewChefPlateauScreen';
+import ValideChefEquipeScreen from '../screens/scanning/chefEquipe/ValideChefEquipeScreen';
+import NewAgentSupScanScreen from '../screens/scanning/agentAileSuperviseur/NewAgentSupScanScreen';
+import NewEquipeScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeScanScreen';
+import NewFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/NewFolioRetourScreen';
+import DetailsFolioRetourScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFolioRetourScreen';
+import DetailsFolioRetourChefPlateau from '../screens/scanning/agentAileSuperviseur/retour/DetailsFolioRetourChefPlateau';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -87,7 +95,18 @@ export default function RootNavigator() {
                 <Stack.Screen name='FolioRetourSuperviseurScreen' component={FolioRetourSuperviseurScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='VolumeRetourChefPlateau' component={VolumeRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='VolumeRetourAgentSuperviseur' component={VolumeRetourAgentSuperviseur} options={{ headerShown: false }} />
-                
+                <Stack.Screen name='NewAgentSupAIlleScanScreen' component={NewAgentSupAIlleScanScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='NewChefPlateauScreen' component={NewChefPlateauScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='ValideChefEquipeScreen' component={ValideChefEquipeScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='NewAgentSupScanScreen' component={NewAgentSupScanScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='NewEquipeScanScreen' component={NewEquipeScanScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }}/>
+                <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }}/>
+                <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>
