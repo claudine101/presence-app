@@ -1,31 +1,32 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, ScrollView, Image } from "react-native";
-import { COLORS } from "../../../styles/COLORS";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
+import { COLORS } from "../../styles/COLORS";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { useCallback } from "react";
-import fetchApi from "../../../helpers/fetchApi";
+import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
+import { useForm } from "../../hooks/useForm";
+import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
-import Loading from "../../../components/app/Loading";
+import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 
 
 /**
- * Screen pour afficher le details du volumes
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * Retour d'un chef plateau  
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 03/8/2023
  * @returns 
  */
 
-export default function AgentSuperviseurAilleRetourDetailsScreen() {
+export default function VolumeRetourChefPlateau() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume } = route.params
-        const [allDetails, setAllDetails] = useState([])
+        // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
@@ -49,31 +50,6 @@ export default function AgentSuperviseurAilleRetourDetailsScreen() {
                 return isValid
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
-                }
-                catch (error) {
-                        console.log(error)
-                }
-        }
-
         //Fonction pour upload un documents 
         const selectdocument = async () => {
                 setError("document", "")
@@ -94,10 +70,27 @@ export default function AgentSuperviseurAilleRetourDetailsScreen() {
 
         }
 
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                try {
+                        const permission = await ImagePicker.requestCameraPermissionsAsync()
+                        if (!permission.granted) return false
+                        const image = await ImagePicker.launchCameraAsync()
+                        if (!image.canceled) {
+                                setDocument(image)
+                        }
+                }
+                catch (error) {
+                        console.log(error)
+                }
+        }
+
         const submitData = async () => {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
+                        form.append('volume', JSON.stringify(volume.volumes))
+                        form.append('CHEF_PLATEAU', volume.users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -114,14 +107,7 @@ export default function AgentSuperviseurAilleRetourDetailsScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
-                        const res = await fetchApi(`/volume/dossiers/retournPlateau/${volume.ID_USER_AILE_PLATEAU}/${volume.ID_VOLUME}`, {
+                        const res = await fetchApi(`/preparation/volume/retourChefPlateau`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -133,8 +119,6 @@ export default function AgentSuperviseurAilleRetourDetailsScreen() {
                         setLoadingSubmit(false)
                 }
         }
-
-
         return (
                 <>
                         {loadingSubmit && <Loading />}
@@ -147,73 +131,61 @@ export default function AgentSuperviseurAilleRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{volume.NOM} {volume.PRENOM}</Text>
+                                        <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                 </View>
-                                <>
-                                        <ScrollView>
-                                                <View style={styles.cardDetails}>
-                                                        <View style={styles.carddetailItem}>
-                                                                <View style={styles.cardImages}>
-                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                </View>
-                                                                <View style={styles.cardDescription}>
-                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                <View style={styles.cardNames}>
-                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{volume.NUMERO_VOLUME}</Text>
-                                                                                        <Text style={{ fontWeight: "bold", color: "#777" }}>{volume.CODE_VOLUME}</Text>
-                                                                                        <Text>Dossier {volume.NOMBRE_DOSSIER}</Text>
+                                <FlatList
+                                        style={styles.contain}
+                                        data={volume.volumes}
+                                        renderItem={({ item: volume, index }) => {
+                                                return (
+                                                        <>
+                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                </View> :
+                                                                        <View>
+                                                                                <View style={styles.cardDetails}>
+                                                                                        <View style={styles.carddetailItem}>
+                                                                                                <View style={styles.cardImages}>
+                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.cardDescription}>
+                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                <View style={styles.cardNames}>
+                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                                                                        <Text>{volume.volume.CODE_VOLUME} </Text>
+                                                                                                                </View>
+                                                                                                                <Text style={{ color: "#777" }}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </View>
                                                                                 </View>
-                                                                                <Text style={{ color: "#777" }}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                         </View>
-                                                                </View>
-                                                        </View>
-                                                </View>
-                                        </ScrollView>
-                                </>
-
-                                {volume.ID_ETAPE_VOLUME == 6 ? <>
-                                        {/* <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
-                                                        <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
-                                                                </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
+                                                                }
+                                                                
+                                                        </>
+                                                )
+                                        }}
+                                        keyExtractor={(folio, index) => index.toString()}
+                                />
+                                 <TouchableOpacity onPress={onTakePicha}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du proces verbal
                                                                         </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
+                                                                </View>
+                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
                                                 </TouchableOpacity>
-                                        </View> */}
-                                        <TouchableOpacity onPress={onTakePicha}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <Feather name="image" size={24} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du proces verbal
-                                                                </Text>
+                                                <TouchableWithoutFeedback
+                                                        disabled={!isValidAdd()}
+                                                        onPress={submitData}
+                                                >
+                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                                <Text style={styles.buttonText}>Enregistrer</Text>
                                                         </View>
-                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableWithoutFeedback
-                                                disabled={!isValidAdd()}
-                                                onPress={submitData}
-                                        >
-                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                </View>
-                                        </TouchableWithoutFeedback>
-                                </> : null}
+                                                </TouchableWithoutFeedback>
 
                         </View>
                 </>
@@ -316,7 +288,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         addImageLabel: {
                 marginLeft: 5,

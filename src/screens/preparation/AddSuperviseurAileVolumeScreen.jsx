@@ -1,76 +1,72 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image, Alert } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
-import { OutlinedTextField } from 'rn-material-ui-textfield'
-import { useDispatch, useSelector } from "react-redux";
-import { folioPreparationCartSelector } from "../../store/selectors/folioPreparationCartSelector";
-import { addFolioPreparationAction, removeFolioPreparationAction } from "../../store/actions/folioPreparationCartActions";
-import fetchApi from "../../helpers/fetchApi";
 import useFetch from "../../hooks/useFetch";
 import Loading from "../../components/app/Loading";
+import { useEffect } from "react";
+import fetchApi from "../../helpers/fetchApi";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
- * Le screen pour la phase de preparation
+ * Le screen pour aider le distributeur a renger les males dans le batiments
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 12/7/2021
  * @returns 
  */
 
-export default function AgentPreparationScreen() {
+export default function AddSuperviseurAileVolumeScreen() {
         const navigation = useNavigation()
-        const dispatch = useDispatch()
-        const [countFolio, setCountFolio] = useState('')
         const [loading, setLoading] = useState(false)
+        const route = useRoute()
+        const { volume } = route.params
+        const [loadingInformation, setLoadingInformation] = useState(false)
+        const [informations, setInformations] = useState(null);
         const [document, setDocument] = useState(null)
-
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
-
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
-                // },
+                // }
         }, {
                 // document: {
                 //         required: 'ce champ est obligatoire',
-                // },
+                // }
         })
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentPreparation != null && document != null && multiFolios.length > 0 ? true : false
-                return isValid && isValidate()
+                isValid = volume != null && agentSuperviseur != null  && document != null ? true : false
+                return isValid
         }
-
-        // Agent preparation select
-        const preparationModalizeRef = useRef(null);
-        const [agentPreparation, setAgentPreparation] = useState(null);
-        const openPreparationModalize = () => {
-                preparationModalizeRef.current?.open();
+        // Volume select
+        const volumeModalizeRef = useRef(null);
+        const [volumes, setVolumes] = useState(null);
+        const openVolumeModalize = () => {
+                volumeModalizeRef.current?.open();
         };
-        const setSelectedPreparartion = (prep) => {
-                preparationModalizeRef.current?.close();
-                setAgentPreparation(prep)
+        const setSelectedVolume = (vol) => {
+                volumeModalizeRef.current?.close();
+                setVolumes(vol)
         }
-
-        // Modal folio multi select
-        const multSelectModalizeRef = useRef(null);
-        const [multiFolios, setMultiFolios] = useState([]);
-        const openMultiSelectModalize = () => {
-                multSelectModalizeRef.current?.open();
+        // Chef du plateau select
+        const agentSuperviseurModalizeRef = useRef(null);
+        const [agentSuperviseur, setagentSuperviseur] = useState(null);
+        const openagentSuperviseurModalize = () => {
+                agentSuperviseurModalizeRef.current?.open();
         };
-        const submitConfimer = () => {
-                multSelectModalizeRef.current?.close();
+        const setSelectedagentSuperviseur = (chef) => {
+                agentSuperviseurModalizeRef.current?.close();
+                setagentSuperviseur(chef)
         }
 
         //Fonction pour le prendre l'image avec l'appareil photos
@@ -79,7 +75,7 @@ export default function AgentPreparationScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -97,7 +93,6 @@ export default function AgentPreparationScreen() {
                         console.log(error)
                 }
         }
-
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -119,32 +114,34 @@ export default function AgentPreparationScreen() {
 
         }
 
-        //Composent pour afficher le modal les agents de preparation
-        const PreparationList = () => {
-                const [loadingAgentPrepa, allAgentsPreparation] = useFetch('/folio/dossiers/agentPreparation')
+        //Composent pour afficher le modal des chefs des platequx
+        const AgentSuperviseurAile = () => {
+               
+                const [loadingSuperviseur, superviseurList] = useFetch('/preparation/batiment/superviseurAile')
                 return (
                         <>
-                                {loadingAgentPrepa ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les agents de preparations</Text>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
                                                 </View>
-                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                {superviseurList.result.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedagentSuperviseur(chef)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {chef.PHOTO_USER ? <Image source={{ uri: chef.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
-                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
+                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {agentSuperviseur?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -158,43 +155,33 @@ export default function AgentPreparationScreen() {
                 )
         }
 
-        //Composent pour afficher le modal de multi select des folio
-        const MultiFolioSelctList = () => {
-                const [loadingFolio, allFolios] = useFetch('/folio/dossiers/getFolio')
-
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-                }
-
+        //Composent pour afficher le modal de volume 
+        const VolumeAgentSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
                 return (
                         <>
-                                {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                        <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {allFolios.result.map((fol, index) => {
+                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
+                                                {volumesAll.result.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
                                                                                 <View style={styles.modalItem} >
                                                                                         <View style={styles.modalImageContainer}>
                                                                                                 <AntDesign name="folderopen" size={20} color="black" />
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
-                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -204,23 +191,34 @@ export default function AgentPreparationScreen() {
                                                 })}
                                         </View>
                                 }
-                                <TouchableWithoutFeedback
-                                        onPress={submitConfimer}
-                                >
-                                        <View style={styles.butConfirmer}>
-                                                <Text style={styles.buttonText}>Confirmer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
                         </>
                 )
         }
 
-        const submitData = async () => {
+        //Fonction pour appeller les autres information en passant l'id de volume selectionner
+        useEffect(() => {
+                (async () => {
+                        try {
+
+                                if (volumes) {
+                                        setLoadingInformation(true)
+                                        const aie = await fetchApi(`/volume/dossiers/batimentAile/${volumes.ID_VOLUME}`)
+                                        setInformations(aie.result)
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingInformation(false)
+                        }
+                })()
+        }, [volumes])
+
+        const submitInAille = async () => {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('folio', JSON.stringify(multiFolios))
-                        form.append('AGENT_PREPARATION', agentPreparation.ID_USER_AILE)
+                        form.append('AGENT_SUPERVISEUR', agentSuperviseur.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -237,15 +235,7 @@ export default function AgentPreparationScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
-
-                        const volume = await fetchApi(`/folio/dossiers/preparation`, {
+                        const vol= await fetchApi(`/preparation/volume/nommerSuperviseurAile/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -257,19 +247,6 @@ export default function AgentPreparationScreen() {
                         setLoading(false)
                 }
         }
-
-        //Fonction pour recuperer le volume avec le count de folio existants
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                const response = await fetchApi('/folio/dossiers/nbreFolio')
-                                setCountFolio(response.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        }
-                })()
-        }, []))
 
 
         return (
@@ -284,87 +261,72 @@ export default function AgentPreparationScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent preparation</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent supeviseur aille</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                {/* <View style={styles.selectContainer}>
+                                                <View style={styles.selectContainer} onPress={openVolumeModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
                                                                 <View>
-                                                                        {countFolio ? <Text style={styles.selectedValue}>
-                                                                                {countFolio.NUMERO_VOLUME}
-                                                                        </Text> :
-                                                                                <Text style={styles.selectedValue}>
-                                                                                        aucun
-                                                                                </Text>}
-                                                                </View>
-                                                        </View>
-                                                </View> */}
-                                                <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Nombres de dossiers
-                                                                </Text>
-                                                                <View>
-                                                                        {countFolio ? <Text style={styles.selectedValue}>
-                                                                                {countFolio.nbre}
-                                                                        </Text> :
-                                                                                <Text style={styles.selectedValue}>
-                                                                                        aucun
-                                                                                </Text>}
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                                        </Text>
                                                                 </View>
                                                         </View>
                                                 </View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner un agent de preparation
+                                                                        Malle
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
+                                                                                {volume.maille ? `${volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                {volumes ? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Batiments
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {informations ? `${informations?.NUMERO_BATIMENT}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                {volumes ? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Ailles
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {informations ? `${informations?.NUMERO_AILE}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                Sélectionner agent superviseur aille
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {agentSuperviseur ? `${agentSuperviseur.NOM}` + `${agentSuperviseur.PRENOM}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Selectioner les folios
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </TouchableOpacity>
-                                                {/* <View>
-                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                                onPress={selectdocument}
-                                                        >
-                                                                <View>
-                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                                Importer le proces verbal
-                                                                        </Text>
-                                                                        {data.document ? <View>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {data.document.name}
-                                                                                </Text>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                        </Text>
-                                                                                </View>
-                                                                        </View> : null}
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                </View> */}
-                                                <TouchableOpacity onPress={onTakePicha}>
+                                                
+                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -379,20 +341,20 @@ export default function AgentPreparationScreen() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitData}
+                                        onPress={submitInAille}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                                 <Portal>
-                                        <Modalize ref={preparationModalizeRef}  >
-                                                <PreparationList />
+                                        <Modalize ref={agentSuperviseurModalizeRef}  >
+                                                <AgentSuperviseurAile />
                                         </Modalize>
                                 </Portal>
                                 <Portal>
-                                        <Modalize ref={multSelectModalizeRef}  >
-                                                <MultiFolioSelctList />
+                                        <Modalize ref={volumeModalizeRef}  >
+                                                <VolumeAgentSuperviseurList />
                                         </Modalize>
                                 </Portal>
                         </View>
@@ -422,7 +384,7 @@ const styles = StyleSheet.create({
                 borderRadius: 50,
         },
         titlePrincipal: {
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: "bold",
                 marginLeft: 10,
                 color: COLORS.primary
@@ -473,24 +435,6 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
-        buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center"
-        },
-        buttonTextPlus: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 25
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
@@ -504,47 +448,6 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
-        headerRead: {
-                borderRadius: 8,
-                backgroundColor: "#ddd",
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 5,
-                paddingHorizontal: 30
-        },
-        cardFolder: {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: '#FFF',
-                maxHeight: 50,
-                borderRadius: 20,
-                padding: 3,
-                paddingVertical: 2,
-                elevation: 10,
-                shadowColor: '#c4c4c4',
-        },
-        cardDescription: {
-                marginLeft: 10,
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ddd"
-        },
-        reomoveBtn: {
-                width: 30,
-                height: 30,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
-        },
         itemTitleDesc: {
                 color: "#777",
                 marginLeft: 10,
@@ -554,15 +457,6 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
-        },
-        butConfirmer: {
-                // marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                // paddingHorizontal: 10,
-                backgroundColor: "#18678E",
-                marginHorizontal: 50,
-                marginVertical: 15
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -576,4 +470,17 @@ const styles = StyleSheet.create({
                 marginLeft: 5,
                 opacity: 0.8
         },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+            },
+            image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
+            },
 })

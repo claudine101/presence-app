@@ -22,6 +22,21 @@ import SelectFlashAgentSupScreen from '../screens/indexation/chefEquipe/SelectFl
 import SelectChefPlateauScreen from '../screens/indexation/supAile/SelectChefPlateauScreen';
 import SelectAgentIndexationScreen from '../screens/indexation/chefPlateau/SelectAgentIndexationScreen';
 import ChefEquipeFlashDetailScreen from '../screens/indexation/chefEquipe/ChefEquipeFlashDetailScreen';
+import NewVolumeScreen from '../screens/preparation/NewVolumeScreen';
+import DetailsVolumeScreen from '../screens/preparation/DetailsVolumeScreen';
+import AddNombreFolioScreen from '../screens/preparation/AddNombreFolioScreen';
+import DetaillerFolioScreen from '../screens/preparation/DetaillerFolioScreen';
+import AddSuperviseurAileVolumeScreen from '../screens/preparation/AddSuperviseurAileVolumeScreen';
+import AddSupervisurPreparationFolioScreen from '../screens/preparation/AddSupervisurPreparationFolioScreen';
+import AddAgentPreparationFolioScreen from '../screens/preparation/AddAgentPreparationFolioScreen';
+import DetailsAgentPreparationScreen from '../screens/preparation/DetailsAgentPreparationScreen';
+import AddDetailsFolioScreen from '../screens/preparation/AddDetailsFolioScreen';
+import DetailsFolioScreen from '../screens/preparation/DetailsFolioScreen';
+import FolioRetourSuperviseurScreen from '../screens/preparation/FolioRetourSuperviseurScreen';
+import VolumeRetourChefPlateau from '../screens/preparation/VolumeRetourChefPlateau';
+import VolumeRetourAgentSuperviseur from '../screens/preparation/VolumeRetourAgentSuperviseur';
+import AddChefPlateauVolumeScreen from '../screens/preparation/AddChefPlateauVolumeScreen';
+import DescriptionEtapeScreen from '../screens/preparation/DescriptionEtapeScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -58,6 +73,20 @@ export default function RootNavigator() {
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='SelectAgentIndexationScreen' component={SelectAgentIndexationScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='ChefEquipeFlashDetailScreen' component={ChefEquipeFlashDetailScreen} options={{ headerShown: false }}/>
+
+                <Stack.Screen name='DetailsVolumeScreen' component={DetailsVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddNombreFolioScreen' component={AddNombreFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetaillerFolioScreen' component={DetaillerFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddSuperviseurAileVolumeScreen' component={AddSuperviseurAileVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddSupervisurPreparationFolioScreen' component={AddSupervisurPreparationFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddAgentPreparationFolioScreen' component={AddAgentPreparationFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddChefPlateauVolumeScreen' component={AddChefPlateauVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAgentPreparationScreen' component={DetailsAgentPreparationScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AddDetailsFolioScreen' component={AddDetailsFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFolioScreen' component={DetailsFolioScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FolioRetourSuperviseurScreen' component={FolioRetourSuperviseurScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='VolumeRetourChefPlateau' component={VolumeRetourChefPlateau} options={{ headerShown: false }} />
+                <Stack.Screen name='VolumeRetourAgentSuperviseur' component={VolumeRetourAgentSuperviseur} options={{ headerShown: false }} />
                 
             </Stack.Navigator>
 

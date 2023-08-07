@@ -9,40 +9,31 @@ import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
-import AppHeaderChefPlateauRetour from "../../components/app/AppHeaderChefPlateauRetour";
+import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher le folio donnees a un agent de superviseur de phase preparation
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * Screen pour afficher les chef plateau et  les nombre des dossiers recu
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 03/08/2023
  * @returns 
  */
 
 
-export default function AgentChefPlateauRetourScreen() {
+export default function AgentSuperviseurAileScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
-        console.log(allDetails)
         const [loading, setLoading] = useState(false)
+        const [header, setHeader] = useState("Agents superviseurs ailes")
+
         const user = useSelector(userSelector)
 
-        const Action = ({ title, image }) => {
-                return (
-                        <View style={styles.action}>
-                                <Text style={styles.actionLabel}>{title}</Text>
-                                <View style={styles.actionIcon}>
-                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                                </View>
-                        </View>
-                )
-        }
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/folio/dossiers/superviseurPreparations')
+                                const res = await fetchApi('/preparation/volume/agentSuperviseurAile')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -51,22 +42,9 @@ export default function AgentChefPlateauRetourScreen() {
                         }
                 })()
         }, []))
-
-        const actions = [
-        ];
-        const actionsAgentchefPlateau = [
-                {
-                    text: "Agent chef plateau",
-                    icon: require("../../../assets/images/dossier.png"),
-                    name: "DescriptionEtapeScreen",
-                    position: 7,
-                    render: () => <Action title={"Agent superviseur phase preparation"} image={require("../../../assets/images/dossier.png")} key={"key7"} />
-                },
-            ];
-
         return (
                 <>
-                        <AppHeaderChefPlateauRetour />
+                        <AppHeaderPhPreparationRetour header={header} />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -74,10 +52,10 @@ export default function AgentChefPlateauRetourScreen() {
                                         allDetails.length <= 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun Folio trouvé
+                                                        Aucun Agent  superviseur trouvé
                                                 </Text>
                                                 <Text style={styles.emptyDesc}>
-                                                        Aucun folio deja envoyes chez un agent de preparation
+                                                        Aucun folio deja envoyes chez un agent superviseur
                                                 </Text>
                                         </View> :
 
@@ -89,9 +67,9 @@ export default function AgentChefPlateauRetourScreen() {
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
+                                                                                </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentChefPlateauRetourDetailsScreen", {ID_FOLIO_AILE_PREPARATION:folio.ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO, nbre_folio: folio.nbre_folio})}
+                                                                                                onPress={() => navigation.navigate("VolumeRetourAgentSuperviseur", { volume:folio,users:folio.users})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -101,15 +79,16 @@ export default function AgentChefPlateauRetourScreen() {
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NOM} {folio.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.nbre_folio}</Text>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>
+                                                                                                                                            {folio.users?.NOM} {folio.users?.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.volumes?.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>
+                                                                                        </TouchableNativeFeedback>:null
                                                                                 }
                                                                         </>
                                                                 )
@@ -117,16 +96,6 @@ export default function AgentChefPlateauRetourScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
-                        <FloatingAction
-                                actions={
-                                        user.ID_PROFIL == 15 ? actionsAgentchefPlateau : actions}
-                                onPressItem={name => {
-                                        if (name == 'DescriptionEtapeScreen') {
-                                                navigation.navigate('DescriptionEtapeScreen')
-                                        } 
-                                }}
-                                color={COLORS.primary}
-                        />
                 </>
         )
 }
@@ -213,5 +182,5 @@ const styles = StyleSheet.create({
                 width: 100,
                 height: 100,
                 resizeMode: 'contain'
-        },
+            },
 })

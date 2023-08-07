@@ -1,27 +1,30 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import AppHeader from "../../components/app/AppHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { FloatingAction } from "react-native-floating-action";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
+import { FloatingAction } from "react-native-floating-action";
+import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher le details de folio avec leurs natures
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * Screen pour afficher les chef plateau et  les nombre des dossiers recu
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 03/08/2023
  * @returns 
  */
 
-export default function AllFolioSupAgentScreen() {
+
+export default function ChefPlateauScreen() {
         const navigation = useNavigation()
-        const [allFolioAgent, setAllFolioAgent] = useState([])
+        const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
+        const [header, setHeader] = useState("Chefs plateau")
+
         const user = useSelector(userSelector)
 
         const Action = ({ title, image }) => {
@@ -35,13 +38,13 @@ export default function AllFolioSupAgentScreen() {
                 )
         }
 
-        //Fonction pour recuperer les folios associer a un agent superviseur phase preparation
+        //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/folio/dossiers/folio')
-                                setAllFolioAgent(res.result)
+                                const res = await fetchApi('/preparation/volume/chefPlateau')
+                                setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -49,53 +52,35 @@ export default function AllFolioSupAgentScreen() {
                         }
                 })()
         }, []))
-
-        const actions = [
-        ];
-        const actionsAgentSuperviseurPhasePreparation = [
-                {
-                        text: "Agent superviseur phase preparation",
-                        icon: require("../../../assets/images/entrant.jpg"),
-                        name: "DescriptionEtapeScreen",
-                        position: 8,
-                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/mail-receive-small.png")} key={"key8"} />
-                },
-                {
-                        text: "Agent traitement",
-                        icon: require("../../../assets/images/entrant.jpg"),
-                        name: "DescriptionEtapeSupMailleScreen",
-                        position: 9,
-                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/mail-receive-small.png")} key={"key9"} />
-                },
-        ];
-
         return (
                 <>
-                        <AppHeader />
+                        <AppHeaderPhPreparationRetour  header={header}/>
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allFolioAgent.length <= 0 ? <View style={styles.emptyContaier}>
-                                                {/* <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} /> */}
+                                        allDetails.length <= 0 ? <View style={styles.emptyContaier}>
+                                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun Folio trouvé
+                                                        Aucun Agent  superviseur trouvé
                                                 </Text>
                                                 <Text style={styles.emptyDesc}>
-                                                        Aucun folio touver ou vous n'êtes pas affecte a aucun folio
+                                                        Aucun folio deja envoyes chez un agent superviseur
                                                 </Text>
                                         </View> :
 
                                                 <FlatList
                                                         style={styles.contain}
-                                                        data={allFolioAgent}
+                                                        data={allDetails}
                                                         renderItem={({ item: folio, index }) => {
                                                                 return (
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
-                                                                                        <View useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}>
+                                                                                </View> :folio.users?
+                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                onPress={() => navigation.navigate("VolumeRetourChefPlateau", { volume:folio,users:folio.users})}
+                                                                                        >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
                                                                                                                 <View style={styles.cardImages}>
@@ -104,15 +89,16 @@ export default function AllFolioSupAgentScreen() {
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                        <Text>{folio.CODE_FOLIO}</Text>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>
+                                                                                                                                            {folio.users?.NOM} {folio.users?.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.volumes?.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </View>
+                                                                                        </TouchableNativeFeedback>:null
                                                                                 }
                                                                         </>
                                                                 )
@@ -120,18 +106,6 @@ export default function AllFolioSupAgentScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
-                        <FloatingAction
-                                actions={
-                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
-                                onPressItem={name => {
-                                        if (name == 'DescriptionEtapeScreen') {
-                                                navigation.navigate('DescriptionEtapeScreen')
-                                        } else {
-                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
-                                        }
-                                }}
-                                color={COLORS.primary}
-                        />
                 </>
         )
 }
@@ -172,14 +146,8 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        actionIcon: {
-                width: 45,
-                height: 45,
-                backgroundColor: COLORS.primary,
-                borderRadius: 50,
-                alignContent: 'center',
-                alignItems: 'center',
-                justifyContent: 'center'
+        cardNames: {
+                maxWidth: "67%"
         },
         actionLabel: {
                 backgroundColor: '#fff',
@@ -193,4 +161,36 @@ const styles = StyleSheet.create({
                 alignContent: 'center',
                 alignItems: 'center'
         },
+        actionIcon: {
+                width: 45,
+                height: 45,
+                backgroundColor: COLORS.primary,
+                borderRadius: 50,
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center'
+        },
+        emptyContaier: {
+                // flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        emptyTitle: {
+                textAlign: 'center',
+                fontWeight: 'bold',
+                color: '#333',
+                marginVertical: 10,
+                fontSize: 15
+        },
+        emptyDesc: {
+                color: '#777',
+                textAlign: 'center',
+                maxWidth: 300,
+                lineHeight: 20
+        },
+        emptyImage: {
+                width: 100,
+                height: 100,
+                resizeMode: 'contain'
+            },
 })

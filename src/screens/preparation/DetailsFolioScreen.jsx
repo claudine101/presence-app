@@ -1,31 +1,33 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../styles/COLORS";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { useCallback } from "react";
-import fetchApi from "../../../helpers/fetchApi";
+import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
+import { useForm } from "../../hooks/useForm";
+import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
-import Loading from "../../../components/app/Loading";
+import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 
 
 /**
  * Screen pour afficher le details de folio avec leur nature  
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 02/8/2023
  * @returns 
  */
 
-export default function AgentSupPhasePreparationRetourDetailsScreen() {
+export default function DetailsAgentPreparationScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_USER_AILE_AGENT_PREPARATION, ID_ETAPE_FOLIO } = route.params
-        const [allDetails, setAllDetails] = useState([])
+        const {folio,users } = route.params
+        console.log(folio.folios)
+        // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
@@ -75,7 +77,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -98,6 +100,8 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
+                        form.append('folio', JSON.stringify(folio.folios))
+                        form.append('AGENT_PREPARATION', folio.users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -122,7 +126,7 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                         //                 uri: data.document.uri, name: filename, type: data.document.mimeType
                         //         })
                         // }
-                        const res = await fetchApi(`/folio/dossiers/retourPreparation/${ID_USER_AILE_AGENT_PREPARATION}`, {
+                        const res = await fetchApi(`/preparation/folio/retourAgentPreparation`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -136,19 +140,19 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
         }
 
         //Fonction pour recuperer les details de folios 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
-                                setAllDetails(res.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
+        // useFocusEffect(useCallback(() => {
+        //         (async () => {
+        //                 try {
+        //                         setLoading(true)
+        //                         const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
+        //                         setAllDetails(res.result)
+        //                 } catch (error) {
+        //                         console.log(error)
+        //                 } finally {
+        //                         setLoading(false)
+        //                 }
+        //         })()
+        // }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
 
         return (
                 <>
@@ -162,18 +166,21 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text>
+                                        <Text style={styles.titlePrincipal}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                 </View>
                                 <FlatList
                                         style={styles.contain}
-                                        data={allDetails}
+                                        data={folio.folios}
                                         renderItem={({ item: folio, index }) => {
+                                                const isExists = folio.folio.ID_ETAPE_FOLIO==IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION?true:false
                                                 return (
                                                         <>
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                 </View> :
-                                                                        <View>
+                                                                       <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                       onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio:folio.folio,users:users})}
+                                                               >
                                                                                 <View style={styles.cardDetails}>
                                                                                         <View style={styles.carddetailItem}>
                                                                                                 <View style={styles.cardImages}>
@@ -182,66 +189,22 @@ export default function AgentSupPhasePreparationRetourDetailsScreen() {
                                                                                                 <View style={styles.cardDescription}>
                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text>{folio.CODE_FOLIO}</Text>
+                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <Text>{folio.folio.CODE_FOLIO} {isExists}</Text>
                                                                                                                 </View>
                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </View>
                                                                                 </View>
-                                                                        </View>
+                                                                        </TouchableNativeFeedback>
                                                                 }
                                                         </>
                                                 )
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                {ID_ETAPE_FOLIO == 2 ?
-                                        <>
-                                                {/* <View>
-                                                <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                        onPress={selectdocument}
-                                                >
-                                                        <View>
-                                                                <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                        Importer le proces verbal
-                                                                </Text>
-                                                                {data.document ? <View>
-                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                {data.document.name}
-                                                                        </Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                </Text>
-                                                                        </View>
-                                                                </View> : null}
-                                                        </View>
-                                                </TouchableOpacity>
-                                        </View> */}
-                                                <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
-                                                                </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                        </View>
-                                                </TouchableOpacity>
-                                                <TouchableWithoutFeedback
-                                                        disabled={!isValidAdd()}
-                                                        onPress={submitData}
-                                                >
-                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                                        </View>
-                                                </TouchableWithoutFeedback>
-                                        </>
-                                        : null}
+                               
 
                         </View>
                 </>

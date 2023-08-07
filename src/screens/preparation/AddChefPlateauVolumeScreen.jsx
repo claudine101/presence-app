@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
@@ -16,16 +16,17 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
- * Le screen pour aider le distributeur a renger les males dans le batiments
+ * Le screen pour aider un superviseur aille affecter un chef du plateaux
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 12/7/2021
+ * @date 17/7/2021
  * @returns 
  */
 
-export default function AgentSuperviseurAilleScreen() {
+export default function AddChefPlateauVolumeScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
-
+        const route = useRoute()
+        const { volume } = route.params
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
         const [document, setDocument] = useState(null)
@@ -46,8 +47,10 @@ export default function AgentSuperviseurAilleScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volumes != null && chefPlateaux != null  && document != null ? true : false
-                return isValid
+                isValid = volumes != null ? true : false
+                isValid = chefPlateaux != null ? true : false
+                isValid = document != null ? true : false
+                return isValid && isValidate()
         }
 
         // Volume select
@@ -78,18 +81,8 @@ export default function AgentSuperviseurAilleScreen() {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
                         }
                 }
                 catch (error) {
@@ -117,10 +110,9 @@ export default function AgentSuperviseurAilleScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des platequx
+        //Composent pour afficher le modal des chefs des plateaux
         const ChefPlateauList = () => {
-               
-                const [loadingSuperviseur, superviseurList] = useFetch('/folio/dossiers/agentSuperviseur')
+                const [loadingSuperviseur, superviseurList] = useFetch('/preparation/batiment/chefPlateau')
                 return (
                         <>
                                 {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -128,22 +120,23 @@ export default function AgentSuperviseurAilleScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
+                                                        <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
                                                 </View>
                                                 {superviseurList.result.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                        <View style={styles.imageContainer}>
+                                                                                                {chef.PHOTO_USER ? <Image source={{ uri: chef.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.ID_USER_AILE == chef.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -169,7 +162,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
                                                 {volumesAll.result.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
@@ -196,7 +189,6 @@ export default function AgentSuperviseurAilleScreen() {
                         </>
                 )
         }
-
         //Fonction pour appeller les autres information en passant l'id de volume selectionner
         useEffect(() => {
                 (async () => {
@@ -220,7 +212,7 @@ export default function AgentSuperviseurAilleScreen() {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('AGENT_SUPERVISEUR', chefPlateaux.ID_USER_AILE)
+                        form.append('CHEF_PLATEAU', chefPlateaux.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -237,15 +229,7 @@ export default function AgentSuperviseurAilleScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
-                        
-                        const volume = await fetchApi(`/volume/dossiers/affectationSuperviseur/${volumes.ID_VOLUME}`, {
+                        const vol = await fetchApi(`/preparation/volume/nommerChefPlateau/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -271,7 +255,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent supeviseur aille</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer le chef plateau</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
@@ -282,7 +266,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
+                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -295,6 +279,18 @@ export default function AgentSuperviseurAilleScreen() {
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
                                                                                 {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                </View> : null}
+                                                {volumes ? <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Dossier
+                                                                </Text>
+                                                                <View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -326,7 +322,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectioner agent superviseur aille
+                                                                        Sélectionner un chef de plateau
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -357,7 +353,7 @@ export default function AgentSuperviseurAilleScreen() {
                                                                 </View>
                                                         </TouchableOpacity>
                                                 </View> */}
-                                                 <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -500,5 +496,18 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
 })

@@ -5,22 +5,26 @@ import AppHeader from "../../components/app/AppHeader";
 import { FloatingAction } from "react-native-floating-action";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useCallback, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
+import PROFILS from "../../constants/PROFILS";
+
 
 /**
- * Screen pour la listes des volume planifier pour vous
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 11/7/2023
+ * Screen pour la listes des volume 
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 1/08/2023
  * @returns 
  */
-export default function AllVolumeScreen() {
+export default function AllFolioScreen() {
+    console.log('qsdfghjklm:ùdfghjklmùcgvbhn,')
+
     const navigation = useNavigation()
     const user = useSelector(userSelector)
-    console.log(user)
     const [allVolumes, setAllVolumes] = useState([])
+    const [nextRouteName, setNextRouteName] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const Action = ({ title, image }) => {
@@ -39,14 +43,39 @@ export default function AllVolumeScreen() {
         (async () => {
             try {
                 setLoading(true)
-                const vol = await fetchApi(`/volume/dossiers/volume`)
-                setAllVolumes(vol.result)
+                const vol = await fetchApi(`/preparation/folio/folios`)
+                setAllVolumes(vol.result.data)
             } catch (error) {
                 console.log(error)
             } finally {
                 setLoading(false)
             }
         })()
+    }, [user]))
+
+    //fonction pour recuperer screen pour  detaillers
+    useFocusEffect(useCallback(() => {
+        if(user.ID_PROFIL==PROFILS.CHEF_DIVISION_ARCHIGES){
+         setNextRouteName('DetailsVolumeScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_DESARCHIVAGES){
+            setNextRouteName('AddNombreFolioScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
+            setNextRouteName('DetaillerFolioScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_DISTRIBUTEUR){
+            setNextRouteName('AddSuperviseurAileVolumeScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENTS_SUPERVISEUR_AILE){
+            setNextRouteName('AddChefPlateauVolumeScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.CHEF_PLATEAU){
+            setNextRouteName('AddSupervisurPreparationFolioScreen')
+        }
+        else if(user.ID_PROFIL==PROFILS.AGENT_SUPERVISEUR){
+            setNextRouteName('AddAgentPreparationFolioScreen')
+        }
     }, [user]))
 
 
@@ -156,27 +185,27 @@ export default function AllVolumeScreen() {
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                             <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} 
-                                            onPress={()=>navigation.navigate("VolumeDetailsScreen", {volume:volume})}
-                                        >
-                                            <View style={styles.cardDetails}>
-                                                <View style={styles.carddetailItem}>
-                                                    <View style={styles.cardImages}>
-                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                    </View>
-                                                    <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME}</Text>
-                                                                <Text>{volume.CODE_VOLUME}</Text>
+                                        
+                                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
+                                            >
+                                                <View style={styles.cardDetails}>
+                                                    <View style={styles.carddetailItem}>
+                                                        <View style={styles.cardImages}>
+                                                            <AntDesign name="folderopen" size={24} color="black" />
+                                                        </View>
+                                                        <View style={styles.cardDescription}>
+                                                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                    <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                </View>
+                                                                <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                             </View>
-                                                            <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>
                                             </TouchableNativeFeedback>
-                                            }
+                                        }
                                     </>
                                 )
                             }}
@@ -186,13 +215,13 @@ export default function AllVolumeScreen() {
 
 
             <FloatingAction
-                actions={user.ID_PROFIL ==1 ? actionsPlanification : 
-                    user.ID_PROFIL == 2 ? actionsAgentArchivages : 
-                    user.ID_PROFIL == 3 ? actionsAgentSuperviseur :
-                    user.ID_PROFIL == 29 ? actionsAgentSuperviseurAille :
-                    user.ID_PROFIL == 7 ? actionsAgentAille :
-                    user.ID_PROFIL == 15 ? actionsAgentchefPlateau :
-                    user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions }
+                actions={user.ID_PROFIL == 1 ? actionsPlanification :
+                    user.ID_PROFIL == 2 ? actionsAgentArchivages :
+                        user.ID_PROFIL == 3 ? actionsAgentSuperviseur :
+                            user.ID_PROFIL == 29 ? actionsAgentSuperviseurAille :
+                                user.ID_PROFIL == 7 ? actionsAgentAille :
+                                    user.ID_PROFIL == 15 ? actionsAgentchefPlateau :
+                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
                 onPressItem={name => {
                     if (name == 'DescriptionEtapeScreen') {
                         navigation.navigate("DescriptionEtapeScreen")
@@ -204,9 +233,9 @@ export default function AllVolumeScreen() {
                         navigation.navigate('DescriptionEtapeSupMailleScreen')
                     } else if (name == 'DescriptionEtapeScreen') {
                         navigation.navigate('DescriptionEtapeScreen')
-                    } else if(name == 'DescriptionEtapeScreen'){
+                    } else if (name == 'DescriptionEtapeScreen') {
                         navigation.navigate('DescriptionEtapeScreen')
-                    }else if (name == 'DescriptionEtapeScreen') {
+                    } else if (name == 'DescriptionEtapeScreen') {
                         navigation.navigate('DescriptionEtapeScreen')
                     } else if (name == 'DescriptionEtapeScreen') {
                         navigation.navigate('DescriptionEtapeScreen')
@@ -270,13 +299,12 @@ const styles = StyleSheet.create({
         lineHeight: 20
     },
     cardDetails: {
-        backgroundColor: '#fff',
         borderRadius: 10,
         elevation: 5,
         shadowColor: '#c4c4c4',
         marginTop: 10,
-        backgroundColor: '#fff',
-        padding: 15,
+        backgroundColor: '#FFF',
+        padding: 10,
         overflow: 'hidden',
         marginHorizontal: 10
     },

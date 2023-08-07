@@ -1,86 +1,85 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image, Alert } from "react-native";
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
+import { useDispatch, useSelector } from "react-redux";
+import fetchApi from "../../helpers/fetchApi";
 import useFetch from "../../hooks/useFetch";
 import Loading from "../../components/app/Loading";
-import { useEffect } from "react";
-import fetchApi from "../../helpers/fetchApi";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
- * Le screen pour aider un superviseur aille affecter un chef du plateaux
+ * Le screen pour nomme agent superviseur la phase de preparation
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2021
+ * @date 12/7/2021
  * @returns 
  */
 
-export default function AgentSupPlateauScreen() {
+export default function AddAgentPreparationFolioScreen() {
         const navigation = useNavigation()
+        const dispatch = useDispatch()
+        const [countFolio, setCountFolio] = useState('')
         const [loading, setLoading] = useState(false)
-
-        const [loadingInformation, setLoadingInformation] = useState(false)
-        const [informations, setInformations] = useState(null);
+        
         const [document, setDocument] = useState(null)
-
+        const route = useRoute()
+        const { volume } = route.params
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
 
+
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
-                // }
+                // },
         }, {
                 // document: {
                 //         required: 'ce champ est obligatoire',
-                // }
+                // },
         })
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volumes != null ? true : false
-                isValid = chefPlateaux != null ? true : false
-                isValid = document != null ? true : false
+                isValid = agentPreparation != null && document != null && multiFolios.length > 0 ? true : false
                 return isValid && isValidate()
         }
 
-        // Volume select
-        const volumeModalizeRef = useRef(null);
-        const [volumes, setVolumes] = useState(null);
-        const openVolumeModalize = () => {
-                volumeModalizeRef.current?.open();
+        // Agent preparation select
+        const preparationModalizeRef = useRef(null);
+        const [agentPreparation, setAgentPreparation] = useState(null);
+        const openPreparationModalize = () => {
+                preparationModalizeRef.current?.open();
         };
-        const setSelectedVolume = (vol) => {
-                volumeModalizeRef.current?.close();
-                setVolumes(vol)
+        const setSelectedPreparartion = (prep) => {
+                preparationModalizeRef.current?.close();
+                setAgentPreparation(prep)
         }
 
-        // Chef du plateau select
-        const chefplateauModalizeRef = useRef(null);
-        const [chefPlateaux, setChefPlateaux] = useState(null);
-        const openChefPlateauModalize = () => {
-                chefplateauModalizeRef.current?.open();
+        // Modal folio multi select
+        const multSelectModalizeRef = useRef(null);
+        const [multiFolios, setMultiFolios] = useState([]);
+        const openMultiSelectModalize = () => {
+                multSelectModalizeRef.current?.open();
         };
-        const setSelectedChefPlateau = (chef) => {
-                chefplateauModalizeRef.current?.close();
-                setChefPlateaux(chef)
+        const submitConfimer = () => {
+                multSelectModalizeRef.current?.close();
         }
 
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
                 try {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -98,6 +97,7 @@ export default function AgentSupPlateauScreen() {
                         console.log(error)
                 }
         }
+
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -119,32 +119,33 @@ export default function AgentSupPlateauScreen() {
 
         }
 
-        //Composent pour afficher le modal des chefs des plateaux
-        const ChefPlateauList = () => {
-                const [loadingSuperviseur, superviseurList] = useFetch('/folio/dossiers/chefPlateau')
+        //Composent pour afficher le modal les agents de preparation
+        const PreparationList = () => {
+                const [loadingAgentPrepa, allAgentsPreparation] = useFetch('/preparation/batiment/agentPreparation')
                 return (
                         <>
-                                {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingAgentPrepa ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
+                                                        <Text style={styles.modalTitle}>Les agents de preparations</Text>
                                                 </View>
-                                                {superviseurList.result.map((chef, index) => {
+                                                {allAgentsPreparation.result.map((prep, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="addusergroup" size={24} color="black" />
+                                                                                <View style={styles.imageContainer}>
+                                                                                                {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
+                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
+                                                                                                        <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.ID_USER_AILE == chef.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {agentPreparation?.USERS_ID == prep.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -158,33 +159,39 @@ export default function AgentSupPlateauScreen() {
                 )
         }
 
-        //Composent pour afficher le modal de volume 
-        const VolumeAgentSuperviseurList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
+        //Composent pour afficher le modal de multi select des folio
+        const MultiFolioSelctList = () => {
+        const [allFolios, setAllFolios] = useState(volume.folios)
+                const isSelected = id_folio => multiFolios.find(u =>u.folio.ID_FOLIO == id_folio) ? true : false
+                const setSelectedFolio = (fol) => {
+                        if (isSelected(fol.folio.ID_FOLIO)) {
+                                const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != fol.folio.ID_FOLIO)
+                                setMultiFolios(newfolio)
+                        } else {
+                                setMultiFolios(u => [...u, fol])
+                        }
+                }
                 return (
                         <>
-                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View> :
+                                {
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les volumes</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
-                                                {volumesAll.result.map((vol, index) => {
+                                                {allFolios.map((fol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
                                                                                 <View style={styles.modalItem} >
                                                                                         <View style={styles.modalImageContainer}>
                                                                                                 <AntDesign name="folderopen" size={20} color="black" />
                                                                                         </View>
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
-                                                                                                        <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
+                                                                                                        <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.folio.CODE_FOLIO}</Text>
                                                                                                 </View>
-                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
                                                                                         </View>
                                                                                 </View>
@@ -194,34 +201,23 @@ export default function AgentSupPlateauScreen() {
                                                 })}
                                         </View>
                                 }
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </>
                 )
         }
 
-        //Fonction pour appeller les autres information en passant l'id de volume selectionner
-        useEffect(() => {
-                (async () => {
-                        try {
-
-                                if (volumes) {
-                                        setLoadingInformation(true)
-                                        const aie = await fetchApi(`/volume/dossiers/batimentAile/${volumes.ID_VOLUME}`)
-                                        setInformations(aie.result)
-                                }
-                        }
-                        catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingInformation(false)
-                        }
-                })()
-        }, [volumes])
-
-        const submitInAille = async () => {
+        const submitData = async () => {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('CHEF_PLATEAU', chefPlateaux.ID_USER_AILE)
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('AGENT_PREPARATION', agentPreparation.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -238,14 +234,7 @@ export default function AgentSupPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
-                        const volume = await fetchApi(`/volume/dossiers/affectationPlateau/${volumes.ID_VOLUME}`, {
+                        const volume = await fetchApi(`/preparation/folio/nommerAgentPreparation`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -257,6 +246,19 @@ export default function AgentSupPlateauScreen() {
                         setLoading(false)
                 }
         }
+
+        //Fonction pour recuperer le volume avec le count de folio existants
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                const response = await fetchApi('/folio/dossiers/nbreFolio')
+                                setCountFolio(response.result)
+
+                        } catch (error) {
+                                console.log(error)
+                        }
+                })()
+        }, []))
 
 
         return (
@@ -271,78 +273,60 @@ export default function AgentSupPlateauScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer le chef plateau</Text>
+                                        <Text style={styles.titlePrincipal}>Nommer un agent preparation</Text>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
+                                                <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
                                                                 <View>
+                                                                        {volume ? <Text style={styles.selectedValue}>
+                                                                                {volume.volume.NUMERO_VOLUME}
+                                                                        </Text> :
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        aucun
+                                                                                </Text>}
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                                <View style={styles.selectContainer}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Nombres de dossiers
+                                                                </Text>
+                                                                <View>
+                                                                        {volume ? <Text style={styles.selectedValue}>
+                                                                                {volume.folios.length}
+                                                                        </Text> :
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        aucun
+                                                                                </Text>}
+                                                                </View>
+                                                        </View>
+                                                </View>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
+                                                        <View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Selectionner un agent de preparation
+                                                                </Text>
+                                                                <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volumes ? `${volumes.NUMERO_VOLUME}` : 'Aucun'}
+                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                {volumes ? <View style={styles.selectContainer}>
+                                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Malle
+                                                                        Selectionner les dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_MAILLE}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Dossier
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NOMBRE_DOSSIER}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Batiments
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_BATIMENT}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Ailles
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_AILE}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Selectioner un chef de plateau
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {chefPlateaux ? `${chefPlateaux.NOM}` + `${chefPlateaux.PRENOM}` : 'Aucun'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -369,7 +353,7 @@ export default function AgentSupPlateauScreen() {
                                                                 </View>
                                                         </TouchableOpacity>
                                                 </View> */}
-                                                 <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -384,20 +368,20 @@ export default function AgentSupPlateauScreen() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitInAille}
+                                        onPress={submitData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                                 <Portal>
-                                        <Modalize ref={chefplateauModalizeRef}  >
-                                                <ChefPlateauList />
+                                        <Modalize ref={preparationModalizeRef}  >
+                                                <PreparationList />
                                         </Modalize>
                                 </Portal>
                                 <Portal>
-                                        <Modalize ref={volumeModalizeRef}  >
-                                                <VolumeAgentSuperviseurList />
+                                        <Modalize ref={multSelectModalizeRef}  >
+                                                <MultiFolioSelctList />
                                         </Modalize>
                                 </Portal>
                         </View>
@@ -478,6 +462,24 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
+        label: {
+                fontSize: 16,
+                fontWeight: 'bold'
+        },
+        buttonPlus: {
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                backgroundColor: COLORS.primary,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center"
+        },
+        buttonTextPlus: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 25
+        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
@@ -491,6 +493,47 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#ddd",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 5,
+                paddingHorizontal: 30
+        },
+        cardFolder: {
+                flexDirection: "row",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: '#FFF',
+                maxHeight: 50,
+                borderRadius: 20,
+                padding: 3,
+                paddingVertical: 2,
+                elevation: 10,
+                shadowColor: '#c4c4c4',
+        },
+        cardDescription: {
+                marginLeft: 10,
+                width: 30,
+                height: 30,
+                borderRadius: 30,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: "#ddd"
+        },
+        reomoveBtn: {
+                width: 30,
+                height: 30,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
         itemTitleDesc: {
                 color: "#777",
                 marginLeft: 10,
@@ -500,6 +543,15 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
+        },
+        butConfirmer: {
+                // marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                // paddingHorizontal: 10,
+                backgroundColor: "#18678E",
+                marginHorizontal: 10,
+                marginVertical: 15
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -512,5 +564,18 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
 })

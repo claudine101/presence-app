@@ -1,53 +1,55 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../styles/COLORS";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { useCallback } from "react";
-import fetchApi from "../../../helpers/fetchApi";
+import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
 import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
+import { useForm } from "../../hooks/useForm";
+import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
-import Loading from "../../../components/app/Loading";
-import { OutlinedTextField } from 'rn-material-ui-textfield'
+import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 
 
 /**
  * Screen pour afficher le details de folio avec leur nature  
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 17/7/2023
+ * @author claudine NDAYISABA <claudine@mediabox.bi>
+ * @date 02/8/2023
  * @returns 
  */
 
-export default function AgentChefPlateauRetourDetailsScreen() {
+export default function DetailsAgentPreparationScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { ID_FOLIO_AILE_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION, NOM, PRENOM, ID_ETAPE_FOLIO, nbre_folio } = route.params
-        const [allDetails, setAllDetails] = useState([])
-        const [countNombre, setCountNombre] = useState('')
+        const {folio } = route.params
+        console.log(folio.folios)
+        // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
 
         const [data, handleChange, setValue] = useForm({
-               
-                motif: '',
+                // document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-               
+                // document: {
+                //         required: true
+                // },
         }, {
-               
+                // document: {
+                //         required: 'ce champ est obligatoire',
+                // },
         })
-
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null ? true : false
-                return isValid 
-            }
+                return isValid
+        }
 
         //Fonction pour upload un documents 
         const selectdocument = async () => {
@@ -69,14 +71,13 @@ export default function AgentChefPlateauRetourDetailsScreen() {
 
         }
 
-        
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
                 try {
                         const permission = await ImagePicker.requestCameraPermissionsAsync()
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
-                        if (!image.didCancel) {
+                        if (!image.canceled) {
                                 setDocument(image)
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
@@ -99,9 +100,8 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
-                        if(data.motif){
-                                form.append('MOTIF', data.motif)
-                        }
+                        form.append('folio', JSON.stringify(folio.folios))
+                        form.append('AGENT_PREPARATION', folio.users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -118,6 +118,7 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
+
                         // if (data.document) {
                         //         let localUri = data.document.uri;
                         //         let filename = localUri.split('/').pop();
@@ -125,7 +126,7 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                         //                 uri: data.document.uri, name: filename, type: data.document.mimeType
                         //         })
                         // }
-                        const res = await fetchApi(`/folio/dossiers/retourSuperviseurPreparation/${ID_FOLIO_AILE_PREPARATION}`, {
+                        const res = await fetchApi(`/preparation/folio/retourAgentPreparation`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -139,34 +140,19 @@ export default function AgentChefPlateauRetourDetailsScreen() {
         }
 
         //Fonction pour recuperer les details de folios 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const res = await fetchApi(`/folio/dossiers/folioSuperviseur/${ID_FOLIO_AILE_PREPARATION}`)
-                                setAllDetails(res.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, [ID_FOLIO_AILE_PREPARATION]))
-
-        //Fonction pour recuperer le nombre de folio qui n'ont pas details
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const res = await fetchApi(`/folio/dossiers/folioNonPrepare/${ID_FOLIO_AILE_PREPARATION}`)
-                                setCountNombre(res.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, [ID_FOLIO_AILE_PREPARATION]))
+        // useFocusEffect(useCallback(() => {
+        //         (async () => {
+        //                 try {
+        //                         setLoading(true)
+        //                         const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
+        //                         setAllDetails(res.result)
+        //                 } catch (error) {
+        //                         console.log(error)
+        //                 } finally {
+        //                         setLoading(false)
+        //                 }
+        //         })()
+        // }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
 
         return (
                 <>
@@ -180,12 +166,13 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{NOM} {PRENOM}</Text>
+                                        <Text style={styles.titlePrincipal}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                 </View>
                                 <FlatList
                                         style={styles.contain}
-                                        data={allDetails}
+                                        data={folio.folios}
                                         renderItem={({ item: folio, index }) => {
+                                                const isExists = folio.folio.ID_ETAPE_FOLIO==IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION?true:false
                                                 return (
                                                         <>
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -200,8 +187,8 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                                                                 <View style={styles.cardDescription}>
                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text>{folio.CODE_FOLIO}</Text>
+                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <Text>{folio.folio.CODE_FOLIO} {isExists}</Text>
                                                                                                                 </View>
                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                         </View>
@@ -215,27 +202,10 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                {ID_ETAPE_FOLIO <= 4 ? <>
-                                       {countNombre > 0 ?  <View style={{ marginTop: 8, marginHorizontal: 10 }}>
-                                                <OutlinedTextField
-                                                        label="Motif"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.motif}
-                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                        onBlur={() => checkFieldData('motif')}
-                                                        error={hasError('motif') ? getError('motif') : ''}
-                                                        autoCompleteType='off'
-                                                        blurOnSubmit={false}
-                                                        multiline={true}
-                                                />
-                                        </View> :null}
-                                        {/* <View>
+                                {
+                                // ID_ETAPE_FOLIO == 2 ?
+                                        <>
+                                                {/* <View>
                                                 <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
                                                         onPress={selectdocument}
                                                 >
@@ -257,7 +227,7 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                         </View>
                                                 </TouchableOpacity>
                                         </View> */}
-                                        <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />
@@ -268,15 +238,17 @@ export default function AgentChefPlateauRetourDetailsScreen() {
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
                                                 </TouchableOpacity>
-                                        <TouchableWithoutFeedback
-                                                disabled={!isValidAdd()}
-                                                onPress={submitData}
-                                        >
-                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                </View>
-                                        </TouchableWithoutFeedback>
-                                </> : null}
+                                                <TouchableWithoutFeedback
+                                                        disabled={!isValidAdd()}
+                                                        onPress={submitData}
+                                                >
+                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                                        </View>
+                                                </TouchableWithoutFeedback>
+                                        </>
+                                        // : null
+                                        }
 
                         </View>
                 </>
@@ -366,7 +338,7 @@ const styles = StyleSheet.create({
                 borderRadius: 5,
                 borderWidth: 0.5,
                 borderColor: "#777",
-                marginVertical: 3,
+                marginVertical: 10,
                 marginHorizontal: 10
         },
         selectedValue: {
@@ -379,7 +351,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         addImageLabel: {
                 marginLeft: 5,

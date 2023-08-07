@@ -9,17 +9,17 @@ import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
-import AppHeaderAgSupAille from "../../components/app/AppHeaderAgSupAille";
+import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher les volumes retourner parn un  chef plateau
+ * Screen pour afficher agents de preparation et leurs folio
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 
  */
 
 
-export default function AgentSuperiveurAilleRetourScreen() {
+export default function AgentPreparationFolioScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
@@ -36,12 +36,12 @@ export default function AgentSuperiveurAilleRetourScreen() {
                 )
         }
 
-        //Fonction pour recuperer les volumes lesquels tu as associe
+        //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/volume/dossiers/chefPlateauVolume')
+                                const res = await fetchApi('/preparation/folio/agents')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -53,19 +53,26 @@ export default function AgentSuperiveurAilleRetourScreen() {
 
         const actions = [
         ];
-        const actionsAgentAille = [
+        const actionsAgentSuperviseurPhasePreparation = [
                 {
-                    text: "Superviseur aille",
-                    icon: require("../../../assets/images/dossier.png"),
-                    name: "DescriptionEtapeScreen",
-                    position: 6,
-                    render: () => <Action title={"Nommer un chef plateau"} image={require("../../../assets/images/dossier.png")} key={"key6"} />
+                        text: "Agent superviseur phase preparation",
+                        icon: require("../../../assets/images/dossier.png"),
+                        name: "DescriptionEtapeScreen",
+                        position: 8,
+                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
                 },
-            ];
+                {
+                        text: "Agent traitement",
+                        icon: require("../../../assets/images/dossier.png"),
+                        name: "DescriptionEtapeSupMailleScreen",
+                        position: 9,
+                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
+                },
+        ];
 
         return (
                 <>
-                        <AppHeaderAgSupAille/>
+                        <AppHeaderPhPreparationRetour />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -83,14 +90,14 @@ export default function AgentSuperiveurAilleRetourScreen() {
                                                 <FlatList
                                                         style={styles.contain}
                                                         data={allDetails}
-                                                        renderItem={({ item: volume, index }) => {
+                                                        renderItem={({ item: folio, index }) => {
                                                                 return (
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
+                                                                                </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentSuperviseurAilleRetourDetailsScreen", {volume:volume})}
+                                                                                                onPress={() => navigation.navigate("DetailsFolioScreen", { folio:folio,users:folio.users})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -100,16 +107,16 @@ export default function AgentSuperiveurAilleRetourScreen() {
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{volume.NOM} {volume.PRENOM}</Text>
-                                                                                                                                        <Text style={{fontWeight:"bold"}}>{volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>{volume.CODE_VOLUME}</Text>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>
+                                                                                                                                            {folio.users?.NOM} {folio.users?.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.folios?.length}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text style={{ color: "#777" }}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>
+                                                                                        </TouchableNativeFeedback>:null
                                                                                 }
                                                                         </>
                                                                 )
@@ -119,11 +126,13 @@ export default function AgentSuperiveurAilleRetourScreen() {
                         </View>
                         <FloatingAction
                                 actions={
-                                        user.ID_PROFIL == 7 ? actionsAgentAille : actions}
+                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
                                 onPressItem={name => {
                                         if (name == 'DescriptionEtapeScreen') {
                                                 navigation.navigate('DescriptionEtapeScreen')
-                                        } 
+                                        } else {
+                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
+                                        }
                                 }}
                                 color={COLORS.primary}
                         />
@@ -213,5 +222,5 @@ const styles = StyleSheet.create({
                 width: 100,
                 height: 100,
                 resizeMode: 'contain'
-        },
+            },
 })

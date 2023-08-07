@@ -19,10 +19,11 @@ import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPrepar
  */
 
 
-export default function AgentSupPhasePreparationRetourScreen() {
+export default function AgentSuperviseurScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
+        const [header, setHeader] = useState("Agents superviseurs")
         const user = useSelector(userSelector)
 
         const Action = ({ title, image }) => {
@@ -41,8 +42,7 @@ export default function AgentSupPhasePreparationRetourScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/folio/dossiers/agentPreparations')
-                                console.log(res)
+                                const res = await fetchApi('/preparation/folio/superviseur')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -51,29 +51,9 @@ export default function AgentSupPhasePreparationRetourScreen() {
                         }
                 })()
         }, []))
-
-        const actions = [
-        ];
-        const actionsAgentSuperviseurPhasePreparation = [
-                {
-                        text: "Agent superviseur phase preparation",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeScreen",
-                        position: 8,
-                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
-                },
-                {
-                        text: "Agent traitement",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeSupMailleScreen",
-                        position: 9,
-                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
-                },
-        ];
-
         return (
                 <>
-                        <AppHeaderPhPreparationRetour />
+                        <AppHeaderPhPreparationRetour header={header} />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -81,10 +61,10 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                         allDetails.length <= 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun Folio trouvé
+                                                        Aucun Agent  superviseur trouvé
                                                 </Text>
                                                 <Text style={styles.emptyDesc}>
-                                                        Aucun folio deja envoyes chez un agent de preparation
+                                                        Aucun folio deja envoyes chez un agent superviseur
                                                 </Text>
                                         </View> :
 
@@ -96,9 +76,9 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
+                                                                                </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("AgentSupPhasePreparationRetourDetailsScreen", { ID_USER_AILE_AGENT_PREPARATION: folio.ID_USER_AILE_AGENT_PREPARATION, ID_FOLIO_AILE_AGENT_PREPARATION: folio.ID_FOLIO_AILE_AGENT_PREPARATION, NOM: folio.NOM, PRENOM: folio.PRENOM, ID_ETAPE_FOLIO: folio.ID_ETAPE_FOLIO })}
+                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio:folio,users:folio.users})}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
@@ -108,15 +88,16 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
-                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.NOM} {folio.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.nbre_folio}</Text>
+                                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>
+                                                                                                                                            {folio.users?.NOM} {folio.users?.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.folios?.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>
+                                                                                        </TouchableNativeFeedback>:null
                                                                                 }
                                                                         </>
                                                                 )
@@ -124,18 +105,6 @@ export default function AgentSupPhasePreparationRetourScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
-                        <FloatingAction
-                                actions={
-                                        user.ID_PROFIL == 8 ? actionsAgentSuperviseurPhasePreparation : actions}
-                                onPressItem={name => {
-                                        if (name == 'DescriptionEtapeScreen') {
-                                                navigation.navigate('DescriptionEtapeScreen')
-                                        } else {
-                                                navigation.navigate('DescriptionEtapeSupMailleScreen')
-                                        }
-                                }}
-                                color={COLORS.primary}
-                        />
                 </>
         )
 }
