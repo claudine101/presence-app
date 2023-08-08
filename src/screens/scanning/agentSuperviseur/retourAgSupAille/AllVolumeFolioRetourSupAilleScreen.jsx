@@ -26,7 +26,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
         const [allRetourVolumesDesarchivages, setAllRetourVolumesDesarchivages] = useState([])
-        console.log(allRetourVolumesDesarchivages)
         const user = useSelector(userSelector)
         console.log(user)
         useFocusEffect(useCallback(() => {
