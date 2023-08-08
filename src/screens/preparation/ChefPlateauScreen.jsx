@@ -54,7 +54,7 @@ export default function ChefPlateauScreen() {
         }, []))
         return (
                 <>
-                        <AppHeaderPhPreparationRetour  header={header}/>
+                        <AppHeaderPhPreparationRetour header={header} />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -77,28 +77,30 @@ export default function ChefPlateauScreen() {
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :folio.users?
+                                                                                </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("VolumeRetourChefPlateau", { volume:folio,users:folio.users})}
+                                                                                                onPress={() => navigation.navigate("VolumeRetourChefPlateau", { volume: folio, users: folio.users })}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
+
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
                                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>
-                                                                                                                                            {folio.users?.NOM} {folio.users?.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.volumes?.length}</Text>
+                                                                                                                                                {folio.users?.NOM} {folio.users?.PRENOM}</Text>
+                                                                                                                                        <Text>{folio.volumes?.length} volume </Text>
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>:null
+                                                                                        </TouchableNativeFeedback> : null
                                                                                 }
                                                                         </>
                                                                 )
@@ -114,6 +116,12 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#ddd'
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -192,5 +200,5 @@ const styles = StyleSheet.create({
                 width: 100,
                 height: 100,
                 resizeMode: 'contain'
-            },
+        },
 })

@@ -37,13 +37,8 @@ export default function AddChefPlateauVolumeScreen() {
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                // document: {
-                //         required: true
-                // }
+              
         }, {
-                // document: {
-                //         required: 'ce champ est obligatoire',
-                // }
         })
 
         const isValidAdd = () => {
@@ -83,7 +78,7 @@ export default function AddChefPlateauVolumeScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                         }
                 }
                 catch (error) {
@@ -323,11 +318,11 @@ export default function AddChefPlateauVolumeScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateauModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Sélectionner un chef de plateau
+                                                                        Chef de plateau
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {chefPlateaux ? `${chefPlateaux.NOM}` + `${chefPlateaux.PRENOM}` : 'Aucun'}
+                                                                                {chefPlateaux ? `${chefPlateaux.NOM}` + ` ${chefPlateaux.PRENOM}` : 'Sélectionner un chef de plateau'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

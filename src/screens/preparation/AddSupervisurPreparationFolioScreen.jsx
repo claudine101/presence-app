@@ -251,8 +251,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
+                                setDocument(image.assets[0])
+                                // const photo = 
                                 // const photoId = Date.now()
                                 // const manipResult = await manipulateAsync(
                                 //         photo.uri,
@@ -398,11 +398,11 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectionner un agent superviseur
+                                                                        Agent superviseur
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {supPreparations ? `${supPreparations.NOM}` + `${supPreparations.PRENOM}` : 'Aucun'}
+                                                                                {supPreparations ? `${supPreparations.NOM}` + ` ${supPreparations.PRENOM}` : ' Selectionner un agent superviseur'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -410,11 +410,11 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectionner les dossiers
+                                                                        Dossier
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Selectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

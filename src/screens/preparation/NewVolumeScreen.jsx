@@ -32,11 +32,12 @@ export default function NewVolumeScreen() {
     const user = useSelector(userSelector)
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)
+    const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
         nbre_volume: '',
         numero: '',
-        // document: null
+        PV: null
     })
 
     const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -114,9 +115,12 @@ export default function NewVolumeScreen() {
             const permission = await ImagePicker.requestCameraPermissionsAsync()
             if (!permission.granted) return false
             const image = await ImagePicker.launchCameraAsync()
-            if (!image.canceled) {
-                setDocument(image)
+            if (image.canceled) {
+                return setIsCompressingPhoto(false)
             }
+            const photo = image.assets[0]
+            setDocument(photo)
+
         }
         catch (error) {
             console.log(error)
@@ -151,7 +155,7 @@ export default function NewVolumeScreen() {
                 body: form
             })
             dispatch(resetCartAction())
-            navigation.goBack()
+            navigation.navigate('AllVolumeScreen')
         }
         catch (error) {
             console.log(error)
@@ -299,7 +303,7 @@ const styles = StyleSheet.create({
     amountChanger: {
         width: 100,
         height: 50,
-        backgroundColor:COLORS.primary,
+        backgroundColor: COLORS.primary,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',

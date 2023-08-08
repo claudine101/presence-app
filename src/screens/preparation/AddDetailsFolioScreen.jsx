@@ -218,7 +218,7 @@ export default function AddDetailsFolioScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setLogoImage(image)
+                                setLogoImage(image.assets[0])
                         }
                 }
                 catch (error) {
@@ -578,11 +578,11 @@ export default function AddDetailsFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openProvinceModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Sélectionner le province
+                                                                Province
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {provinces ? `${provinces.PROVINCE_NAME}` : 'Aucun'}
+                                                                                {provinces ? `${provinces.PROVINCE_NAME}` : 'Sélectionner le province'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -590,11 +590,11 @@ export default function AddDetailsFolioScreen() {
                                                 {provinces ? <TouchableOpacity style={styles.selectContainer} onPress={openCommuneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Sélectionner le commune
+                                                                        Commune
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {communes ? `${communes.COMMUNE_NAME}` : 'Aucun'}
+                                                                                {communes ? `${communes.COMMUNE_NAME}` : 'Sélectionner le commune'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -604,11 +604,11 @@ export default function AddDetailsFolioScreen() {
                                                 {communes ? <TouchableOpacity style={styles.selectContainer} onPress={openZoneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Sélectionner le zone
+                                                                Zone
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {zones ? `${zones.ZONE_NAME}` : 'Aucun'}
+                                                                                {zones ? `${zones.ZONE_NAME}` : ' Sélectionner le zone'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -618,11 +618,11 @@ export default function AddDetailsFolioScreen() {
                                                 {zones ? <TouchableOpacity style={styles.selectContainer} onPress={openCollineModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Sélectionner le colline
+                                                                        Colline
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Aucun'}
+                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Sélectionner le  olline'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

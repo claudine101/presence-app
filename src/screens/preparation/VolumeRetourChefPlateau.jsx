@@ -26,11 +26,25 @@ export default function VolumeRetourChefPlateau() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume } = route.params
-        // const [, setAllDetails] = useState([])
+        const [loadingCheck, setLoadingCheck] = useState(false)
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
+        const [check, setCheck] = useState([])
         const [document, setDocument] = useState(null)
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
+                                setCheck(res.result)
 
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
+                        }
+                })()
+        }, [volume.users]))
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -77,7 +91,7 @@ export default function VolumeRetourChefPlateau() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                         }
                 }
                 catch (error) {
@@ -161,31 +175,31 @@ export default function VolumeRetourChefPlateau() {
                                                                                 </View>
                                                                         </View>
                                                                 }
-                                                                
+
                                                         </>
                                                 )
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
-                                 <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
-                                                                </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                        </View>
-                                                </TouchableOpacity>
-                                                <TouchableWithoutFeedback
-                                                        disabled={!isValidAdd()}
-                                                        onPress={submitData}
-                                                >
-                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                                        </View>
-                                                </TouchableWithoutFeedback>
+                                <TouchableOpacity onPress={onTakePicha}>
+                                        <View style={[styles.addImageItem]}>
+                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                        <Feather name="image" size={24} color="#777" />
+                                                        <Text style={styles.addImageLabel}>
+                                                                Photo du proces verbal
+                                                        </Text>
+                                                </View>
+                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                        </View>
+                                </TouchableOpacity>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
 
                         </View>
                 </>
@@ -239,7 +253,7 @@ const styles = StyleSheet.create({
                 marginVertical: 10
         },
         backBtn: {
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -257,7 +271,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 marginHorizontal: 10
         },
         buttonText: {

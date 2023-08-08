@@ -82,15 +82,17 @@ export default function AgentSuperviseurScreen() {
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardDescription}>
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View style={styles.cardNames}>
                                                                                                                                         <Text style={styles.itemVolume} numberOfLines={1}>
                                                                                                                                             {folio.users?.NOM} {folio.users?.PRENOM}</Text>
-                                                                                                                                        <Text>{folio.folios?.length}</Text>
+                                                                                                                                            {folio.folios?.length>=2    ? <Text>{folio.folios?.length} dossiers</Text>:
+                                                                                                                                        <Text>{folio.folios?.length} dossier  </Text>}
                                                                                                                                 </View>
                                                                                                                                 <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                         </View>
@@ -168,6 +170,12 @@ const styles = StyleSheet.create({
                 alignContent: 'center',
                 alignItems: 'center',
                 justifyContent: 'center'
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                resizeMode: "center"
         },
         emptyContaier: {
                 // flex: 1,
