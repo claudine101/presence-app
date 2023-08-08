@@ -328,10 +328,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
-                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("ConfirmerPvRetourAgentDesarchivages", { volume: volume, id: volume.volume.ID_VOLUME })}
-                        
-                                                                                        >
+                                                                                        <View>
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.carddetailItem}>
                                                                                                                 <View style={styles.cardImages}>
@@ -348,7 +345,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>
+                                                                                        </View>
                                                                                 }
                                                                         </>
                                                                 )
