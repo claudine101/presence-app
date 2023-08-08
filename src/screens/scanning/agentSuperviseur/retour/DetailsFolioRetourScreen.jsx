@@ -72,7 +72,7 @@ export default function DetailsFolioRetourScreen() {
                                 })
                         }
                         console.log(form)
-                        const folioss = await fetchApi(`/scanning/volume/retour`, {
+                        const folioss = await fetchApi(`/scanning/volume/retour/chef`, {
                                 method: "PUT",
                                 body: form
                         })
