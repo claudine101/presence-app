@@ -78,9 +78,9 @@ export default function AllFolioRecusScanScreen() {
                                                                                                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.itemVolume}>{folio.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                <Text>{folio.folios.length}</Text>
+                                                                                                                                <Text>Nombre de dossiers {folio.folios.length}</Text>
                                                                                                                         </View>
-                                                                                                                        <Text>{moment(folio.volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                        <Text>{moment(folio.volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>

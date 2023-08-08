@@ -72,7 +72,7 @@ export default function AllFoliosSuperviseurPvScreen() {
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View>
                                                                                                                                         <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
-                                                                                                                                        <Text>{folio.folios.length}</Text>
+                                                                                                                                        <Text>Nombre de folios {folio.folios.length}</Text>
                                                                                                                                 </View>
                                                                                                                                 {/* <Text>djjje</Text> */}
                                                                                                                         </View>

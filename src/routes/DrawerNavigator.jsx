@@ -114,7 +114,8 @@ export default function DrawerNavigator() {
                                 : null}
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ? <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} /> : null}
                         {(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING || user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING
-                                || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) ?
+                                || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ||
+                                user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE ||
                                 user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ||

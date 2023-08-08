@@ -25,6 +25,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         const [allRetourVolumes, setAllRetourVolumes] = useState([])
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
+        const [allRetourVolumesDesarchivages, setAllRetourVolumesDesarchivages] = useState([])
         const user = useSelector(userSelector)
         console.log(user)
         useFocusEffect(useCallback(() => {
@@ -83,6 +84,20 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                 })()
         }, []))
 
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoading(true)
+                                const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
+                                setAllRetourVolumesDesarchivages(vol.result)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, []))
+
         return (
                 <>
                         <AppHeaderPhPreparationRetour />
@@ -121,9 +136,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View>
                                                                                                                                         <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>{volume.volume.NOMBRE_DOSSIER}</Text>
+                                                                                                                                        <Text>Nombre de dossier {volume.volume.NOMBRE_DOSSIER}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -174,7 +189,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                         <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME}</Text>
                                                                                                                                         <Text>{volume.NOMBRE_DOSSIER}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -223,9 +238,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View>
                                                                                                                                         <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>{volume.volume.NOMBRE_DOSSIER}</Text>
+                                                                                                                                        <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -274,9 +289,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                 <View>
                                                                                                                                         <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>{volume.volume.NOMBRE_DOSSIER}</Text>
+                                                                                                                                        <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
                                                                                                                                 </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -289,6 +304,56 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         keyExtractor={(volume, index) => index.toString()}
                                                 />}
                         </View>:null}
+
+                        {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ? <View style={styles.container}>
+                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        allRetourVolumesDesarchivages.length == 0 ? <View style={styles.emptyContaier}>
+                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Text style={styles.emptyTitle}>
+                                                        Aucun volume trouvé
+                                                </Text>
+                                                <Text style={styles.emptyDesc}>
+                                                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                                                </Text>
+                                        </View> :
+                                                <FlatList
+                                                        style={styles.contain}
+                                                        data={allRetourVolumesDesarchivages}
+                                                        renderItem={({ item: volume, index }) => {
+                                                                return (
+                                                                        <>
+                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                </View> :
+                                                                                        <View>
+                                                                                                <View style={styles.cardDetails}>
+                                                                                                        <View style={styles.carddetailItem}>
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardDescription}>
+                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                                <View>
+                                                                                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                                                                                        <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
+                                                                                                                                </View>
+                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </View>
+                                                                                }
+                                                                        </>
+                                                                )
+                                                        }}
+                                                        keyExtractor={(volume, index) => index.toString()}
+                                                />}
+                        </View>:null}
+
+                        
                 </>
         )
 }

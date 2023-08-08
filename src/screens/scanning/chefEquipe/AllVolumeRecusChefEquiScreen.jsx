@@ -84,7 +84,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                <Text>{volume.volume.NOMBRE_DOSSIER}</Text>
+                                                                                                                                <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
                                                                                                                         </View>
                                                                                                                         <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                                 </View>

@@ -243,26 +243,26 @@ export default function NewEquipeScanScreen() {
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                        <TouchableOpacity style={styles.selectContainer1} onPress={openEquipeModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner une equipe scanning
+                                                                Equipe scanning
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {equipe ? `${equipe.NOM_EQUIPE}` : 'Aucun'}
+                                                                        {equipe ? `${equipe.NOM_EQUIPE}` : 'Selectioner une equipe'}
                                                                 </Text>
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                        <TouchableOpacity style={styles.selectContainer1} onPress={openMultiSelectModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner les folios
+                                                                Folios
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -332,6 +332,17 @@ const styles = StyleSheet.create({
                 maxWidth: "85%"
         },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                // borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10
+        },
+        selectContainer1: {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",

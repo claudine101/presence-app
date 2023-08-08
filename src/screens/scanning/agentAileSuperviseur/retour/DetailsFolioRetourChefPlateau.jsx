@@ -60,7 +60,6 @@ export default function DetailsFolioRetourChefPlateau() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const folioss = await fetchApi(`/scanning/volume/retour/plateau`, {
                                 method: "PUT",
                                 body: form
@@ -93,9 +92,7 @@ export default function DetailsFolioRetourChefPlateau() {
                                         console.log(fol)
                                         return (
                                                 <>
-                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} key={index}
-                                                        // onPress={() => handleSubmit(fol)}
-                                                        >
+                                                        <View>
                                                                 <View style={styles.cardDetails}>
                                                                         <View style={styles.carddetailItem}>
                                                                                 <View style={styles.cardImages}>
@@ -107,12 +104,12 @@ export default function DetailsFolioRetourChefPlateau() {
                                                                                                         <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
                                                                                                         {/* <Text>sjjjs</Text> */}
                                                                                                 </View>
-                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                         </View>
                                                                                 </View>
                                                                         </View>
                                                                 </View>
-                                                        </TouchableNativeFeedback>
+                                                        </View>
                                                 </>
                                         )
                                 })}

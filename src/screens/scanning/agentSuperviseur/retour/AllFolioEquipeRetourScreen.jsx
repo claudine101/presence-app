@@ -100,7 +100,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                                 <View>
                                                                                                                                                         <Text style={styles.itemVolume}>{folio.folios[0].traitement.NOM} {folio.folios[0].traitement.PRENOM}</Text>
-                                                                                                                                                        <Text>{folio.folios.length}</Text>
+                                                                                                                                                        <Text>Nombre de dossiers {folio.folios.length}</Text>
                                                                                                                                                 </View>
                                                                                                                                         </View>
                                                                                                                                 </View>
@@ -150,7 +150,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                                 <View>
                                                                                                                                                         <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
-                                                                                                                                                        <Text>{folio.folios.length}</Text>
+                                                                                                                                                        <Text>Nombre de filios {folio.folios.length}</Text>
                                                                                                                                                 </View>
                                                                                                                                         </View>
                                                                                                                                 </View>

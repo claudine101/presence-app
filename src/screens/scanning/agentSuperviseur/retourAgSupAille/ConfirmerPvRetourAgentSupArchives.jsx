@@ -183,14 +183,14 @@ export default function ConfirmerPvRetourAgentSupArchives(){
                                                 </View>
                                         </View>
                                 </View>
-                                <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                <TouchableOpacity style={styles.selectContainer1} onPress={openEquipeModalize}>
                                         <View>
                                                 <Text style={styles.selectLabel}>
-                                                        Selectioner un agent superviseurs archives
+                                                        Agent superviseurs archives
                                                 </Text>
                                                 <View>
                                                         <Text style={styles.selectedValue}>
-                                                                {equipe ? `${equipe.NOM}` + `${equipe.PRENOM}` : 'Aucun'}
+                                                                {equipe ? `${equipe.NOM}`+' '+ `${equipe.PRENOM}` : 'Selectioner un agent'}
                                                         </Text>
                                                 </View>
                                         </View>
@@ -256,6 +256,17 @@ const styles = StyleSheet.create({
                 maxWidth: "85%"
         },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                // borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10
+        },
+        selectContainer1: {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
