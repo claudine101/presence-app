@@ -501,7 +501,7 @@ export default function AddDetailsFolioScreen() {
                                         </TouchableNativeFeedback>
                                         <Text style={styles.titlePrincipal}>Ajout de details :{folio.NUMERO_FOLIO}</Text>
                                 </View>
-                                <ScrollView>
+                                <ScrollView keyboardShouldPersistTaps='handled'>
                                         <View>
                                                 <View style={{ marginVertical: 8 }}>
                                                         <OutlinedTextField

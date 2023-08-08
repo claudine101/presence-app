@@ -186,7 +186,7 @@ export default function ConfirmerPvRetourAgentSupArchives(){
                                 <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
                                         <View>
                                                 <Text style={styles.selectLabel}>
-                                                        Selectioner une equipe scanning
+                                                        Selectioner un agent superviseurs archives
                                                 </Text>
                                                 <View>
                                                         <Text style={styles.selectedValue}>
