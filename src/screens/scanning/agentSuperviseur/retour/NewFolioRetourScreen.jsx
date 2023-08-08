@@ -46,7 +46,8 @@ export default function NewFolioRetourScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        // navigation.goBack()
+                        navigation.navigate("AllFoliosSuperviseurPvScreen")
                 }
                 catch (error) {
                         console.log(error)
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
-                borderWidth: 0.5,
+                // borderWidth: 0.5,
                 borderColor: "#777",
                 marginVertical: 10
         },

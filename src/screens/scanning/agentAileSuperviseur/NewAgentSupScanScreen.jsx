@@ -296,14 +296,14 @@ export default function NewAgentSupScanScreen() {
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>
+                                        <TouchableOpacity style={styles.selectContainer1} onPress={openSuperviseurModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner un agent superviseur
+                                                                Agent superviseur
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {agentSuperviseur ? `${agentSuperviseur.NOM}` + ' ' + `${agentSuperviseur.PRENOM}` : 'Aucun'}
+                                                                        {agentSuperviseur ? `${agentSuperviseur.NOM}` + ' ' + `${agentSuperviseur.PRENOM}` : 'Selectioner un agent'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -385,6 +385,17 @@ const styles = StyleSheet.create({
                 maxWidth: "85%"
         },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                // borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10
+        },
+        selectContainer1: {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",

@@ -195,14 +195,14 @@ export default function NewChefPlateauScreen() {
                                                         </View>
                                                 </View>
                                         </View>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
+                                        <TouchableOpacity style={styles.selectContainer1} onPress={openChefPlateuModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
-                                                                Selectioner le chef du plateau
+                                                                Chef du plateau
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {chefPlateau ? `${chefPlateau.NOM}` + `${chefPlateau.PRENOM}` : 'Aucun'}
+                                                                        {chefPlateau ? `${chefPlateau.NOM}` + `${chefPlateau.PRENOM}` : 'Selectioner un chef'}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -267,6 +267,17 @@ const styles = StyleSheet.create({
                 maxWidth: "85%"
         },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                // borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10
+        },
+        selectContainer1: {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
