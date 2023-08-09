@@ -1,4 +1,4 @@
-package com.mediabox.courrier.newarchitecture.components;
+package com.mediabox.archivage.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

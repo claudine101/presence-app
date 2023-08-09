@@ -1,4 +1,4 @@
-package com.mediabox.courrier.newarchitecture;
+package com.mediabox.archivage.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.mediabox.courrier.BuildConfig;
-import com.mediabox.courrier.newarchitecture.components.MainComponentsRegistry;
-import com.mediabox.courrier.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.mediabox.archivage.BuildConfig;
+import com.mediabox.archivage.newarchitecture.components.MainComponentsRegistry;
+import com.mediabox.archivage.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,13 +1,13 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "Archivage",
+    "name": "DTFCN",
     "slug": "archivage",
     "version": "1.0.0",
-    "icon": "./assets/iconArch.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splashArchive.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -19,27 +19,27 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mediabox.cra"
+      "bundleIdentifier": "com.mediabox.archivage"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/iconArch.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.mediabox.courrier"
+      "package": "com.mediabox.archivage"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "notification": {
-      "icon": "./assets/iconArch.png",
+      "icon": "./assets/icon.png",
       "color": "#dddddd",
       "androidMode": "default",
-      "androidCollapsedTitle": "Cra",
+      "androidCollapsedTitle": "DTFCN",
       "iosDisplayInForeground": true
     },
-    "scheme": "cra",
-    "description": "Une application pour remplir le compte rendu d'activite de mediabox"
+    "scheme": "archivage",
+    "description": "Une application de DTFCN pour la numerisatio des archives"
   }
 }

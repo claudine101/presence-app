@@ -1,4 +1,4 @@
-package com.mediabox.courrier;
+package com.mediabox.archivage;
 
 import android.os.Build;
 import android.os.Bundle;
