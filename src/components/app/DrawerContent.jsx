@@ -345,7 +345,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
-                        {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashRetourScreen')}>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashsRetourScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
@@ -355,6 +355,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
+                         {/*
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashValidesScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>

@@ -29,6 +29,8 @@ import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolu
 // phase uploadEDMS
 
 import ChefEquipeFlashValideScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashValideScreen";
+import ChefEquipeFlashsRetourScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashsRetourScreen";
+
 
 export default function DrawerNavigator() {
         const drawr = true
@@ -129,7 +131,7 @@ export default function DrawerNavigator() {
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
                                 <>
                                         <Drawer.Screen name="ChefEquipeFlashValideScreen" component={ChefEquipeFlashValideScreen} />
-                                        <Drawer.Screen name="ChefEquipeFlashRetourScreen" component={ChefEquipeFlashRetourScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashsRetourScreen" component={ChefEquipeFlashsRetourScreen} />
                                         <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
                                 </>
                                 : null}
