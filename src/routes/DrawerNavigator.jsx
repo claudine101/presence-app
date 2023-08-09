@@ -26,6 +26,9 @@ import AllFolioEquipeRetourScreen from "../screens/scanning/agentSuperviseur/ret
 import AllFoliosSuperviseurPvScreen from "../screens/scanning/agentSuperviseur/retour/AllFoliosSuperviseurPvScreen";
 import AllVolumeFolioRetourSupAilleScreen from "../screens/scanning/agentSuperviseur/retourAgSupAille/AllVolumeFolioRetourSupAilleScreen";
 import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolumeRecusChefEquiScreen";
+// phase uploadEDMS
+
+import ChefEquipeFlashValideScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashValideScreen";
 
 export default function DrawerNavigator() {
         const drawr = true
@@ -121,7 +124,16 @@ export default function DrawerNavigator() {
                                 user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ||
                                 user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ?
                                 <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> : null}
-                        {/* <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} /> */}
+                       
+                        {/*phase uplad EDMS*/}
+                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
+                                <>
+                                        <Drawer.Screen name="ChefEquipeFlashValideScreen" component={ChefEquipeFlashValideScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashRetourScreen" component={ChefEquipeFlashRetourScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
+                                </>
+                                : null}
+
                 </Drawer.Navigator>
         )
 }

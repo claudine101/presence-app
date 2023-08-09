@@ -36,6 +36,10 @@ import ConfirmerPvRetourAgentDistrScreen from '../screens/scanning/agentSupervis
 import ConfirmerPvRetourAgentSupArchives from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentSupArchives';
 import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentDesarchivages';
 
+{/* phase uploadEDRMS */}
+import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
+
+
 export default function RootNavigator() {
     const Stack = createStackNavigator()
     return (
@@ -81,6 +85,11 @@ export default function RootNavigator() {
                 <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }}/>
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }}/>
+                
+                {/* phase uploadEDRMS */}
+                <Stack.Screen name='SelectFolioAgentScreen' component={SelectFolioAgentScreen} options={{ headerShown: false }}/>
+
+            
             </Stack.Navigator>
 
         </NavigationContainer>

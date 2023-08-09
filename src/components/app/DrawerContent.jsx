@@ -331,6 +331,41 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback>
                     </>
                     : null}
+{/* Phase uplad EDRMS */}
+
+{user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
+                    <>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashValideScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                        En ettente de classement
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashRetourScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                        En ettente de vérification
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashValidesScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                        Dossiers vérifie
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback> */}
+                    </> : null}
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('#EFEFEF')}>
