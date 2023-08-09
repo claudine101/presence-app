@@ -134,11 +134,14 @@ export default function AllVolumeScreen() {
                                                                 <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
                                                             </View>
                                                             <View>
-                                                                <Text style={styles.itemVolume}>{volume.folios.length}</Text>
+                                                             
 
                                                             </View>
                                                             <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
+                                                        {volume.folios.length>=2 ? <Text style={styles.itemVolume}>{volume.folios.length} dossiers</Text>:
+                                                            <Text style={styles.itemVolume}>{volume.folios.length} dossier</Text>}
+                                                               
                                                     </View>
                                                 </View>
                                             </View>}

@@ -142,17 +142,7 @@ export default function AddFolioScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
+                                setDocument(image.assets[0])
                         }
                 }
                 catch (error) {
@@ -207,7 +197,6 @@ export default function AddFolioScreen() {
         //Composent pour afficher le modal de volume associer a un agent superviceur
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
-                console.log(volumesAll)
                 return (
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -670,11 +659,11 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Sélectionner le malle
+                                                                               Malle
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {malles ? `${malles.NUMERO_MAILLE}` : 'Aucun'}
+                                                                                                {malles ? `${malles.NUMERO_MAILLE}` : ' Sélectionner le malle'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>
@@ -682,11 +671,11 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Sélectionner le batiment
+                                                                               Batiment
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {batiments ? `${batiments.NUMERO_BATIMENT}` : 'Aucun'}
+                                                                                                {batiments ? `${batiments.NUMERO_BATIMENT}` : ' Sélectionner le batiment'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>
@@ -694,11 +683,11 @@ export default function AddFolioScreen() {
                                                                 {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Sélectionner ailles
+                                                                               Ailes
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {ailles ? `${ailles.NUMERO_AILE}` : 'Aucun'}
+                                                                                                {ailles ? `${ailles.NUMERO_AILE}` : ' Sélectionner ailles'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>
@@ -706,11 +695,11 @@ export default function AddFolioScreen() {
                                                                 {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Sélectionner le distributeur
+                                                                                Distributeur
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {distributeur ? `${distributeur.NOM}` + `${distributeur.PRENOM}` : 'Aucun'}
+                                                                                                {distributeur ? `${distributeur.NOM}` +`  ${distributeur.PRENOM}` : 'Sélectionner le distributeur'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>

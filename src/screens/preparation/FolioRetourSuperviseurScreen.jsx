@@ -37,7 +37,7 @@ export default function FolioRetourSuperviseurScreen() {
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
         const [data, handleChange, setValue] = useForm({
-                // document: null,
+                motif: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
@@ -50,9 +50,17 @@ export default function FolioRetourSuperviseurScreen() {
                 // },
         })
         const isValidAdd = () => {
+                var existMotif = false
+                var isValidMotif = false
+
+                existMotif =!(folio.folios.length==nbre) ? true : false
+                console.log("existMotif "+existMotif)
+                existMotif && (isValidMotif = data.motif != null  ? true : false)
+                console.log("isValidMotif "+ data.motif)
+
                 var isValid = false
-                isValid = document != null ? true : false
-                return isValid
+                isValid = document != null  ? true : false
+                return isValid && isValidMotif
         }
 
         useFocusEffect(useCallback(() => {
@@ -109,6 +117,7 @@ export default function FolioRetourSuperviseurScreen() {
                         setLoadingSubmit(true)
                         const form = new FormData()
                         form.append('folio', JSON.stringify(folio.folios))
+                        form.append('motif', data.motif)
                         form.append('AGENT_SUPERVISEUR', folio.users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
@@ -152,7 +161,7 @@ export default function FolioRetourSuperviseurScreen() {
                                 setLoadingCheck(false)
                         }
                 })()
-        }, []))
+        }, [folio.users]))
         return (
                 <>
                         {(loadingSubmit && loadingCheck) && <Loading />}
@@ -202,8 +211,9 @@ export default function FolioRetourSuperviseurScreen() {
                                 {
                                         // ID_ETAPE_FOLIO == 2 ?
                                         <>
-
-                                                {!(folio.folios.length==nbre)?<View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                        
+                                                {check.length > 0 ? <>
+                                                        {!(folio.folios.length==nbre)?<View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                                                         <OutlinedTextField
                                                                 label="Motif"
                                                                 fontSize={14}
@@ -213,17 +223,17 @@ export default function FolioRetourSuperviseurScreen() {
                                                                 lineWidth={1}
                                                                 activeLineWidth={1}
                                                                 errorColor={COLORS.error}
-                                                                value={data.nbre_volume}
-                                                                onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
-                                                                onBlur={() => checkFieldData('nbre_volume')}
-                                                                error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
+                                                                value={data.motif}
+                                                                onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                                onBlur={() => checkFieldData('motif')}
+                                                                error={hasError('motif') ? getError('motif') : ''}
                                                                 autoCompleteType='off'
                                                                 // keyboardType='number-pad'
                                                                 blurOnSubmit={false}
                                                                 multiline={true}
                                                         />
                                                 </View>:null}
-                                                {check.length > 0 ? <><TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <Feather name="image" size={24} color="#777" />

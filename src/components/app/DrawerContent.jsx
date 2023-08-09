@@ -72,7 +72,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefPlateauScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
                                         Chefs plateau
                                     </Text>
@@ -82,7 +82,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
                                         Agents superviseurs
                                     </Text>
@@ -101,7 +101,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </View> : null}
-                {/* {user.ID_PROFIL == 2 ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
+                 {user.ID_PROFIL ==PROFILS.AGENTS_DESARCHIVAGES ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>
                             <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
@@ -110,12 +110,11 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             </Text>
                         </View>
                     </View>
-                </TouchableNativeFeedback> : null} */}
-
+                </TouchableNativeFeedback> : null}
                 {user.ID_PROFIL == PROFILS.CHEF_EQUIPE ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurAileScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                            <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                             <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }, { marginBottom: 3 }]}>
                                 agents superviseurs ailes
                             </Text>

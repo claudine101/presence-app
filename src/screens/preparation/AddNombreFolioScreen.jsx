@@ -89,13 +89,17 @@ export default function AddNombreFolioScreen() {
             const permission = await ImagePicker.requestCameraPermissionsAsync()
             if (!permission.granted) return false
             const image = await ImagePicker.launchCameraAsync()
-            if (!image.canceled) {
-                setDocument(image)
+            if (image.canceled) {
+                setDocument(null)
             }
+            const photo = image.assets[0]
+            setDocument(photo)
+
         }
         catch (error) {
             console.log(error)
         }
+
     }
 
     //Fonction pour upload un documents 
@@ -286,11 +290,11 @@ export default function AddNombreFolioScreen() {
                     <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
                         <View>
                             <Text style={styles.selectLabel}>
-                            Sélectionner un agent d'archive
+                           un agent d'archive
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
-                                    {agents ? `${agents.NOM}` + `${agents.PRENOM}` : 'Aucun'}
+                                    {agents ? `${agents.NOM}` + `${agents.PRENOM}` : ' Sélectionner un agent'}
                                 </Text>
                             </View>
                         </View>
