@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "499447712609",
+    "project_id": "archivage-395413",
+    "storage_bucket": "archivage-395413.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499447712609:android:1417874d893defcf909320",
+        "android_client_info": {
+          "package_name": "com.mediabox.archivage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499447712609-uh8tjb7c5fddq2u19j85o589pv0qen68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSfJ0qd3L066DAYQKi4t7kgA3sibPmkVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499447712609-uh8tjb7c5fddq2u19j85o589pv0qen68.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
