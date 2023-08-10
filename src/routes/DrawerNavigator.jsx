@@ -43,6 +43,7 @@ export default function DrawerNavigator() {
                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
 
@@ -50,11 +51,13 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU ?
@@ -119,7 +122,6 @@ export default function DrawerNavigator() {
                                         </>
                                         : null}
 
-
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING ?
                                 <>
                                         <Drawer.Screen name="AllFolioRecusScanScreen" component={AllFolioRecusScanScreen} />
@@ -127,9 +129,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                 </>
                                 : null}
-                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING
-                                || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ||
-                                user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) ?
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
 
                         {/* <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} /> */}

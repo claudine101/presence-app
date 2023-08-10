@@ -30,7 +30,11 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         const [loadingChefPlateau, setLoadingChefPlateau] = useState(false)
 
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
+        const [loadingDistributeaur, setLoadingDistributeaur] = useState(false)
+
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
+        const [loadingSupArchives, setLoadingSupArchives] = useState(false)
+
         const [allRetourVolumesDesarchivages, setAllRetourVolumesDesarchivages] = useState([])
         const user = useSelector(userSelector)
         useFocusEffect(useCallback(() => {
@@ -64,13 +68,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingDistributeaur(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
                                 setAllRetourVolumesDistributeur(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingDistributeaur(false)
                         }
                 })()
         }, []))
@@ -78,13 +82,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingSupArchives(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
                                 setAllRetourVolumesArchives(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingSupArchives(false)
                         }
                 })()
         }, []))
@@ -209,7 +213,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                         </View> : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ?
                                 <View style={styles.container}>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        {loadingDistributeaur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesDistributeur.length == 0 ? <View style={styles.emptyContaier}>
@@ -227,7 +231,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingDistributeaur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
@@ -260,7 +264,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 </View> : null
                         }
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ? <View style={styles.container}>
-                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                        {loadingSupArchives ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesArchives.length == 0 ? <View style={styles.emptyContaier}>
@@ -278,7 +282,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingSupArchives ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}

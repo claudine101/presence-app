@@ -53,43 +53,43 @@ export default function NewChefPlateauScreen() {
                 const [loadingVolume, volumesAll] = useFetch('/scanning/volume/plateau')
                 return (
                         <>
-                        {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View > :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                                        </View>
-                                        {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
-                                        <View style={styles.modalList}>
-                                                {volumesAll.result.map((chef, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedChefPlateu(chef)}>
-                                                                                <View style={styles.listItem} >
-                                                                                        <View style={styles.listItemDesc}>
-                                                                                                <View style={styles.listItemImageContainer}>
-                                                                                                        <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((chef, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedChefPlateu(chef)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                <View style={styles.listNames}>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        {chefPlateau?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color="black" />}
 
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
                                         </View>
-                                </View>
-                        }
-                </>
-                       
+                                }
+                        </>
+
                 )
         }
 
@@ -219,7 +219,7 @@ export default function NewChefPlateauScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {chefPlateau ? `${chefPlateau.NOM}` + `${chefPlateau.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                        {chefPlateau ? `${chefPlateau.NOM} ${chefPlateau.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={onTakePicha}>
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         buttonText: {
                 color: "#fff",
