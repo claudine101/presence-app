@@ -22,6 +22,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         const navigation = useNavigation()
         const [allVolumes, setAllVolumes] = useState([])
         const [loading, setLoading] = useState(false)
+        const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
         const [allRetourVolumes, setAllRetourVolumes] = useState([])
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
@@ -31,13 +32,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingAilleScanning(true)
                                 const vol = await fetchApi(`/scanning/volume/retour/agent`)
                                 setAllVolumes(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingAilleScanning(false)
                         }
                 })()
         }, []))
@@ -103,7 +104,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                         <AppHeaderPhPreparationRetour />
 
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ? <View style={styles.container}>
-                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allVolumes.length == 0 ? <View style={styles.emptyContaier}>
@@ -121,7 +122,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
