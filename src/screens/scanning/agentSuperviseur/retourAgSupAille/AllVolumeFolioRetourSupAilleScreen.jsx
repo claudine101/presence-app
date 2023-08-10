@@ -20,15 +20,19 @@ import { userSelector } from "../../../../store/selectors/userSelector";
 
 export default function AllVolumeFolioRetourSupAilleScreen() {
         const navigation = useNavigation()
+
         const [allVolumes, setAllVolumes] = useState([])
-        const [loading, setLoading] = useState(false)
         const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
+
+        const [loading, setLoading] = useState(false)
+       
         const [allRetourVolumes, setAllRetourVolumes] = useState([])
+        const [loadingChefPlateau, setLoadingChefPlateau] = useState(false)
+
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
         const [allRetourVolumesDesarchivages, setAllRetourVolumesDesarchivages] = useState([])
         const user = useSelector(userSelector)
-        console.log(user)
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
@@ -46,13 +50,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingChefPlateau(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/chefEquipe`)
                                 setAllRetourVolumes(vol.volu)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingChefPlateau(false)
                         }
                 })()
         }, []))
@@ -154,7 +158,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 />}
                         </View> : null}
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ? <View style={styles.container}>
-                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumes.length == 0 ? <View style={styles.emptyContaier}>
@@ -172,7 +176,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}

@@ -23,6 +23,7 @@ export default function AllFolioEquipeRetourScreen() {
         const [allFolios, setAllFolios] = useState([])
         const [allFoliosRetour, setAllFoliosRetour] = useState([])
         const [loading, setLoading] = useState(false)
+        const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
                 if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
                         navigation.navigate("DetailsFolioRetourChefPlateau", {folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO})
@@ -51,13 +52,13 @@ export default function AllFolioEquipeRetourScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingRetour(true)
                                 const fol = await fetchApi(`/scanning/volume/retour/plateau`)
                                 setAllFoliosRetour(fol.UserFolios)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingRetour(false)
                         }
                 })()
         }, []))
@@ -67,7 +68,7 @@ export default function AllFolioEquipeRetourScreen() {
                                 <>
                                         <AppHeaderPhPreparationRetour />
                                         <View style={styles.container}>
-                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                {loadingRetour ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                 </View> :
                                                         allFoliosRetour.length == 0 ? <View style={styles.emptyContaier}>
@@ -85,7 +86,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                         renderItem={({ item: folio, index }) => {
                                                                                 return (
                                                                                         <>
-                                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                                {loadingRetour ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                                 </View> :
                                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
@@ -150,7 +151,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                                                                                                                 <View>
                                                                                                                                                         <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
-                                                                                                                                                        <Text>Nombre de filios {folio.folios.length}</Text>
+                                                                                                                                                        <Text>Nombre de dossier {folio.folios.length}</Text>
                                                                                                                                                 </View>
                                                                                                                                         </View>
                                                                                                                                 </View>

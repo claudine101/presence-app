@@ -19,7 +19,6 @@ import { userSelector } from "../../../store/selectors/userSelector";
 
 export default function VolumeEnEttenteChefEquipeScreen() {
         const [allVolumes, setAllVolumes] = useState([])
-        console.log(allVolumes)
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
 

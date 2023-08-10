@@ -107,10 +107,19 @@ export default function DrawerNavigator() {
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
                                 <>
-                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> 
+                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         {/* <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} /> */}
                                 </> : null}
+                        {
+                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
+                                        <>
+                                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
+                                                <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
+                                        </>
+                                        : null}
+
+
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING ?
                                 <>
                                         <Drawer.Screen name="AllFolioRecusScanScreen" component={AllFolioRecusScanScreen} />
@@ -118,14 +127,11 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                 </>
                                 : null}
-                        {user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ? <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} /> : null}
-                        {( user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING
                                 || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ||
                                 user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
-                        {
-                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
-                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> : null}
+
                         {/* <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} /> */}
                 </Drawer.Navigator>
         )
