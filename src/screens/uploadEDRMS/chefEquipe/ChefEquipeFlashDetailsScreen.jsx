@@ -21,9 +21,9 @@ import Folio from "../../../components/folio/Folio";
 export default function ChefEquipeFlashDetailsScreen() {
     const route = useRoute()
     const { flashs } = route.params
-    //   return console.log(flashs[0].users)
+    console.log()
     const [flashDetail, setFlashDetail] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
     const [pvPhoto, setPvPhoto] = useState(null)
     const navigation = useNavigation()
@@ -32,7 +32,7 @@ export default function ChefEquipeFlashDetailsScreen() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [galexyIndex, setGalexyIndex] = useState(null)
 
-    // const [loadingSupAile, supAile] = useFetch(`/indexation/flashs/sup_aile_indexation/${flash.ID_FLASH}`)
+    const [loadingSupAile, supAile] = useFetch(`/indexation/flashs/sup_aile_indexation/${flashs?.ID_FLASH}`)
 
     const [data, handleChange] = useForm({
         agent: null,
@@ -55,18 +55,18 @@ export default function ChefEquipeFlashDetailsScreen() {
         handleChange('agent', agent)
     }
 
-    // useFocusEffect(useCallback(() => {
-    //     (async () => {
-    //         try {
-    //             const res = await fetchApi(`/indexation/flashs/details/${flashs[0].flashs.ID_FLASH}`)
-    //             setFlashDetail(res?.result)
-    //         } catch (error) {
-    //             console.log(error)
-    //         } finally {
-    //             setLoading(false)
-    //         }
-    //     })()
-    // }, []))
+    useFocusEffect(useCallback(() => {
+        (async () => {
+            try {
+                const res = await fetchApi(`/indexation/flashs/details/${flash.ID_FLASH}`)
+                setFlashDetail(res.result)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, []))
 
 
     /**
@@ -80,7 +80,7 @@ export default function ChefEquipeFlashDetailsScreen() {
             if (!isRetourValid()) return false
             setIsSubmitting(true)
             const form = new FormData()
-            // form.append("ID_FLASH_INDEXE", flashDetail.foliosIndexes[0].ID_FLASH_INDEXE)
+            form.append("ID_FLASH_INDEXE", flashDetail?.foliosIndexes[0]?.ID_FLASH_INDEXE)
             form.append("ID_SUP_AILE_INDEXATION", supAile.result.USER_TRAITEMENT)
             if (data.pv) {
                 const photo = data.pv
@@ -134,7 +134,7 @@ export default function ChefEquipeFlashDetailsScreen() {
         <>
             {(galexyIndex != null && supAile?.result && supAile?.result) &&
                 <ImageView
-                    images={[{ uri: supAile?.result.PV_PATH }, supAile?.result?.retour ? { uri: supAile?.result?.retour.PV_PATH } : undefined]}
+                    images={[{ uri: flashs[0].folios[0].PV_PATH }, flashs[0].folios[0].PV_PATH ? flashs[0].folios[0].PV_PATH : undefined]}
                     imageIndex={galexyIndex}
                     visible={(galexyIndex != null) ? true : false}
                     onRequestClose={() => setGalexyIndex(null)}
@@ -162,31 +162,38 @@ export default function ChefEquipeFlashDetailsScreen() {
                                                   <Text style={styles.flashName}>{ flashDetail.NOM_FLASH }</Text>
                                         </View> */}
                     <View style={styles.content}>
-                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={true}>
+                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={supAile.result ? true : false}>
                             <View style={{ width: '100%' }}>
                                 <View style={styles.labelContainer}>
                                     <View style={styles.icon}>
                                         <Feather name="user" size={20} color="#777" />
                                     </View>
                                     <Text style={styles.selectLabel}>
-                                        Superviseur aile indexation
+                                        Agent uploadEDMRS
                                     </Text>
                                 </View>
+                                {loadingSupAile ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <ActivityIndicator animating size={'small'} color={'#777'} />
+                                    <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                        Chargement
+                                    </Text>
+                                </View> : null}
                                 <Text style={styles.selectedValue}>
-                                    {flashs[0]?.users.NOM} {flashs?.folios[0]?.users.PRENOM}
+                                    {flashs[0].users.NOM} {flashs[0].users.PRENOM}
                                 </Text>
-                                {/* {supAile.result ?
-                                                                                          <>
-                                                                                                    <TouchableOpacity onPress={() => {
-                                                                                                              setGalexyIndex(0)
-                                                                                                    }}>
-                                                                                                              <Image source={{ uri: supAile.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                    </TouchableOpacity>
-                                                                                                    <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(supAile.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                          </> : null} */}
+                                {flashs ?
+                                    <>
+                                        <TouchableOpacity onPress={() => {
+                                            setGalexyIndex(0)
+                                        }}>
+                                            <Image source={{ uri: flashs[0].folios[0].PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                        </TouchableOpacity>
+                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashs[0].folios[0].DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                    </>
+                                    : null}
                             </View>
                         </TouchableOpacity>
-                        {/* {supAile?.result ? null : <TouchableOpacity onPress={onTakePhoto}>
+                        {supAile?.result ? null : <TouchableOpacity onPress={onTakePhoto}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -200,7 +207,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                 {pvPhoto && <Image source={{ uri: pvPhoto.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                             </View>
                         </TouchableOpacity>}
-                        {flashDetail.foliosIndexes.length > 0 ? <View style={styles.selectContainer}>
+                        {flashDetail?.foliosIndexes.length > 0 ? <View style={styles.selectContainer}>
                             <View style={{ width: '100%' }}>
                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -217,11 +224,11 @@ export default function ChefEquipeFlashDetailsScreen() {
                                         {flashDetail.folios.length} dossier{flashDetail.folios.length > 1 && 's'}
                                     </Text>
                                     <Text style={styles.selectedValue}>
-                                        {flashDetail.foliosIndexes.length} indexé{flashDetail.foliosIndexes.length > 1 && 's'}
+                                        {flashDetail?.foliosIndexes.length} indexé{flashDetail?.foliosIndexes.length > 1 && 's'}
                                     </Text>
                                 </View>
                                 <View style={styles.folioList}>
-                                    {flashDetail.foliosIndexes.map((folio, index) => {
+                                    {flashDetail?.foliosIndexes.map((folio, index) => {
                                         return (
                                             <Folio style={{ backgroundColor: '#f1f1f1' }} folio={folio} key={index} onPress={null} isSelected={() => true} />
                                         )
@@ -229,7 +236,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                 </View>
                             </View>
                         </View> : null}
-                        {flashDetail.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]}>
+                        {flashDetail?.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]}>
                             <View style={styles.labelContainer}>
                                 <View style={styles.icon}>
                                     <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
@@ -239,10 +246,10 @@ export default function ChefEquipeFlashDetailsScreen() {
                                 </Text>
                             </View>
                             <Text style={styles.selectedValue}>
-                                {flashDetail.foliosIndexes[0].flash.NOM_FLASH}
+                                {flashDetail?.foliosIndexes[0].flash.NOM_FLASH}
                             </Text>
                         </View> : null}
-                        {(supAile?.result && flashDetail.foliosIndexes.length > 0) ? <TouchableOpacity onPress={onTakePhoto} disabled={supAile?.result?.retour ? true : false}>
+                        {(supAile?.result && flashDetail?.foliosIndexes.length > 0) ? <TouchableOpacity onPress={onTakePhoto} disabled={supAile?.result?.retour ? true : false}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -263,18 +270,18 @@ export default function ChefEquipeFlashDetailsScreen() {
                                     <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(supAile?.result?.retour.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                 </> : null}
                             </View>
-                        </TouchableOpacity> : null} */}
+                        </TouchableOpacity> : null}
                     </View>
                 </ScrollView>}
-                {/* {(flashDetail && supAile?.result && !supAile?.result.retour && flashDetail.foliosIndexes.length > 0) ? <View style={styles.actions}>
+                {(flashDetail && supAile?.result && !supAile?.result.retour && flashDetail?.foliosIndexes.length > 0) ? <View style={styles.actions}>
                     <View style={styles.actions}>
                         <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                             <Text style={styles.actionText}>Envoyer</Text>
                         </TouchableOpacity>
                     </View>
-                </View> : null} */}
+                </View> : null}
             </View>
-            {/* <Modalize
+            <Modalize
                 ref={agentsModalRef}
                 handlePosition='inside'
                 modalStyle={{
@@ -314,7 +321,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                             })}
                         </View>
                     </View>}
-            </Modalize> */}
+            </Modalize>
         </>
     )
 }
