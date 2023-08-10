@@ -76,17 +76,16 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.cardDescription}>
                                                                                                                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                        <View>
-                                                                                                                                                <Text style={styles.itemVolume}>{volume.traitant.NOM} {volume.traitant.PRENOM}</Text>
+                                                                                                                                        <View style={{width:"62%"}}>
+                                                                                                                                                <Text numberOfLines={2} style={styles.itemVolume}>{volume.traitant.NOM} {volume.traitant.PRENOM}</Text>
                                                                                                                                                 <Text>{volume.traitant.EMAIL}</Text>
                                                                                                                                         </View>
-                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
@@ -133,7 +132,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                                                 <Text style={styles.itemVolume}>{volume.traitant.NOM} {volume.traitant.PRENOM}</Text>
                                                                                                                                                 <Text>{volume.traitant.EMAIL}</Text>
                                                                                                                                         </View>
-                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format("DD-MM-YYYY, HH:mm")}</Text>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
