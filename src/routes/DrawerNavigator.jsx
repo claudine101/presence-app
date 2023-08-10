@@ -30,6 +30,9 @@ import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolu
 
 import ChefEquipeFlashValideScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashValideScreen";
 import ChefEquipeFlashsRetourScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashsRetourScreen";
+import AgentFlashScreen from "../screens/uploadEDRMS/agentUpload/AgentFlashScreen";
+
+
 
 
 export default function DrawerNavigator() {
@@ -135,6 +138,13 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
                                 </>
                                 : null}
+                                {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
+                                <>
+                                        <Drawer.Screen name="AgentFlashScreen" component={AgentFlashScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashsRetourScreen" component={ChefEquipeFlashsRetourScreen} />
+                                </>
+                                : null}
+                                
 
                 </Drawer.Navigator>
         )

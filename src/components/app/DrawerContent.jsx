@@ -101,7 +101,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </View> : null}
-                 {user.ID_PROFIL ==PROFILS.AGENTS_DESARCHIVAGES ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
+                {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>
                             <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
@@ -331,9 +331,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback>
                     </>
                     : null}
-{/* Phase uplad EDRMS */}
+                {/* Phase uplad EDRMS */}
 
-{user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
+                {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
                     <>
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashValideScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
@@ -355,7 +355,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
-                         {/*
+                        {/*
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashValidesScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
@@ -366,6 +366,29 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback> */}
+                    </> : null}
+                    {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
+                    <>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentFlashScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                    En ettente de vérification
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashsRetourScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden", marginTop: 10 }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                        Dossier vérifie
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
                     </> : null}
             </DrawerContentScrollView>
             <View style={styles.bottomSection}>
