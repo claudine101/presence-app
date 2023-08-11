@@ -127,7 +127,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
                                                 </View>
-                                                {superviseurList.result.map((chef, index) => {
+                                                {superviseurList?.result?.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedagentSuperviseur(chef)}>

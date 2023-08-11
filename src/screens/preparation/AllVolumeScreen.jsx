@@ -62,7 +62,7 @@ export default function AllVolumeScreen() {
     //fonction pour recuperer screen pour  detaillers
     useFocusEffect(useCallback(() => {
         if (user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES) {
-            setNextRouteName('')
+            setNextRouteName('DetaillerVolumeScreen')
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
             setNextRouteName('AddNombreFolioScreen')
@@ -121,6 +121,7 @@ export default function AllVolumeScreen() {
                                     </View> :
 
                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                        disabled={true}
                                             onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                         >
                                             {<View style={styles.cardDetails}>
