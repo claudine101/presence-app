@@ -60,7 +60,7 @@ export default function FolioRetourSuperviseurScreen() {
 
                 var isValid = false
                 isValid = document != null  ? true : false
-                return isValid && isValidMotif
+                return isValid 
         }
 
         useFocusEffect(useCallback(() => {
@@ -104,7 +104,7 @@ export default function FolioRetourSuperviseurScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                         }
                 }
                 catch (error) {

@@ -77,7 +77,7 @@ export default function VolumeRetourAgentSuperviseur() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                         }
                 }
                 catch (error) {
