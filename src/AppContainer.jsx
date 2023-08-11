@@ -57,7 +57,7 @@ export default function AppContainer() {
 
           return (
                     <>
-                    <UpdatingScreen />
+                    {/* <UpdatingScreen /> */}
                               {!user ? <WelcomeNavigator showOnBoarding={showOnBoarding} /> :
                                         <RootNavigator />
                               }
