@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.mediabox.courrier",
+    package = "com.mediabox.archivage",
 )
 
 android_resource(
     name = "res",
-    package = "com.mediabox.courrier",
+    package = "com.mediabox.archivage",
     res = "src/main/res",
 )
 

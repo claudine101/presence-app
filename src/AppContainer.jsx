@@ -39,7 +39,7 @@ export default function AppContainer() {
                     (async function () {
                               setToken()
                               const user = await AsyncStorage.getItem("user")
-                                    // await AsyncStorage.removeItem('user')
+                              //       await AsyncStorage.removeItem('user')
                               const onboarding = JSON.parse(await AsyncStorage.getItem('onboarding'))
                               setShowOnBoarding(!onboarding || !onboarding.finished)
                               dispatch(setUserAction(JSON.parse(user)))

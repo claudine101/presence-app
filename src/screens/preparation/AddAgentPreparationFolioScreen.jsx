@@ -80,7 +80,7 @@ export default function AddAgentPreparationFolioScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
                                 // const manipResult = await manipulateAsync(
@@ -310,11 +310,11 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectionner un agent de preparation
+                                                                     Agent de preparation
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `${agentPreparation.PRENOM}` : 'Aucun'}
+                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `  ${agentPreparation.PRENOM}` : 'Sélectionner un agent de preparation'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -322,37 +322,15 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Selectionner les dossiers
+                                                                       Dossier
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length : ' Sélectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                {/* <View>
-                                                        <TouchableOpacity style={[styles.selectContainer, hasError("document") && { borderColor: "red" }]}
-                                                                onPress={selectdocument}
-                                                        >
-                                                                <View>
-                                                                        <Text style={[styles.selectLabel, hasError("document") && { color: 'red' }]}>
-                                                                                Importer le proces verbal
-                                                                        </Text>
-                                                                        {data.document ? <View>
-                                                                                <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                        {data.document.name}
-                                                                                </Text>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <Text>{data.document.name.split('.')[1].toUpperCase()} - </Text>
-                                                                                        <Text style={[styles.selectedValue, { color: '#333' }]}>
-                                                                                                {((data.document.size / 1000) / 1000).toFixed(2)} M
-                                                                                        </Text>
-                                                                                </View>
-                                                                        </View> : null}
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                </View> */}
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>

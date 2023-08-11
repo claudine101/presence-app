@@ -76,7 +76,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                         if (!permission.granted) return false
                         const image = await ImagePicker.launchCameraAsync()
                         if (!image.canceled) {
-                                setDocument(image)
+                                setDocument(image.assets[0])
                                 // const photo = image.assets[0]
                                 // const photoId = Date.now()
                                 // const manipResult = await manipulateAsync(
@@ -328,11 +328,11 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                Sélectionner agent superviseur aille
+                                                                Agent superviseur aille
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {agentSuperviseur ? `${agentSuperviseur.NOM}` + `${agentSuperviseur.PRENOM}` : 'Aucun'}
+                                                                                {agentSuperviseur ? `${agentSuperviseur.NOM}` +  `${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aille'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

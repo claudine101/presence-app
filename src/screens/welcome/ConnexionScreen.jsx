@@ -87,11 +87,9 @@ export default function ConnexionScreen() {
       {loading && <Loading />}
       <ScrollView>
           <View style={styles.container}>
-            <Image source={require('../../../assets/images/iconLogoLogin.png')} style={{...styles.image, resizeMode:"center", height: (42*height-StatusBar.currentHeight)/100}}/>
+            <Image source={require('../../../assets/images/archivage_collage.png')} style={{...styles.image, resizeMode:"center"}}/>
           
-            <View style={styles.cardTitle}>
               <Text style={styles.title}>Connexion</Text>
-            </View>
 
             <View style={styles.inputCard}>
               <View>
@@ -118,7 +116,7 @@ export default function ConnexionScreen() {
               </View>
 
             </View>
-            <View style={styles.inputCard}>
+            <View style={[styles.inputCard, { marginTop: 20 }]}>
               <View>
                 <OutlinedTextField
                   label="Mot de passe"
@@ -209,18 +207,18 @@ const styles = StyleSheet.create({
   image:{
     maxWidth: '80%',
     alignSelf: 'center',
+    height: 200,
 },
 title: {
   fontSize: 25,
   fontWeight: 'bold',
-  marginBottom: 25,
+  marginVertical: 25,
   opacity: 0.8,
-  color:COLORS.primary
+  color:COLORS.primary,
+  paddingHorizontal: 20
 },
 cardTitle: {
   flexDirection: "row",
-  marginTop: 30,
-  marginVertical: 20,
   justifyContent: "center",
   alignItems: "center"
 },
