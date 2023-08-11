@@ -294,7 +294,7 @@ export default function AddNombreFolioScreen() {
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
-                                    {agents ? `${agents.NOM}` + `${agents.PRENOM}` : ' Sélectionner un agent'}
+                                    {agents ? `${agents.NOM} ${agents.PRENOM}` : ' Sélectionner un agent'}
                                 </Text>
                             </View>
                         </View>
