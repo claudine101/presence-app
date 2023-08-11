@@ -603,18 +603,22 @@ export default function AddFolioScreen() {
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
-                                                <Text style={styles.titlePrincipal2}>Ajouter le volume dans une malle</Text> :
-                                                <Text style={styles.titlePrincipal}>Detailler le volume</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Selection d'un chef plateau</Text>
+
+                                                {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
+                                                <Text style={styles.title} numberOfLines={2}>Ajouter le volume dans une malle</Text> :
+                                                <Text style={styles.title} numberOfLines={2}>Detailler le volume</Text>
                                         }
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
@@ -683,7 +687,7 @@ export default function AddFolioScreen() {
                                                                 {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                               Ailes
+                                                                               Aile
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -744,7 +748,7 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Sélectionner la nature
+                                                                                        Sélectionner la nature
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -864,34 +868,24 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 marginHorizontal: 10,
-                marginTop: -20
         },
-        cardHeader: {
+        header: {
                 flexDirection: 'row',
-                marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginBottom: 15
-        },
-        backBtn: {
-                backgroundColor:COLORS.primary,
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
+                paddingVertical: 10
         },
-        titlePrincipal: {
-                fontSize: 18,
-                fontWeight: "bold",
-                marginLeft: 10,
-                color: COLORS.primary
+        headerBtn: {
+                padding: 10
         },
-        titlePrincipal2: {
-                fontSize: 15,
-                fontWeight: "bold",
-                marginLeft: 10,
-                color: COLORS.primary
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
         },
         selectContainer: {
                 flexDirection: "row",

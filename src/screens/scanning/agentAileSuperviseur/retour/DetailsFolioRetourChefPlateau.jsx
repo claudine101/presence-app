@@ -16,6 +16,7 @@ export default function DetailsFolioRetourChefPlateau() {
         const { folio, ID_ETAPE_FOLIO } = route.params
         const navigation = useNavigation()
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
@@ -24,19 +25,26 @@ export default function DetailsFolioRetourChefPlateau() {
                 return isValid
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image)
-                        }
+         //Fonction pour le prendre l'image avec l'appareil photos
+         const onTakePicha = async () => {
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         const submitPlateauData = async () => {
@@ -74,17 +82,19 @@ export default function DetailsFolioRetourChefPlateau() {
         }
 
         return (
+                <>
+                {loadingData && <Loading />}
                 <View style={styles.container}>
-                        <View style={styles.cardHeader}>
+                        <View style={styles.header}>
                                 <TouchableNativeFeedback
                                         onPress={() => navigation.goBack()}
                                         background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.backBtn}>
-                                                <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                        <View style={styles.headerBtn}>
+                                                <Ionicons name="chevron-back-outline" size={24} color="black" />
                                         </View>
                                 </TouchableNativeFeedback>
                                 <View style={styles.cardTitle}>
-                                        <Text numberOfLines={2} style={styles.titlePrincipal}>Listes des folios</Text>
+                                        <Text style={styles.title} numberOfLines={2}>Listes des folios</Text>
                                 </View>
                         </View>
                         <ScrollView>
@@ -117,11 +127,14 @@ export default function DetailsFolioRetourChefPlateau() {
                         {ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.RETOUR_EQUIPE_SCANNING_V_AGENT_SUP_SCANNING ? <View style={{ marginHorizontal: 10 }}>
                                 <TouchableOpacity onPress={onTakePicha}>
                                         <View style={[styles.addImageItem]}>
-                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                        <Feather name="image" size={24} color="#777" />
-                                                        <Text style={styles.addImageLabel}>
-                                                                Photo du proces verbal
-                                                        </Text>
+                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                <Text style={styles.addImageLabel}>
+                                                                        Photo du procès verbal
+                                                                </Text>
+                                                        </View>
+                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                 </View>
                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
@@ -134,38 +147,31 @@ export default function DetailsFolioRetourChefPlateau() {
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                        </View>:null}
+                        </View> : null}
                 </View>
+                </>
         )
 }
 
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginTop: -20,
-                backgroundColor: "#ddd"
+                backgroundColor: '#ddd'
         },
-        cardHeader: {
+        header: {
                 flexDirection: 'row',
-                marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginBottom: 15,
-                marginHorizontal: 10
-        },
-        backBtn: {
-                backgroundColor: COLORS.primary,
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
+                paddingVertical: 10
         },
-        titlePrincipal: {
-                fontSize: 18,
-                fontWeight: "bold",
-                marginLeft: 10,
-                color: COLORS.primary
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
         },
         cardTitle: {
                 maxWidth: "85%"
@@ -200,30 +206,29 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#000",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5,
-                marginTop: 7
-        },
-        addImageLabel: {
-                marginLeft: 5,
-                opacity: 0.8
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
         },
 })
