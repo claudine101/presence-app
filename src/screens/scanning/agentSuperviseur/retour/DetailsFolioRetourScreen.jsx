@@ -24,6 +24,7 @@ export default function DetailsFolioRetourScreen() {
         const route = useRoute()
         const { folio, ID_ETAPE_FOLIO, ID_EQUIPE } = route.params
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
@@ -32,22 +33,29 @@ export default function DetailsFolioRetourScreen() {
                 return isValid
         }
         const handleSubmit = (fol) => {
-                navigation.navigate("NewFolioRetourScreen",{details:fol})
+                navigation.navigate("NewFolioRetourScreen", { details: fol })
         }
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image)
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         const submitEquipeData = async () => {
@@ -88,67 +96,70 @@ export default function DetailsFolioRetourScreen() {
                 <>
                         {loadingData && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text numberOfLines={2} style={styles.titlePrincipal}>Listes des folios</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Listes des folios</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
                                         {folio.folios.map((fol, index) => {
                                                 return (
                                                         <>
-                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} key={index}
-                                                        onPress={() => handleSubmit(fol)}
-                                                        >
-                                                                <View style={styles.cardDetails}>
-                                                                        <View style={styles.carddetailItem}>
-                                                                                <View style={styles.cardImages}>
-                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                </View>
-                                                                                <View style={styles.cardDescription}>
-                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text>{fol.folio.CODE_FOLIO}</Text>
+                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} key={index}
+                                                                        onPress={() => handleSubmit(fol)}
+                                                                >
+                                                                        <View style={styles.cardDetails}>
+                                                                                <View style={styles.carddetailItem}>
+                                                                                        <View style={styles.cardImages}>
+                                                                                                <AntDesign name="folderopen" size={24} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.cardDescription}>
+                                                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text>{fol.folio.CODE_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                        <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                 </View>
-                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                         </View>
                                                                                 </View>
                                                                         </View>
-                                                                </View>
-                                                        </TouchableNativeFeedback>
+                                                                </TouchableNativeFeedback>
                                                         </>
                                                 )
                                         })}
                                 </ScrollView>
-                               {ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_EQUIPE_SCANNIMG ? <View style={{ marginHorizontal: 10 }}>
+                                {ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_EQUIPE_SCANNIMG ? <View style={{ marginHorizontal: 10 }}>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <Feather name="image" size={24} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du proces verbal
-                                                                </Text>
+                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du procès verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                         </View>
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
                                         </TouchableOpacity>
                                         <TouchableWithoutFeedback
                                                 disabled={!isValidAdd()}
-                                        onPress={submitEquipeData}
+                                                onPress={submitEquipeData}
                                         >
                                                 <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
                                         </TouchableWithoutFeedback>
-                                </View>:null}
+                                </View> : null}
                         </View>
                 </>
         )
@@ -156,24 +167,7 @@ export default function DetailsFolioRetourScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginTop: -20,
                 backgroundColor: "#ddd"
-        },
-        cardHeader: {
-                flexDirection: 'row',
-                marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginBottom: 15,
-                marginHorizontal: 10
-        },
-        backBtn: {
-                backgroundColor: COLORS.primary,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
         },
         titlePrincipal: {
                 fontSize: 18,
@@ -181,8 +175,12 @@ const styles = StyleSheet.create({
                 marginLeft: 10,
                 color: COLORS.primary
         },
-        cardTitle: {
-                maxWidth: "85%"
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
         },
         cardDetails: {
                 borderRadius: 10,
@@ -214,30 +212,40 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#000",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5,
-                marginTop: 7
-        },
-        addImageLabel: {
-                marginLeft: 5,
-                opacity: 0.8
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
         },
 })

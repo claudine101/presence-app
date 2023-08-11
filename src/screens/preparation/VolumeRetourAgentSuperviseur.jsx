@@ -5,7 +5,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto, FontAwesome5 } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
@@ -30,6 +30,7 @@ export default function VolumeRetourAgentSuperviseur() {
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
                 // document: null,
@@ -70,19 +71,26 @@ export default function VolumeRetourAgentSuperviseur() {
 
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                        }
+         //Fonction pour le prendre l'image avec l'appareil photos
+         const onTakePicha = async () => {
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         const submitData = async () => {
@@ -123,15 +131,17 @@ export default function VolumeRetourAgentSuperviseur() {
                 <>
                         {loadingSubmit && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                        </View>
                                 </View>
                                 <FlatList
                                         style={styles.contain}
@@ -161,31 +171,34 @@ export default function VolumeRetourAgentSuperviseur() {
                                                                                 </View>
                                                                         </View>
                                                                 }
-                                                                
+
                                                         </>
                                                 )
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
                                 />
                                  <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
+                                                <View style={[styles.addImageItem]}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
+                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
                                                                         <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
+                                                                                Photo du procès verbal
                                                                         </Text>
                                                                 </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                         </View>
-                                                </TouchableOpacity>
-                                                <TouchableWithoutFeedback
-                                                        disabled={!isValidAdd()}
-                                                        onPress={submitData}
-                                                >
-                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                                        </View>
-                                                </TouchableWithoutFeedback>
+                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </View>
+                                        </TouchableOpacity>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
 
                         </View>
                 </>
@@ -197,6 +210,24 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#ddd'
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -229,35 +260,13 @@ const styles = StyleSheet.create({
                 fontSize: 15,
                 fontWeight: "bold",
         },
-        cardHeader: {
-                flexDirection: 'row',
-                // marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginBottom: 15,
-                marginHorizontal: 10,
-                marginVertical: 10
-        },
-        backBtn: {
-                backgroundColor:COLORS.primary,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-        },
-        titlePrincipal: {
-                fontSize: 18,
-                fontWeight: "bold",
-                marginLeft: 10,
-                color: COLORS.primary
-        },
+
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 marginHorizontal: 10
         },
         buttonText: {
@@ -288,7 +297,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal: 10
+                marginHorizontal:10
         },
         addImageLabel: {
                 marginLeft: 5,

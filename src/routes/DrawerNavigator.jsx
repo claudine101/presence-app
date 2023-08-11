@@ -26,6 +26,7 @@ import AllFolioEquipeRetourScreen from "../screens/scanning/agentSuperviseur/ret
 import AllFoliosSuperviseurPvScreen from "../screens/scanning/agentSuperviseur/retour/AllFoliosSuperviseurPvScreen";
 import AllVolumeFolioRetourSupAilleScreen from "../screens/scanning/agentSuperviseur/retourAgSupAille/AllVolumeFolioRetourSupAilleScreen";
 import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolumeRecusChefEquiScreen";
+import VolumeEnEttenteChefEquipeScreen from "../screens/scanning/chefEquipe/VolumeEnEttenteChefEquipeScreen";
 
 export default function DrawerNavigator() {
         const drawr = true
@@ -41,6 +42,7 @@ export default function DrawerNavigator() {
                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
 
@@ -48,11 +50,13 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU ?
@@ -74,11 +78,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="FolioRetourScreen" component={FolioRetourScreen} />
                                 </>
                                 : null}
-                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE ?
-                                <>
-                                        <Drawer.Screen name="AgentSuperviseurAileScreen" component={AgentSuperviseurAileScreen} />
-                                </>
-                                : null}
+
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_INDEXATION ?
                                 <>
                                         <Drawer.Screen name="IndexationChefEquipeFolioScreen" component={IndexationChefEquipeFolioScreen} />
@@ -100,11 +100,27 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="ChefPlateauFlashValidesScreen" component={ChefPlateauFlashValidesScreen} />
                                 </>
                                 : null}
-                        {user.ID_PROFIL == 9 ?
+                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE ?
                                 <>
-                                        <Drawer.Screen name="AllVolumesRecusScreen" component={AllVolumesRecusScreen} />
+                                        <Drawer.Screen name="AgentSuperviseurAileScreen" component={AgentSuperviseurAileScreen} />
+                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>
                                 : null}
+                        {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
+                                <>
+                                        <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
+                                        {/* <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} /> */}
+                                </> : null}
+                        {
+                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
+                                        <>
+                                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
+                                                <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
+                                        </>
+                                        : null}
+
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING ?
                                 <>
                                         <Drawer.Screen name="AllFolioRecusScanScreen" component={AllFolioRecusScanScreen} />
@@ -112,15 +128,9 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                 </>
                                 : null}
-                        {user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ? <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} /> : null}
-                        {(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING || user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING
-                                || user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR || user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ||
-                                user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) ?
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
-                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE ||
-                                user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ||
-                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ?
-                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> : null}
+
                         {/* <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} /> */}
                 </Drawer.Navigator>
         )
