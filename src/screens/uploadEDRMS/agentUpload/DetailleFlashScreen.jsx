@@ -33,9 +33,9 @@ export default function DetailleFlashScreen() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
     const [selectedType, setSelectedType] = useState([])
+    const [typeDocument, setTypeDocument] = useState([])
     const [selectedFolio, setSelectedFolio] = useState(null)
     const [flashIndexes, setFlashIndexes] = useState(null)
-    const [typeDocument, setTypeDocument] = useState([])
     const flashModalRef = useRef()
     // console.log(selectedItems)
     const openFlashModalize = () => {
@@ -107,14 +107,9 @@ export default function DetailleFlashScreen() {
         }
     })
 
-    const openAgentModalize = () => {
-        natureModalRef.current?.open()
+    const handleFoliosPress = folio => {
+        navigation.navigate("DetailsFolioFlashScreen", { folio })
     }
-    const handleAgentPress = agent => {
-        natureModalRef.current?.close()
-        handleChange('agent', agent)
-    }
-
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
@@ -222,7 +217,9 @@ export default function DetailleFlashScreen() {
             setIsSubmitting(false)
         }
     }
-
+    const handleFoliosFlashPress = folio => {
+        navigation.navigate("DetailsFolioFlashScreen", { folio })
+    }
 
     return (
         <>
@@ -247,12 +244,24 @@ export default function DetailleFlashScreen() {
                             {<View style={styles.folioList}>
                                 {flash.folios.map((folio, index) => {
                                     return (
-                                        <Folios style={{ backgroundColor: '#f1f1f1' }} folio={folio} key={index} onPress={() => {
-                                            fetchTypeDoc(folio.folio.ID_NATURE)
-                                            natureModalRef.current?.open()
-                                            setSelectedFolio(folio.folio)
-                                        }
-                                        } isSelected={isSelected} />
+                                        <>
+                                        <TouchableNativeFeedback onPress={() => handleFoliosPress(folio)} >
+                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
+                                                  <View style={[styles.folio]}>
+                                                            <View style={styles.folioLeftSide}>
+                                                                      <View style={styles.folioImageContainer}>
+                                                                                <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                      </View>
+                                                                      <View style={styles.folioDesc}>
+                                                                                <Text style={styles.folioName}>{ folio.folio.NUMERO_FOLIO }</Text>
+                                                                                <Text style={styles.folioSubname}>{ folio.folio.NUMERO_FOLIO }</Text>
+                                                                      </View>
+                                                            </View>
+                                                            
+                                                  </View>
+                                        </View>
+                              </TouchableNativeFeedback>
+                                        </>
                                     )
                                 })}
                             </View>}

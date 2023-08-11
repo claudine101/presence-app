@@ -40,7 +40,7 @@ import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperv
 import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
 import ChefEquipeFlashDetailsScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashDetailsScreen';
 import DetailleFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailleFlashScreen';
-
+import DetailsFolioFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioFlashScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -92,7 +92,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='SelectFolioAgentScreen' component={SelectFolioAgentScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='ChefEquipeFlashDetailsScreen' component={ChefEquipeFlashDetailsScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DetailleFlashScreen' component={DetailleFlashScreen} options={{ headerShown: false }}/>
-            
+                <Stack.Screen name='DetailsFolioFlashScreen' component={DetailsFolioFlashScreen} options={{ headerShown: false }}/>
+               
+                
             </Stack.Navigator>
 
         </NavigationContainer>
