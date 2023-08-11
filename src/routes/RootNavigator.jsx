@@ -23,6 +23,7 @@ import DescriptionEtapeScreen from '../screens/preparation/DescriptionEtapeScree
 import DetailsAgentPreparationScreen from '../screens/preparation/DetailsAgentPreparationScreen';
 
 
+
 import NewAgentSupAIlleScanScreen from '../screens/scanning/chefEquipe/NewAgentSupAIlleScanScreen';
 import NewChefPlateauScreen from '../screens/scanning/agentAileSuperviseur/NewChefPlateauScreen';
 import ValideChefEquipeScreen from '../screens/scanning/chefEquipe/ValideChefEquipeScreen';
@@ -35,6 +36,7 @@ import ConfimerPvScreen from '../screens/scanning/agentSuperviseur/retourAgSupAi
 import ConfirmerPvRetourAgentDistrScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentDistrScreen';
 import ConfirmerPvRetourAgentSupArchives from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentSupArchives';
 import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentDesarchivages';
+import DetaillerVolumeScreen from '../screens/preparation/DetaillerVolumeScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -81,6 +83,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }}/>
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetaillerVolumeScreen' component={DetaillerVolumeScreen} options={{ headerShown: false }}/>
+              
+                
             </Stack.Navigator>
 
         </NavigationContainer>

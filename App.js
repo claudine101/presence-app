@@ -21,9 +21,9 @@ let App = () =>  {
                     </>
           )
 }
-App = codePush({
-    updateDialog: false,
-    installMode: codePush.InstallMode.ON_NEXT_RESTART,
-})(App)
+// App = codePush({
+//     updateDialog: false,
+//     installMode: codePush.InstallMode.ON_NEXT_RESTART,
+// })(App)
 
 export default App
