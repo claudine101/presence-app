@@ -121,16 +121,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </TouchableNativeFeedback> : null}
                     </>
                     : null}
-                {user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <View useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumePrepareScreen')}>
-                    <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
-                        <View style={styles.drawerItem}>
-                            <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
-                            <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
-                                Volume prépares
-                            </Text>
-                        </View>
-                    </View>
-                </View> : null}
                 {/* {user.ID_PROFIL == 2 ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentDesarchivagesRetourScreen')}>
                     <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                         <View style={styles.drawerItem}>

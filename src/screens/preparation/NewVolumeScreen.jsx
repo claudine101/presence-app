@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableNativeFeedback, StatusBar, ToastAndroid, Image, Alert } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableNativeFeedback,ActivityIndicator, StatusBar, ToastAndroid, Image, Alert } from "react-native";
 import { OutlinedTextField } from 'rn-material-ui-textfield'
-import { MaterialCommunityIcons, AntDesign, Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../styles/COLORS';
 import { useForm } from '../../hooks/useForm';
@@ -32,6 +32,7 @@ export default function NewVolumeScreen() {
     const user = useSelector(userSelector)
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)
+    const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
         nbre_volume: '',
@@ -107,22 +108,27 @@ export default function NewVolumeScreen() {
         }
 
     }
-
-    //Fonction pour le prendre l'image avec l'appareil photos
-    const onTakePicha = async () => {
-        try {
-            const permission = await ImagePicker.requestCameraPermissionsAsync()
-            if (!permission.granted) return false
-            const image = await ImagePicker.launchCameraAsync()
-            if (!image.canceled) {
-                setDocument(image)
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
-
+//Fonction pour le prendre l'image avec l'appareil photos
+const onTakePicha = async () => {
+    setIsCompressingPhoto(true)
+    const permission = await ImagePicker.requestCameraPermissionsAsync()
+    if (!permission.granted) return false
+    const image = await ImagePicker.launchCameraAsync()
+    if (image.canceled) {
+            return setIsCompressingPhoto(false)
     }
+    const photo = image.assets[0]
+    setDocument(photo)
+    const manipResult = await manipulateAsync(
+            photo.uri,
+            [
+                    { resize: { width: 500 } }
+            ],
+            { compress: 0.7, format: SaveFormat.JPEG }
+    );
+    setIsCompressingPhoto(false)
+    //     handleChange('pv', manipResult)
+}
 
     //fonction pour envoyer les donnees des volumes dans la bases
     const submitPlanification = async () => {
@@ -164,17 +170,19 @@ export default function NewVolumeScreen() {
         <>
             {loading && <Loading />}
             <View style={styles.container}>
-                <View style={styles.cardHeader}>
+                <View style={styles.header}>
                     <TouchableNativeFeedback
                         onPress={() => navigation.goBack()}
                         background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                        <View style={styles.backBtn}>
-                            <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                        <View style={styles.headerBtn}>
+                            <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.titlePrincipal}>Planifier les volumes</Text>
+                    <View style={styles.cardTitle}>
+                        <Text style={styles.title} numberOfLines={2}>Planifier les volumes</Text>
+                    </View>
                 </View>
-                <View style={{ marginVertical: 8 }}>
+                <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                     <OutlinedTextField
                         label="Nombre de volume"
                         fontSize={14}
@@ -193,7 +201,7 @@ export default function NewVolumeScreen() {
                         blurOnSubmit={false}
                     />
                 </View>
-                {data.nbre_volume > 0 ? <View style={{ marginVertical: 8 }}>
+                {data.nbre_volume > 0 ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                     <OutlinedTextField
                         label="Nom du volume"
                         fontSize={14}
@@ -235,11 +243,14 @@ export default function NewVolumeScreen() {
                         })}
                         <TouchableOpacity onPress={onTakePicha}>
                             <View style={[styles.addImageItem]}>
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Feather name="image" size={24} color="#777" />
-                                    <Text style={styles.addImageLabel}>
-                                        Photo du proces verbal
-                                    </Text>
+                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                        <Text style={styles.addImageLabel}>
+                                            Photo du procès verbal
+                                        </Text>
+                                    </View>
+                                    {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                 </View>
                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                             </View>
@@ -272,22 +283,34 @@ export default function NewVolumeScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: -20,
         flex: 1,
-        marginHorizontal: 10
+        backgroundColor: '#fff'
     },
-    titlePrincipal: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginLeft: 10,
-        color: COLORS.primary
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    headerBtn: {
+        padding: 10
+    },
+    title: {
+        paddingHorizontal: 5,
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: '#777',
+        // color: COLORS.primary
+    },
+    cardTitle: {
+        maxWidth: "85%"
     },
     button: {
         marginVertical: 10,
         borderRadius: 8,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        backgroundColor: COLORS.primary
+        backgroundColor: COLORS.primary,
+        marginHorizontal:10
     },
     buttonText: {
         color: "#fff",
@@ -299,11 +322,12 @@ const styles = StyleSheet.create({
     amountChanger: {
         width: 100,
         height: 50,
-        backgroundColor:COLORS.primary,
+        backgroundColor: COLORS.primary,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 10,
+        marginHorizontal:10
 
     },
     amountChangerText: {
@@ -336,7 +360,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 5,
         paddingHorizontal: 30,
-        marginBottom: 10
+        marginBottom: 10,
+        marginHorizontal:10
     },
     cardFolder: {
         flexDirection: "row",
@@ -361,22 +386,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#ddd"
     },
-    cardHeader: {
-        flexDirection: 'row',
-        marginTop: StatusBar.currentHeight,
-        alignContent: "center",
-        alignItems: "center",
-        marginBottom: 15
-
-    },
-    backBtn: {
-        backgroundColor: COLORS.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-    },
     selectContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -393,14 +402,15 @@ const styles = StyleSheet.create({
     },
     addImageItem: {
         borderWidth: 0.5,
-        borderColor: "#000",
+        borderColor: "#ddd",
         borderRadius: 5,
         paddingHorizontal: 10,
         paddingVertical: 15,
-        marginBottom: 5
-    },
-    addImageLabel: {
+        marginBottom: 5,
+        marginHorizontal:10
+},
+addImageLabel: {
         marginLeft: 5,
         opacity: 0.8
-    },
+},
 })

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, Feather, Fontisto } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Feather, Fontisto, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
@@ -29,6 +29,7 @@ export default function AddNombreFolioScreen() {
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)
+    const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
         numero: '',
@@ -85,17 +86,24 @@ export default function AddNombreFolioScreen() {
 
     //Fonction pour le prendre l'image avec l'appareil photos
     const onTakePicha = async () => {
-        try {
-            const permission = await ImagePicker.requestCameraPermissionsAsync()
-            if (!permission.granted) return false
-            const image = await ImagePicker.launchCameraAsync()
-            if (!image.canceled) {
-                setDocument(image)
-            }
+        setIsCompressingPhoto(true)
+        const permission = await ImagePicker.requestCameraPermissionsAsync()
+        if (!permission.granted) return false
+        const image = await ImagePicker.launchCameraAsync()
+        if (image.canceled) {
+            return setIsCompressingPhoto(false)
         }
-        catch (error) {
-            console.log(error)
-        }
+        const photo = image.assets[0]
+        setDocument(photo)
+        const manipResult = await manipulateAsync(
+            photo.uri,
+            [
+                { resize: { width: 500 } }
+            ],
+            { compress: 0.7, format: SaveFormat.JPEG }
+        );
+        setIsCompressingPhoto(false)
+        //     handleChange('pv', manipResult)
     }
 
     //Fonction pour upload un documents 
@@ -162,38 +170,40 @@ export default function AddNombreFolioScreen() {
         const [loadingAgentArchive, agentSuperviseurArchives] = useFetch('/preparation/batiment/agentArchive')
         return (
             <>
-                {loadingAgentArchive ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator animating size={'large'} color={'#777'} />
-                </View> :
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Les agents superviseurs archives</Text>
-                        </View>
-                        {agentSuperviseurArchives.result.map((ag, index) => {
-                            return (
-                                <ScrollView key={index}>
-                                    <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)}>
-                                        <View style={styles.modalItem} >
-                                            <View style={styles.modalImageContainer}>
-                                                {ag.PHOTO_USER ? <Image source={{ uri: ag.PHOTO_USER }} style={styles.image} /> :
-                                                    <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
-                                            </View>
-                                            <View style={styles.modalItemCard}>
-                                                <View>
-                                                    <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
-                                                    <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
+                                {loadingAgentArchive ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                 </View>
-                                                {agents?.USERS_ID == ag.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                    <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                            </View>
+                                                <View style={styles.modalList}>
+                                                        {agentSuperviseurArchives.result.map((ag, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.listItemImage} />
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {agents?.USERS_ID == ag.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
                                         </View>
-                                    </TouchableNativeFeedback>
-                                </ScrollView>
-                            )
-                        })}
-                    </View>
-                }
-            </>
+                                }
+                        </>
         )
     }
 
@@ -236,78 +246,77 @@ export default function AddNombreFolioScreen() {
     return (<>
         {loading && <Loading />}
         <View style={styles.container}>
-            <View style={styles.cardHeader}>
+            <View style={styles.header}>
                 <TouchableNativeFeedback
                     onPress={() => navigation.goBack()}
                     background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                    <View style={styles.backBtn}>
-                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                    <View style={styles.headerBtn}>
+                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                     </View>
                 </TouchableNativeFeedback>
-                <Text style={styles.titlePrincipal}>Nommer un agent archive</Text>
-            </View>
-            <ScrollView>
-                <View>
-                    <View style={styles.selectContainer} >
-                        <View>
-                            <Text style={styles.selectLabel}>
-                                Volume
-                            </Text>
-                            <View>
-                                <Text style={styles.selectedValue}>
-                                    {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                </Text>
-                                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                M
-                                                                        </Text>
-                                                                </View> */}
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{ marginVertical: 8 }}>
-                        <OutlinedTextField
-                            label="Nombre de dossier"
-                            fontSize={14}
-                            baseColor={COLORS.smallBrown}
-                            tintColor={COLORS.primary}
-                            containerStyle={{ borderRadius: 20 }}
-                            lineWidth={1}
-                            activeLineWidth={1}
-                            errorColor={COLORS.error}
-                            value={data.numero}
-                            onChangeText={(newValue) => handleChange('numero', newValue)}
-                            onBlur={() => checkFieldData('numero')}
-                            error={hasError('numero') ? getError('numero') : ''}
-                            autoCompleteType='off'
-                            blurOnSubmit={false}
-                        />
-                    </View>
-                    <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
-                        <View>
-                            <Text style={styles.selectLabel}>
-                            Sélectionner un agent d'archive
-                            </Text>
-                            <View>
-                                <Text style={styles.selectedValue}>
-                                    {agents ? `${agents.NOM}` + `${agents.PRENOM}` : 'Aucun'}
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onTakePicha}>
-                        <View style={[styles.addImageItem]}>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Feather name="image" size={24} color="#777" />
-                                <Text style={styles.addImageLabel}>
-                                    Photo du proces verbal
-                                </Text>
-                            </View>
-                            {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                        </View>
-                    </TouchableOpacity>
-
+                <View style={styles.cardTitle}>
+                    <Text style={styles.title} numberOfLines={2}>Nommer un agent archive</Text>
                 </View>
+            </View>
+            <ScrollView style={styles.inputs}>
+                <TouchableOpacity style={styles.selectContainer}>
+                    <View style={styles.labelContainer}>
+                        <View style={styles.icon}>
+                            <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                        </View>
+                        <Text style={styles.selectLabel}>
+                            Volume
+                        </Text>
+                    </View>
+                    <Text style={styles.selectedValue}>
+                        {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                    </Text>
+                </TouchableOpacity>
+                <View style={{ marginVertical: 8 }}>
+                    <OutlinedTextField
+                        label="Nombre de dossier"
+                        fontSize={14}
+                        baseColor={COLORS.smallBrown}
+                        tintColor={COLORS.primary}
+                        containerStyle={{ borderRadius: 20 }}
+                        lineWidth={1}
+                        activeLineWidth={1}
+                        errorColor={COLORS.error}
+                        value={data.numero}
+                        onChangeText={(newValue) => handleChange('numero', newValue)}
+                        onBlur={() => checkFieldData('numero')}
+                        error={hasError('numero') ? getError('numero') : ''}
+                        autoCompleteType='off'
+                        blurOnSubmit={false}
+                    />
+                </View>
+                <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
+                    <View style={styles.labelContainer}>
+                        <View style={styles.icon}>
+                            <Feather name="user" size={20} color="#777" />
+                        </View>
+                        <Text style={styles.selectLabel}>
+                            Agent d'archive
+                        </Text>
+                    </View>
+                    <Text style={styles.selectedValue}>
+                        {agents ? `${agents.NOM} ${agents.PRENOM}` : "Cliquer pour choisir l'agent"}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onTakePicha}>
+                    <View style={[styles.addImageItem]}>
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                <Text style={styles.addImageLabel}>
+                                    Photo du procès verbal
+                                </Text>
+                            </View>
+                            {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                        </View>
+                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                    </View>
+                </TouchableOpacity>
             </ScrollView>
             <TouchableWithoutFeedback
                 disabled={!isValidAdd()}
@@ -335,108 +344,51 @@ export default function AddNombreFolioScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 10,
-        marginTop: -20
+        backgroundColor: '#fff'
     },
-    cardHeader: {
+    header: {
         flexDirection: 'row',
-        marginTop: StatusBar.currentHeight,
-        alignContent: "center",
-        alignItems: "center",
-        marginBottom: 15
-    },
-    backBtn: {
-        backgroundColor:COLORS.primary,
-        justifyContent: 'center',
         alignItems: 'center',
-        width: 50,
-        height: 50,
-        borderRadius: 50,
+        paddingVertical: 10
     },
-    titlePrincipal: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginLeft: 10,
-        color: COLORS.primary
+    headerBtn: {
+        padding: 10
+    },
+    title: {
+        paddingHorizontal: 5,
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: '#777',
+        // color: COLORS.primary
+    },
+    cardTitle: {
+        maxWidth: "85%"
+    },
+    inputs: {
+        paddingHorizontal: 10
     },
     selectContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
         backgroundColor: "#fff",
         padding: 13,
         borderRadius: 5,
         borderWidth: 0.5,
-        borderColor: "#777",
+        borderColor: "#ddd",
         marginVertical: 10
     },
-    modalHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 10,
-        paddingVertical: 5
-    },
-    modalItem: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F1F1F1'
-    },
-    modalImageContainer: {
-        width: 40,
-        height: 40,
-        backgroundColor: '#F1F1F1',
-        borderRadius: 50,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    modalImage: {
-        width: "85%",
-        height: "85%",
-        resizeMode: "center",
-        borderRadius: 100,
-    },
-    modalTitle: {
-        fontWeight: "bold",
-        textAlign: "center",
-        marginTop: 10,
-        fontSize: 16
-    },
-    itemTitle: {
-        marginLeft: 10
-    },
-    button: {
-        marginTop: 10,
-        borderRadius: 8,
-        paddingVertical: 14,
-        paddingHorizontal: 10,
-        backgroundColor:COLORS.primary,
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 16,
-        textAlign: "center"
-    },
     selectedValue: {
-        color: '#777'
+        color: '#777',
+        marginTop: 2
     },
-    modalItemCard: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        flex: 1
+    labelContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    itemTitleDesc: {
-        color: "#777",
-        marginLeft: 10,
-        fontSize: 11
+    selectLabel: {
+        marginLeft: 5
     },
     addImageItem: {
         borderWidth: 0.5,
-        borderColor: "#000",
+        borderColor: "#ddd",
         borderRadius: 5,
         paddingHorizontal: 10,
         paddingVertical: 15,
@@ -446,10 +398,77 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         opacity: 0.8
     },
-    image: {
-        width: "100%",
-        height: "100%",
+    modalHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 10,
+        paddingVertical: 5
+    },
+    modalTitle: {
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 10,
+        fontSize: 16
+    },
+    listItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 10
+    },
+    listItemImageContainer: {
+        width: 50,
+        height: 50,
         borderRadius: 10,
-        resizeMode: "center"
-    }
+        backgroundColor: '#ddd',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    listItemImage: {
+        width: '60%',
+        height: '60%',
+    },
+    listItemDesc: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    listNames: {
+        marginLeft: 10
+    },
+    listItemTitle: {
+        fontWeight: 'bold'
+    },
+    listItemSubTitle: {
+        color: '#777',
+        fontSize: 12,
+        marginTop: 5
+    },
+    addImageItem: {
+        borderWidth: 0.5,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        marginBottom: 5
+    },
+    addImageLabel: {
+        marginLeft: 5,
+        opacity: 0.8
+    },
+    button: {
+        marginTop: 10,
+        borderRadius: 8,
+        paddingVertical: 14,
+        paddingHorizontal: 10,
+        backgroundColor: COLORS.primary,
+        marginHorizontal: 10
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 16,
+        textAlign: "center"
+    },
 })
