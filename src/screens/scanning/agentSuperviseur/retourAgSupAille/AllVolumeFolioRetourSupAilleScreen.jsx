@@ -20,24 +20,33 @@ import { userSelector } from "../../../../store/selectors/userSelector";
 
 export default function AllVolumeFolioRetourSupAilleScreen() {
         const navigation = useNavigation()
+
         const [allVolumes, setAllVolumes] = useState([])
+        const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
+
         const [loading, setLoading] = useState(false)
+       
         const [allRetourVolumes, setAllRetourVolumes] = useState([])
+        const [loadingChefPlateau, setLoadingChefPlateau] = useState(false)
+
         const [allRetourVolumesDistributeur, setAllRetourVolumesDistributeur] = useState([])
+        const [loadingDistributeaur, setLoadingDistributeaur] = useState(false)
+
         const [allRetourVolumesArchives, setAllRetourVolumesArchives] = useState([])
+        const [loadingSupArchives, setLoadingSupArchives] = useState(false)
+
         const [allRetourVolumesDesarchivages, setAllRetourVolumesDesarchivages] = useState([])
         const user = useSelector(userSelector)
-        console.log(user)
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingAilleScanning(true)
                                 const vol = await fetchApi(`/scanning/volume/retour/agent`)
                                 setAllVolumes(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingAilleScanning(false)
                         }
                 })()
         }, []))
@@ -45,13 +54,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingChefPlateau(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/chefEquipe`)
                                 setAllRetourVolumes(vol.volu)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingChefPlateau(false)
                         }
                 })()
         }, []))
@@ -59,13 +68,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingDistributeaur(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
                                 setAllRetourVolumesDistributeur(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingDistributeaur(false)
                         }
                 })()
         }, []))
@@ -73,13 +82,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
+                                setLoadingSupArchives(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
                                 setAllRetourVolumesArchives(vol.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingSupArchives(false)
                         }
                 })()
         }, []))
@@ -103,7 +112,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                         <AppHeaderPhPreparationRetour />
 
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ? <View style={styles.container}>
-                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allVolumes.length == 0 ? <View style={styles.emptyContaier}>
@@ -121,7 +130,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
@@ -153,7 +162,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 />}
                         </View> : null}
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ? <View style={styles.container}>
-                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumes.length == 0 ? <View style={styles.emptyContaier}>
@@ -171,7 +180,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
@@ -204,7 +213,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                         </View> : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ?
                                 <View style={styles.container}>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        {loadingDistributeaur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesDistributeur.length == 0 ? <View style={styles.emptyContaier}>
@@ -222,7 +231,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingDistributeaur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
@@ -255,7 +264,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 </View> : null
                         }
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ? <View style={styles.container}>
-                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                        {loadingSupArchives ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesArchives.length == 0 ? <View style={styles.emptyContaier}>
@@ -273,7 +282,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                {loadingSupArchives ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
