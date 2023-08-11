@@ -31,7 +31,6 @@ import VolumeEnEttenteChefEquipeScreen from "../screens/scanning/chefEquipe/Volu
 export default function DrawerNavigator() {
         const drawr = true
         const user = useSelector(userSelector)
-        console.log(user)
         const Drawer = createDrawerNavigator()
         return (
                 <Drawer.Navigator screenOptions={{ headerShown: false, lazy: true, unmountOnBlur: true }} useLegacyImplementation={true} drawerContent={props => <DrawerContent {...props} />}>

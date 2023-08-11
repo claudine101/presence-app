@@ -189,8 +189,8 @@ const onTakePicha = async () => {
                         baseColor={COLORS.smallBrown}
                         tintColor={COLORS.primary}
                         containerStyle={{ borderRadius: 20 }}
-                        lineWidth={1}
-                        activeLineWidth={1}
+                        lineWidth={0.5}
+                        activeLineWidth={0.5}
                         errorColor={COLORS.error}
                         value={data.nbre_volume}
                         onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
