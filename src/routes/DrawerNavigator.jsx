@@ -26,13 +26,15 @@ import AllFolioEquipeRetourScreen from "../screens/scanning/agentSuperviseur/ret
 import AllFoliosSuperviseurPvScreen from "../screens/scanning/agentSuperviseur/retour/AllFoliosSuperviseurPvScreen";
 import AllVolumeFolioRetourSupAilleScreen from "../screens/scanning/agentSuperviseur/retourAgSupAille/AllVolumeFolioRetourSupAilleScreen";
 import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolumeRecusChefEquiScreen";
-// phase uploadEDMS
 
+// phase uploadEDMS
 import ChefEquipeFlashValideScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashValideScreen";
 import ChefEquipeFlashsRetourScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashsRetourScreen";
 import AgentFlashScreen from "../screens/uploadEDRMS/agentUpload/AgentFlashScreen";
-
-
+import FolioUploadScreen from "../screens/uploadEDRMS/agentUpload/FolioUploadScreen";
+import VerificateurFlashScreen from "../screens/uploadEDRMS/verificateur/VerificateurFlashScreen";
+import FolioEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioEnregistreScreen";
+import FolioNoEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen";
 
 
 export default function DrawerNavigator() {
@@ -141,9 +143,18 @@ export default function DrawerNavigator() {
                                 {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
                                 <>
                                         <Drawer.Screen name="AgentFlashScreen" component={AgentFlashScreen} />
-                                        <Drawer.Screen name="ChefEquipeFlashsRetourScreen" component={ChefEquipeFlashsRetourScreen} />
+                                        <Drawer.Screen name="FolioUploadScreen" component={FolioUploadScreen} />
                                 </>
                                 : null}
+                                 {user.ID_PROFIL == PROFILS.VERIFICATEUR_UPLOAD ?
+                                <>
+                                        <Drawer.Screen name="VerificateurFlashScreen" component={VerificateurFlashScreen} />
+                                        <Drawer.Screen name="FolioEnregistreScreen" component={FolioEnregistreScreen} />
+                                        <Drawer.Screen name="FolioNoEnregistreScreen" component={FolioNoEnregistreScreen} />
+                               
+                                </>
+                                : null}
+                                
                                 
 
                 </Drawer.Navigator>

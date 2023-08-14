@@ -39,8 +39,19 @@ import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperv
 {/* phase uploadEDRMS */}
 import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
 import ChefEquipeFlashDetailsScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashDetailsScreen';
+
 import DetailleFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailleFlashScreen';
 import DetailsFolioFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioFlashScreen';
+import DetailsFolioUploadScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioUploadScreen';
+
+import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUploadScreen';
+import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
+import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
+
+
+
+
+
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -93,8 +104,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='ChefEquipeFlashDetailsScreen' component={ChefEquipeFlashDetailsScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DetailleFlashScreen' component={DetailleFlashScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name='DetailsFolioFlashScreen' component={DetailsFolioFlashScreen} options={{ headerShown: false }}/>
-               
-                
+                <Stack.Screen name='DetailsFolioUploadScreen' component={DetailsFolioUploadScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DetailsUploadScreen' component={DetailsUploadScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='FolioEnregistreScreen' component={FolioEnregistreScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='FolioNoEnregistreScreen' component={FolioNoEnregistreScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
 
         </NavigationContainer>
