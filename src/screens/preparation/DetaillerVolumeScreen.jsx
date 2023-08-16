@@ -626,7 +626,7 @@ export default function DetaillerVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER}` : 'Aucun'}
+                                                                                {volume ? `${volume?.volume?.NOMBRE_DOSSIER}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -640,7 +640,7 @@ export default function DetaillerVolumeScreen() {
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {volume ? `${volume.volume.maille.NUMERO_MAILLE}` : ' Sélectionner le malle'}
+                                                                                                {volume ? `${volume?.volume?.maille.NUMERO_MAILLE}` : ' Sélectionner le malle'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>
