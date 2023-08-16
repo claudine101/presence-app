@@ -38,6 +38,23 @@ import ConfirmerPvRetourAgentSupArchives from '../screens/scanning/agentSupervis
 import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentDesarchivages';
 import DetaillerVolumeScreen from '../screens/preparation/DetaillerVolumeScreen';
 
+{/* phase uploadEDRMS */ }
+import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
+import ChefEquipeFlashDetailsScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashDetailsScreen';
+
+import DetailleFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailleFlashScreen';
+import DetailsFolioFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioFlashScreen';
+import DetailsFolioUploadScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioUploadScreen';
+
+import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUploadScreen';
+import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
+import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
+
+
+
+
+
+
 export default function RootNavigator() {
     const Stack = createStackNavigator()
     return (
@@ -51,13 +68,13 @@ export default function RootNavigator() {
                 <Stack.Screen name='Root' component={DrawerNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name='NewVolumeScreen' component={NewVolumeScreen} options={{ headerShown: false }} />
 
-                <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }} />
 
                 {/* indexation */}
-                <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='SelectAgentIndexationScreen' component={SelectAgentIndexationScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='ChefEquipeFlashDetailScreen' component={ChefEquipeFlashDetailScreen} options={{ headerShown: false }}/>
+                <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='SelectAgentIndexationScreen' component={SelectAgentIndexationScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefEquipeFlashDetailScreen' component={ChefEquipeFlashDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsAgentPreparationScreen' component={DetailsAgentPreparationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeScreen' component={DetailsVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AddNombreFolioScreen' component={AddNombreFolioScreen} options={{ headerShown: false }} />
@@ -71,21 +88,28 @@ export default function RootNavigator() {
                 <Stack.Screen name='FolioRetourSuperviseurScreen' component={FolioRetourSuperviseurScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='VolumeRetourChefPlateau' component={VolumeRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='VolumeRetourAgentSuperviseur' component={VolumeRetourAgentSuperviseur} options={{ headerShown: false }} />
-                <Stack.Screen name='NewAgentSupAIlleScanScreen' component={NewAgentSupAIlleScanScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='NewChefPlateauScreen' component={NewChefPlateauScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='ValideChefEquipeScreen' component={ValideChefEquipeScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='NewAgentSupScanScreen' component={NewAgentSupScanScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='NewEquipeScanScreen' component={NewEquipeScanScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }}/>
-                <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }}/>
-                <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }}/>
-                <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }}/>
-                <Stack.Screen name='DetaillerVolumeScreen' component={DetaillerVolumeScreen} options={{ headerShown: false }}/>
-              
-                
+                <Stack.Screen name='NewAgentSupAIlleScanScreen' component={NewAgentSupAIlleScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewChefPlateauScreen' component={NewChefPlateauScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ValideChefEquipeScreen' component={ValideChefEquipeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewAgentSupScanScreen' component={NewAgentSupScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewEquipeScanScreen' component={NewEquipeScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
+                <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }} />
+                <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }} />
+                <Stack.Screen name='DetaillerVolumeScreen' component={DetaillerVolumeScreen} options={{ headerShown: false }} />
+                {/* phase uploadEDRMS */}
+                <Stack.Screen name='SelectFolioAgentScreen' component={SelectFolioAgentScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefEquipeFlashDetailsScreen' component={ChefEquipeFlashDetailsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailleFlashScreen' component={DetailleFlashScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFolioFlashScreen' component={DetailsFolioFlashScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFolioUploadScreen' component={DetailsFolioUploadScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsUploadScreen' component={DetailsUploadScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FolioEnregistreScreen' component={FolioEnregistreScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FolioNoEnregistreScreen' component={FolioNoEnregistreScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
 
         </NavigationContainer>

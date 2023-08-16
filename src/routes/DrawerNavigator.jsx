@@ -28,6 +28,16 @@ import AllVolumeFolioRetourSupAilleScreen from "../screens/scanning/agentSupervi
 import AllVolumeRecusChefEquiScreen from "../screens/scanning/chefEquipe/AllVolumeRecusChefEquiScreen";
 import VolumeEnEttenteChefEquipeScreen from "../screens/scanning/chefEquipe/VolumeEnEttenteChefEquipeScreen";
 
+// phase uploadEDMS
+import ChefEquipeFlashValideScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashValideScreen";
+import ChefEquipeFlashsRetourScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashsRetourScreen";
+import AgentFlashScreen from "../screens/uploadEDRMS/agentUpload/AgentFlashScreen";
+import FolioUploadScreen from "../screens/uploadEDRMS/agentUpload/FolioUploadScreen";
+import VerificateurFlashScreen from "../screens/uploadEDRMS/verificateur/VerificateurFlashScreen";
+import FolioEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioEnregistreScreen";
+import FolioNoEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen";
+
+
 export default function DrawerNavigator() {
         const drawr = true
         const user = useSelector(userSelector)
@@ -131,7 +141,35 @@ export default function DrawerNavigator() {
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
 
-                        {/* <Drawer.Screen name="AllFolioSupAgentScreen" component={AllFolioSupAgentScreen} /> */}
+
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE ||
+                                user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ||
+                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ?
+                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> : null}
+                       
+                        {/*phase uplad EDMS*/}
+                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
+                                <>
+                                        <Drawer.Screen name="ChefEquipeFlashValideScreen" component={ChefEquipeFlashValideScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashsRetourScreen" component={ChefEquipeFlashsRetourScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
+                                </>
+                                : null}
+                                {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
+                                <>
+                                        <Drawer.Screen name="AgentFlashScreen" component={AgentFlashScreen} />
+                                        <Drawer.Screen name="FolioUploadScreen" component={FolioUploadScreen} />
+                                </>
+                                : null}
+                                 {user.ID_PROFIL == PROFILS.VERIFICATEUR_UPLOAD ?
+                                <>
+                                        <Drawer.Screen name="VerificateurFlashScreen" component={VerificateurFlashScreen} />
+                                        <Drawer.Screen name="FolioEnregistreScreen" component={FolioEnregistreScreen} />
+                                        <Drawer.Screen name="FolioNoEnregistreScreen" component={FolioNoEnregistreScreen} />
+                               
+                                </>
+                                : null}
+
                 </Drawer.Navigator>
         )
 }
