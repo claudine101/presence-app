@@ -121,7 +121,6 @@ export default function AllVolumeScreen() {
                                     </View> :
 
                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                        disabled={true}
                                             onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                         >
                                             {<View style={styles.cardDetails}>
