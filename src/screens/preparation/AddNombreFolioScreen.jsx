@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, Feather, Fontisto, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Feather, MaterialIcons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
@@ -54,11 +54,13 @@ export default function AddNombreFolioScreen() {
 
     const isValidAdd = () => {
         var isValid = false
+        var isValidAg = false
+
         isValid = data.numero > 0 ? true : false
         isValid = volumes != null ? true : false
-        isValid = agents != null ? true : false
+        isValidAg = agents != null ? true : false
         isValid = document != null ? true : false
-        return isValid && isValidate()
+        return isValid && isValidAg && isValidate()
     }
 
 
@@ -175,7 +177,7 @@ export default function AddNombreFolioScreen() {
                                 </View > :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent superviseur archive</Text>
                                                 </View>
                                                 <View style={styles.modalList}>
                                                         {agentSuperviseurArchives.result.map((ag, index) => {
@@ -185,16 +187,17 @@ export default function AddNombreFolioScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                      {  ag.PHOTO_USER ? <Image source={{ uri: ag.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.listItemImage} />}
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
                                                                                                                 <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {agents?.USERS_ID == ag.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {agents?.USERS_ID == ag.USERS_ID ? 
+                                                                                               <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
+                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
                                                                         </ScrollView>
@@ -255,7 +258,7 @@ export default function AddNombreFolioScreen() {
                     </View>
                 </TouchableNativeFeedback>
                 <View style={styles.cardTitle}>
-                    <Text style={styles.title} numberOfLines={2}>Nommer un agent archive</Text>
+                    <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
                 </View>
             </View>
             <ScrollView style={styles.inputs}>
@@ -279,8 +282,8 @@ export default function AddNombreFolioScreen() {
                         baseColor={COLORS.smallBrown}
                         tintColor={COLORS.primary}
                         containerStyle={{ borderRadius: 20 }}
-                        lineWidth={1}
-                        activeLineWidth={1}
+                        lineWidth={0.25}
+                        activeLineWidth={0.25}
                         errorColor={COLORS.error}
                         value={data.numero}
                         onChangeText={(newValue) => handleChange('numero', newValue)}
@@ -288,6 +291,7 @@ export default function AddNombreFolioScreen() {
                         error={hasError('numero') ? getError('numero') : ''}
                         autoCompleteType='off'
                         blurOnSubmit={false}
+                        keyboardType='number-pad'
                     />
                 </View>
                 <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
@@ -296,7 +300,7 @@ export default function AddNombreFolioScreen() {
                             <Feather name="user" size={20} color="#777" />
                         </View>
                         <Text style={styles.selectLabel}>
-                            Agent d'archive
+                            Agent superviseur d'archive
                         </Text>
                     </View>
                     <Text style={styles.selectedValue}>

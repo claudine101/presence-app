@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableNativeFeedback,ActivityIndicator, StatusBar, ToastAndroid, Image, Alert } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableNativeFeedback, ActivityIndicator, StatusBar, ToastAndroid, Image, Alert } from "react-native";
 import { OutlinedTextField } from 'rn-material-ui-textfield'
-import { MaterialCommunityIcons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons,  FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../styles/COLORS';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVolumeAction, resetCartAction } from '../../store/actions/planificationCartActions';
+import { resetCartAction } from '../../store/actions/planificationCartActions';
 import { planificationCartSelector } from '../../store/selectors/planificationCartSelectors';
-import { removeVolumeAction } from '../../store/actions/planificationCartActions';
 import { userSelector } from '../../store/selectors/userSelector';
 import * as DocumentPicker from 'expo-document-picker';
 import fetchApi from '../../helpers/fetchApi';
 import Loading from '../../components/app/Loading';
 import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Screen pour planifier et enregistrement volume
@@ -32,6 +31,7 @@ export default function NewVolumeScreen() {
     const user = useSelector(userSelector)
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)
+    const [volumes, setVolumes] = useState([])
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
@@ -52,29 +52,23 @@ export default function NewVolumeScreen() {
     })
     const isValidAdd = () => {
         var isValid = false
-        isValid = (data.nbre_volume == '' && activity.length > 0) && document != null ? true : false
+        isValid = (volumes.length > 0) && document != null ? true : false
         return isValid && isValidate()
     }
 
     const isValidFin = () => {
         var isVal = false
-        isVal = (data.nbre_volume > 0 && data.numero != '') ? true : false
+        isVal = (data.numero != '') ? true : false
         return isVal
     }
 
     //Fonction pour ajouter un volume da le redux
-    const onAddToCart = () => {
-        dispatch(addVolumeAction({ ID_VOLUME: parseInt(data.nbre_volume), NUMERO_VOLUME: data.numero }))
+    const handleFolioPressType = (vol) => {
+        setVolumes(vols => [...vols, data.numero])
         handleChange("numero", "")
-        if (data.nbre_volume - 1 == 0) {
-            handleChange("nbre_volume", "")
-        } else {
-            handleChange("nbre_volume", data.nbre_volume - 1)
-        }
     }
-
     //Fonction pour enlever un volume da le redux
-    const onRemoveProduct = (index) => {
+    const onRemoveVolume = (volIndex) => {
         Alert.alert("Enlever le volume", "Voulez-vous vraiment enlever ce volume dans les details?",
             [
                 {
@@ -83,7 +77,8 @@ export default function NewVolumeScreen() {
                 },
                 {
                     text: "Oui", onPress: async () => {
-                        dispatch(removeVolumeAction(index))
+                        const removed = volumes.filter((vol, index) => index != volIndex)
+                        setVolumes(removed)
                     }
                 }
             ])
@@ -108,34 +103,34 @@ export default function NewVolumeScreen() {
         }
 
     }
-//Fonction pour le prendre l'image avec l'appareil photos
-const onTakePicha = async () => {
-    setIsCompressingPhoto(true)
-    const permission = await ImagePicker.requestCameraPermissionsAsync()
-    if (!permission.granted) return false
-    const image = await ImagePicker.launchCameraAsync()
-    if (image.canceled) {
+    //Fonction pour le prendre l'image avec l'appareil photos
+    const onTakePicha = async () => {
+        setIsCompressingPhoto(true)
+        const permission = await ImagePicker.requestCameraPermissionsAsync()
+        if (!permission.granted) return false
+        const image = await ImagePicker.launchCameraAsync()
+        if (image.canceled) {
             return setIsCompressingPhoto(false)
-    }
-    const photo = image.assets[0]
-    setDocument(photo)
-    const manipResult = await manipulateAsync(
+        }
+        const photo = image.assets[0]
+        setDocument(photo)
+        const manipResult = await manipulateAsync(
             photo.uri,
             [
-                    { resize: { width: 500 } }
+                { resize: { width: 500 } }
             ],
             { compress: 0.7, format: SaveFormat.JPEG }
-    );
-    setIsCompressingPhoto(false)
-    //     handleChange('pv', manipResult)
-}
+        );
+        setIsCompressingPhoto(false)
+        //     handleChange('pv', manipResult)
+    }
 
     //fonction pour envoyer les donnees des volumes dans la bases
     const submitPlanification = async () => {
         try {
             setLoading(true)
             const form = new FormData()
-            form.append('volume', JSON.stringify(activity))
+            form.append('volume', JSON.stringify(volumes))
             if (document) {
                 const manipResult = await manipulateAsync(
                     document.uri,
@@ -184,25 +179,6 @@ const onTakePicha = async () => {
                 </View>
                 <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                     <OutlinedTextField
-                        label="Nombre de volume"
-                        fontSize={14}
-                        baseColor={COLORS.smallBrown}
-                        tintColor={COLORS.primary}
-                        containerStyle={{ borderRadius: 20 }}
-                        lineWidth={0.5}
-                        activeLineWidth={0.5}
-                        errorColor={COLORS.error}
-                        value={data.nbre_volume}
-                        onChangeText={(newValue) => handleChange('nbre_volume', newValue)}
-                        onBlur={() => checkFieldData('nbre_volume')}
-                        error={hasError('nbre_volume') ? getError('nbre_volume') : ''}
-                        autoCompleteType='off'
-                        keyboardType='number-pad'
-                        blurOnSubmit={false}
-                    />
-                </View>
-                {data.nbre_volume > 0 ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                    <OutlinedTextField
                         label="Nom du volume"
                         fontSize={14}
                         baseColor={COLORS.smallBrown}
@@ -218,27 +194,23 @@ const onTakePicha = async () => {
                         autoCompleteType='off'
                         blurOnSubmit={false}
                     />
-                </View> : null}
+                </View>
                 <ScrollView>
                     <>
-                        {activity.map((product, index) => {
+                        {volumes.map((volume, index) => {
                             return (
-                                <View style={styles.headerRead} key={index}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                        <View style={styles.cardFolder}>
-                                            <Text style={[styles.title]} numberOfLines={1}>{product.NUMERO_VOLUME}</Text>
-                                            <View style={styles.cardDescription}>
-                                                <AntDesign name="folderopen" size={20} color="black" />
-                                            </View>
-
+                            <View style={[styles.headerRead]} key={index}>
+                                        <View style={styles.folioImageContainer}>
+                                            <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                         </View>
-                                        <View>
-                                            <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                            </TouchableOpacity>
+                                        <View style={styles.folioDesc}>
+                                            <Text style={styles.folioName}>{volume}</Text>
+                                            <Text style={styles.folioSubname}>{volume}</Text>
                                         </View>
+                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveVolume(index)}>
+                                            <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                        </TouchableOpacity>
                                     </View>
-                                </View>
                             )
                         })}
                         <TouchableOpacity onPress={onTakePicha}>
@@ -261,7 +233,7 @@ const onTakePicha = async () => {
                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                     <TouchableOpacity
                         disabled={!isValidFin()}
-                        onPress={onAddToCart}
+                        onPress={handleFolioPressType}
                     >
                         <View style={[styles.amountChanger, !isValidFin() && { opacity: 0.5 }]}>
                             <Text style={styles.amountChangerText}>+</Text>
@@ -299,7 +271,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: '#777',
-        // color: COLORS.primary
     },
     cardTitle: {
         maxWidth: "85%"
@@ -310,12 +281,11 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         paddingHorizontal: 10,
         backgroundColor: COLORS.primary,
-        marginHorizontal:10
+        marginHorizontal: 10
     },
     buttonText: {
         color: "#fff",
         fontWeight: "bold",
-        // textTransform:"uppercase",
         fontSize: 16,
         textAlign: "center"
     },
@@ -327,7 +297,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
-        marginHorizontal:10
+        marginHorizontal: 10
 
     },
     amountChangerText: {
@@ -339,9 +309,9 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         backgroundColor: '#F1F1F1',
-        borderRadius: 5,
+        borderRadius: 0,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     amountContainer: {
         flexDirection: 'row',
@@ -359,9 +329,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingVertical: 5,
-        paddingHorizontal: 30,
+        paddingHorizontal: 10,
         marginBottom: 10,
-        marginHorizontal:10
+        marginHorizontal: 10
     },
     cardFolder: {
         flexDirection: "row",
@@ -407,10 +377,45 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 15,
         marginBottom: 5,
-        marginHorizontal:10
-},
-addImageLabel: {
+        marginHorizontal: 10
+    },
+    addImageLabel: {
         marginLeft: 5,
         opacity: 0.8
+    },
+    folio: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'red',
+        padding: 10
+    },
+    folioLeftSide: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    folioImageContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 40,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    folioImage: {
+        width: '60%',
+        height: '60%'
+    },
+    folioDesc: {
+        marginLeft: 10,
+        flex: 1
 },
+folioName: {
+        fontWeight: 'bold',
+        color: '#333',
+},
+folioSubname: {
+    color: '#777',
+    fontSize: 12
+}
 })

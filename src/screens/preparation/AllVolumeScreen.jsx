@@ -1,11 +1,11 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Image, ScrollView, ActivityIndicator, FlatList, TouchableNativeFeedback } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, FlatList, TouchableNativeFeedback } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import AppHeader from "../../components/app/AppHeader";
 import { FloatingAction } from "react-native-floating-action";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
@@ -24,19 +24,7 @@ export default function AllVolumeScreen() {
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
     const [loading, setLoading] = useState(false)
-    const Action = ({ title, image }) => {
-        return (
-            <View style={styles.action}>
-                <Text style={styles.actionLabel}>{title}</Text>
-                <View style={styles.actionIcon}>
-                    <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                </View>
-            </View>
-        )
-    }
-
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
-
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
@@ -85,75 +73,75 @@ export default function AllVolumeScreen() {
 
     }, [user]))
 
-    const actionsPlanification = [
-        {
-            text: "Ajouter volume",
-            icon: require("../../../assets/images/dossier.png"),
-            name: "DescriptionEtapeScreen",
-            position: 1,
-            render: () => <Action title={"Planification des activites"} image={require("../../../assets/images/dossier.png")} key={"key1"} />
-        },
-    ];
+    //Fonction pour ajouter un volume
+    const onPressAdd = () => {
+        navigation.navigate("NewVolumeScreen")
+    }
     return (
         <>
             <AppHeader />
-            {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ? <View style={styles.container}>
-                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+            {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
+                <View style={styles.container}>
+                    {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
 
-                </View> : allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                    <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                    <Text style={styles.emptyTitle}>
-                        Aucun volume trouvé
-                    </Text>
-                    <Text style={styles.emptyDesc}>
-                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                    </Text>
-                </View> :
+                    </View> : allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
+                        <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                        <Text style={styles.emptyTitle}>
+                            Aucun volume trouvé
+                        </Text>
+                        <Text style={styles.emptyDesc}>
+                            Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                        </Text>
+                    </View> :
 
-                    <FlatList
-                        style={styles.contain}
-                        data={allVolumes}
-                        renderItem={({ item: volume, index }) => {
-                            return (
-                                <>
-                                    {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                    </View> :
+                        <FlatList
+                            style={styles.contain}
+                            data={allVolumes}
+                            renderItem={({ item: volume, index }) => {
+                                return (
+                                    <>
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                            <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
 
-                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                       
-                                            onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                        >
-                                            {<View style={styles.cardDetails}>
-                                                <View style={styles.carddetailItem}>
-                                                    <View style={styles.cardImages}>
-                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                    </View>
-                                                    <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+
+                                                onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
+                                            >
+                                                {
+                                                    <View style={styles.cardDetails}>
+                                                        <View style={styles.carddetailItem}>
+                                                            <View style={styles.cardImages}>
+                                                                <AntDesign name="folderopen" size={24} color="black" />
                                                             </View>
-                                                            <View>
-                                                             
+                                                            <View style={styles.cardDescription}>
+                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                    <View>
+                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                    </View>
+                                                                    <View>
+
+
+                                                                    </View>
+                                                                    <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                                </View>
+                                                                {volume.folios.length >= 2 ? <Text style={styles.itemVolume}>{volume.folios.length} dossiers</Text> :
+                                                                    <Text style={styles.itemVolume}>{volume.folios.length} dossier</Text>}
 
                                                             </View>
-                                                            <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                         </View>
-                                                        {volume.folios.length>=2 ? <Text style={styles.itemVolume}>{volume.folios.length} dossiers</Text>:
-                                                            <Text style={styles.itemVolume}>{volume.folios.length} dossier</Text>}
-                                                               
                                                     </View>
-                                                </View>
-                                            </View>}
-                                        </TouchableNativeFeedback>
-                                    }
-                                </>
-                            )
-                        }}
-                        keyExtractor={(volume, index) => index.toString()}
-                    />}
-            </View> :
+
+
+                                                }
+                                            </TouchableNativeFeedback>
+                                        }
+                                    </>
+                                )
+                            }}
+                            keyExtractor={(volume, index) => index.toString()}
+                        />}
+                </View> :
 
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -182,17 +170,28 @@ export default function AllVolumeScreen() {
                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                     onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                                 >
-                                                    <View style={styles.cardDetails}>
-                                                        <View style={styles.carddetailItem}>
-                                                            <View style={styles.cardImages}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                            </View>
-                                                            <View style={styles.cardDescription}>
-                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                    <View>
-                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                    <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                        <View style={styles.folio}>
+                                                            <View style={styles.folioLeftSide}>
+                                                                <View style={styles.folioImageContainer}>
+                                                                    <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                </View>
+                                                                <View style={styles.folioDesc}>
+                                                                    <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <AntDesign name="calendar" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                            </Text>
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                            </Text>
+                                                                        </View>
                                                                     </View>
-                                                                    <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -204,18 +203,15 @@ export default function AllVolumeScreen() {
                                 }}
                                 keyExtractor={(volume, index) => index.toString()}
                             />}
+                   { user.ID_PROFIL==PROFILS.CHEF_DIVISION_ARCHIGES ? <View style={[styles.amountChanger]}>
+                        <TouchableOpacity onPress={onPressAdd} >
+                            <Text style={styles.amountChangerText}>+</Text>
+                        </TouchableOpacity>
+                    </View>:null}
+
                 </View>}
 
-            {
-                user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <FloatingAction
-                    actions={actionsPlanification}
-                    onPressItem={name => {
-                        if (name == 'DescriptionEtapeScreen') {
-                            navigation.navigate("DescriptionEtapeScreen")
-                        }
-                    }}
-                    color={COLORS.primary}
-                /> : null}
+
         </>
     )
 }
@@ -301,5 +297,59 @@ const styles = StyleSheet.create({
     },
     contain: {
         backgroundColor: '#ddd'
-    }
+    },
+    folio: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        padding: 10,
+    },
+    folioLeftSide: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    folioImageContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 40,
+        backgroundColor: '#ddd',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    folioImage: {
+        width: '60%',
+        height: '60%'
+    },
+    folioDesc: {
+        marginLeft: 10,
+        flex: 1
+    },
+    folioName: {
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    folioSubname: {
+        color: '#777',
+        fontSize: 12
+    },
+    amountChanger: {
+        width: 50,
+        height: 50,
+        backgroundColor: COLORS.primary,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 1,
+        position: "absolute",
+        left: "80%",
+        bottom: 0,
+        marginBottom: 10
+
+    },
+    amountChangerText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 20
+    },
 })
