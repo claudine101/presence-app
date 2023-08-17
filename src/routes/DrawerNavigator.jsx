@@ -140,12 +140,6 @@ export default function DrawerNavigator() {
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ) ?
                                 <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
-
-
-                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE ||
-                                user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ||
-                                user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ?
-                                <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} /> : null}
                        
                         {/*phase uplad EDMS*/}
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
