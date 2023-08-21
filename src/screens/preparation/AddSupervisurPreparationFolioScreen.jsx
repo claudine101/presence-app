@@ -1,17 +1,14 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons,FontAwesome5, Fontisto,MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
-import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
-import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useDispatch, useSelector } from "react-redux";
 import { folioDetailsCartSelector } from "../../store/selectors/folioDetailsCartSelector";
-import { addFolioDetailAction, removeFolioDetailAction } from "../../store/actions/folioDetailsCartActions";
 import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
 import fetchApi from "../../helpers/fetchApi";
@@ -34,6 +31,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const [informations, setInformations] = useState(null);
         const [loading, setLoading] = useState(false)
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
         const { volume } = route.params
         const [data, handleChange, setValue] = useForm({
@@ -179,8 +177,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21}  color={COLORS.primary} /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21}  color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -206,7 +204,6 @@ export default function AddSupervisurPreparationFolioScreen() {
         const SupervisionPreparationList = () => {
                 // <AntDesign name="addusergroup" size={24} color="black" />
                 const [loadingSuper, allSuperviseur] = useFetch('/preparation/batiment/superviseurPreparation')
-               console.log(allSuperviseur)
                 return (
                         <>
                                 {loadingSuper ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -230,8 +227,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ?  <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -244,29 +241,26 @@ export default function AddSupervisurPreparationFolioScreen() {
                 )
         }
 
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                                // const photo = 
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         //Fonction pour upload un documents 
@@ -347,29 +341,32 @@ export default function AddSupervisurPreparationFolioScreen() {
                 <>
                         {loading && <Loading/>}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent superviseur</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent supeviseur aille</Text>
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                        <View>
+                                                <TouchableOpacity style={styles.selectContainer}>
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                </View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                        </Text>
                                                 </TouchableOpacity>
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
@@ -378,12 +375,12 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.volume.maille ? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volume? <View style={styles.selectContainer}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Dossier
@@ -422,11 +419,14 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
@@ -441,31 +441,23 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                                <Portal>
                                         <Modalize ref={preparationModalizeRef}  >
                                                 <SupervisionPreparationList />
                                         </Modalize>
-                                </Portal>
-                                <Portal>
                                         <Modalize ref={volumeModalizeRef}  >
                                                 <VolumeAgentSuperviseurList />
                                         </Modalize>
-                                </Portal>
-                                <Portal>
                                         <Modalize ref={multSelectModalizeRef}  >
                                                 <MultiFolioSelctList />
                                         </Modalize>
-                                </Portal>
                         </View>
                 </>
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -489,18 +481,18 @@ const styles = StyleSheet.create({
                 color: COLORS.primary
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -534,77 +526,19 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
+                marginHorizontal:10
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
-        },
-        buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center"
-        },
-        buttonTextPlus: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 25
-        },
-        headerRead: {
-                borderRadius: 8,
-                backgroundColor: "#ddd",
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 5,
-                paddingHorizontal: 30
-        },
-        cardFolder: {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: '#FFF',
-                maxHeight: 50,
-                borderRadius: 20,
-                padding: 3,
-                paddingVertical: 2,
-                elevation: 10,
-                shadowColor: '#c4c4c4',
-        },
-        cardDescription: {
-                marginLeft: 10,
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ddd"
-        },
-        reomoveBtn: {
-                width: 30,
-                height: 30,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
         },
         itemTitleDesc: {
                 color: "#777",
@@ -616,24 +550,15 @@ const styles = StyleSheet.create({
                 justifyContent: "space-between",
                 flex: 1
         },
-        butConfirmer: {
-                // marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
-                marginHorizontal: 10
-                // marginHorizontal: 50,
-                // marginVertical: 15
-        },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
-        },
+                marginBottom: 5,
+                marginHorizontal:10
+            },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -644,12 +569,36 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.handleColor,
                 borderRadius: 10,
                 padding: 5
-            },
-            image: {
+        },
+        image: {
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
                 resizeMode: "center"
-            },
-
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
 })

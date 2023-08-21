@@ -21,8 +21,8 @@ import VolumeRetourAgentSuperviseur from '../screens/preparation/VolumeRetourAge
 import AddChefPlateauVolumeScreen from '../screens/preparation/AddChefPlateauVolumeScreen';
 import DescriptionEtapeScreen from '../screens/preparation/DescriptionEtapeScreen';
 import DetailsAgentPreparationScreen from '../screens/preparation/DetailsAgentPreparationScreen';
-
-
+import AllVolumeChefPlateauScreen from '../screens/preparation/AllVolumeChefPlateauScreen';
+import ChefPlatauRetourScreen from '../screens/preparation/ChefPlatauRetourScreen';
 
 import NewAgentSupAIlleScanScreen from '../screens/scanning/chefEquipe/NewAgentSupAIlleScanScreen';
 import NewChefPlateauScreen from '../screens/scanning/agentAileSuperviseur/NewChefPlateauScreen';
@@ -67,9 +67,10 @@ export default function RootNavigator() {
             <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}>
                 <Stack.Screen name='Root' component={DrawerNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name='NewVolumeScreen' component={NewVolumeScreen} options={{ headerShown: false }} />
-
+                <Stack.Screen name='AllVolumeChefPlateauScreen' component={AllVolumeChefPlateauScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }} />
-
+                <Stack.Screen name='ChefPlatauRetourScreen' component={ChefPlatauRetourScreen} options={{ headerShown: false }} />
+               
                 {/* indexation */}
                 <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }} />

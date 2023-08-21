@@ -109,25 +109,29 @@ export default function AllVolumeScreen() {
                                                 onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                             >
                                                 {
-                                                    <View style={styles.cardDetails}>
-                                                        <View style={styles.carddetailItem}>
-                                                            <View style={styles.cardImages}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                            </View>
-                                                            <View style={styles.cardDescription}>
-                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                    <View>
-                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                    </View>
-                                                                    <View>
-
-
-                                                                    </View>
-                                                                    <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                                    <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                        <View style={styles.folio}>
+                                                            <View style={styles.folioLeftSide}>
+                                                                <View style={styles.folioImageContainer}>
+                                                                    <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                                                 </View>
-                                                                {volume.folios.length >= 2 ? <Text style={styles.itemVolume}>{volume.folios.length} dossiers</Text> :
-                                                                    <Text style={styles.itemVolume}>{volume.folios.length} dossier</Text>}
-
+                                                                <View style={styles.folioDesc}>
+                                                                    <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <AntDesign name="calendar" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                            </Text>
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {volume.folios.length ? volume.folios.length : "0"} dossier{volume.folios.length > 1 && 's'}
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+                                                                </View>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -203,11 +207,11 @@ export default function AllVolumeScreen() {
                                 }}
                                 keyExtractor={(volume, index) => index.toString()}
                             />}
-                   { user.ID_PROFIL==PROFILS.CHEF_DIVISION_ARCHIGES ? <View style={[styles.amountChanger]}>
+                    {user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <View style={[styles.amountChanger]}>
                         <TouchableOpacity onPress={onPressAdd} >
                             <Text style={styles.amountChangerText}>+</Text>
                         </TouchableOpacity>
-                    </View>:null}
+                    </View> : null}
 
                 </View>}
 

@@ -18,7 +18,7 @@ import ImageView from "react-native-image-viewing";
 import moment from "moment";
 import Folio from "../../../components/folio/Folio";
 
-export default function ChefEquipeFlashDetailScreen() {
+export default function VolumeRetourChefPlateauScreen() {
           const route = useRoute()
           const { flash } = route.params
           const [flashDetail, setFlashDetail] = useState(null)

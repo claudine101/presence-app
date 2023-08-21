@@ -63,7 +63,7 @@ export default function NewVolumeScreen() {
     }
 
     //Fonction pour ajouter un volume da le redux
-    const handleFolioPressType = (vol) => {
+    const handleAdd = (vol) => {
         setVolumes(vols => [...vols, data.numero])
         handleChange("numero", "")
     }
@@ -184,8 +184,8 @@ export default function NewVolumeScreen() {
                         baseColor={COLORS.smallBrown}
                         tintColor={COLORS.primary}
                         containerStyle={{ borderRadius: 20 }}
-                        lineWidth={1}
-                        activeLineWidth={1}
+                        lineWidth={0.25}
+                        activeLineWidth={0.25}
                         errorColor={COLORS.error}
                         value={data.numero}
                         onChangeText={(newValue) => handleChange('numero', newValue)}
@@ -233,7 +233,7 @@ export default function NewVolumeScreen() {
                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                     <TouchableOpacity
                         disabled={!isValidFin()}
-                        onPress={handleFolioPressType}
+                        onPress={handleAdd}
                     >
                         <View style={[styles.amountChanger, !isValidFin() && { opacity: 0.5 }]}>
                             <Text style={styles.amountChangerText}>+</Text>

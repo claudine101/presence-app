@@ -145,7 +145,7 @@ export default function VolumeRetourChefPlateau() {
                                                         <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                        {/* <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text> */}
                                 </View>
                                 <FlatList
                                         style={styles.contain}

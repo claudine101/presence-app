@@ -1,38 +1,36 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableNativeFeedbackBase, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
-import { AntDesign, Ionicons, MaterialCommunityIcons, Entypo, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
-import fetchApi from "../../../helpers/fetchApi";
-import { COLORS } from "../../../styles/COLORS";
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
+import { useCallback, useRef, useState } from "react";
+import fetchApi from "../../helpers/fetchApi";
+import { COLORS } from "../../styles/COLORS";
+import { useForm } from "../../hooks/useForm";
+import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
-import { Modalize } from "react-native-modalize";
-import useFetch from "../../../hooks/useFetch";
-import PROFILS from "../../../constants/PROFILS";
-import Loading from "../../../components/app/Loading";
+import useFetch from "../../hooks/useFetch";
+import Loading from "../../components/app/Loading";
 import ImageView from "react-native-image-viewing";
 import moment from "moment";
-import Folio from "../../../components/folio/Folio";
+import Folio from "../../components/folio/Folio";
 
-export default function ChefEquipeFlashDetailScreen() {
+export default function ChefPlatauRetourScreen() {
           const route = useRoute()
-          const { flash } = route.params
+          const { volume } = route.params
+        //   return  console.log(volume.volume.ID_VOLUME)
           const [flashDetail, setFlashDetail] = useState(null)
           const [loading, setLoading] = useState(true)
           const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
           const [pvPhoto, setPvPhoto] = useState(null)
           const navigation = useNavigation()
           const agentsModalRef = useRef()
-          const [loadingAgents, agents] = useFetch(`/indexation/users/${PROFILS.CHEF_PLATEAU_INDEXATION}`)
           const [isSubmitting, setIsSubmitting] = useState(false)
           const [galexyIndex, setGalexyIndex] = useState(null)
 
-          const [loadingSupAile, supAile] = useFetch(`/indexation/flashs/sup_aile_indexation/${flash.ID_FLASH}`)
-
+          const [loadingChefPlateau, supAile] = useFetch(`/preparation/volume/chefsPlateaux/${volume.volume.ID_VOLUME}`)
+        //   return  console.log(supAile)
           const [data, handleChange] = useForm({
                     agent: null,
                     pv: null
@@ -57,7 +55,7 @@ export default function ChefEquipeFlashDetailScreen() {
           useFocusEffect(useCallback(() => {
                     (async () => {
                               try {
-                                        const res = await fetchApi(`/indexation/flashs/details/${flash.ID_FLASH}`)
+                                        const res = await fetchApi(`/preparation/volume/detailsVolume/${volume.volume.ID_VOLUME}`)
                                         setFlashDetail(res.result)
                               } catch (error) {
                                         console.log(error)
@@ -79,7 +77,7 @@ export default function ChefEquipeFlashDetailScreen() {
                               if (!isRetourValid()) return false
                               setIsSubmitting(true)
                               const form = new FormData()
-                              form.append("ID_FLASH_INDEXE", flashDetail.foliosIndexes[0].ID_FLASH_INDEXE)
+                              form.append("ID_FLASH_INDEXE", flashDetail?.foliosIndexes[0].ID_FLASH_INDEXE)
                               form.append("ID_SUP_AILE_INDEXATION", supAile.result.USER_TRAITEMENT)
                               if(data.pv) {
                                         const photo = data.pv
@@ -151,7 +149,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                       <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                             </View>
                                                   </TouchableNativeFeedback>
-                                                  <Text style={styles.title}>{flashDetail ? flashDetail.NOM_FLASH : null}</Text>
+                                                  <Text style={styles.title}>{volume? volume.volume.NUMERO_VOLUME : null}</Text>
                                         </View>
                                         {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                   <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -168,14 +166,14 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                                                     Superviseur aile indexation
                                                                                           </Text>
                                                                                 </View>
-                                                                                {loadingSupAile ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                {loadingChefPlateau ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                           <ActivityIndicator animating size={'small'} color={'#777'} />
                                                                                           <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
                                                                                                     Chargement
                                                                                           </Text>
                                                                                 </View> : null}
                                                                                 <Text style={styles.selectedValue}>
-                                                                                          {supAile?.result?.traitement.NOM} {supAile?.result?.traitement.PRENOM}
+                                                                                          {supAile?.result?.traitant?.NOM} {supAile?.result?.traitant?.PRENOM}
                                                                                 </Text>
                                                                                 {supAile.result ?
                                                                                           <>
@@ -202,7 +200,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                                 {pvPhoto && <Image source={{ uri: pvPhoto.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                       </View>
                                                             </TouchableOpacity>}
-                                                            {flashDetail.foliosIndexes.length > 0 ? <View style={styles.selectContainer}>
+                                                            {flashDetail?.foliosIndexes.length > 0 ? <View style={styles.selectContainer}>
                                                                       <View style={{ width: '100%' }}>
                                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
                                                                                           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -216,14 +214,14 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                                 </View>
                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                                           <Text style={styles.selectedValue}>
-                                                                                                    {flashDetail.folios.length} dossier{flashDetail.folios.length > 1 && 's'}
+                                                                                                    {flashDetail?.folios.length} dossier{flashDetail?.folios.length > 1 && 's'}
                                                                                           </Text>
                                                                                           <Text style={styles.selectedValue}>
-                                                                                                    {flashDetail.foliosIndexes.length} indexé{flashDetail.foliosIndexes.length > 1 && 's'}
+                                                                                                    {flashDetail?.foliosIndexes.length} indexé{flashDetail?.foliosIndexes.length > 1 && 's'}
                                                                                           </Text>
                                                                                 </View>
                                                                                 <View style={styles.folioList}>
-                                                                                          {flashDetail.foliosIndexes.map((folio, index) => {
+                                                                                          {flashDetail?.foliosIndexes.map((folio, index) => {
                                                                                                     return (
                                                                                                               <Folio style={{ backgroundColor: '#f1f1f1' }} folio={folio} key={index} onPress={null} isSelected={() => true} />
                                                                                                     )
@@ -231,7 +229,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                                 </View>
                                                                       </View>
                                                             </View> : null}
-                                                            {flashDetail.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline'}]}>
+                                                            {flashDetail?.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline'}]}>
                                                                       <View style={styles.labelContainer}>
                                                                                 <View style={styles.icon}>
                                                                                           <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
@@ -241,10 +239,10 @@ export default function ChefEquipeFlashDetailScreen() {
                                                                                 </Text>
                                                                       </View>
                                                                       <Text style={styles.selectedValue}>
-                                                                                {flashDetail.foliosIndexes[0].flash.NOM_FLASH}
+                                                                                {flashDetail?.foliosIndexes[0].flash?.NOM_FLASH}
                                                                       </Text> 
                                                             </View> : null}
-                                                            {(supAile?.result && flashDetail.foliosIndexes.length > 0) ? <TouchableOpacity onPress={onTakePhoto} disabled={supAile?.result?.retour ? true : false}>
+                                                            {(supAile?.result && flashDetail?.foliosIndexes.length > 0) ? <TouchableOpacity onPress={onTakePhoto} disabled={supAile?.result?.retour ? true : false}>
                                                                       <View style={[styles.addImageItem]}>
                                                                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                                           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -268,7 +266,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                             </TouchableOpacity> : null}
                                                   </View>
                                         </ScrollView>}
-                                        {(flashDetail && supAile?.result && !supAile?.result.retour && flashDetail.foliosIndexes.length > 0) ? <View style={styles.actions}>
+                                        {(flashDetail && supAile?.result && !supAile?.result.retour && flashDetail?.foliosIndexes.length > 0) ? <View style={styles.actions}>
                                                   <View style={styles.actions}>
                                                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                                                                       <Text style={styles.actionText}>Envoyer</Text>
@@ -276,47 +274,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                   </View>
                                         </View> : null}
                               </View>
-                              <Modalize
-                                        ref={agentsModalRef}
-                                        handlePosition='inside'
-                                        modalStyle={{
-                                                  borderTopRightRadius: 10,
-                                                  borderTopLeftRadius: 10,
-                                                  paddingVertical: 20
-                                        }}
-                                        handleStyle={{ marginTop: 10 }}
-                                        scrollViewProps={{
-                                                  keyboardShouldPersistTaps: "handled"
-                                        }}
-                              >
-                                        {loadingAgents ? null :
-                                                  <View style={styles.modalContainer}>
-                                                            <View style={styles.modalHeader}>
-                                                                      <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                                                            </View>
-                                                            <View style={styles.modalList}>
-                                                                      {agents.result.map((agent, index) => {
-                                                                                return (
-                                                                                          <TouchableNativeFeedback key={index} onPress={() => handleAgentPress(agent)}>
-                                                                                                    <View style={styles.listItem}>
-                                                                                                              <View style={styles.listItemDesc}>
-                                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                                  <Image source={require('../../../../assets/images/usb-flash-drive.png')} style={styles.listItemImage} />
-                                                                                                                        </View>
-                                                                                                                        <View style={styles.listNames}>
-                                                                                                                                  <Text style={styles.listItemTitle}>{agent.NOM} {agent.PRENOM}</Text>
-                                                                                                                                  <Text style={styles.listItemSubTitle}>TOSHIBA - 16GB</Text>
-                                                                                                                        </View>
-                                                                                                              </View>
-                                                                                                              {(data.agent && data.agent.USERS_ID == agent.USERS_ID) ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
-                                                                                                    </View>
-                                                                                          </TouchableNativeFeedback>
-                                                                                )
-                                                                      })}
-                                                            </View>
-                                                  </View>}
-                              </Modalize>
+                              
                     </>
           )
 }

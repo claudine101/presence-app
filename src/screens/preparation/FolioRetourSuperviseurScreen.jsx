@@ -5,7 +5,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
@@ -14,7 +14,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 import { OutlinedTextField } from 'rn-material-ui-textfield'
-
+import useFetch from "../../hooks/useFetch";
+import ImageView from "react-native-image-viewing";
 
 
 /**
@@ -29,17 +30,59 @@ export default function FolioRetourSuperviseurScreen() {
         const route = useRoute()
         const { folio } = route.params
 
-        // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
         const [nbre, setNbre] = useState(null)
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
+        const [loadingPvs, setLoadingPvs] = useState(false)
+        const [pvs, setPvs] = useState(false)
+
+
+
+        const [galexyIndex, setGalexyIndex] = useState(null)
+        // const [loadingPvs, pvs] = useFetch(`/preparation/folio/getPv/${folio.users.USERS_ID}`)
         const [data, handleChange, setValue] = useForm({
                 motif: null,
         })
 
+        const folio_ids = folio?.folios?.map(folio => folio.folio.ID_FOLIO)
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingPvs(true)
+                                const form = new FormData()
+                                form.append('folioIds', JSON.stringify(folio_ids))
+                                form.append('AGENT_SUPERVISEUR', folio.users.USERS_ID)
+                                const res = await fetchApi(`/preparation/folio/getPv`, {
+                                        method: "POST",
+                                        body: form
+                                })
+                                setPvs(res)
+
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingPvs(false)
+                        }
+                })()
+        }, [folio.folios]))
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${ folio.users.USERS_ID}`)
+                                setCheck(res.result)
+
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
+                        }
+                })()
+        }, [folio.users]))
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
@@ -53,14 +96,12 @@ export default function FolioRetourSuperviseurScreen() {
                 var existMotif = false
                 var isValidMotif = false
 
-                existMotif =!(folio.folios.length==nbre) ? true : false
-                console.log("existMotif "+existMotif)
-                existMotif && (isValidMotif = data.motif != null  ? true : false)
-                console.log("isValidMotif "+ data.motif)
+                existMotif = !(folio?.folios?.length == nbre) ? true : false
+                existMotif && (isValidMotif = data.motif != null ? true : false)
 
                 var isValid = false
-                isValid = document != null  ? true : false
-                return isValid 
+                isValid = document != null ? true : false
+                return isValid
         }
 
         useFocusEffect(useCallback(() => {
@@ -68,7 +109,7 @@ export default function FolioRetourSuperviseurScreen() {
                         try {
                                 setLoading(true)
                                 const res = await fetchApi(`/preparation/folio/nbrefolios/${folio.users.USERS_ID}`)
-                                setNbre(res.result[0].folios.length)
+                                setNbre(res.result[0]?.folios?.length)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -76,26 +117,6 @@ export default function FolioRetourSuperviseurScreen() {
                         }
                 })()
         }, [folio.users]))
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -116,7 +137,7 @@ export default function FolioRetourSuperviseurScreen() {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
-                        form.append('folio', JSON.stringify(folio.folios))
+                        form.append('folio', JSON.stringify(folio?.folios))
                         form.append('motif', data.motif)
                         form.append('AGENT_SUPERVISEUR', folio.users.USERS_ID)
                         if (document) {
@@ -163,87 +184,119 @@ export default function FolioRetourSuperviseurScreen() {
                 })()
         }, [folio.users]))
         return (
-                <>
+                <>{(galexyIndex != null && pvs?.result && pvs?.result) &&
+                        <ImageView
+                                images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
+                                imageIndex={galexyIndex}
+                                visible={(galexyIndex != null) ? true : false}
+                                onRequestClose={() => setGalexyIndex(null)}
+                                swipeToCloseEnabled
+                                keyExtractor={(_, index) => index.toString()}
+                        />
+                }
+
                         {(loadingSubmit && loadingCheck) && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{folio.users.NOM} {folio.users.PRENOM}</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
+                                        </View>
                                 </View>
-                                <FlatList
-                                        style={styles.contain}
-                                        data={folio.folios}
-                                        renderItem={({ item: folio, index }) => {
-                                                return (
-                                                        <>
-                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                </View> :
-                                                                        <View>
-                                                                                <View style={styles.cardDetails}>
-                                                                                        <View style={styles.carddetailItem}>
-                                                                                                <View style={styles.cardImages}>
-                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.cardDescription}>
-                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                <View style={styles.cardNames}>
-                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                </View>
-                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
+                                <View style={styles.selectContainer}>
+                                        <FlatList
+                                                style={styles.contain}
+                                                data={folio?.folios}
+                                                renderItem={({ item: folio, index }) => {
+                                                        return (
+                                                                <>
+                                                                        {
+                                                                                <View style={{ marginTop: 10, borderRadius: 80, }}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </View>
                                                                                 </View>
-                                                                        </View>
-                                                                }
-                                                        </>
-                                                )
-                                        }}
-                                        keyExtractor={(folio, index) => index.toString()}
-                                />
+
+                                                                        }
+                                                                </>
+                                                        )
+                                                }}
+                                                keyExtractor={(folio, index) => index.toString()}
+                                        />
+                                </View>
+                                <View style={styles.selectContainer}>
+                                        <View style={{ width: '100%' }}>
+                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                Chargement
+                                                        </Text>
+                                                </View> : null}
+                                                <Text style={styles.selectedValue}>
+                                                        {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM}
+                                                </Text>
+                                                {pvs.result ?
+                                                        <>
+                                                                <TouchableOpacity onPress={() => {
+                                                                        setGalexyIndex(0)
+                                                                }}>
+                                                                        <Image source={{ uri: pvs.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                </TouchableOpacity>
+                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                        </> : null}
+                                        </View>
+                                </View>
                                 {
                                         // ID_ETAPE_FOLIO == 2 ?
                                         <>
-                                        
+
                                                 {check.length > 0 ? <>
-                                                        {!(folio.folios.length==nbre)?<View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                                                        <OutlinedTextField
-                                                                label="Motif"
-                                                                fontSize={14}
-                                                                baseColor={COLORS.smallBrown}
-                                                                tintColor={COLORS.primary}
-                                                                containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
-                                                                errorColor={COLORS.error}
-                                                                value={data.motif}
-                                                                onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                                onBlur={() => checkFieldData('motif')}
-                                                                error={hasError('motif') ? getError('motif') : ''}
-                                                                autoCompleteType='off'
-                                                                // keyboardType='number-pad'
-                                                                blurOnSubmit={false}
-                                                                multiline={true}
-                                                        />
-                                                </View>:null}
-                                                <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                        {!(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                                <OutlinedTextField
+                                                                        label="Motif"
+                                                                        fontSize={14}
+                                                                        baseColor={COLORS.smallBrown}
+                                                                        tintColor={COLORS.primary}
+                                                                        containerStyle={{ borderRadius: 20 }}
+                                                                        lineWidth={1}
+                                                                        activeLineWidth={1}
+                                                                        errorColor={COLORS.error}
+                                                                        value={data.motif}
+                                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                                        onBlur={() => checkFieldData('motif')}
+                                                                        error={hasError('motif') ? getError('motif') : ''}
+                                                                        autoCompleteType='off'
+                                                                        // keyboardType='number-pad'
+                                                                        blurOnSubmit={false}
+                                                                        multiline={true}
+                                                                />
+                                                        </View> : null}
+                                                        <TouchableOpacity onPress={onTakePicha}>
+                                                                <View style={[styles.addImageItem]}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <Feather name="image" size={24} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du proces verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                 </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                        </View>
-                                                </TouchableOpacity>
+                                                        </TouchableOpacity>
                                                         <TouchableWithoutFeedback
                                                                 disabled={!isValidAdd()}
                                                                 onPress={submitData}
@@ -256,7 +309,7 @@ export default function FolioRetourSuperviseurScreen() {
                                         // : null
                                 }
 
-                        </View>
+                        </View >
                 </>
 
         )
@@ -265,7 +318,7 @@ export default function FolioRetourSuperviseurScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                backgroundColor: '#fff'
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -362,5 +415,80 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#f1f1f1",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                marginBottom: 10,
+                marginHorizontal: 10
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10,
+                borderRadius: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        flash: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 10
+        },
+        flashName: {
+                marginLeft: 5
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
         },
 })

@@ -172,7 +172,7 @@ export default function VolumeRetourAgentSuperviseur() {
                                                                         </View>
                                                                 }
 
-                                                        </>
+                                                        </> 
                                                 )
                                         }}
                                         keyExtractor={(folio, index) => index.toString()}
