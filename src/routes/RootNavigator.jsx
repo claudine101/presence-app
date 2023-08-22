@@ -37,6 +37,10 @@ import ConfirmerPvRetourAgentDistrScreen from '../screens/scanning/agentSupervis
 import ConfirmerPvRetourAgentSupArchives from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentSupArchives';
 import ConfirmerPvRetourAgentDesarchivages from '../screens/scanning/agentSuperviseur/retourAgSupAille/ConfirmerPvRetourAgentDesarchivages';
 import DetaillerVolumeScreen from '../screens/preparation/DetaillerVolumeScreen';
+import FolioPrepareDetailScreen from '../screens/preparation/FolioPrepareDetailScreen';
+import AgentSuperviseurValideDetailScreen from '../screens/preparation/AgentSuperviseurValideDetailScreen';
+import ChefPlatauValideDetailsScreen from '../screens/preparation/ChefPlatauValideDetailsScreen';
+
 
 {/* phase uploadEDRMS */ }
 import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
@@ -70,7 +74,11 @@ export default function RootNavigator() {
                 <Stack.Screen name='AllVolumeChefPlateauScreen' component={AllVolumeChefPlateauScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefPlatauRetourScreen' component={ChefPlatauRetourScreen} options={{ headerShown: false }} />
-               
+                <Stack.Screen name='FolioPrepareDetailScreen' component={FolioPrepareDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AgentSuperviseurValideDetailScreen' component={AgentSuperviseurValideDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefPlatauValideDetailsScreen' component={ChefPlatauValideDetailsScreen} options={{ headerShown: false }} />
+                
+                
                 {/* indexation */}
                 <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }} />

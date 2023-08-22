@@ -5,17 +5,15 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { Ionicons, AntDesign, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
-import * as DocumentPicker from 'expo-document-picker';
 import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 import { OutlinedTextField } from 'rn-material-ui-textfield'
-import useFetch from "../../hooks/useFetch";
 import ImageView from "react-native-image-viewing";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 /**
@@ -29,7 +27,6 @@ export default function FolioRetourSuperviseurScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio } = route.params
-
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
@@ -38,11 +35,8 @@ export default function FolioRetourSuperviseurScreen() {
         const [loadingCheck, setLoadingCheck] = useState(false)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
-
-
-
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
-        // const [loadingPvs, pvs] = useFetch(`/preparation/folio/getPv/${folio.users.USERS_ID}`)
         const [data, handleChange, setValue] = useForm({
                 motif: null,
         })
@@ -73,7 +67,7 @@ export default function FolioRetourSuperviseurScreen() {
                 (async () => {
                         try {
                                 setLoadingCheck(true)
-                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${ folio.users.USERS_ID}`)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
                                 setCheck(res.result)
 
                         } catch (error) {
@@ -120,18 +114,26 @@ export default function FolioRetourSuperviseurScreen() {
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
+
 
         const submitData = async () => {
                 try {
@@ -197,7 +199,7 @@ export default function FolioRetourSuperviseurScreen() {
 
                         {(loadingSubmit && loadingCheck) && <Loading />}
                         <View style={styles.container}>
-                                
+
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
@@ -210,104 +212,103 @@ export default function FolioRetourSuperviseurScreen() {
                                                 <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                         </View>
                                 </View>
-                                <View style={styles.selectContainer}>
-                                        <FlatList
-                                                style={styles.contain}
-                                                data={folio?.folios}
-                                                renderItem={({ item: folio, index }) => {
-                                                        return (
-                                                                <>
-                                                                        {
-                                                                                <View style={{ marginTop: 10, borderRadius: 80, }}>
-                                                                                        <View style={[styles.folio]}>
-                                                                                                <View style={styles.folioLeftSide}>
-                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                        </View>
+                                <ScrollView>
+                                        <View style={styles.selectContainer}>
+                                                <View style={styles.contain}>
+                                                        {folio?.folios.map((folio, index) => {
+                                                                return (
+                                                                        <View style={{ marginTop: 10, borderRadius: 80, }}>
+                                                                                <View style={[styles.folio]}>
+                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                        <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                </View>
+                                                                                                <View style={styles.folioDesc}>
+                                                                                                        <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
                                                                                                 </View>
                                                                                         </View>
+                                                                                        {folio.folio.IS_PREPARE == 0 ?
+                                                                                                <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                                                                                : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                        }
+
                                                                                 </View>
-
-                                                                        }
-                                                                </>
-                                                        )
-                                                }}
-                                                keyExtractor={(folio, index) => index.toString()}
-                                        />
-                                </View>
-                                <View style={styles.selectContainer}>
-                                        <View style={{ width: '100%' }}>
-                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                Chargement
-                                                        </Text>
-                                                </View> : null}
-                                                <Text style={styles.selectedValue}>
-                                                        {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM}
-                                                </Text>
-                                                {pvs.result ?
-                                                        <>
-                                                                <TouchableOpacity onPress={() => {
-                                                                        setGalexyIndex(0)
-                                                                }}>
-                                                                        <Image source={{ uri: pvs.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                </TouchableOpacity>
-                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                        </> : null}
-                                        </View>
-                                </View>
-                                {
-                                        // ID_ETAPE_FOLIO == 2 ?
-                                        <>
-
-                                                {check.length > 0 ? <>
-                                                        {!(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                                                                <OutlinedTextField
-                                                                        label="Motif"
-                                                                        fontSize={14}
-                                                                        baseColor={COLORS.smallBrown}
-                                                                        tintColor={COLORS.primary}
-                                                                        containerStyle={{ borderRadius: 20 }}
-                                                                        lineWidth={1}
-                                                                        activeLineWidth={1}
-                                                                        errorColor={COLORS.error}
-                                                                        value={data.motif}
-                                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                                        onBlur={() => checkFieldData('motif')}
-                                                                        error={hasError('motif') ? getError('motif') : ''}
-                                                                        autoCompleteType='off'
-                                                                        // keyboardType='number-pad'
-                                                                        blurOnSubmit={false}
-                                                                        multiline={true}
-                                                                />
-                                                        </View> : null}
-                                                        <TouchableOpacity onPress={onTakePicha}>
-                                                                <View style={[styles.addImageItem]}>
-                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                <Feather name="image" size={24} color="#777" />
-                                                                                <Text style={styles.addImageLabel}>
-                                                                                        Photo du proces verbal
-                                                                                </Text>
                                                                         </View>
-                                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                        <TouchableWithoutFeedback
-                                                                disabled={!isValidAdd()}
-                                                                onPress={submitData}
-                                                        >
-                                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                                </View>
-                                                        </TouchableWithoutFeedback></> : null}
-                                        </>
-                                        // : null
-                                }
+                                                                )
+                                                        })
+                                                        }
+                                                </View>
+                                        </View>
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null}
+                                                        <Text style={styles.selectedValue}>
+                                                                {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM}
+                                                        </Text>
+                                                        {pvs.result ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}>
+                                                                                <Image source={{ uri: pvs.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                        </TouchableOpacity>
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
+                                                </View>
+                                        </View>
+                                        {check.length > 0 && !(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                <OutlinedTextField
+                                                        label="Motif"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.motif}
+                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                        onBlur={() => checkFieldData('motif')}
+                                                        error={hasError('motif') ? getError('motif') : ''}
+                                                        autoCompleteType='off'
+                                                        // keyboardType='number-pad'
+                                                        blurOnSubmit={false}
+                                                        multiline={true}
+                                                />
+                                        </View> : null}
+                                        {check.length > 0 ?
+                                               <TouchableOpacity onPress={onTakePicha}>
+                                               <View style={[styles.addImageItem]}>
+                                                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                               <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                       <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                       <Text style={styles.addImageLabel}>
+                                                                               Photo du procès verbal
+                                                                       </Text>
+                                                               </View>
+                                                               {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                       </View>
+                                                       {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                               </View>
+                                       </TouchableOpacity> : null}
+                                </ScrollView>
+                                {check.length > 0 ?
+                                        <TouchableWithoutFeedback
+                                                disabled={!isValidAdd()}
+                                                onPress={submitData}
+                                        >
+                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback> : null}
+
+
 
                         </View >
                 </>
@@ -433,7 +434,10 @@ const styles = StyleSheet.create({
                 justifyContent: 'space-between',
                 backgroundColor: '#f1f1f1',
                 padding: 10,
-                borderRadius: 10
+                borderRadius: 10,
+        },
+        contain: {
+                flex: 1
         },
         folioLeftSide: {
                 flexDirection: 'row',

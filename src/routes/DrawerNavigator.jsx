@@ -6,9 +6,15 @@ import AllVolumeScreen from "../screens/preparation/AllVolumeScreen";
 import AgentPreparationFolioScreen from "../screens/preparation/AgentPreparationFolioScreen";
 import FolioRetourScreen from "../screens/preparation/FolioRetourScreen";
 import AgentSuperviseurScreen from "../screens/preparation/AgentSuperviseurScreen";
+import AgentSuperviseurValideScreen from "../screens/preparation/AgentSuperviseurValideScreen";
 import ChefPlateauScreen from "../screens/preparation/ChefPlateauScreen";
 import AgentSuperviseurAileScreen from "../screens/preparation/AgentSuperviseurAileScreen";
 import AllVolumeDetaillerScreen from "../screens/preparation/AllVolumeDetaillerScreen";
+import FolioRetouPrepareScreen from "../screens/preparation/FolioRetouPrepareScreen";
+import AllVolumeChefPlateauValidesScreen from "../screens/preparation/AllVolumeChefPlateauValidesScreen";
+
+
+
 import { userSelector } from "../store/selectors/userSelector";
 import PROFILS from "../constants/PROFILS";
 import IndexationChefEquipeFolioScreen from "../screens/indexation/chefEquipe/IndexationChefEquipeFolioScreen";
@@ -20,7 +26,7 @@ import SupFlashScreen from "../screens/indexation/supAile/SupFlashScreen";
 import SupFlashValidesScreen from "../screens/indexation/supAile/SupFlashValidesScreen";
 import ChefEquipeFlashRetourScreen from "../screens/indexation/chefEquipe/ChefEquipeFlashRetourScreen";
 import ChefEquipeFlashValidesScreen from "../screens/indexation/chefEquipe/ChefEquipeFlashValidesScreen";
-import AllVolumesRecusScreen from "../screens/scanning/chefEquipe/AllVolumesRecusScreen";
+
 import AllFolioRecusScanScreen from "../screens/scanning/agentSuperviseur/AllFolioRecusScanScreen";
 import AllFolioEquipeRetourScreen from "../screens/scanning/agentSuperviseur/retour/AllFolioEquipeRetourScreen";
 import AllFoliosSuperviseurPvScreen from "../screens/scanning/agentSuperviseur/retour/AllFoliosSuperviseurPvScreen";
@@ -73,12 +79,15 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AgentSuperviseurScreen" component={AgentSuperviseurScreen} />
+                                        <Drawer.Screen name="AgentSuperviseurValideScreen" component={AgentSuperviseurValideScreen} />
+
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="ChefPlateauScreen" component={ChefPlateauScreen} />
+                                        <Drawer.Screen name="AllVolumeChefPlateauValidesScreen" component={AllVolumeChefPlateauValidesScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
@@ -86,6 +95,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AgentPreparationFolioScreen" component={AgentPreparationFolioScreen} />
                                         <Drawer.Screen name="FolioRetourScreen" component={FolioRetourScreen} />
+                                        <Drawer.Screen name="FolioRetouPrepareScreen" component={FolioRetouPrepareScreen} />
                                 </>
                                 : null}
 

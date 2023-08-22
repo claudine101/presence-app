@@ -152,24 +152,34 @@ export default function VolumeRetourAgentSuperviseur() {
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                 </View> :
-                                                                        <View>
-                                                                                <View style={styles.cardDetails}>
-                                                                                        <View style={styles.carddetailItem}>
-                                                                                                <View style={styles.cardImages}>
-                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.cardDescription}>
-                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                <View style={styles.cardNames}>
-                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                        <Text>{volume.volume.CODE_VOLUME} </Text>
-                                                                                                                </View>
-                                                                                                                <Text style={{ color: "#777" }}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                        </View>
+                                                                        
+                                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                        <View style={styles.folio}>
+                                                                            <View style={styles.folioLeftSide}>
+                                                                                <View style={styles.folioImageContainer}>
+                                                                                    <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                                                                 </View>
+                                                                                <View style={styles.folioDesc}>
+                                                                                    <Text style={styles.folioName}>{volume.volume.CODE_VOLUME}</Text>
+                                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                            <AntDesign name="calendar" size={20} color="#777" />
+                                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                            </Text>
+                                                                                        </View>
+                                                                                        
+                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                            <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                                            </Text>
+                                                                                        </View>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </View>
                                                                         </View>
+                                                                    </View>
                                                                 }
 
                                                         </> 
@@ -209,13 +219,14 @@ export default function VolumeRetourAgentSuperviseur() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                backgroundColor: '#fff'
         },
         header: {
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingVertical: 10
         },
+        
         headerBtn: {
                 padding: 10
         },
@@ -303,4 +314,39 @@ const styles = StyleSheet.create({
                 marginLeft: 5,
                 opacity: 0.8
         },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10,
+            },
+            folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+            },
+            folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+            },
+            folioImage: {
+                width: '60%',
+                height: '60%'
+            },
+            folioDesc: {
+                marginLeft: 10,
+                flex: 1
+            },
+            folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+            },
+            folioSubname: {
+                color: '#777',
+                fontSize: 12
+            }
 })

@@ -19,29 +19,21 @@ import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPrepar
  */
 
 
-export default function AgentPreparationFolioScreen() {
+export default function FolioRetouPrepareScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
-
-        const Action = ({ title, image }) => {
-                return (
-                        <View style={styles.action}>
-                                <Text style={styles.actionLabel}>{title}</Text>
-                                <View style={styles.actionIcon}>
-                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                                </View>
-                        </View>
-                )
-        }
+        const handleAgentsPress = (agent,folio) => {
+             navigation.navigate("FolioPrepareDetailScreen", { agent,folio })
+  }
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/preparation/folio/agents')
+                                const res = await fetchApi('/preparation/folio/allFOlios')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -51,24 +43,6 @@ export default function AgentPreparationFolioScreen() {
                 })()
         }, []))
 
-        const actions = [
-        ];
-        const actionsAgentSuperviseurPhasePreparation = [
-                {
-                        text: "Agent superviseur phase preparation",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeScreen",
-                        position: 8,
-                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
-                },
-                {
-                        text: "Agent traitement",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeSupMailleScreen",
-                        position: 9,
-                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
-                },
-        ];
 
         return (
                 <>
@@ -97,7 +71,7 @@ export default function AgentPreparationFolioScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("DetailsFolioScreen", { folio:folio,users:folio.users})}
+                                                                                                onPress={() =>handleAgentsPress(folio.users,folio.folios)}
                                                                                         >
                                                                                               <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>

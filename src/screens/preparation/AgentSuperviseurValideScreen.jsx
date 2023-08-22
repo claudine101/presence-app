@@ -12,17 +12,18 @@ import { FloatingAction } from "react-native-floating-action";
 import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher agents de preparation et leurs folio
+ * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 17/7/2023
  * @returns 
  */
 
 
-export default function AgentPreparationFolioScreen() {
+export default function AgentSuperviseurValideScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
+        const [header, setHeader] = useState("Agents superviseurs")
         const user = useSelector(userSelector)
 
         const Action = ({ title, image }) => {
@@ -41,7 +42,7 @@ export default function AgentPreparationFolioScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/preparation/folio/agents')
+                                const res = await fetchApi('/preparation/folio/superviseurValides')
                                 setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
@@ -50,29 +51,13 @@ export default function AgentPreparationFolioScreen() {
                         }
                 })()
         }, []))
-
-        const actions = [
-        ];
-        const actionsAgentSuperviseurPhasePreparation = [
-                {
-                        text: "Agent superviseur phase preparation",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeScreen",
-                        position: 8,
-                        render: () => <Action title={"Nommer un agent preparation"} image={require("../../../assets/images/dossier.png")} key={"key8"} />
-                },
-                {
-                        text: "Agent traitement",
-                        icon: require("../../../assets/images/dossier.png"),
-                        name: "DescriptionEtapeSupMailleScreen",
-                        position: 9,
-                        render: () => <Action title={"Ajout de detaits"} image={require("../../../assets/images/dossier.png")} key={"key9"} />
-                },
-        ];
+        const handleAgentsPress = (agent,folio) => {
+            navigation.navigate("AgentSuperviseurValideDetailScreen", { agent,folio })
+ }
 
         return (
                 <>
-                        <AppHeaderPhPreparationRetour />
+                        <AppHeaderPhPreparationRetour header={header} />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -80,10 +65,10 @@ export default function AgentPreparationFolioScreen() {
                                         allDetails.length <= 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun Folio trouvé
+                                                        Aucun Agent  superviseur trouvé
                                                 </Text>
                                                 <Text style={styles.emptyDesc}>
-                                                        Aucun folio deja envoyes chez un agent de preparation
+                                                        Aucun folio deja envoyes chez un agent superviseur
                                                 </Text>
                                         </View> :
 
@@ -95,11 +80,12 @@ export default function AgentPreparationFolioScreen() {
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :folio.users?
+                                                                                </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("DetailsFolioScreen", { folio:folio,users:folio.users})}
-                                                                                        >
-                                                                                              <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                        onPress={() =>handleAgentsPress(folio.users,folio.folios)}
+                                                                                >
+     
+                                                                                                <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
@@ -126,7 +112,7 @@ export default function AgentPreparationFolioScreen() {
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>:null
+                                                                                        </TouchableNativeFeedback> : null
                                                                                 }
                                                                         </>
                                                                 )
@@ -134,10 +120,10 @@ export default function AgentPreparationFolioScreen() {
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
                         </View>
-                        
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
             flex: 1,
