@@ -22,7 +22,8 @@ export default function ConfimerPvScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { volume, id } = route.params
+        const { detail} = route.params
+        console.log(detail)
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
@@ -101,7 +102,7 @@ export default function ConfimerPvScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Confirmer le retour</Text>
+                                                <Text style={styles.title} numberOfLines={2}>{detail?.traitant?.NOM} {detail?.traitant?.PRENOM}</Text>
                                         </View>
                                 </View>
 
@@ -116,23 +117,9 @@ export default function ConfimerPvScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
+                                                        {/* {volume.volume.NUMERO_VOLUME} */}
+                                                        dd
                                                 </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Malle
-                                                        </Text>
-                                                </View>
-                                                <View>
-                                                        <Text style={styles.selectedValue}>
-                                                                {volume.volume.ID_MALLE}
-                                                        </Text>
-                                                </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>

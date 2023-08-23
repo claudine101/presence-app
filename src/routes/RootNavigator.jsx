@@ -49,6 +49,7 @@ import DetailsFolioUploadScreen from '../screens/uploadEDRMS/agentUpload/Details
 import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUploadScreen';
 import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
 import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
+import DetailsParAgentClickVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsParAgentClickVolumeScreen';
 
 
 
@@ -97,6 +98,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsParAgentClickVolumeScreen' component={DetailsParAgentClickVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }} />
