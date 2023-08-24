@@ -159,24 +159,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-
-
-                                                                                                {/* <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                                </View>
-                                                                                                                <View style={styles.cardDescription}>
-                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                <View>
-                                                                                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>Nombre de dossier {volume.volume.NOMBRE_DOSSIER}</Text>
-                                                                                                                                </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                        </View>
-                                                                                                </View> */}
                                                                                         </TouchableNativeFeedback>
 
                                                                                 }
