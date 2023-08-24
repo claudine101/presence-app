@@ -7,14 +7,14 @@ import { COLORS } from "../../../styles/COLORS"
 import { AntDesign, Ionicons } from '@expo/vector-icons'; 
 import moment from "moment"
 
-export default function ChefEquipeFlashRetourScreen() {
+export default function ChefEquipeFlashValidesScreen() {
           const [loading, setLoading] = useState(true)
           const [flashs, setFlashs] = useState([])
 
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/uploadEDMRS/folio/chef_equipe`)
+                              const res = await fetchApi(`/indexation/flashs/chef_equipe?precision=valides`)
                               setFlashs(res.result)
                     } catch (error) {
                               console.log(error)
@@ -28,15 +28,15 @@ export default function ChefEquipeFlashRetourScreen() {
                     })()
           }, []))
           const handleFlashPress = flash => {
-                    navigation.navigate("ChefEquipeFlashDetailsScreen", { flashs })
+                    navigation.navigate("ChefEquipeFlashDetailScreen", { flash })
           }
           return (
                     <>
-                              <AppHeader title="Dossiers en  attente" />
+                              <AppHeader title="Dossiers classés" />
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Les dossiers en ettente de vérification</Text> : null}
+                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Les dossiers indexés</Text> : null}
                                         {flashs.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
@@ -46,7 +46,7 @@ export default function ChefEquipeFlashRetourScreen() {
                                                   keyExtractor={(_, index) => index}
                                                   renderItem={({ item, index} ) => {
                                                             return (
-                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item)}>
+                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash)}>
                                                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                                                           <View style={styles.folio}>
                                                                                                     <View style={styles.folioLeftSide}>
@@ -54,7 +54,7 @@ export default function ChefEquipeFlashRetourScreen() {
                                                                                                                         <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{ item.flashs.NOM_FLASH }</Text>
+                                                                                                                        <Text style={styles.folioName}>{ item.folio.flash.NOM_FLASH }</Text>
                                                                                                                         {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -66,7 +66,7 @@ export default function ChefEquipeFlashRetourScreen() {
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                                                                                                      {item.folioCounts} dossier{item.folioCounts > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
           title: {
                     paddingHorizontal: 10,
                     marginTop: 10,
-                    fontSize: 16,
+                    fontSize: 17,
                     fontWeight: 'bold',
                     color: '#777'
           },

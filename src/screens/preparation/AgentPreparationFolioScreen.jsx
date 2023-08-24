@@ -78,7 +78,7 @@ export default function AgentPreparationFolioScreen() {
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allDetails.length <= 0 ? <View style={styles.emptyContaier}>
+                                        allDetails?.length <= 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun Folio trouvé
@@ -114,7 +114,7 @@ export default function AgentPreparationFolioScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

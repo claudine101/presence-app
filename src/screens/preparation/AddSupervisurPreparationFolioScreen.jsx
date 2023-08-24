@@ -85,6 +85,37 @@ export default function AddSupervisurPreparationFolioScreen() {
                 multSelectModalizeRef.current?.close();
         }
 
+        
+        const [allFolios, setAllFolios] = useState([]);
+        const [foliosLoading, setFoliosLoading] = useState(false);
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                        setMultiFolios(newfolio)
+                } else {
+                        setMultiFolios(u => [...u, fol])
+                }
+        }
+        //fonction pour recuperer le folio par rapport de volume
+        useEffect(() => {
+                (async () => {
+                        try {
+                                if (volume.volume) {
+                                        setFoliosLoading(true)
+                                        const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
+                                        setAllFolios(rep.result)
+                                        console.log(volume.volume.ID_VOLUME)
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setFoliosLoading(false)
+                        }
+                })()
+        }, [])
+
         //Composent pour afficher le modal de volume 
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
@@ -125,36 +156,6 @@ export default function AddSupervisurPreparationFolioScreen() {
         }
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
-
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-
-                }
-                //fonction pour recuperer le folio par rapport de volume
-                useEffect(() => {
-                        (async () => {
-                                try {
-                                        if (volume.volume) {
-                                                setFoliosLoading(true)
-                                                const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
-                                                setAllFolios(rep.result)
-                                        }
-                                }
-                                catch (error) {
-                                        console.log(error)
-                                } finally {
-                                        setFoliosLoading(false)
-                                }
-                        })()
-                }, [volumes])
                 return (
                         <>
                                 {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -350,7 +351,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent supeviseur aille</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent supeviseur</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
@@ -380,18 +381,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volume ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Dossier
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
+                                                
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -411,7 +401,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Selectionner les dossiers'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length:'Selectionner les dossiers'} séléctionné{ multiFolios.length>1 ? "s" : ''} 
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -458,6 +448,13 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#fff'
+        },
+        butConfirmer: {
+                borderRadius: 8,
+                paddingVertical: 14,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 5,
+                 marginVertical: 10
         },
         cardHeader: {
                 flexDirection: 'row',

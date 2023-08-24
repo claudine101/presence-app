@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather, FontAwesome5 ,MaterialIcons} from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
@@ -70,13 +70,13 @@ export default function AddFolioScreen() {
         const isValidFin = () => {
                 var isVal = false
                 var isValidFolio = false
-                isVal =folios.length == volume.volume.NOMBRE_DOSSIER ? true : false
+                isVal = folios.length == volume.volume.NOMBRE_DOSSIER ? true : false
                 isValidFolio = document != null ? true : false
-                return isVal   && isValidFolio
+                return isVal && isValidFolio
         }
         const isValidFinDistr = () => {
                 var isVal = false
-                isVal = document != null && malles?.ID_MAILLE  && distributeur?.USERS_ID? true : false
+                isVal = document != null && malles?.ID_MAILLE && distributeur?.USERS_ID ? true : false
                 return isVal
         }
 
@@ -114,7 +114,7 @@ export default function AddFolioScreen() {
                 if (data.folio <= 200) {
                         const folio = folios.find(f => f.NUMERO_FOLIO == data.folio)
                         if (!folio) {
-                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: natures.DESCRIPTION + data.folio, ID_NATURE:natures.ID_NATURE_FOLIO }])
+                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: natures.DESCRIPTION + data.folio, ID_NATURE: natures.ID_NATURE_FOLIO }])
                                 handleChange("folio", "")
                                 setNatures(null)
                                 setDossier(null)
@@ -194,8 +194,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
                                                                                                 </View>
-                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -233,8 +233,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{nat.DESCRIPTION}</Text>
                                                                                                         {/* <Text style={styles.itemTitleDesc}>{nat.CODE_VOLUME}</Text> */}
                                                                                                 </View>
-                                                                                                {natures?.ID_NATURE_FOLIO == nat.ID_NATURE_FOLIO ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {natures?.ID_NATURE_FOLIO == nat.ID_NATURE_FOLIO ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -303,8 +303,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
                                                                                                         {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
                                                                                                 </View>
-                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -344,8 +344,8 @@ export default function AddFolioScreen() {
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
                                                                                                         </View>
-                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -401,8 +401,8 @@ export default function AddFolioScreen() {
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
                                                                                                 </View>
-                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -461,8 +461,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {distributeur?.USERS_ID == distr.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {distributeur?.USERS_ID == distr.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -629,9 +629,9 @@ export default function AddFolioScreen() {
                                                                                 <Text style={styles.selectLabel}>
                                                                                         Malle
                                                                                 </Text>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                                {malles ? `${malles.NUMERO_MAILLE}` : ' Sélectionner le malle'}
-                                                                                        </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {malles ? `${malles.NUMERO_MAILLE}` : ' Sélectionner le malle'}
+                                                                                </Text>
                                                                         </View>
                                                                 </TouchableOpacity>
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
@@ -773,7 +773,7 @@ export default function AddFolioScreen() {
                                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                         </View>
                                                                 </TouchableOpacity>
-                                                                
+
                                                         </>
                                                 }
                                         </View>
@@ -795,39 +795,26 @@ export default function AddFolioScreen() {
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
                                         </TouchableWithoutFeedback>}
+                                <Modalize ref={natureModalizeRef}  >
+                                        <NatureDossierList />
+                                </Modalize>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
 
+                                <Modalize ref={maleModalizeRef}  >
+                                        <MalleList />
+                                </Modalize>
+                                <Modalize ref={batimentModalizeRef}  >
+                                        <BatimentList />
+                                </Modalize>
+                                <Modalize ref={aillesModalizeRef}  >
+                                        <AillesList batiments={batiments} />
+                                </Modalize>
 
-                                <Portal>
-                                        <Modalize ref={natureModalizeRef}  >
-                                                <NatureDossierList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={volumeModalizeRef}  >
-                                                <VolumeAgentSuperviseurList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={maleModalizeRef}  >
-                                                <MalleList />
-                                        </Modalize>
-                                </Portal>
-
-                                <Portal>
-                                        <Modalize ref={batimentModalizeRef}  >
-                                                <BatimentList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={aillesModalizeRef}  >
-                                                <AillesList batiments={batiments} />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={distributrutModalizeRef}  >
-                                                <DistributeurAgentList ailles={ailles} />
-                                        </Modalize>
-                                </Portal>
+                                <Modalize ref={distributrutModalizeRef}  >
+                                        <DistributeurAgentList ailles={ailles} />
+                                </Modalize>
                         </View>
                 </>
         )
@@ -914,7 +901,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal:10,
+                marginHorizontal: 10,
         },
         buttonText: {
                 color: "#fff",
@@ -930,8 +917,8 @@ const styles = StyleSheet.create({
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
-                marginHorizontal:10,
-                marginBottom:10
+                marginHorizontal: 10,
+                marginBottom: 10
         },
         buttonTextPlus: {
                 color: "#fff",

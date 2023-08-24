@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, ScrollView,TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
@@ -11,6 +11,8 @@ import Loading from "../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
+import moment from 'moment'
+import ImageView from "react-native-image-viewing";
 
 
 /**
@@ -29,6 +31,8 @@ export default function DetailsAgentPreparationScreen() {
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
         const [selectedItems, setSelectedItems] = useState([])
+        const [galexyIndex, setGalexyIndex] = useState(null)
+
 
         const [data, handleChange, setValue] = useForm({
                 // document: null,
@@ -131,23 +135,20 @@ export default function DetailsAgentPreparationScreen() {
                 }
         }
 
-        //Fonction pour recuperer les details de folios 
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoading(true)
-        //                         const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
-        //                         setAllDetails(res.result)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoading(false)
-        //                 }
-        //         })()
-        // }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
 
         return (
                 <>
+                        {(galexyIndex != null && folio && folio) &&
+                                <ImageView
+                                        images={[{ uri: folio.PV_PATH }]}
+                                        imageIndex={galexyIndex}
+                                        visible={(galexyIndex != null) ? true : false}
+                                        onRequestClose={() => setGalexyIndex(null)}
+                                        swipeToCloseEnabled
+                                        keyExtractor={(_, index) => index.toString()}
+                                />
+                        }
+
                         {loadingSubmit && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
@@ -162,34 +163,30 @@ export default function DetailsAgentPreparationScreen() {
                                                 <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                         </View>
                                 </View>
-
-                                {folio.folios.length > 0 ?
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                        <View style={styles.icon}>
-                                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                <ScrollView>
+                                        {folio.folios.length > 0 ?
+                                                <View style={styles.selectContainer}>
+                                                        <View style={{ width: '100%' }}>
+                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                <View style={styles.icon}>
+                                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                                </View>
+                                                                                <Text style={styles.selectLabel}>
+                                                                                        Les dossiers
+                                                                                </Text>
                                                                         </View>
-                                                                        <Text style={styles.selectLabel}>
-                                                                                Les dossiers
+                                                                </View>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {folio.folios.length} dossier{folio.folios.length > 1 && 's'}
+                                                                        </Text>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {selectedItems?.length} préparé{selectedItems.length > 1 && 's'}
                                                                         </Text>
                                                                 </View>
-                                                        </View>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {folio.folios.length} dossier{folio.folios.length > 1 && 's'}
-                                                                </Text>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {selectedItems?.length} préparé{selectedItems.length > 1 && 's'}
-                                                                </Text>
-                                                        </View>
-                                                        <View style={styles.folioList}>
-                                                                <FlatList
-                                                                        style={styles.contain}
-                                                                        data={folio.folios}
-                                                                        renderItem={({ item: folio, index }) => {
-                                                                                const isExists = folio.folio.ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION ? true : false
+                                                                <View style={styles.folioList}>
+                                                                        {folio?.folios.map((folio, index) => {
                                                                                 return (
                                                                                         <>
                                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -197,7 +194,7 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                 </View> :
                                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }}>
                                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)} key={index}
-                                                                                                                   onPress={()=> handleFolioPress(folio.folio) }>
+                                                                                                                        onPress={() => handleFolioPress(folio)}>
                                                                                                                         <View style={[styles.folio]}>
                                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                                         <View style={styles.folioLeft}>
@@ -205,11 +202,11 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                                                                         <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                                                 </View>
                                                                                                                                                 <View style={styles.folioDesc}>
-                                                                                                                                                        <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                                                        <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
                                                                                                                                                 </View>
                                                                                                                                         </View>
-                                                                                                                                        {isSelected(folio.folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                                        {isSelected(folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                                                                 <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -218,43 +215,48 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                 }
                                                                                         </>
                                                                                 )
-                                                                        }}
-                                                                        keyExtractor={(folio, index) => index.toString()}
-                                                                />
-                                                        </View>
-                                                </View>
-                                        </View> : null}
+                                                                        })}
 
-                                {
-                                        // ID_ETAPE_FOLIO == 2 ?
-                                        <>
-
-                                                <TouchableOpacity onPress={onTakePicha}>
-                                                        <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                                <Text style={styles.addImageLabel}>
-                                                                                        Photo du procès verbal
-                                                                                </Text>
-                                                                        </View>
-                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
-                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
-                                                </TouchableOpacity>
-                                                <TouchableWithoutFeedback
-                                                        disabled={!isValidAdd()}
-                                                        onPress={submitData}
-                                                >
-                                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                                        </View>
-                                                </TouchableWithoutFeedback>
-                                        </>
-                                        // : null
-                                }
+                                                </View> : null}
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
 
+                                                        <>
+                                                                <TouchableOpacity onPress={() => {
+                                                                        setGalexyIndex(0)
+                                                                }}>
+                                                                        <Image source={{ uri: folio.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                </TouchableOpacity>
+                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(folio.date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                        </>
+                                                </View>
+                                        </View>
+                                        <TouchableOpacity onPress={onTakePicha}>
+                                                <View style={[styles.addImageItem]}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du procès verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                        </View>
+                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </View>
+                                        </TouchableOpacity>
+                                        
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                                disabled={!isValidAdd()}
+                                                onPress={submitData}
+                                        >
+                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback>
                         </View>
                 </>
 

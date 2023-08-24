@@ -17,7 +17,7 @@ export default function FolioUploadScreen() {
             try {
                 const res = await fetchApi(`/uploadEDMRS/folio/folioUplad`)
                 setFolios(res.result)
-                // console.log(res.result[0].folios)
+                console.log(res)
 
             } catch (error) {
                 console.log(error)

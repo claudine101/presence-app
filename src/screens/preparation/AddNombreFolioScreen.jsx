@@ -29,6 +29,7 @@ export default function AddNombreFolioScreen() {
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)
+    const [errorsVolume, setErrorsVolume] = useState(null)
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
     const [data, handleChange, setValue] = useForm({
@@ -40,16 +41,10 @@ export default function AddNombreFolioScreen() {
         numero: {
             required: true
         },
-        // document:{
-        //         required: true
-        // }
     }, {
         numero: {
             required: 'ce champ est obligatoire',
         },
-        // document: {
-        //         required: 'ce champ est obligatoire',
-        // }
     })
 
     const isValidAdd = () => {
@@ -128,45 +123,6 @@ export default function AddNombreFolioScreen() {
 
     }
 
-    //Modal pour afficher la liste de volumes existants
-    const VolumeList = () => {
-        const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/volumes')
-        return (
-            <>
-                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator animating size={'large'} color={'#777'} />
-                </View> :
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Les volumes</Text>
-                        </View>
-                        {volumesAll.result.map((vol, index) => {
-                            return (
-                                <ScrollView key={index}>
-                                    <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
-                                        <View style={styles.modalItem} >
-                                            <View style={styles.modalImageContainer}>
-                                                <AntDesign name="folderopen" size={20} color="black" />
-                                            </View>
-                                            <View style={styles.modalItemCard}>
-                                                <View>
-                                                    <Text style={styles.itemTitle}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                    <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
-                                                </View>
-                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                    <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                            </View>
-                                        </View>
-                                    </TouchableNativeFeedback>
-                                </ScrollView>
-                            )
-                        })}
-                    </View>
-                }
-            </>
-        )
-    }
-
     //Modal pour afficher la liste de agents archivages existants
     const AgentArchivageList = () => {
         const [loadingAgentArchive, agentSuperviseurArchives] = useFetch('/preparation/batiment/agentArchive')
@@ -180,7 +136,7 @@ export default function AddNombreFolioScreen() {
                                                         <Text style={styles.modalTitle}>Sélectionner l'agent superviseur archive</Text>
                                                 </View>
                                                 <View style={styles.modalList}>
-                                                        {agentSuperviseurArchives.result.map((ag, index) => {
+                                                        {agentSuperviseurArchives?.result?.map((ag, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)}>
@@ -233,7 +189,7 @@ export default function AddNombreFolioScreen() {
                     uri: localUri, name: filename, type
                 })
             }
-            const res = await fetchApi(`/preparation/volume/modifier/${volume.ID_VOLUME}`, {
+            const res = await fetchApi(`/preparation/volume/modifier/${volume.volume.ID_VOLUME}`, {
                 method: 'PUT',
                 body: form,
             })
@@ -241,6 +197,8 @@ export default function AddNombreFolioScreen() {
         }
         catch (error) {
             console.log(error)
+            // setError("numero", ["folio existe"])
+            setError("numero", [error.message])
         } finally {
             setLoading(false)
         }
@@ -258,7 +216,7 @@ export default function AddNombreFolioScreen() {
                     </View>
                 </TouchableNativeFeedback>
                 <View style={styles.cardTitle}>
-                    <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
+                    <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur </Text>
                 </View>
             </View>
             <ScrollView style={styles.inputs}>
@@ -300,7 +258,7 @@ export default function AddNombreFolioScreen() {
                             <Feather name="user" size={20} color="#777" />
                         </View>
                         <Text style={styles.selectLabel}>
-                            Agent superviseur d'archive
+                            Agent superviseur 
                         </Text>
                     </View>
                     <Text style={styles.selectedValue}>
@@ -330,16 +288,10 @@ export default function AddNombreFolioScreen() {
                     <Text style={styles.buttonText}>Enregistrer</Text>
                 </View>
             </TouchableWithoutFeedback>
-            <Portal>
-                <Modalize ref={volumeModalizeRef}  >
-                    <VolumeList />
-                </Modalize>
-            </Portal>
-            <Portal>
+            
                 <Modalize ref={agentModalizeRef}  >
                     <AgentArchivageList />
                 </Modalize>
-            </Portal>
         </View>
     </>
     )
@@ -360,7 +312,7 @@ const styles = StyleSheet.create({
     },
     title: {
         paddingHorizontal: 5,
-        fontSize: 17,
+        fontSize: 14,
         fontWeight: 'bold',
         color: '#777',
         // color: COLORS.primary

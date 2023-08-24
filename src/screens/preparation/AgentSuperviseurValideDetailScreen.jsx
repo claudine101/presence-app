@@ -1,22 +1,15 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
 import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableNativeFeedbackBase, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
-import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import { COLORS } from "../../styles/COLORS";
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
-import { Modalize } from "react-native-modalize";
-import useFetch from "../../hooks/useFetch";
-import PROFILS from "../../constants/PROFILS";
-import Loading from "../../components/app/Loading";
 import ImageView from "react-native-image-viewing";
 import moment from "moment";
-import Folio from "../../components/folio/Folio";
 
 export default function AgentSuperviseurValideDetailScreen() {
           const route = useRoute()
@@ -29,7 +22,7 @@ export default function AgentSuperviseurValideDetailScreen() {
           const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
-        const folio_ids = folio?.map(folio => folio.folio.ID_FOLIO)
+        const folio_ids = folio?.map(folio => folio.ID_FOLIO)
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
@@ -114,7 +107,7 @@ export default function AgentSuperviseurValideDetailScreen() {
                                                                                               }}>
                                                                                                         <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                               </TouchableOpacity>
-                                                                                              <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs?.result?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                              <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs?.result?.date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                     </> : null}
                                                                                 
                                                                                
@@ -144,8 +137,8 @@ export default function AgentSuperviseurValideDetailScreen() {
                                                                                                                                       <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                             </View>
                                                                                                                             <View style={styles.folioDesc}>
-                                                                                                                                      <Text style={styles.folioName}>{ folio.folio.NUMERO_FOLIO }</Text>
-                                                                                                                                      <Text style={styles.folioSubname}>{ folio.folio.NUMERO_FOLIO }</Text>
+                                                                                                                                      <Text style={styles.folioName}>{ folio.NUMERO_FOLIO }</Text>
+                                                                                                                                      <Text style={styles.folioSubname}>{ folio.NUMERO_FOLIO }</Text>
                                                                                                                             </View>
                                                                                                                   </View>
                                                                                                                   <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> 
@@ -178,8 +171,8 @@ export default function AgentSuperviseurValideDetailScreen() {
                                                                                                                                       <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                             </View>
                                                                                                                             <View style={styles.folioDesc}>
-                                                                                                                                      <Text style={styles.folioName}>{ folio.folio.NUMERO_FOLIO }</Text>
-                                                                                                                                      <Text style={styles.folioSubname}>{ folio.folio.NUMERO_FOLIO }</Text>
+                                                                                                                                      <Text style={styles.folioName}>{ folio.NUMERO_FOLIO }</Text>
+                                                                                                                                      <Text style={styles.folioSubname}>{ folio.NUMERO_FOLIO }</Text>
                                                                                                                             </View>
                                                                                                                   </View>
                                                                                                                   <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" /> 
@@ -218,6 +211,7 @@ export default function AgentSuperviseurValideDetailScreen() {
                                                                                               </TouchableOpacity>
                                                                                               <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs?.result?.pvRetour?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                     </> : null}
+                                                                                    
                                                                                 
                                                                                
                                                                                 

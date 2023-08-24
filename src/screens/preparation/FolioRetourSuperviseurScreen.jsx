@@ -41,7 +41,7 @@ export default function FolioRetourSuperviseurScreen() {
                 motif: null,
         })
 
-        const folio_ids = folio?.folios?.map(folio => folio.folio.ID_FOLIO)
+        const folio_ids = folio?.folios?.map(folio => folio.ID_FOLIO)
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
@@ -197,7 +197,7 @@ export default function FolioRetourSuperviseurScreen() {
                         />
                 }
 
-                        {(loadingSubmit && loadingCheck) && <Loading />}
+                        {(loadingSubmit || loadingCheck) && <Loading />}
                         <View style={styles.container}>
 
                                 <View style={styles.header}>
@@ -217,18 +217,18 @@ export default function FolioRetourSuperviseurScreen() {
                                                 <View style={styles.contain}>
                                                         {folio?.folios.map((folio, index) => {
                                                                 return (
-                                                                        <View style={{ marginTop: 10, borderRadius: 80, }}>
+                                                                        <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
                                                                                 <View style={[styles.folio]}>
                                                                                         <View style={styles.folioLeftSide}>
                                                                                                 <View style={styles.folioImageContainer}>
                                                                                                         <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                 </View>
                                                                                                 <View style={styles.folioDesc}>
-                                                                                                        <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
                                                                                                 </View>
                                                                                         </View>
-                                                                                        {folio.folio.IS_PREPARE == 0 ?
+                                                                                        {folio.IS_PREPARE == 0 ?
                                                                                                 <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
                                                                                                 : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                         }

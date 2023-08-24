@@ -385,5 +385,5 @@ const styles = StyleSheet.create({
           addImageLabel: {
                   marginLeft: 5,
                   opacity: 0.8
-          },
+          }
 })

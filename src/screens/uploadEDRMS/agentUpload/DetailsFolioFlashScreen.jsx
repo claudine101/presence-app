@@ -34,8 +34,10 @@ export default function DetailsFolioFlashScreen() {
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
+               
                 const res = await fetchApi(`/uploadEDMRS/folio/typeDocument/${folio.folio.ID_NATURE}`)
                 setTypeDocument(res.result)
+                console.log(res)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -203,7 +205,7 @@ export default function DetailsFolioFlashScreen() {
                 {folio.ID_ETAPE_FOLIO == 16 ?
                     <View style={styles.actions}>
                         <TouchableOpacity style={[styles.actionBtn, { opacity: !selectedType.length > 0 ? 0.5 : 1 }]} disabled={!selectedType.length > 0} onPress={() => handleSubmit()}>
-                            <Text style={styles.actionText}>Enregistrergggg</Text>
+                            <Text style={styles.actionText}>Enregistrer</Text>
                         </TouchableOpacity>
                     </View> : null
                 }

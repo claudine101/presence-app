@@ -323,7 +323,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : ' Sélectionner les dossiers'}
+                                                                                {multiFolios.length > 0 ? multiFolios.length:'Selectionner les dossiers'} séléctionné{ multiFolios.length>1 ? "s" : ''} 
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -420,6 +420,13 @@ const styles = StyleSheet.create({
                 paddingVertical: 10,
                 borderBottomWidth: 1,
                 borderBottomColor: '#F1F1F1'
+        },
+        butConfirmer: {
+                borderRadius: 8,
+                paddingVertical: 14,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 5,
+                 marginVertical: 10
         },
         modalImageContainer: {
                 width: 40,

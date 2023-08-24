@@ -78,10 +78,11 @@ export default function ChefEquipeFlashDetailsScreen() {
     const handleSubmitRetour = async () => {
         try {
             if (!isRetourValid()) return false
+
             setIsSubmitting(true)
             const form = new FormData()
-            form.append("ID_FLASH_INDEXE", flashDetail?.foliosIndexes[0]?.ID_FLASH_INDEXE)
-            form.append("ID_SUP_AILE_INDEXATION", supAile.result.USER_TRAITEMENT)
+            form.append("ID_FLASH", flashs[0].flashs.ID_FLASH )
+            form.append("AGENT_UPLOAD",flashs[0].users.USERS_ID)
             if (data.pv) {
                 const photo = data.pv
                 let localUri = photo.uri;
@@ -92,7 +93,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                     uri: localUri, name: filename, type
                 })
             }
-            const res = await fetchApi(`/indexation/agent_sup_aile_indexation/retour`, {
+            const res = await fetchApi(`/uploadEDMRS/folio/retour`, {
                 method: 'POST',
                 body: form
             })
@@ -239,7 +240,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                         {flashDetail?.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]}>
                             <View style={styles.labelContainer}>
                                 <View style={styles.icon}>
-                                    <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
+                                        <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
                                 </View>
                                 <Text style={styles.selectLabel}>
                                     Clé USB des dossiers indexés
@@ -273,13 +274,13 @@ export default function ChefEquipeFlashDetailsScreen() {
                         </TouchableOpacity> : null}
                     </View>
                 </ScrollView>}
-                {(flashDetail && supAile?.result && !supAile?.result.retour && flashDetail?.foliosIndexes.length > 0) ? <View style={styles.actions}>
+                 <View style={styles.actions}>
                     <View style={styles.actions}>
                         <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                             <Text style={styles.actionText}>Envoyer</Text>
                         </TouchableOpacity>
                     </View>
-                </View> : null}
+                </View> 
             </View>
             <Modalize
                 ref={agentsModalRef}

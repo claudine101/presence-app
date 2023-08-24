@@ -51,6 +51,7 @@ export default function AgentSuperviseurScreen() {
                         }
                 })()
         }, []))
+        // return console.log(allDetails)
         return (
                 <>
                         <AppHeaderPhPreparationRetour header={header} />
@@ -78,7 +79,7 @@ export default function AgentSuperviseurScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio: folio, users: folio.users })}
+                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio: folio})}
                                                                                         >
      
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
@@ -94,7 +95,7 @@ export default function AgentSuperviseurScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

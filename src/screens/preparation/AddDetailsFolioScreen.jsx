@@ -629,7 +629,7 @@ export default function AddDetailsFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Sélectionner le  olline'}
+                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Sélectionner le  colline'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
