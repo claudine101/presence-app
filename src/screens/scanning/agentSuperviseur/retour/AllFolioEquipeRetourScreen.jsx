@@ -8,6 +8,7 @@ import fetchApi from "../../../../helpers/fetchApi";
 import PROFILS from "../../../../constants/PROFILS";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../../store/selectors/userSelector";
+import moment from 'moment'
 
 
 /**
@@ -26,7 +27,8 @@ export default function AllFolioEquipeRetourScreen() {
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
-                        navigation.navigate("DetailsFolioRetourChefPlateau", { folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO })
+                        // navigation.navigate("DetailsFolioRetourChefPlateau", { folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO })
+                        navigation.navigate("FoliosRetourdetailChefPlateauScreen", {details:folio?.folios, userTraite:folio?.users})
                 } else {
                         navigation.navigate("DetailsFolioRetourScreen", { folio: folio, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
                 }
@@ -91,8 +93,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                 </View> :
 
                                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                                // onPress={() => navigation.navigate("ConfimerPvScreen", { volume: volume, id: volume.volume.ID_VOLUME })}
-                                                                                                                // onPress={() => navigation.navigate('DetailsParAgentClickVolumeScreen', { details: volume?.volumes, userTraite: volume?.users })}
+                                                                                                                onPress={() => handleSubmit(folio)}
                                                                                                         >
                                                                                                                 <View style={styles.cardDetails}>
                                                                                                                         <View style={styles.cardImages}>
@@ -103,14 +104,14 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                         <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                                 <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>sjsjsj</Text></View>
+                                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                         </View>
                                                                                                                                 </View>
                                                                                                                                 <View>
                                                                                                                                         <View ><Text></Text></View>
                                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>3 dossiers</Text></View>
+                                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                         </View>
                                                                                                                                 </View>

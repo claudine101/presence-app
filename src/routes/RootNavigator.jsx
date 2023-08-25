@@ -50,6 +50,7 @@ import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUplo
 import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
 import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
 import DetailsParAgentClickVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsParAgentClickVolumeScreen';
+import FoliosRetourdetailChefPlateauScreen from '../screens/scanning/agentSuperviseur/retour/FoliosRetourdetailChefPlateauScreen';
 
 
 
@@ -103,6 +104,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }} />
                 <Stack.Screen name='DetaillerVolumeScreen' component={DetaillerVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FoliosRetourdetailChefPlateauScreen' component={FoliosRetourdetailChefPlateauScreen} options={{ headerShown: false }} />
                 {/* phase uploadEDRMS */}
                 <Stack.Screen name='SelectFolioAgentScreen' component={SelectFolioAgentScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefEquipeFlashDetailsScreen' component={ChefEquipeFlashDetailsScreen} options={{ headerShown: false }} />
