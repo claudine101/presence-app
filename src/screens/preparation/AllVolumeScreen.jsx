@@ -167,7 +167,6 @@ export default function AllVolumeScreen() {
                             </View> :
 
                                 <FlatList
-                                    style={styles.contain}
                                     data={allVolumes}
                                     renderItem={({ item: volume, index }) => {
                                         return (
@@ -237,7 +236,6 @@ export default function AllVolumeScreen() {
                             </View> :
 
                                 <FlatList
-                                    style={styles.contain}
                                     data={allVolumes}
                                     renderItem={({ item: volume, index }) => {
                                         return (
@@ -299,7 +297,6 @@ export default function AllVolumeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ddd'
     },
     actionIcon: {
         width: 45,
@@ -375,9 +372,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
     },
-    contain: {
-        backgroundColor: '#ddd'
-    },
+    
     folio: {
         flexDirection: 'row',
         alignItems: 'center',

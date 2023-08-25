@@ -133,7 +133,7 @@ export default function AddNombreFolioScreen() {
                                 </View > :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent superviseur archive</Text>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent superviseur</Text>
                                                 </View>
                                                 <View style={styles.modalList}>
                                                         {agentSuperviseurArchives?.result?.map((ag, index) => {
@@ -310,6 +310,11 @@ const styles = StyleSheet.create({
     headerBtn: {
         padding: 10
     },
+    itemTitleDesc: {
+        color: "#777",
+        marginLeft: 10,
+        fontSize: 11
+},
     title: {
         paddingHorizontal: 5,
         fontSize: 14,
