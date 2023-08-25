@@ -35,18 +35,6 @@ export default function DetailleFlashScreen() {
     const [selectedType, setSelectedType] = useState([])
     const [typeDocument, setTypeDocument] = useState([])
     const [selectedFolio, setSelectedFolio] = useState(null)
-    const [flashIndexes, setFlashIndexes] = useState(null)
-    const flashModalRef = useRef()
-    // console.log(selectedItems)
-    const openFlashModalize = () => {
-        flashModalRef.current?.open()
-    }
-
-    const handleFlashPress = flash => {
-        flashModalRef.current?.close()
-        setFlashIndexes(flash)
-    }
-
     const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
     const handleFolioPress = (folio) => {
         if (isSelected(folio)) {
@@ -125,102 +113,6 @@ export default function DetailleFlashScreen() {
             }
         })()
     }, []))
-    const fetchTypeDoc = async (ID_NATURE) => {
-        try {
-            const res = await fetchApi(`/uploadEDMRS/folio/typeDocument/${ID_NATURE}`)
-            setTypeDocument(res.result)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
-    // useFocusEffect(useCallback(() => {
-    //     (async () => {
-    //         fetchTypeDoc()
-    //     })()
-    // }, []))
-    const isRetourValid = () => {
-        return selectedItems.length > 0 && data.pv && !isCompressingPhoto && flashIndexes ? true : false
-    }
-    /**
-     * Permet d'envoyer le chef agent d'indexation
-     * @author darcydev <darcy@mediabox.bi>
-     * @date 03/08/2023
-     * @returns 
-     */
-    const handleSubmit = async () => {
-        try {
-            if (!isValidate()) return false
-            setIsSubmitting(true)
-            const form = new FormData()
-            form.append("ID_FLASH", flash.ID_FLASH)
-            form.append("ID_AGENT_INDEXATION", data.agent.USERS_ID)
-            if (data.pv) {
-                const photo = data.pv
-                let localUri = photo.uri;
-                let filename = localUri.split('/').pop();
-                let match = /\.(\w+)$/.exec(filename);
-                let type = match ? `image/${match[1]}` : `image`;
-                form.append(`pv`, {
-                    uri: localUri, name: filename, type
-                })
-            }
-            const res = await fetchApi(`/indexation/agent_indexation`, {
-                method: 'POST',
-                body: form
-            })
-            ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-            navigation.goBack()
-        } catch (error) {
-            console.log(error)
-            ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
-
-    /**
-     * Permet de traiter les dossiers indexes du chef agent d'indexation
-     * @author darcydev <darcy@mediabox.bi>
-     * @date 03/08/2023
-     * @returns 
-     */
-    const handleSubmitRetour = async () => {
-        try {
-            if (!isRetourValid()) return false
-            setIsSubmitting(true)
-            const form = new FormData()
-            form.append("ID_FLASH_INDEXES", flashIndexes.ID_FLASH)
-            form.append("ID_AGENT_INDEXATION", flashDetail.agentIndexation.USER_TRAITEMENT)
-            form.append("foliosIndexesIds", JSON.stringify(selectedItems.map(folio => folio.ID_FOLIO)))
-            if (data.pv) {
-                const photo = data.pv
-                let localUri = photo.uri;
-                let filename = localUri.split('/').pop();
-                let match = /\.(\w+)$/.exec(filename);
-                let type = match ? `image/${match[1]}` : `image`;
-                form.append(`pv`, {
-                    uri: localUri, name: filename, type
-                })
-            }
-            const res = await fetchApi(`/indexation/agent_indexation/retour/indexation_folios`, {
-                method: 'POST',
-                body: form
-            })
-            ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-            navigation.goBack()
-        } catch (error) {
-            console.log(error)
-            ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
-    const handleFoliosFlashPress = folio => {
-        navigation.navigate("DetailsFolioFlashScreen", { folio })
-    }
-
     return (
         <>
 
@@ -245,7 +137,7 @@ export default function DetailleFlashScreen() {
                                 {flash.folios.map((folio, index) => {
                                     return (
                                         <>
-                                        <TouchableNativeFeedback onPress={() => handleFoliosPress(folio)} >
+                                        <TouchableNativeFeedback onPress={() => handleFoliosPress(folio)} key={index} >
                                         <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                   <View style={[styles.folio]}>
                                                             <View style={styles.folioLeftSide}>
@@ -303,7 +195,6 @@ export default function DetailleFlashScreen() {
                                                     </View>
                                                     <View style={styles.listNames}>
                                                         <Text style={styles.listItemTitle}>{type.NOM_DOCUMENT}</Text>
-                                                        {/* <Text style={styles.listItemSubTitle}>{type.NOM_DOCUMENT}</Text> */}
                                                     </View>
                                                 </View>
                                                 {isSelectedTypeItems(type) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :

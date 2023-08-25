@@ -229,7 +229,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                     </Text>
                                 </View>
                                 <View style={styles.folioList}>
-                                    {flashDetail?.foliosIndexes.map((folio, index) => {
+                                    {flashDetail?.foliosIndexes?.map((folio, index) => {
                                         return (
                                             <Folio style={{ backgroundColor: '#f1f1f1' }} folio={folio} key={index} onPress={null} isSelected={() => true} />
                                         )
@@ -301,7 +301,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                             <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                         </View>
                         <View style={styles.modalList}>
-                            {agents.result.map((agent, index) => {
+                            {agents?.result?.map((agent, index) => {
                                 return (
                                     <TouchableNativeFeedback key={index} onPress={() => handleAgentPress(agent)}>
                                         <View style={styles.listItem}>

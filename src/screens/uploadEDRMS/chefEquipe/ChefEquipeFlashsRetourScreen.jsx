@@ -55,7 +55,6 @@ export default function ChefEquipeFlashRetourScreen() {
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
                                                                                                                         <Text style={styles.folioName}>{ item.flashs.NOM_FLASH }</Text>
-                                                                                                                        {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <AntDesign name="calendar" size={20} color="#777" />
