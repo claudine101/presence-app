@@ -113,7 +113,6 @@ export default function AllVolumeChefPlateauScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ddd'
     },
     actionIcon: {
         width: 45,
@@ -189,10 +188,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
     },
-    contain: {
-        backgroundColor: '#ddd',
-        marginTop:-15
-    },
+    
     folio: {
         flexDirection: 'row',
         alignItems: 'center',

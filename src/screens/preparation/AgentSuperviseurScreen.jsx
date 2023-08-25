@@ -124,7 +124,6 @@ export default function AgentSuperviseurScreen() {
 const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: '#ddd'
         },
         image: {
                 width: "100%",
@@ -207,7 +206,6 @@ const styles = StyleSheet.create({
             fontWeight: "bold",
         },
         contain: {
-            backgroundColor: '#ddd'
         },
         folio: {
             flexDirection: 'row',

@@ -67,8 +67,15 @@ export default function FolioRetourSuperviseurScreen() {
                 (async () => {
                         try {
                                 setLoadingCheck(true)
-                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
+                                const form = new FormData()
+                                form.append('folioIds', JSON.stringify(folio_ids))
+                                form.append('USERS_ID', folio.users.USERS_ID)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsup`, {
+                                        method: "POST",
+                                        body: form
+                                })
                                 setCheck(res.result)
+                                console.log(res.result)
 
                         } catch (error) {
                                 console.log(error)
@@ -174,6 +181,7 @@ export default function FolioRetourSuperviseurScreen() {
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
+                                folio?.folios
                                 setLoadingCheck(true)
                                 const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
                                 setCheck(res.result)
@@ -283,20 +291,20 @@ export default function FolioRetourSuperviseurScreen() {
                                                 />
                                         </View> : null}
                                         {check.length > 0 ?
-                                               <TouchableOpacity onPress={onTakePicha}>
-                                               <View style={[styles.addImageItem]}>
-                                                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                       <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                       <Text style={styles.addImageLabel}>
-                                                                               Photo du procès verbal
-                                                                       </Text>
-                                                               </View>
-                                                               {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                                                       </View>
-                                                       {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                               </View>
-                                       </TouchableOpacity> : null}
+                                                <TouchableOpacity onPress={onTakePicha}>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                                </View>
+                                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableOpacity> : null}
                                 </ScrollView>
                                 {check.length > 0 ?
                                         <TouchableWithoutFeedback

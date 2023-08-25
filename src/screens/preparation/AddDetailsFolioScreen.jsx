@@ -85,6 +85,7 @@ export default function AddDetailsFolioScreen() {
                 isValid = agentPreparation != null ? true : false
                 isValid = allFolio != null ? true : false
                 isValid = logoImage != null ? true : false
+                isValid = collines?.COLLINE_ID!= null ? true : false
                 return isValid && isValidate()
         }
 
