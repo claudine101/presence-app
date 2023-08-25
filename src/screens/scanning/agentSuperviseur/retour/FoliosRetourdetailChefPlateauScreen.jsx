@@ -6,6 +6,8 @@ import { COLORS } from "../../../../styles/COLORS"
 import moment from 'moment'
 import ImageView from "react-native-image-viewing";
 import fetchApi from "../../../../helpers/fetchApi";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 /**
  * Screen pour afficher le details de folios lors de retours chez un chef plateau
@@ -24,11 +26,17 @@ export default function FoliosRetourdetailChefPlateauScreen() {
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
-        console.log(pvs)
-
-        // console.log(details)
+        const [check, setCheck] = useState([])
+        console.log(check)
+        const [loadingCheck, setLoadingCheck] = useState(false)
 
         const folio_ids = details?.map(folio => folio.folio.ID_FOLIO)
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = document != null ? true : false
+                return isValid
+        }
 
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -49,9 +57,22 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                 setLoadingPvs(false)
                         }
                 })()
-        }, [userTraite.users]))
+        }, [userTraite]))
 
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const res = await fetchApi(`/scanning/retour/agent/retour/pvs/${userTraite.USERS_ID}`)
+                                setCheck(res.result)
 
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
+                        }
+                })()
+        }, [userTraite]))
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -73,6 +94,40 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                 );
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
+        }
+
+        const submitPlateauData = async () => {
+                try {
+                        setLoadingData(true)
+                        const form = new FormData()
+                        // form.append('folio', JSON.stringify(folio))
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
+                        }
+                        const folioss = await fetchApi(`/scanning/volume/retour/plateau`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoadingData(false)
+                }
         }
 
         return (
@@ -154,8 +209,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {/* {check.length > 0 ? */}
-                                        <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -168,20 +222,16 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                         </View>
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
-                                        </TouchableOpacity>
-                                        {/* : null} */}
+                                        </TouchableOpacity> : null}
                                 </ScrollView>
-                                <TouchableWithoutFeedback
-                                // disabled={!isValidAdd()}
-                                // onPress={submitData}
+                                {check.length > 0 ? <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                onPress={submitPlateauData}
                                 >
-                                        <View style={styles.button}>
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback>
-
-
-
+                                </TouchableWithoutFeedback>: null}
                         </View >
                 </>
 

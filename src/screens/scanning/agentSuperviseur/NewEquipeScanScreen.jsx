@@ -88,7 +88,7 @@ export default function NewEquipeScanScreen() {
                         </View > :
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Sélectionner une equipe</Text>
+                                                <Text style={styles.modalTitle}>Sélectionner une équipe</Text>
                                         </View>
                                         {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucune equipe trouves</Text></View> : null}
                                         <View style={styles.modalList}>
@@ -99,8 +99,8 @@ export default function NewEquipeScanScreen() {
                                                                                 <View style={styles.listItem} >
                                                                                         <View style={styles.listItemDesc}>
                                                                                                 <View style={styles.listItemImageContainer}>
-                                                                                                        {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
-                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
+                                                                                                        {/* <AntDesign name="folderopen" size={20} color="black" /> */}
                                                                                                 </View>
                                                                                                 <View style={styles.listNames}>
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
@@ -230,7 +230,7 @@ export default function NewEquipeScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'equipe scanning</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -281,8 +281,10 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'} 
+                                                                        {multiFolios.length > 0 ? <Text> sélectionner</Text>:null}
                                                                 </Text>
+                                                                
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
@@ -411,8 +413,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '80%',
+                height: '80%',
+                borderRadius:10
         },
         listItemDesc: {
                 flexDirection: 'row',
