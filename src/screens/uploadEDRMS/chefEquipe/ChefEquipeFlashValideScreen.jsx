@@ -14,7 +14,7 @@ export default function ChefEquipeFlashRetourScreen() {
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/uploadEDMRS/folio/chef_equipe`)
+                              const res = await fetchApi(`/uploadEDMRS/folio/flashs`)
                               setFlashs(res.result)
                     } catch (error) {
                               console.log(error)
@@ -28,7 +28,7 @@ export default function ChefEquipeFlashRetourScreen() {
                     })()
           }, []))
           const handleFlashPress = flash => {
-                    navigation.navigate("ChefEquipeFlashDetailsScreen", { flashs })
+                    navigation.navigate("SelectFolioAgentScreen", { flash })
           }
           return (
                     <>

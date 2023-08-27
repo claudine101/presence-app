@@ -21,18 +21,17 @@ import Folio from "../../../components/folio/Folio";
 export default function ChefEquipeFlashDetailsScreen() {
     const route = useRoute()
     const { flashs } = route.params
-    console.log()
-    const [flashDetail, setFlashDetail] = useState(null)
+    const [check, setCheck] = useState(null)
+
+
     const [loading, setLoading] = useState(true)
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
     const [pvPhoto, setPvPhoto] = useState(null)
     const navigation = useNavigation()
     const agentsModalRef = useRef()
-    const [loadingAgents, agents] = useFetch(`/indexation/users/${PROFILS.CHEF_PLATEAU_INDEXATION}`)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [galexyIndex, setGalexyIndex] = useState(null)
 
-    const [loadingSupAile, supAile] = useFetch(`/indexation/flashs/sup_aile_indexation/${flashs?.ID_FLASH}`)
 
     const [data, handleChange] = useForm({
         agent: null,
@@ -55,11 +54,12 @@ export default function ChefEquipeFlashDetailsScreen() {
         handleChange('agent', agent)
     }
 
+
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
-                const res = await fetchApi(`/indexation/flashs/details/${flash.ID_FLASH}`)
-                setFlashDetail(res.result)
+                const res = await fetchApi(`/uploadEDMRS/folio/check/${flashs[0].flashs.ID_FLASH}`)
+                setCheck(res.result[0].folios)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -67,7 +67,6 @@ export default function ChefEquipeFlashDetailsScreen() {
             }
         })()
     }, []))
-
 
     /**
      * Permet de traiter le retour entre le sup aile indexation et le chef d'equipe
@@ -158,9 +157,12 @@ export default function ChefEquipeFlashDetailsScreen() {
                 {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator animating size={'large'} color={'#777'} />
                 </View> : <ScrollView style={styles.inputs}>
-                    
+                    {/* <View style={styles.flash}>
+                                                  <MaterialCommunityIcons name="usb-flash-drive-outline" size={24} color="black" />
+                                                  <Text style={styles.flashName}>{ flashDetail.NOM_FLASH }</Text>
+                                        </View> */}
                     <View style={styles.content}>
-                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={supAile.result ? true : false}>
+                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} >
                             <View style={{ width: '100%' }}>
                                 <View style={styles.labelContainer}>
                                     <View style={styles.icon}>
@@ -170,12 +172,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                         Agent uploadEDMRS
                                     </Text>
                                 </View>
-                                {loadingSupAile ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <ActivityIndicator animating size={'small'} color={'#777'} />
-                                    <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                        Chargement
-                                    </Text>
-                                </View> : null}
+                                
                                 <Text style={styles.selectedValue}>
                                     {flashs[0].users.NOM} {flashs[0].users.PRENOM}
                                 </Text>
@@ -191,7 +188,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                     : null}
                             </View>
                         </TouchableOpacity>
-                        {supAile?.result ? null : <TouchableOpacity onPress={onTakePhoto}>
+                        { check.length>0? <TouchableOpacity onPress={onTakePhoto}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -204,122 +201,19 @@ export default function ChefEquipeFlashDetailsScreen() {
                                 </View>
                                 {pvPhoto && <Image source={{ uri: pvPhoto.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                             </View>
-                        </TouchableOpacity>}
-                        {flashDetail?.foliosIndexes.length > 0 ? <View style={styles.selectContainer}>
-                            <View style={{ width: '100%' }}>
-                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <View style={styles.icon}>
-                                            <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                        </View>
-                                        <Text style={styles.selectLabel}>
-                                            Les dossiers
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text style={styles.selectedValue}>
-                                        {flashDetail.folios.length} dossier{flashDetail.folios.length > 1 && 's'}
-                                    </Text>
-                                    <Text style={styles.selectedValue}>
-                                        {flashDetail?.foliosIndexes.length} indexé{flashDetail?.foliosIndexes.length > 1 && 's'}
-                                    </Text>
-                                </View>
-                                <View style={styles.folioList}>
-                                    {flashDetail?.foliosIndexes?.map((folio, index) => {
-                                        return (
-                                            <Folio style={{ backgroundColor: '#f1f1f1' }} folio={folio} key={index} onPress={null} isSelected={() => true} />
-                                        )
-                                    })}
-                                </View>
-                            </View>
-                        </View> : null}
-                        {flashDetail?.foliosIndexes.length > 0 ? <View style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]}>
-                            <View style={styles.labelContainer}>
-                                <View style={styles.icon}>
-                                        <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
-                                </View>
-                                <Text style={styles.selectLabel}>
-                                    Clé USB des dossiers indexés
-                                </Text>
-                            </View>
-                            <Text style={styles.selectedValue}>
-                                {flashDetail?.foliosIndexes[0].flash.NOM_FLASH}
-                            </Text>
-                        </View> : null}
-                        {(supAile?.result && flashDetail?.foliosIndexes.length > 0) ? <TouchableOpacity onPress={onTakePhoto} disabled={supAile?.result?.retour ? true : false}>
-                            <View style={[styles.addImageItem]}>
-                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                        <Text style={styles.addImageLabel}>
-                                            Procès verbal du retour
-                                        </Text>
-                                    </View>
-                                    {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                                </View>
-                                {pvPhoto && <Image source={{ uri: pvPhoto.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                {supAile?.result?.retour ? <>
-                                    <TouchableOpacity onPress={() => {
-                                        setGalexyIndex(1)
-                                    }}>
-                                        <Image source={{ uri: supAile?.result?.retour.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                    </TouchableOpacity>
-                                    <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(supAile?.result?.retour.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                </> : null}
-                            </View>
-                        </TouchableOpacity> : null}
+                        </TouchableOpacity>:null}
                     </View>
                 </ScrollView>}
+                { check.length>0?
                  <View style={styles.actions}>
                     <View style={styles.actions}>
                         <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                             <Text style={styles.actionText}>Envoyer</Text>
                         </TouchableOpacity>
                     </View>
-                </View> 
+                </View> :null}
             </View>
-            <Modalize
-                ref={agentsModalRef}
-                handlePosition='inside'
-                modalStyle={{
-                    borderTopRightRadius: 10,
-                    borderTopLeftRadius: 10,
-                    paddingVertical: 20
-                }}
-                handleStyle={{ marginTop: 10 }}
-                scrollViewProps={{
-                    keyboardShouldPersistTaps: "handled"
-                }}
-            >
-                {loadingAgents ? null :
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                        </View>
-                        <View style={styles.modalList}>
-                            {agents?.result?.map((agent, index) => {
-                                return (
-                                    <TouchableNativeFeedback key={index} onPress={() => handleAgentPress(agent)}>
-                                        <View style={styles.listItem}>
-                                            <View style={styles.listItemDesc}>
-                                                <View style={styles.listItemImageContainer}>
-                                                    <Image source={require('../../../../assets/images/usb-flash-drive.png')} style={styles.listItemImage} />
-                                                </View>
-                                                <View style={styles.listNames}>
-                                                    <Text style={styles.listItemTitle}>{agent.NOM} {agent.PRENOM}</Text>
-                                                    <Text style={styles.listItemSubTitle}>TOSHIBA - 16GB</Text>
-                                                </View>
-                                            </View>
-                                            {(data.agent && data.agent.USERS_ID == agent.USERS_ID) ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
-                                        </View>
-                                    </TouchableNativeFeedback>
-                                )
-                            })}
-                        </View>
-                    </View>}
-            </Modalize>
+            
         </>
     )
 }
