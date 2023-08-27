@@ -82,8 +82,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
@@ -125,7 +124,6 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/scanning/retour/agent/distributeur/${id}`, {
                                 method: "PUT",
                                 body: form
@@ -151,7 +149,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Confirmer le retour</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent distributeur</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -312,8 +310,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '90%',
+                height: '90%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',

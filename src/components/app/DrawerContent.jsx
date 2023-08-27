@@ -140,7 +140,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                        Volume recus
+                                        Volume Reçus
                                     </Text>
                                 </View>
                             </View>
@@ -164,7 +164,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <View style={styles.drawerItem}>
                                 <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                 <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                    Volume recus
+                                    Volume Reçus
                                 </Text>
                             </View>
                         </View>
@@ -198,7 +198,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                            Volume recus
+                                            Volume Reçus
                                         </Text>
                                     </View>
                                 </View>
@@ -353,11 +353,11 @@ export default function DrawerContent({ state, navigation, descriptors }) {
 
                 {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ? <>
                     <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeFolioRetourSupAilleScreen')}>
-                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
                             <View style={styles.drawerItem}>
                                 <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                                <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
-                                    Volumes Retourner
+                                <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
+                                    Volumes Reçus
                                 </Text>
                             </View>
                         </View>
@@ -391,7 +391,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
-                                        Folios recus
+                                        Folios Reçus
                                     </Text>
                                 </View>
                             </View>

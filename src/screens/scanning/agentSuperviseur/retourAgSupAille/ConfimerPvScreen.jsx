@@ -77,7 +77,7 @@ export default function ConfimerPvScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/${id}`, {
+                        const volume = await fetchApi(`/scanning/retour/agent/${detail.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })

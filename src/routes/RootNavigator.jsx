@@ -51,6 +51,9 @@ import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnre
 import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
 import DetailsParAgentClickVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsParAgentClickVolumeScreen';
 import FoliosRetourdetailChefPlateauScreen from '../screens/scanning/agentSuperviseur/retour/FoliosRetourdetailChefPlateauScreen';
+import DetailsClickAgentDistributeurVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsClickAgentDistributeurVolumeScreen';
+import DetailsClickAgentSupArchiveVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsClickAgentSupArchiveVolumeScreen';
+import DetailsAgentDesarchivagesVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsAgentDesarchivagesVolumeScreen';
 
 
 
@@ -100,6 +103,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsParAgentClickVolumeScreen' component={DetailsParAgentClickVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsClickAgentDistributeurVolumeScreen' component={DetailsClickAgentDistributeurVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsClickAgentSupArchiveVolumeScreen' component={DetailsClickAgentSupArchiveVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAgentDesarchivagesVolumeScreen' component={DetailsAgentDesarchivagesVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }} />

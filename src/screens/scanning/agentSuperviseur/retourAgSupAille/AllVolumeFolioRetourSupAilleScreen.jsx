@@ -83,7 +83,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                 (async () => {
                         try {
                                 setLoadingSupArchives(true)
-                                const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
+                                const vol = await fetchApi(`/scanning/retour/agent/allVolume/archives`)
                                 setAllRetourVolumesArchives(vol.result)
                         } catch (error) {
                                 console.log(error)
@@ -97,7 +97,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const vol = await fetchApi(`/scanning/retour/agent/allVolume`)
+                                const vol = await fetchApi(`/scanning/retour/agent/allVolume/desarchivages`)
                                 setAllRetourVolumesDesarchivages(vol.result)
                         } catch (error) {
                                 console.log(error)
@@ -135,7 +135,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                 // onPress={() => navigation.navigate("ConfimerPvScreen", { volume: volume, id: volume.volume.ID_VOLUME })}
-                                                                                                onPress={()=>navigation.navigate('DetailsParAgentClickVolumeScreen', {details:volume?.volumes, userTraite:volume?.users})}
+                                                                                                onPress={() => navigation.navigate('DetailsParAgentClickVolumeScreen', { details: volume?.volumes, userTraite: volume?.users })}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.cardImages}>
@@ -185,6 +185,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         style={styles.contain}
                                                         data={allRetourVolumes}
                                                         renderItem={({ item: volume, index }) => {
+                                                                console.log(volume)
                                                                 return (
                                                                         <>
                                                                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -192,20 +193,25 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                 onPress={() => navigation.navigate("ConfirmerPvRetourAgentDistrScreen", { volume: volume, id: volume.ID_VOLUME })}
-
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.cardAllDetails}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.titlePrincipal}>{volume.NUMERO_VOLUME}</Text>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        </View>
                                                                                                                 </View>
-                                                                                                                <View style={styles.cardDescription}>
-                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                <View>
-                                                                                                                                        <Text style={styles.itemVolume}>{volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>{volume.NOMBRE_DOSSIER}</Text>
-                                                                                                                                </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                                <View>
+                                                                                                                        <View ><Text></Text></View>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume.NOMBRE_DOSSIER} dossiers</Text></View>
+
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -242,21 +248,26 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                         </View> :
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => navigation.navigate("ConfirmerPvRetourAgentSupArchives", { volume: volume, id: volume.volume.ID_VOLUME })}
-
+                                                                                                        onPress={() => navigation.navigate('DetailsClickAgentDistributeurVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.carddetailItem}>
-                                                                                                                        <View style={styles.cardImages}>
-                                                                                                                                <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardAllDetails}>
+                                                                                                                        <View>
+                                                                                                                                <Text style={styles.titlePrincipal}>{volume?.volumes[0]?.users?.NOM} {volume?.volumes[0]?.users?.PRENOM}</Text>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.volumes[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                </View>
                                                                                                                         </View>
-                                                                                                                        <View style={styles.cardDescription}>
-                                                                                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                        <View>
-                                                                                                                                                <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                                <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
-                                                                                                                                        </View>
-                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                                        <View>
+                                                                                                                                <View ><Text></Text></View>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes.length} dossiers</Text></View>
+
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
@@ -293,21 +304,26 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("ConfirmerPvRetourAgentDesarchivages", { volume: volume, id: volume.volume.ID_VOLUME })}
-
+                                                                                                onPress={() => navigation.navigate('DetailsClickAgentSupArchiveVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.cardAllDetails}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.titlePrincipal}>{volume?.volumes[0]?.users?.NOM} {volume?.volumes[0]?.users?.PRENOM}</Text>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.volumes[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        </View>
                                                                                                                 </View>
-                                                                                                                <View style={styles.cardDescription}>
-                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                <View>
-                                                                                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
-                                                                                                                                </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                                <View>
+                                                                                                                        <View ><Text></Text></View>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
+
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -340,7 +356,39 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
+
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                </View> :
+                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                onPress={() => navigation.navigate('DetailsAgentDesarchivagesVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
+                                                                                        >
+                                                                                                <View style={styles.cardDetails}>
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.cardAllDetails}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.titlePrincipal}>{volume?.volumes[0]?.users?.NOM} {volume?.volumes[0]?.users?.PRENOM}</Text>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.volumes[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                <View>
+                                                                                                                        <View ><Text></Text></View>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
+
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </TouchableNativeFeedback>
+                                                                                }
+
+                                                                                {/* {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <View>
@@ -361,7 +409,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </View>
-                                                                                }
+                                                                                } */}
                                                                         </>
                                                                 )
                                                         }}
@@ -387,7 +435,7 @@ const styles = StyleSheet.create({
                 padding: 10,
                 overflow: 'hidden',
                 marginHorizontal: 10,
-                flexDirection:"row"
+                flexDirection: "row"
         },
         cardImages: {
                 backgroundColor: '#ddd',
@@ -406,17 +454,17 @@ const styles = StyleSheet.create({
         },
         cardDescDetails: {
                 flexDirection: "row",
-                marginTop:8
+                marginTop: 8
         },
-        cardAllDetails:{
-                flexDirection:"row",
-                alignItems:"center",
-                justifyContent:"space-between",
-                flex:1,
-                marginLeft:8
+        cardAllDetails: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 1,
+                marginLeft: 8
         },
-        titlePrincipal:{
-                fontWeight:"bold"
+        titlePrincipal: {
+                fontWeight: "bold"
         },
 
 
