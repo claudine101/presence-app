@@ -84,7 +84,7 @@ export default function AllVolumeScreen() {
     }
     return (
         <>
-            <AppHeader title='Volume planifie' />
+            <AppHeader title='Volumes planifiés' />
             {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

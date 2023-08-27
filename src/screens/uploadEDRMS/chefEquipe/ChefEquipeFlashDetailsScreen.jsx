@@ -158,10 +158,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                 {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator animating size={'large'} color={'#777'} />
                 </View> : <ScrollView style={styles.inputs}>
-                    {/* <View style={styles.flash}>
-                                                  <MaterialCommunityIcons name="usb-flash-drive-outline" size={24} color="black" />
-                                                  <Text style={styles.flashName}>{ flashDetail.NOM_FLASH }</Text>
-                                        </View> */}
+                    
                     <View style={styles.content}>
                         <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={supAile.result ? true : false}>
                             <View style={{ width: '100%' }}>

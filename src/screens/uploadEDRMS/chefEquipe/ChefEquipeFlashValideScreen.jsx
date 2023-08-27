@@ -32,7 +32,7 @@ export default function ChefEquipeFlashRetourScreen() {
           }
           return (
                     <>
-                              <AppHeader title="Dossiers en  attente" />
+                              <AppHeader title="Dossiers indexés" />
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>

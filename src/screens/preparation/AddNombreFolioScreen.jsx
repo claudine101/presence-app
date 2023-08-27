@@ -43,7 +43,7 @@ export default function AddNombreFolioScreen() {
         },
     }, {
         numero: {
-            required: 'ce champ est obligatoire',
+            required: 'Ce champ est obligatoire',
         },
     })
 
@@ -312,7 +312,6 @@ const styles = StyleSheet.create({
     },
     itemTitleDesc: {
         color: "#777",
-        marginLeft: 10,
         fontSize: 11
 },
     title: {

@@ -67,7 +67,7 @@ export default function SelectFlashAgentSupScreen() {
                               const form = new FormData()
                               form.append("ID_FLASH", data.flash.ID_FLASH)
                               form.append("ID_SUP_AILE_INDEXATION", data.agent.USERS_ID)
-                              form.append("folios", JSON.stringify(folios.map(folio => folio.ID_FOLIO)))
+                              form.append("folios", JSON.stringify(folios?.map(folio => folio.ID_FOLIO)))
                               if(data.pv) {
                                         const photo = data.pv
                                         let localUri = photo.uri;
@@ -206,7 +206,7 @@ export default function SelectFlashAgentSupScreen() {
                                                                       <Text style={styles.modalTitle}>Sélectionner la clé USB</Text>
                                                             </View>
                                                             <View style={styles.modalList}>
-                                                                      {flashs.result.map((flash, index) => {
+                                                                      {flashs.result?.map((flash, index) => {
                                                                                 return (
                                                                                           <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(flash)}>
                                                                                                     <View style={styles.listItem}>
@@ -247,7 +247,7 @@ export default function SelectFlashAgentSupScreen() {
                                                                       <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                             </View>
                                                             <View style={styles.modalList}>
-                                                                      {agents.result.map((agent, index) => {
+                                                                      {agents?.result?.map((agent, index) => {
                                                                                 return (
                                                                                           <TouchableNativeFeedback key={index} onPress={() => handleAgentPress(agent)}>
                                                                                                     <View style={styles.listItem}>
