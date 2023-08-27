@@ -30,7 +30,7 @@ export default function AllFolioEquipeRetourScreen() {
                         // navigation.navigate("DetailsFolioRetourChefPlateau", { folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO })
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
-                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
+                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.folios[0].USER_TRAITEMENT,   ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
                 }
         }
 
@@ -137,14 +137,13 @@ export default function AllFolioEquipeRetourScreen() {
                                                                         Aucun folio trouvé
                                                                 </Text>
                                                                 <Text style={styles.emptyDesc}>
-                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                        Aucun folio planifier 
                                                                 </Text>
                                                         </View> :
                                                                 <FlatList
                                                                         style={styles.contain}
                                                                         data={allFolios}
                                                                         renderItem={({ item: folio, index }) => {
-                                                                                console.log(folio)
                                                                                 return (
                                                                                         <>
                                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
