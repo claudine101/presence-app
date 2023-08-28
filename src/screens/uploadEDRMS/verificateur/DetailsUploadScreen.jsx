@@ -86,9 +86,8 @@ export default function DetailsFolioUploadScreen() {
                     <ScrollView style={styles.inputs}>
                         <View style={styles.content}>
                             {<View style={styles.folioList}>
-                                {flash.folios.map((folio, index) => {
+                                {flash?.folios?.map((folio, index) => {
                                     return (
-                                        <>
                                             <TouchableNativeFeedback onPress={() => handleFolioPress(folio)} key={index} >
                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                     <View style={[styles.folio]}>
@@ -108,7 +107,6 @@ export default function DetailsFolioUploadScreen() {
                                                     </View>
                                                 </View>
                                             </TouchableNativeFeedback>
-                                        </>
                                     )
                                 })}
                             </View>}
@@ -117,7 +115,7 @@ export default function DetailsFolioUploadScreen() {
                     </ScrollView>
                     <View style={styles.actions}>
                             <TouchableOpacity style={[styles.actionBtn, { opacity: !selectedItems.length > 0 ? 0.5 : 1 }]} disabled={!selectedItems.length > 0} onPress={() => handleSubmit()}>
-                                <Text style={styles.actionText}>Enregistrer</Text>
+                                <Text style={styles.actionText}>Confirmer</Text>
                             </TouchableOpacity>
                         </View>
             </View>

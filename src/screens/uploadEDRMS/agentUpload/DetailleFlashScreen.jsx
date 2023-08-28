@@ -10,6 +10,7 @@ export default function DetailleFlashScreen() {
     const { flash } = route.params
     const navigation = useNavigation()
     const handleFoliosPress = folio => {
+        //  return console.log(folio.ID_ETAPE_FOLIO)
         navigation.navigate("DetailsFolioFlashScreen", { folio })
     }
     return (
@@ -24,7 +25,7 @@ export default function DetailleFlashScreen() {
                             <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.title}>{flash.flashs ? flash.flashs.NOM_FLASH : null}</Text>
+                    <Text style={styles.title}>{flash.flash ? flash.flash.NOM_FLASH : null}</Text>
                 </View>
                 {
                     <ScrollView style={styles.inputs}>
@@ -40,8 +41,8 @@ export default function DetailleFlashScreen() {
                                                                                 <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                       </View>
                                                                       <View style={styles.folioDesc}>
-                                                                                <Text style={styles.folioName}>{ folio.folio.NUMERO_FOLIO }</Text>
-                                                                                <Text style={styles.folioSubname}>{ folio.folio.NUMERO_FOLIO }</Text>
+                                                                                <Text style={styles.folioName}>{ folio.NUMERO_FOLIO }</Text>
+                                                                                <Text style={styles.folioSubname}>{ folio.NUMERO_FOLIO }</Text>
                                                                       </View>
                                                             </View>
                                                             

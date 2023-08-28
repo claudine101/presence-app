@@ -42,6 +42,8 @@ import FolioUploadScreen from "../screens/uploadEDRMS/agentUpload/FolioUploadScr
 import VerificateurFlashScreen from "../screens/uploadEDRMS/verificateur/VerificateurFlashScreen";
 import FolioEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioEnregistreScreen";
 import FolioNoEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen";
+import ChefEquipeFlashUploadScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashUploadScreen";
+import FolioInvalideScreen from "../screens/uploadEDRMS/agentUpload/FolioInvalideScreen";
 
 
 export default function DrawerNavigator() {
@@ -156,13 +158,14 @@ export default function DrawerNavigator() {
                                 <>
                                         <Drawer.Screen name="ChefEquipeFlashValideScreen" component={ChefEquipeFlashValideScreen} />
                                         <Drawer.Screen name="ChefEquipeFlashsRetourScreen" component={ChefEquipeFlashsRetourScreen} />
-                                        <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
+                                        <Drawer.Screen name="ChefEquipeFlashUploadScreen" component={ChefEquipeFlashUploadScreen} />
                                 </>
                                 : null}
                                 {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
                                 <>
                                         <Drawer.Screen name="AgentFlashScreen" component={AgentFlashScreen} />
                                         <Drawer.Screen name="FolioUploadScreen" component={FolioUploadScreen} />
+                                        <Drawer.Screen name="FolioInvalideScreen" component={FolioInvalideScreen} />
                                 </>
                                 : null}
                                  {user.ID_PROFIL == PROFILS.VERIFICATEUR_UPLOAD ?

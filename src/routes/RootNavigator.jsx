@@ -53,6 +53,8 @@ import DetailsFolioUploadScreen from '../screens/uploadEDRMS/agentUpload/Details
 import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUploadScreen';
 import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
 import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
+import ChefEquipeDetailsFlashUploadScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeDetailsFlashUploadScreen';
+import DetailValideScreen from '../screens/uploadEDRMS/chefEquipe/DetailValideScreen';
 
 
 
@@ -119,6 +121,11 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsUploadScreen' component={DetailsUploadScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='FolioEnregistreScreen' component={FolioEnregistreScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='FolioNoEnregistreScreen' component={FolioNoEnregistreScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefEquipeDetailsFlashUploadScreen' component={ChefEquipeDetailsFlashUploadScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailValideScreen' component={DetailValideScreen} options={{ headerShown: false }} />
+            
+                
+                
             </Stack.Navigator>
 
         </NavigationContainer>

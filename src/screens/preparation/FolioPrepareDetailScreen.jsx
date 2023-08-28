@@ -142,7 +142,8 @@ export default function FolioPrepareDetailScreen() {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {pvs?.result?.foliosNoPrepare?.length > 0 ? <View style={styles.selectContainer}>
+                                                {pvs?.result?.foliosNoPrepare?.length > 0 ? 
+                                                <View style={styles.selectContainer}>
                                                         <View style={{ width: '100%' }}>
                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 

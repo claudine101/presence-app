@@ -8,14 +8,14 @@ import { COLORS } from "../../../styles/COLORS";
 import Loading from "../../../components/app/Loading";
 import AppHeader from "../../../components/app/AppHeader";
 import moment from "moment"
-export default function FolioUploadScreen() {
+export default function FolioInvalideScreen() {
     const [loading, setLoading] = useState(true)
     const navigation = useNavigation()
     const [folio, setFolios] = useState([])
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
-                const res = await fetchApi(`/uploadEDMRS/folio/folioUplad`)
+                const res = await fetchApi(`/uploadEDMRS/folio/folioInvalide`)
                 setFolios(res.result)
 
             } catch (error) {
