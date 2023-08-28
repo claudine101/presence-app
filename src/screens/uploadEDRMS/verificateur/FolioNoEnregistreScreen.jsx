@@ -22,7 +22,7 @@ export default function FolioNoEnregistreScreen() {
         })()
     }, []))
     const handleFoliosPress = folio => {
-        navigation.navigate("DetailsFolioFlashScreen", { folio })
+        navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio })
     }
     return (
         <>

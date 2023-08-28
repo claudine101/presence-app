@@ -10,9 +10,7 @@ export default function DetailsFolioUploadScreen() {
     const { flash } = route.params
     const navigation = useNavigation()
     const handleFoliosPress = folio => {
-        // return console.log(folio)
-
-        navigation.navigate("DetailsFolioFlashScreen", { folio })
+        navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio })
     }
     return (
         <>

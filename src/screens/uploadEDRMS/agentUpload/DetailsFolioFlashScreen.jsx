@@ -36,7 +36,7 @@ export default function DetailsFolioFlashScreen() {
         (async () => {
             try {
 
-                const res = await fetchApi(`/uploadEDMRS/folio/document/${folio?.folio?.ID_FOLIO}`)
+                const res = await fetchApi(`/uploadEDMRS/folio/document/${folio?.ID_FOLIO}`)
                 setDocument(res.result)
             } catch (error) {
                 console.log(error)
@@ -49,8 +49,9 @@ export default function DetailsFolioFlashScreen() {
         (async () => {
             try {
 
-                const res = await fetchApi(`/uploadEDMRS/folio/typeDocument/${folio?.folio?.ID_NATURE}`)
+                const res = await fetchApi(`/uploadEDMRS/folio/typeDocument/${folio?.ID_NATURE}`)
                 setTypeDocument(res.result)
+                console.log(folio?.ID_NATURE)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -68,7 +69,7 @@ export default function DetailsFolioFlashScreen() {
         try {
             setIsSubmitting(true)
             const form = new FormData()
-            form.append("ID_FOLIO",folio?.folio?.ID_FOLIO)
+            form.append("ID_FOLIO",folio?.ID_FOLIO)
             form.append("TYPE_DOCUMENT", JSON.stringify(selectedType))
             const res = await fetchApi(`/uploadEDMRS/folio/isUpload`, {
                 method: 'POST',
@@ -97,7 +98,7 @@ export default function DetailsFolioFlashScreen() {
                             <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.title}>{folio ?folio?.folio?.NUMERO_FOLIO : null}</Text>
+                    <Text style={styles.title}>{folio ?folio?.NUMERO_FOLIO : null}</Text>
                 </View>
                 <ScrollView>
                     <View style={styles.selectContainer}>
@@ -106,7 +107,7 @@ export default function DetailsFolioFlashScreen() {
                                 <View style={styles.folioLeftSide}>
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Numéro de feuille</Text>
-                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FEUILLE} {folio?.folio?.PRENOM_PROPRIETAIRE}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FEUILLE} {folio?.PRENOM_PROPRIETAIRE}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -117,7 +118,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Propriétaire</Text>
-                                        <Text style={styles.folioSubname}>{folio?.folio?.NOM_PROPRIETAIRE} {folio?.folio?.PRENOM_PROPRIETAIRE}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NOM_PROPRIETAIRE} {folio?.PRENOM_PROPRIETAIRE}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -128,7 +129,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Numéro parcelle</Text>
-                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_PARCELLE} {folio?.folio?.PRENOM_PROPRIETAIRE}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NUMERO_PARCELLE} {folio?.PRENOM_PROPRIETAIRE}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -139,7 +140,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Localité</Text>
-                                        <Text style={styles.folioSubname}>{folio?.folio?.LOCALITE} {folio?.folio?.PRENOM_PROPRIETAIRE}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.LOCALITE} {folio?.PRENOM_PROPRIETAIRE}</Text>
                                     </View>
                                 </View>
                             </View>

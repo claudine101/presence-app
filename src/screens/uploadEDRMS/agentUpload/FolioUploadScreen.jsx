@@ -35,6 +35,10 @@ export default function FolioUploadScreen() {
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
                 {
+                     folio.length == 0 ? <View style={styles.emptyContainer}>
+                     <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                     <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                 </View> :
                     <View style={styles.content}>
                         {<View style={styles.folioList}>
                             <FlatList
@@ -250,5 +254,21 @@ const styles = StyleSheet.create({
         color: '#777',
         fontSize: 12,
         marginTop: 5
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyImage: {
+        width: 100,
+        height: 100,
+        opacity: 0.8
+    },
+    emptyLabel: {
+        fontWeight: 'bold',
+        marginTop: 20,
+        color: '#777',
+        fontSize: 16
     },
 })
