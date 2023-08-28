@@ -188,7 +188,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                                     : null}
                             </View>
                         </TouchableOpacity>
-                        { check.length>0? <TouchableOpacity onPress={onTakePhoto}>
+                        { check?.length>0? <TouchableOpacity onPress={onTakePhoto}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -204,7 +204,7 @@ export default function ChefEquipeFlashDetailsScreen() {
                         </TouchableOpacity>:null}
                     </View>
                 </ScrollView>}
-                { check.length>0?
+                { check?.length>0?
                  <View style={styles.actions}>
                     <View style={styles.actions}>
                         <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>

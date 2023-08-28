@@ -36,8 +36,8 @@ export default function ChefEquipeFlashRetourScreen() {
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Les dossiers en ettente de vérification</Text> : null}
-                                        {flashs.length == 0 ? <View style={styles.emptyContainer}>
+                                        {!loading && flashs?.length > 0 ? <Text style={styles.title}>Les dossiers en ettente de vérification</Text> : null}
+                                        {flashs?.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
                                         </View>:
@@ -66,7 +66,7 @@ export default function ChefEquipeFlashRetourScreen() {
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                                                                                                      {item?.folios?.length} dossier{item?.folios?.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>

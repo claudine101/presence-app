@@ -1,122 +1,20 @@
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableNativeFeedbackBase, TouchableOpacity, View } from "react-native"
+import {  useNavigation, useRoute } from "@react-navigation/native"
+import {  Image, Text, TouchableNativeFeedback,  View } from "react-native"
 import { StyleSheet } from "react-native"
-import { AntDesign, Ionicons, MaterialCommunityIcons, Entypo, Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons} from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
-import fetchApi from "../../../helpers/fetchApi";
 import { COLORS } from "../../../styles/COLORS";
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
-import { Modalize } from "react-native-modalize";
-import useFetch from "../../../hooks/useFetch";
-import PROFILS from "../../../constants/PROFILS";
-import Loading from "../../../components/app/Loading";
-import moment from "moment";
-import ImageView from "react-native-image-viewing";
-import Folio from "../../../components/folio/Folio";
-import Folios from "../../../components/folio/Folios";
 
 export default function DetailleFlashScreen() {
     const route = useRoute()
     const { flash } = route.params
-    const [flashDetail, setFlashDetail] = useState({})
-    const [loading, setLoading] = useState(true)
-    const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-    const [pvPhoto, setPvPhoto] = useState(null)
     const navigation = useNavigation()
-    const natureModalRef = useRef()
-    const [loadingAgents, agents] = useFetch(`/indexation/users/${PROFILS.AGENT_INDEXATION}`)
-    const [loadingFlashs, flashs] = useFetch(`/indexation/flashs`)
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [selectedItems, setSelectedItems] = useState([])
-    const [selectedType, setSelectedType] = useState([])
-    const [typeDocument, setTypeDocument] = useState([])
-    const [selectedFolio, setSelectedFolio] = useState(null)
-    const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
-    const handleFolioPress = (folio) => {
-        if (isSelected(folio)) {
-            // const removed = selectedItems.filter(f => c)
-            const newItems = selectedItems.map(f => {
-                if(f.ID_FOLIO == folio.ID_FOLIO) {
-                    return {
-                        ...f,
-                        selectedType: [...f.selectedType, ...selectedType]
-                    }
-                } else {
-                    return f
-                }
-            })
-            setSelectedItems(newItems)
-        } else {
-            setSelectedItems(items => [...items, { ...folio, selectedType }])
-        }
-        natureModalRef.current?.close()
-    }
-    const isSelectedType = type => selectedType.find(f => f.ID_TYPE_FOLIO_DOCUMENT == type.ID_TYPE_FOLIO_DOCUMENT) ? true : false
-    const isSelectedTypeItems = type => {
-        if (isSelectedType(type)) {
-            return true
-        }
-        if (!isSelected(selectedFolio)) {
-            return false
-        }
-       
-        const folio = selectedItems.find(f => f.ID_FOLIO == selectedFolio?.ID_FOLIO)
-        if(folio){
-            const isTypeSelected = folio.selectedType.find(f => f.ID_TYPE_FOLIO_DOCUMENT == type.ID_TYPE_FOLIO_DOCUMENT)
-            return isTypeSelected ? true : false
-        }
-        return false
-        
-    }
-
-    const handleFolioPressType = (type) => {
-        if (isSelectedType(type)) {
-            const removed = selectedType.filter(f => f.ID_TYPE_FOLIO_DOCUMENT != type.ID_TYPE_FOLIO_DOCUMENT)
-            setSelectedType(removed)
-
-        } else {
-            setSelectedType(items => [...items, type])
-        }
-    }
-    const [data, handleChange] = useForm({
-        agent: null,
-        pv: null
-    })
-    const { hasError, getError, setErrors, checkFieldData, isValidate, setError } = useFormErrorsHandle(data, {
-        agent: {
-            required: true
-        },
-        pv: {
-            required: true
-        }
-    })
-
     const handleFoliosPress = folio => {
         navigation.navigate("DetailsFolioFlashScreen", { folio })
     }
-    useFocusEffect(useCallback(() => {
-        (async () => {
-            try {
-                const res = await fetchApi(`/indexation/flashs/details/${flash.ID_FLASH}`)
-                setFlashDetail(res.result)
-                if (res.result.foliosIndexes) {
-                    setSelectedItems(res.result.foliosIndexes)
-                }
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
-            }
-        })()
-    }, []))
     return (
         <>
 
-            {isSubmitting && <Loading />}
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableNativeFeedback
@@ -128,15 +26,12 @@ export default function DetailleFlashScreen() {
                     </TouchableNativeFeedback>
                     <Text style={styles.title}>{flash.flashs ? flash.flashs.NOM_FLASH : null}</Text>
                 </View>
-                {(loading) ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator animating size={'large'} color={'#777'} />
-                </View> :
+                {
                     <ScrollView style={styles.inputs}>
                         <View style={styles.content}>
                             {<View style={styles.folioList}>
-                                {flash.folios.map((folio, index) => {
+                                {flash?.folios?.map((folio, index) => {
                                     return (
-                                        <>
                                         <TouchableNativeFeedback onPress={() => handleFoliosPress(folio)} key={index} >
                                         <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                   <View style={[styles.folio]}>
@@ -153,7 +48,6 @@ export default function DetailleFlashScreen() {
                                                   </View>
                                         </View>
                               </TouchableNativeFeedback>
-                                        </>
                                     )
                                 })}
                             </View>}
@@ -162,56 +56,7 @@ export default function DetailleFlashScreen() {
                     </ScrollView>}
 
             </View>
-            <Modalize
-                ref={natureModalRef}
-                handlePosition='inside'
-                modalStyle={{
-                    borderTopRightRadius: 10,
-                    borderTopLeftRadius: 10,
-                    paddingVertical: 20
-                }}
-                handleStyle={{ marginTop: 10 }}
-                scrollViewProps={{
-                    keyboardShouldPersistTaps: "handled"
-                }}
-                onClosed={()=>{
-                    setSelectedType([])
-                }}
-            >
-                {loadingAgents ? null :
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Type des documents</Text>
-                        </View>
-                        <View style={styles.modalList}>
-                            {typeDocument.map((type, index) => {
-                                return (
-                                    <>
-                                        <TouchableNativeFeedback key={index} onPress={() => handleFolioPressType(type)}>
-                                            <View style={styles.listItem}>
-                                                <View style={styles.listItemDesc}>
-                                                    <View style={styles.listItemImageContainer}>
-                                                        <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
-                                                    </View>
-                                                    <View style={styles.listNames}>
-                                                        <Text style={styles.listItemTitle}>{type.NOM_DOCUMENT}</Text>
-                                                    </View>
-                                                </View>
-                                                {isSelectedTypeItems(type) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                    <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
-                                            </View>
-                                        </TouchableNativeFeedback>
-                                    </>
-                                )
-                            })}
-                        </View>
-                        <View style={styles.actions}>
-                            <TouchableOpacity style={[styles.actionBtn, { opacity: !selectedType.length > 0 ? 0.5 : 1 }]} disabled={!selectedType.length > 0} onPress={() => handleFolioPress(selectedFolio)}>
-                                <Text style={styles.actionText}>Enregistrer</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>}
-            </Modalize>
+            
         </>
     )
 }

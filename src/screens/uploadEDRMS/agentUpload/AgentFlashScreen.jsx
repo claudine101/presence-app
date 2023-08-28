@@ -59,13 +59,13 @@ export default function AgentFlashScreen() {
                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                             </Text>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                {item.folios.length}dossier{item.folios.length > 1 && 's'}
                                                             </Text>
                                                         </View>
                                                     </View>
