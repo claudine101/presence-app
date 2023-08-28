@@ -80,92 +80,92 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                                 <ScrollView style={styles.inputs}>
-                                                                <View style={styles.selectContainer}>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                <View style={styles.labelContainer}>
-                                                                                        <View style={styles.icon}>
-                                                                                                <Feather name="user" size={20} color="#777" />
-                                                                                        </View>
-                                                                                        <Text style={styles.selectLabel}>
-                                                                                                Agent superviseur
-                                                                                        </Text>
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={styles.labelContainer}>
+                                                                                <View style={styles.icon}>
+                                                                                        <Feather name="user" size={20} color="#777" />
                                                                                 </View>
-                                                                                <Text style={styles.selectedValue}>
-                                                                                        {userTraite?.NOM} {userTraite?.PRENOM}
+                                                                                <Text style={styles.selectLabel}>
+                                                                                        Agent superviseur
                                                                                 </Text>
-                                                                                <View style={{ width: '100%' }}>
-                                                                                        {PV_PATH ?
-                                                                                                <>
-                                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                                setGalexyIndex(0)
-                                                                                                        }}>
-                                                                                                                <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                        </TouchableOpacity>
-                                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                                </> : null}
-                                                                                </View>
                                                                         </View>
-                                                                </View>
-
-                                                                {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {userTraite?.NOM} {userTraite?.PRENOM}
+                                                                        </Text>
                                                                         <View style={{ width: '100%' }}>
-                                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-
-                                                                                </View>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                        </Text>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                                {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                                {/* {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'} */}
-                                                                                        </Text>
-                                                                                </View>
-                                                                                <View style={styles.folioList}>
-                                                                                        {folio?.folios.map((folio, index) => {
-                                                                                                return (
-                                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
-                                                                                                                <View style={[styles.folio]}>
-                                                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                                                </View>
-                                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                </View>
-                                                                                                                        </View>
-                                                                                                                        {folio.IS_RECONCILIE != null ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-                                                                                                                </View>
-                                                                                                        </TouchableOpacity>
-                                                                                                )
-                                                                                        })}
-                                                                                </View>
-                                                                        </View>
-                                                                </View> : null}
-                                                                <View style={styles.selectContainer}>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                                Chargement
-                                                                                        </Text>
-                                                                                </View> : null}
-                                                                                <Text style={styles.selectedValue}>
-                                                                                        {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                        PV de retour
-                                                                                </Text>
-                                                                                {pvs?.result ?
+                                                                                {PV_PATH ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
                                                                                                         setGalexyIndex(0)
                                                                                                 }}>
-                                                                                                        <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                         </> : null}
                                                                         </View>
                                                                 </View>
+                                                        </View>
+
+                                                        {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
+                                                                                        {/* {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'} */}
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {folio?.folios.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                {folio.IS_RECONCILIE != null ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
+                                                                        </View>
+                                                                </View>
+                                                        </View> : null}
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                                        Chargement
+                                                                                </Text>
+                                                                        </View> : null}
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
+                                                                                PV de retour
+                                                                        </Text>
+                                                                        {pvs?.result ?
+                                                                                <>
+                                                                                        <TouchableOpacity onPress={() => {
+                                                                                                setGalexyIndex(0)
+                                                                                        }}>
+                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                        </TouchableOpacity>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                </> : null}
+                                                                </View>
+                                                        </View>
                                                 </ScrollView>}
                         </View>
                 </>

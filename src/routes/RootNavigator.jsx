@@ -57,6 +57,9 @@ import DetailsAgentDesarchivagesVolumeScreen from '../screens/scanning/agentSupe
 import DetailsEquipeFoliosTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosTraiteScreen';
 import DetailsVolumeChefPlateauTraitesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauTraitesScreen';
 import DetailsSupAilleScanTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsSupAilleScanTraiteVolumeScreen';
+import DetailsVolumeChefEquipScanTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefEquipScanTraiteScreen';
+import DetailsVolumeAgentDistributeurTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentDistributeurTraiteScreen';
+import DetailsVolumeAgentArchivesTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentArchivesTraiteScreen';
 
 
 
@@ -106,6 +109,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsEquipeFoliosTraiteScreen' component={DetailsEquipeFoliosTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeChefPlateauTraitesScreen' component={DetailsVolumeChefPlateauTraitesScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsSupAilleScanTraiteVolumeScreen' component={DetailsSupAilleScanTraiteVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefEquipScanTraiteScreen' component={DetailsVolumeChefEquipScanTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeAgentDistributeurTraiteScreen' component={DetailsVolumeAgentDistributeurTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeAgentArchivesTraiteScreen' component={DetailsVolumeAgentArchivesTraiteScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />

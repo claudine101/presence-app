@@ -61,12 +61,14 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.CHEF_PLATEAU ?
@@ -139,9 +141,13 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                 </>
                                 : null}
-                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ) ?
-                                <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} /> : null}
-                       
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?
+                                <>
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                </>
+                                : null}
+
                         {/*phase uplad EDMS*/}
                         {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_PHASE_UPLOAD ?
                                 <>
@@ -150,18 +156,18 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="ChefEquipeFlashValidesScreen" component={ChefEquipeFlashValidesScreen} />
                                 </>
                                 : null}
-                                {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
+                        {user.ID_PROFIL == PROFILS.AGENT_UPLOAD_EDRMS ?
                                 <>
                                         <Drawer.Screen name="AgentFlashScreen" component={AgentFlashScreen} />
                                         <Drawer.Screen name="FolioUploadScreen" component={FolioUploadScreen} />
                                 </>
                                 : null}
-                                 {user.ID_PROFIL == PROFILS.VERIFICATEUR_UPLOAD ?
+                        {user.ID_PROFIL == PROFILS.VERIFICATEUR_UPLOAD ?
                                 <>
                                         <Drawer.Screen name="VerificateurFlashScreen" component={VerificateurFlashScreen} />
                                         <Drawer.Screen name="FolioEnregistreScreen" component={FolioEnregistreScreen} />
                                         <Drawer.Screen name="FolioNoEnregistreScreen" component={FolioNoEnregistreScreen} />
-                               
+
                                 </>
                                 : null}
 

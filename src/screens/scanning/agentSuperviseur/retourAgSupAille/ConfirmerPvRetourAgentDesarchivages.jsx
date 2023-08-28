@@ -2,7 +2,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import React, { useRef } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { COLORS } from "../../../../styles/COLORS";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useState } from "react";
@@ -48,46 +48,46 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                 setEquipe(equi)
         }
 
-         //Composent pour afficher la listes des agents desarchivages
-         const EquipeScanningList = () => {
+        //Composent pour afficher la listes des agents desarchivages
+        const EquipeScanningList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/desarchivages')
                 return (
                         <>
-                        {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View > :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                                        </View>
-                                        {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent desarchivages trouves</Text></View> : null}
-                                        <View style={styles.modalList}>
-                                                {volumesAll.result.map((chef, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
-                                                                                <View style={styles.listItem} >
-                                                                                        <View style={styles.listItemDesc}>
-                                                                                                <View style={styles.listItemImageContainer}>
-                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent desarchivages trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((chef, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                <View style={styles.listNames}>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        {equipe?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
                                         </View>
-                                </View>
-                        }
-                </>
+                                }
+                        </>
                 )
         }
 
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
                 borderWidth: 0.5,
                 borderColor: "#ddd",
                 marginVertical: 10,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue1: {
                 color: '#777',

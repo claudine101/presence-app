@@ -185,7 +185,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         style={styles.contain}
                                                         data={allRetourVolumes}
                                                         renderItem={({ item: volume, index }) => {
-                                                                console.log(volume)
                                                                 return (
                                                                         <>
                                                                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

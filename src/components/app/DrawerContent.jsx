@@ -69,6 +69,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback> : null}
+                        {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeEnEttenteChefEquipeScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
+                                        Volume traitées
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback> : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeFolioRetourSupAilleScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
@@ -95,6 +105,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
                                         Volumes Retourner
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback> : null}
+                        {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ? <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeEnEttenteChefEquipeScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
+                                        Volume traitées
                                     </Text>
                                 </View>
                             </View>
@@ -368,6 +388,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                 <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
                                     Volumes Reçus
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeEnEttenteChefEquipeScreen')}>
+                        <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                            <View style={styles.drawerItem}>
+                                <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
+                                    Volume traitées
                                 </Text>
                             </View>
                         </View>
