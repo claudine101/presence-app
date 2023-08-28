@@ -23,7 +23,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
         const user = useSelector(userSelector)
 
         const handleSubmit = (volume) => {
-                
+
         }
 
         //fonction pour recuperer les volumes associer a un chef d'equipe
@@ -76,7 +76,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.cardDescription}>
                                                                                                                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                        <View style={{width:"62%"}}>
+                                                                                                                                        <View style={{ width: "62%" }}>
                                                                                                                                                 <Text numberOfLines={2} style={styles.itemVolume}>{volume.traitant.NOM} {volume.traitant.PRENOM}</Text>
                                                                                                                                                 <Text>{volume.traitant.EMAIL}</Text>
                                                                                                                                         </View>
@@ -147,6 +147,26 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                         />}
                                 </View> : null
                         }
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                        >
+                                <View style={styles.cardDetails}>
+                                        <View style={styles.carddetailItem}>
+                                                <View style={styles.cardImages}>
+                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                </View>
+                                                <View style={styles.cardDescription}>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View>
+                                                                        <Text style={styles.itemVolume}>skskks</Text>
+                                                                        <Text>ssjjsj</Text>
+                                                                </View>
+                                                                <Text>sjjsjs</Text>
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+                        </TouchableNativeFeedback>
+
                 </>
 
         )
