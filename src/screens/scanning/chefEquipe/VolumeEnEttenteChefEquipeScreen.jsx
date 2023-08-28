@@ -2,13 +2,15 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../components/app/AppHeader";
 import { COLORS } from "../../../styles/COLORS";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Fontisto } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
 import PROFILS from "../../../constants/PROFILS"
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/selectors/userSelector";
+
+console.log(PROFILS)
 
 /**
  * Screen pour afficher les volumes en ettente pour le chef equipe
@@ -20,26 +22,45 @@ import { userSelector } from "../../../store/selectors/userSelector";
 export default function VolumeEnEttenteChefEquipeScreen() {
         const [allVolumes, setAllVolumes] = useState([])
         const [loading, setLoading] = useState(false)
+        const navigation = useNavigation()
+
+        const [allVolumesChefPlateau, setAllVolumesChefPlateau] = useState([])
+        const [allVolumesSupAilleScan, setAllVolumesSupAilleScan] = useState([])
         const user = useSelector(userSelector)
 
         const handleSubmit = (volume) => {
-
+                console.log(volume)
+                if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
+                        navigation.navigate("DetailsVolumeChefPlateauTraitesScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                }else{
+                        navigation.navigate("DetailsSupAilleScanTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                }
         }
 
         //fonction pour recuperer les volumes associer a un chef d'equipe
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
-                                const vol = await fetchApi(`/scanning/retour/agent/chefEquipe/envoyer`)
-                                setAllVolumes(vol.result)
+                                if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
+                                        setLoading(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau`)
+                                        setAllVolumesChefPlateau(vol.PvFolios)
+                                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
+                                        setLoading(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/supaillescanning`)
+                                        setAllVolumesSupAilleScan(vol.PvVolume)
+                                } else {
+                                        setLoading(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/chefEquipe/envoyer`)
+                                        setAllVolumes(vol.result)
+                                }
                         } catch (error) {
                                 console.log(error)
                         } finally {
                                 setLoading(false)
                         }
                 })()
-        }, []))
+        }, [user, PROFILS]))
         return (
                 <>
                         <AppHeader />
@@ -100,7 +121,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumes.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesSupAilleScan.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
@@ -111,28 +132,36 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumes}
+                                                                data={allVolumesSupAilleScan}
                                                                 renderItem={({ item: volume, index }) => {
+                                                                        console.log(volume)
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                         </View> :
+
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.carddetailItem}>
-                                                                                                                        <View style={styles.cardImages}>
-                                                                                                                                <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardAllDetails}>
+                                                                                                                        <View>
+                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                </View>
                                                                                                                         </View>
-                                                                                                                        <View style={styles.cardDescription}>
-                                                                                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                        <View>
-                                                                                                                                                <Text style={styles.itemVolume}>{volume.traitant.NOM} {volume.traitant.PRENOM}</Text>
-                                                                                                                                                <Text>{volume.traitant.EMAIL}</Text>
-                                                                                                                                        </View>
-                                                                                                                                        <Text>{moment(volume.DATE_INSERTION).format("DD-MM-YYYY, HH:mm")}</Text>
+                                                                                                                        <View>
+                                                                                                                                <View ><Text></Text></View>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes?.length} dossiers</Text></View>
+
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
@@ -147,25 +176,66 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                         />}
                                 </View> : null
                         }
-                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                        >
-                                <View style={styles.cardDetails}>
-                                        <View style={styles.carddetailItem}>
-                                                <View style={styles.cardImages}>
-                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                </View>
-                                                <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <View>
-                                                                        <Text style={styles.itemVolume}>skskks</Text>
-                                                                        <Text>ssjjsj</Text>
-                                                                </View>
-                                                                <Text>sjjsjs</Text>
-                                                        </View>
-                                                </View>
-                                        </View>
-                                </View>
-                        </TouchableNativeFeedback>
+
+                        {user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
+                                <View style={styles.container}>
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumesChefPlateau.length == 0 ? <View style={styles.emptyContaier}>
+                                                        <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                        <Text style={styles.emptyTitle}>
+                                                                Aucun volume trouvé
+                                                        </Text>
+                                                        <Text style={styles.emptyDesc}>
+                                                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
+                                                        </Text>
+                                                </View> :
+                                                        <FlatList
+                                                                style={styles.contain}
+                                                                data={allVolumesChefPlateau}
+                                                                renderItem={({ item: volume, index }) => {
+                                                                        return (
+                                                                                <>
+                                                                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                        </View> :
+
+                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                >
+                                                                                                        <View style={styles.cardDetails}>
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardAllDetails}>
+                                                                                                                        <View>
+                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                        <View>
+                                                                                                                                <View ><Text></Text></View>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </TouchableNativeFeedback>
+
+                                                                                        }
+                                                                                </>
+                                                                        )
+                                                                }}
+                                                                keyExtractor={(volume, index) => index.toString()}
+                                                        />}
+                                </View> : null
+                        }
 
                 </>
 
@@ -185,23 +255,37 @@ const styles = StyleSheet.create({
                 backgroundColor: '#fff',
                 padding: 10,
                 overflow: 'hidden',
-                marginHorizontal: 10
-        },
-        carddetailItem: {
-                flexDirection: 'row',
-                alignItems: 'center',
+                marginHorizontal: 10,
+                flexDirection: "row"
         },
         cardImages: {
-                backgroundColor: '#DCE4F7',
+                backgroundColor: '#ddd',
                 width: 50,
                 height: 50,
                 borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
-        cardDescription: {
-                marginLeft: 10,
-                flex: 1
+        imageIcon: {
+                width: 25,
+                height: 25
+        },
+        titeName: {
+                color: "#777"
+        },
+        cardDescDetails: {
+                flexDirection: "row",
+                marginTop: 8
+        },
+        cardAllDetails: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 1,
+                marginLeft: 8
+        },
+        titlePrincipal: {
+                fontWeight: "bold"
         },
         itemVolume: {
                 fontSize: 15,

@@ -21,6 +21,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
+        console.log(userTraite)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -173,7 +174,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                         </View>
                                 </View>
                                 <ScrollView>
-                                <View style={styles.selectContainer}>
+                                        <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                 <ActivityIndicator animating size={'small'} color={'#777'} />
@@ -197,31 +198,43 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                 </View>
                                         </View>
                                         <View style={styles.selectContainer}>
-                                                <View style={styles.contain}>
-                                                        {details.map((folio, index) => {
-                                                                return (
-                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
-                                                                                <View style={[styles.folio]}>
-                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                </View>
-                                                                                                <View style={styles.folioDesc}>
-                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
-                                                                                </View>
-                                                                        </TouchableOpacity>
-                                                                )
-                                                        })
-                                                        }
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.length} pret à être validé{details.length > 1 && 's'}
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.contain}>
+                                                                {details.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })
+                                                                }
+                                                        </View>
                                                 </View>
                                         </View>
-                                        
+
                                         {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>

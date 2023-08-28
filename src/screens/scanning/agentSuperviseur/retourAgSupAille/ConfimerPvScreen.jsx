@@ -81,7 +81,7 @@ export default function ConfimerPvScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        navigation.navigate("AllVolumeFolioRetourSupAilleScreen")
                 }
                 catch (error) {
                         console.log(error)

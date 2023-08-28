@@ -55,6 +55,8 @@ import DetailsClickAgentDistributeurVolumeScreen from '../screens/scanning/agent
 import DetailsClickAgentSupArchiveVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsClickAgentSupArchiveVolumeScreen';
 import DetailsAgentDesarchivagesVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsAgentDesarchivagesVolumeScreen';
 import DetailsEquipeFoliosTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosTraiteScreen';
+import DetailsVolumeChefPlateauTraitesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauTraitesScreen';
+import DetailsSupAilleScanTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsSupAilleScanTraiteVolumeScreen';
 
 
 
@@ -102,6 +104,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsEquipeFoliosTraiteScreen' component={DetailsEquipeFoliosTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefPlateauTraitesScreen' component={DetailsVolumeChefPlateauTraitesScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsSupAilleScanTraiteVolumeScreen' component={DetailsSupAilleScanTraiteVolumeScreen} options={{ headerShown: false }} />
+
+
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsParAgentClickVolumeScreen' component={DetailsParAgentClickVolumeScreen} options={{ headerShown: false }} />

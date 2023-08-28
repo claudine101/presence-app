@@ -19,7 +19,6 @@ export default function AllFoliosSuperviseurPvScreen() {
         const [allFolios, setAllFolios] = useState([])
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
-                console.log(folio)
                 navigation.navigate("DetailsEquipeFoliosTraiteScreen", { folio: folio, userTraite: folio?.users, PV_PATH:folio?.PV_PATH, date:folio.date })
         }
 

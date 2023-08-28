@@ -16,13 +16,13 @@ import { useRef } from "react";
 import { useCallback } from "react";
 
 /**
- * Screen pour afficher les details des folios traitees par equipe
+ * Screen pour afficher les details de volumes contenant les folios traites
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 3/8/2023
+ * @date 28/8/2023
  * @returns 
  */
 
-export default function DetailsEquipeFoliosTraiteScreen() {
+export default function DetailsVolumeChefPlateauTraitesScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
@@ -39,9 +39,7 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite)
-                                console.log(form)
-                                const res = await fetchApi(`/scanning/retour/agent/equipe/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -75,37 +73,40 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.title}>{folio?.folios[0]?.equipe?.NOM_EQUIPE}</Text>
+                                        <Text style={styles.title}>{folio?.folios[0]?.volume?.NUMERO_VOLUME}</Text>
                                 </View>
                                 {
                                         loadingPvs ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                                 <ScrollView style={styles.inputs}>
-                                                        <View style={styles.content}>
                                                                 <View style={styles.selectContainer}>
                                                                         <View style={{ width: '100%' }}>
-                                                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                                Chargement
+                                                                                <View style={styles.labelContainer}>
+                                                                                        <View style={styles.icon}>
+                                                                                                <Feather name="user" size={20} color="#777" />
+                                                                                        </View>
+                                                                                        <Text style={styles.selectLabel}>
+                                                                                                Agent superviseur
                                                                                         </Text>
-                                                                                </View> : null}
+                                                                                </View>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                        PV de départ
+                                                                                        {userTraite?.NOM} {userTraite?.PRENOM}
                                                                                 </Text>
-                                                                                {pvs?.result ?
-                                                                                        <>
-                                                                                                <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
-                                                                                                }}>
-                                                                                                        <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                        </> : null}
+                                                                                <View style={{ width: '100%' }}>
+                                                                                        {PV_PATH ?
+                                                                                                <>
+                                                                                                        <TouchableOpacity onPress={() => {
+                                                                                                                setGalexyIndex(0)
+                                                                                                        }}>
+                                                                                                                <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                        </TouchableOpacity>
+                                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                                </> : null}
+                                                                                </View>
                                                                         </View>
                                                                 </View>
+
                                                                 {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
                                                                         <View style={{ width: '100%' }}>
                                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
@@ -144,23 +145,27 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                                                 </View> : null}
                                                                 <View style={styles.selectContainer}>
                                                                         <View style={{ width: '100%' }}>
+                                                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                                                Chargement
+                                                                                        </Text>
+                                                                                </View> : null}
                                                                                 <Text style={styles.selectedValue}>
                                                                                         {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
                                                                                         PV de retour
                                                                                 </Text>
-                                                                                {PV_PATH ?
+                                                                                {pvs?.result ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
                                                                                                         setGalexyIndex(0)
                                                                                                 }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                        <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                         </> : null}
                                                                         </View>
                                                                 </View>
-
-                                                        </View>
                                                 </ScrollView>}
                         </View>
                 </>
