@@ -37,8 +37,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                     <View style={styles.userNames}>
                         <Text style={styles.fullName} numberOfLines={1}>{user.NOM} {user.PRENOM}</Text>
                         <Text style={styles.email}>{user.profil.DESCRIPTION}</Text>
-                        {/* <Text style={styles.email}>{user.EMAIL}</Text> */}
-                        {/* <Text style={styles.email}>{user.societe}. {user.departement}</Text> */}
                     </View>
                 </View>
             </TouchableNativeFeedback>
