@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
@@ -69,16 +69,15 @@ export default function NewChefPlateauScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                                 <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -177,7 +176,7 @@ export default function NewChefPlateauScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'un chef plateau</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un chef plateau</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -246,11 +245,9 @@ export default function NewChefPlateauScreen() {
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Portal>
-                                <Modalize ref={chefPlateauModalizeRef}  >
-                                        <ChefPlateauList />
-                                </Modalize>
-                        </Portal>
+                        <Modalize ref={chefPlateauModalizeRef}  >
+                                <ChefPlateauList />
+                        </Modalize>
                 </>
         )
 }
@@ -340,8 +337,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '90%',
+                height: '90%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',

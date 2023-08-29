@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from "react";
 import AppHeaderPhPreparationRetour from "../../../../components/app/AppHeaderPhPreparationRetour";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Fontisto } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
+import moment from 'moment'
 
 /**
  * Screen pour afficher les folios pres a etre reconsillier
@@ -18,7 +19,7 @@ export default function AllFoliosSuperviseurPvScreen() {
         const [allFolios, setAllFolios] = useState([])
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
-                navigation.navigate("DetailsFolioRetourScreen",{folio:folio, ID_ETAPE_FOLIO:folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE:folio.folios[0].folio.equipe.ID_EQUIPE })
+                navigation.navigate("DetailsEquipeFoliosTraiteScreen", { folio: folio, userTraite: folio?.users, PV_PATH:folio?.PV_PATH, date:folio.date })
         }
 
         //fonction pour recuperer les folios d'un agent qui est connecter
@@ -27,7 +28,7 @@ export default function AllFoliosSuperviseurPvScreen() {
                         try {
                                 setLoading(true)
                                 const fol = await fetchApi(`/scanning/volume/allFoliosScanning`)
-                                setAllFolios(fol.UserFolios)
+                                setAllFolios(fol.PvFolios)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -57,29 +58,64 @@ export default function AllFoliosSuperviseurPvScreen() {
                                                         renderItem={({ item: folio, index }) => {
                                                                 return (
                                                                         <>
+
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
+
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                 onPress={() => handleSubmit(folio)}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.cardAllDetails}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.titlePrincipal}>{folio?.folios[0]?.equipe.NOM_EQUIPE}</Text>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        </View>
                                                                                                                 </View>
-                                                                                                                <View style={styles.cardDescription}>
-                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                <View>
-                                                                                                                                        <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
-                                                                                                                                        <Text>Nombre de folios {folio.folios.length}</Text>
-                                                                                                                                </View>
-                                                                                                                                {/* <Text>djjje</Text> */}
+                                                                                                                <View>
+                                                                                                                        <View ><Text></Text></View>
+                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio.folios.length} dossiers</Text></View>
+
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </TouchableNativeFeedback>
+
+
+
+
+
+
+                                                                               
+                                                                                        // <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                        //         onPress={() => handleSubmit(folio)}
+                                                                                        // >
+                                                                                        //         <View style={styles.cardDetails}>
+                                                                                        //                 <View style={styles.carddetailItem}>
+                                                                                        //                         <View style={styles.cardImages}>
+                                                                                        //                                 <AntDesign name="folderopen" size={24} color="black" />
+                                                                                        //                         </View>
+                                                                                        //                         <View style={styles.cardDescription}>
+                                                                                        //                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                        //                                         <View>
+                                                                                        //                                                 <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
+                                                                                        //                                                 <Text>Nombre de folios {folio.folios.length}</Text>
+                                                                                        //                                         </View>
+                                                                                        //                                         {/* <Text>djjje</Text> */}
+                                                                                        //                                 </View>
+                                                                                        //                         </View>
+                                                                                        //                 </View>
+                                                                                        //         </View>
+                                                                                        // </TouchableNativeFeedback>
                                                                                 }
                                                                         </>
                                                                 )
@@ -104,23 +140,37 @@ const styles = StyleSheet.create({
                 backgroundColor: '#fff',
                 padding: 10,
                 overflow: 'hidden',
-                marginHorizontal: 10
-        },
-        carddetailItem: {
-                flexDirection: 'row',
-                alignItems: 'center',
+                marginHorizontal: 10,
+                flexDirection: "row"
         },
         cardImages: {
-                backgroundColor: '#DCE4F7',
+                backgroundColor: '#ddd',
                 width: 50,
                 height: 50,
                 borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
-        cardDescription: {
-                marginLeft: 10,
-                flex: 1
+        imageIcon: {
+                width: 25,
+                height: 25
+        },
+        titeName: {
+                color: "#777"
+        },
+        cardDescDetails: {
+                flexDirection: "row",
+                marginTop: 8
+        },
+        cardAllDetails: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 1,
+                marginLeft: 8
+        },
+        titlePrincipal: {
+                fontWeight: "bold"
         },
         itemVolume: {
                 fontSize: 15,

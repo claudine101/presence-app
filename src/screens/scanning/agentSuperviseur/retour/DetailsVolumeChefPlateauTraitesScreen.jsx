@@ -16,32 +16,22 @@ import { useRef } from "react";
 import { useCallback } from "react";
 
 /**
- * Screen pour afficher les details des folios par equipe
+ * Screen pour afficher les details de volumes contenant les folios traites
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 3/8/2023
+ * @date 28/8/2023
  * @returns 
  */
 
-export default function DetailsFolioRetourScreen() {
+export default function DetailsVolumeChefPlateauTraitesScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio, ID_ETAPE_FOLIO, ID_EQUIPE, userTraite } = route.params
-        const [document, setDocument] = useState(null)
-        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const [loadingData, setLoadingData] = useState(false)
-        const [reconsilier, setReconsilier] = useState(0)
+        const { folio, PV_PATH, date, userTraite } = route.params
 
-        const [loading, setLoading] = useState(true)
-        const agentsModalRef = useRef()
-        const [isSubmitting, setIsSubmitting] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
 
-        const [check, setCheck] = useState([])
-        const [loadingCheck, setLoadingCheck] = useState(false)
-
-        const folio_ids = folio?.folios?.map(foli => foli.folio.ID_FOLIO)
+        const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
 
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -49,8 +39,7 @@ export default function DetailsFolioRetourScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite)
-                                const res = await fetchApi(`/scanning/retour/agent/equipe/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -63,112 +52,17 @@ export default function DetailsFolioRetourScreen() {
                 })()
         }, []))
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/equipeScanning/${userTraite}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [userTraite]))
-
-        //Multi select pour selectionner les folios reconcilier
-        const [multiFolios, setMultiFolios] = useState([]);
-        const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
-        const setSelectedFolio = (folio) => {
-                if (isSelected(folio.folio.ID_FOLIO)) {
-                        const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != folio.folio.ID_FOLIO)
-                        setMultiFolios(newfolio)
-                } else {
-                        setMultiFolios(u => [...u, folio])
-                }
-
-        }
-
-
-        const isValidAdd = () => {
-                var isValid = false
-                isValid = document != null  && multiFolios.length > 0? true : false
-                return isValid
-        }
-        // const handleSubmit = (fol) => {
-        //         navigation.navigate("NewFolioRetourScreen", { details: fol })
-        // }
-
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                setIsCompressingPhoto(true)
-                const permission = await ImagePicker.requestCameraPermissionsAsync()
-                if (!permission.granted) return false
-                const image = await ImagePicker.launchCameraAsync()
-                if (image.canceled) {
-                        return setIsCompressingPhoto(false)
-                }
-                const photo = image.assets[0]
-                setDocument(photo)
-                const manipResult = await manipulateAsync(
-                        photo.uri,
-                        [
-                                { resize: { width: 500 } }
-                        ],
-                        { compress: 0.7, format: SaveFormat.JPEG }
-                );
-                setIsCompressingPhoto(false)
-                //     handleChange('pv', manipResult)
-        }
-
-        const submitEquipeData = async () => {
-                try {
-                        setLoadingData(true)
-                        const form = new FormData()
-                        form.append('folio', JSON.stringify(multiFolios))
-                        if (document) {
-                                const manipResult = await manipulateAsync(
-                                        document.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.8, format: SaveFormat.JPEG }
-                                );
-                                let localUri = manipResult.uri;
-                                let filename = localUri.split('/').pop();
-                                let match = /\.(\w+)$/.exec(filename);
-                                let type = match ? `image/${match[1]}` : `image`;
-                                form.append('PV', {
-                                        uri: localUri, name: filename, type
-                                })
-                        }
-                        const folioss = await fetchApi(`/scanning/volume/retour/chef`, {
-                                method: "PUT",
-                                body: form
-                        })
-                        navigation.goBack()
-                }
-                catch (error) {
-                        console.log(error)
-                } finally {
-                        setLoadingData(false)
-                }
-        }
         return (
-                <>
-                        {(galexyIndex != null && pvs?.result && pvs?.result) &&
-                                <ImageView
-                                        images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
-                                        imageIndex={galexyIndex}
-                                        visible={(galexyIndex != null) ? true : false}
-                                        onRequestClose={() => setGalexyIndex(null)}
-                                        swipeToCloseEnabled
-                                        keyExtractor={(_, index) => index.toString()}
-                                />
-                        }
-                        {loadingData && <Loading />}
+                <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
+                        <ImageView
+                                images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
+                                imageIndex={galexyIndex}
+                                visible={(galexyIndex != null) ? true : false}
+                                onRequestClose={() => setGalexyIndex(null)}
+                                swipeToCloseEnabled
+                                keyExtractor={(_, index) => index.toString()}
+                        />
+                }
                         <View style={styles.container}>
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
@@ -178,35 +72,37 @@ export default function DetailsFolioRetourScreen() {
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.title}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
+                                        <Text style={styles.title}>{folio?.folios[0]?.volume?.NUMERO_VOLUME}</Text>
                                 </View>
-                                {loadingPvs ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View> :
-                                        <ScrollView style={styles.inputs}>
-
-                                                <View style={styles.content}>
+                                {
+                                        loadingPvs ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <ScrollView style={styles.inputs}>
                                                         <View style={styles.selectContainer}>
                                                                 <View style={{ width: '100%' }}>
-                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                        Chargement
+                                                                        <View style={styles.labelContainer}>
+                                                                                <View style={styles.icon}>
+                                                                                        <Feather name="user" size={20} color="#777" />
+                                                                                </View>
+                                                                                <Text style={styles.selectLabel}>
+                                                                                        Agent superviseur
                                                                                 </Text>
-                                                                        </View> : null}
+                                                                        </View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                {/* dggdggd */}
+                                                                                {userTraite?.NOM} {userTraite?.PRENOM}
                                                                         </Text>
-                                                                        {pvs?.result ?
-                                                                                <>
-                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
-                                                                                        }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                        </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                </> : null}
+                                                                        <View style={{ width: '100%' }}>
+                                                                                {PV_PATH ?
+                                                                                        <>
+                                                                                                <TouchableOpacity onPress={() => {
+                                                                                                        setGalexyIndex(0)
+                                                                                                }}>
+                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                </TouchableOpacity>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                        </> : null}
+                                                                        </View>
                                                                 </View>
                                                         </View>
 
@@ -220,24 +116,24 @@ export default function DetailsFolioRetourScreen() {
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
                                                                                         {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                        {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'}
+                                                                                        {/* {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'} */}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
                                                                                 {folio?.folios.map((folio, index) => {
                                                                                         return (
-                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
                                                                                                         <View style={[styles.folio]}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
                                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                {folio.IS_RECONCILIE != null ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                                         <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
@@ -246,35 +142,31 @@ export default function DetailsFolioRetourScreen() {
                                                                         </View>
                                                                 </View>
                                                         </View> : null}
-
-                                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
-                                                                <View style={[styles.addImageItem]}>
-                                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                                        <Text style={styles.addImageLabel}>
-                                                                                                Photo du procès verbal
-                                                                                        </Text>
-                                                                                </View>
-                                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                                                                        </View>
-                                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                                        Chargement
+                                                                                </Text>
+                                                                        </View> : null}
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
+                                                                                PV de retour
+                                                                        </Text>
+                                                                        {pvs?.result ?
+                                                                                <>
+                                                                                        <TouchableOpacity onPress={() => {
+                                                                                                setGalexyIndex(0)
+                                                                                        }}>
+                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                        </TouchableOpacity>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                </> : null}
                                                                 </View>
-                                                        </TouchableOpacity> : null}
-
-                                                </View>
-                                        </ScrollView>}
-                                {check.length > 0 ? <TouchableWithoutFeedback
-                                        disabled={!isValidAdd()}
-                                        onPress={submitEquipeData}
-                                >
-                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback> : null}
-
+                                                        </View>
+                                                </ScrollView>}
                         </View>
-
                 </>
         )
 }

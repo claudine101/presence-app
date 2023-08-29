@@ -8,6 +8,8 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useState } from "react";
 import Loading from "../../../../components/app/Loading";
 import fetchApi from "../../../../helpers/fetchApi";
+import moment from 'moment'
+import ImageView from "react-native-image-viewing";
 
 /**
  * Screen pour signer le pv entre chef plateau et agent superviseur aille
@@ -22,8 +24,9 @@ export default function ConfimerPvScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { volume, id } = route.params
+        const { detail } = route.params
         const [loadingData, setLoadingData] = useState(false)
+        const [galexyIndex, setGalexyIndex] = useState(null)
 
         const isValidAdd = () => {
                 var isValid = false
@@ -74,11 +77,11 @@ export default function ConfimerPvScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/${id}`, {
+                        const volume = await fetchApi(`/scanning/retour/agent/${detail.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        navigation.navigate("AllVolumeFolioRetourSupAilleScreen")
                 }
                 catch (error) {
                         console.log(error)
@@ -90,6 +93,16 @@ export default function ConfimerPvScreen() {
 
         return (
                 <>
+                        {(galexyIndex != null && detail) &&
+                                <ImageView
+                                        images={[{ uri: detail?.PV_PATH } ? { uri: detail?.PV_PATH } : undefined]}
+                                        imageIndex={galexyIndex}
+                                        visible={(galexyIndex != null) ? true : false}
+                                        onRequestClose={() => setGalexyIndex(null)}
+                                        swipeToCloseEnabled
+                                        keyExtractor={(_, index) => index.toString()}
+                                />
+                        }
                         {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
@@ -101,39 +114,42 @@ export default function ConfimerPvScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Confirmer le retour</Text>
+                                                <Text style={styles.title} numberOfLines={2}>{detail?.volume?.NUMERO_VOLUME}</Text>
                                         </View>
                                 </View>
 
-                                <ScrollView style={styles.inputs}>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                <ScrollView>
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {/* {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null} */}
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <Feather name="user" size={20} color="#777" />
+                                                                </View>
+                                                                <Text style={styles.selectLabel}>
+                                                                        Chef du plateau
+                                                                </Text>
                                                         </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
-                                                        </Text>
-                                                </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
-                                                </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Malle
-                                                        </Text>
-                                                </View>
-                                                <View>
                                                         <Text style={styles.selectedValue}>
-                                                                {volume.volume.ID_MALLE}
+                                                                {detail?.traitant?.NOM} {detail?.traitant?.PRENOM}
                                                         </Text>
+                                                        {detail ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}
+                                                                        >
+                                                                                <Image source={{ uri: detail?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                        </TouchableOpacity>
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(detail?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
                                                 </View>
-                                        </TouchableOpacity>
+                                        </View>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -165,8 +181,7 @@ const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#fff'
-        },
-        header: {
+        }, header: {
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingVertical: 10
@@ -179,99 +194,41 @@ const styles = StyleSheet.create({
                 fontSize: 17,
                 fontWeight: 'bold',
                 color: '#777',
-                // color: COLORS.primary
         },
         cardTitle: {
                 maxWidth: "85%"
         },
-        inputs: {
-                paddingHorizontal: 10
-        },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#ddd",
-                marginVertical: 10
+                borderColor: "#777",
+                marginVertical: 10,
+                marginHorizontal: 10
         },
         selectedValue: {
-                color: '#777',
-                marginTop: 2
+                color: '#777'
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5,
+                marginHorizontal: 10
         },
         labelContainer: {
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignItems: 'center',
         },
         selectLabel: {
-                marginLeft: 5
-        },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#ddd",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5
-        },
-        addImageLabel: {
                 marginLeft: 5,
-                opacity: 0.8
-        },
-        modalHeader: {
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingHorizontal: 10,
-                paddingVertical: 5
-        },
-        modalTitle: {
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop: 10,
-                fontSize: 16
-        },
-        listItem: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 10,
-                paddingHorizontal: 10
-        },
-        listItemImageContainer: {
-                width: 50,
-                height: 50,
-                borderRadius: 10,
-                backgroundColor: '#ddd',
-                justifyContent: 'center',
-                alignItems: 'center'
-        },
-        listItemImage: {
-                width: '60%',
-                height: '60%',
-        },
-        listItemDesc: {
-                flexDirection: 'row',
-                alignItems: 'center'
-        },
-        listNames: {
-                marginLeft: 10
-        },
-        listItemTitle: {
-                fontWeight: 'bold'
-        },
-        listItemSubTitle: {
-                color: '#777',
-                fontSize: 12,
-                marginTop: 5
-        },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#ddd",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5
+                fontWeight: "bold"
         },
         addImageLabel: {
                 marginLeft: 5,
@@ -283,7 +240,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         buttonText: {
                 color: "#fff",

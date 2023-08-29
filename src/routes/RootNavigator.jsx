@@ -57,6 +57,17 @@ import ChefEquipeDetailsFlashUploadScreen from '../screens/uploadEDRMS/chefEquip
 import DetailValideScreen from '../screens/uploadEDRMS/chefEquipe/DetailValideScreen';
 import DetailIsUploadScreen from '../screens/uploadEDRMS/chefEquipe/DetailValideScreen';
 
+import DetailsParAgentClickVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsParAgentClickVolumeScreen';
+import FoliosRetourdetailChefPlateauScreen from '../screens/scanning/agentSuperviseur/retour/FoliosRetourdetailChefPlateauScreen';
+import DetailsClickAgentDistributeurVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsClickAgentDistributeurVolumeScreen';
+import DetailsClickAgentSupArchiveVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsClickAgentSupArchiveVolumeScreen';
+import DetailsAgentDesarchivagesVolumeScreen from '../screens/scanning/agentSuperviseur/detailClikAgentAileSup/DetailsAgentDesarchivagesVolumeScreen';
+import DetailsEquipeFoliosTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosTraiteScreen';
+import DetailsVolumeChefPlateauTraitesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauTraitesScreen';
+import DetailsSupAilleScanTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsSupAilleScanTraiteVolumeScreen';
+import DetailsVolumeChefEquipScanTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefEquipScanTraiteScreen';
+import DetailsVolumeAgentDistributeurTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentDistributeurTraiteScreen';
+import DetailsVolumeAgentArchivesTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentArchivesTraiteScreen';
 
 
 
@@ -108,12 +119,25 @@ export default function RootNavigator() {
                 <Stack.Screen name='NewEquipeScanScreen' component={NewEquipeScanScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='NewFolioRetourScreen' component={NewFolioRetourScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsFolioRetourScreen' component={DetailsFolioRetourScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsEquipeFoliosTraiteScreen' component={DetailsEquipeFoliosTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefPlateauTraitesScreen' component={DetailsVolumeChefPlateauTraitesScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsSupAilleScanTraiteVolumeScreen' component={DetailsSupAilleScanTraiteVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefEquipScanTraiteScreen' component={DetailsVolumeChefEquipScanTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeAgentDistributeurTraiteScreen' component={DetailsVolumeAgentDistributeurTraiteScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeAgentArchivesTraiteScreen' component={DetailsVolumeAgentArchivesTraiteScreen} options={{ headerShown: false }} />
+
+
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfimerPvScreen' component={ConfimerPvScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsParAgentClickVolumeScreen' component={DetailsParAgentClickVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsClickAgentDistributeurVolumeScreen' component={DetailsClickAgentDistributeurVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsClickAgentSupArchiveVolumeScreen' component={DetailsClickAgentSupArchiveVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAgentDesarchivagesVolumeScreen' component={DetailsAgentDesarchivagesVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDistrScreen' component={ConfirmerPvRetourAgentDistrScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentSupArchives' component={ConfirmerPvRetourAgentSupArchives} options={{ headerShown: false }} />
                 <Stack.Screen name='ConfirmerPvRetourAgentDesarchivages' component={ConfirmerPvRetourAgentDesarchivages} options={{ headerShown: false }} />
                 <Stack.Screen name='DetaillerVolumeScreen' component={DetaillerVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='FoliosRetourdetailChefPlateauScreen' component={FoliosRetourdetailChefPlateauScreen} options={{ headerShown: false }} />
                 {/* phase uploadEDRMS */}
                 <Stack.Screen name='SelectFolioAgentScreen' component={SelectFolioAgentScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefEquipeFlashDetailsScreen' component={ChefEquipeFlashDetailsScreen} options={{ headerShown: false }} />

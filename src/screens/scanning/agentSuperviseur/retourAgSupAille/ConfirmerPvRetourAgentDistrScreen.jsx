@@ -2,7 +2,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import React, { useRef } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { COLORS } from "../../../../styles/COLORS";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useState } from "react";
@@ -82,15 +82,14 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -125,7 +124,6 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/scanning/retour/agent/distributeur/${id}`, {
                                 method: "PUT",
                                 body: form
@@ -151,7 +149,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Confirmer le retour</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent distributeur</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -312,8 +310,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '90%',
+                height: '90%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',

@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
@@ -55,8 +55,8 @@ export default function NewEquipeScanScreen() {
                 setEquipe(equi)
         }
 
-          //Fonction pour le prendre l'image avec l'appareil photos
-          const onTakePicha = async () => {
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
                 const permission = await ImagePicker.requestCameraPermissionsAsync()
                 if (!permission.granted) return false
@@ -83,41 +83,41 @@ export default function NewEquipeScanScreen() {
                 return (
 
                         <>
-                        {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View > :
-                                <View style={styles.modalContainer}>
-                                        <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Sélectionner une equipe</Text>
-                                        </View>
-                                        {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucune equipe trouves</Text></View> : null}
-                                        <View style={styles.modalList}>
-                                                {volumesAll.result.map((chef, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
-                                                                                <View style={styles.listItem} >
-                                                                                        <View style={styles.listItemDesc}>
-                                                                                                <View style={styles.listItemImageContainer}>
-                                                                                                        {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
-                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner une équipe</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucune equipe trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((chef, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
+                                                                                                                {/* <AntDesign name="folderopen" size={20} color="black" /> */}
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                <View style={styles.listNames}>
-                                                                                                        <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
                                         </View>
-                                </View>
-                        }
-                </>
+                                }
+                        </>
                 )
         }
 
@@ -136,8 +136,6 @@ export default function NewEquipeScanScreen() {
                         }
 
                 }
-
-
                 return (
 
                         <>
@@ -160,8 +158,8 @@ export default function NewEquipeScanScreen() {
                                                                                                         <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
                                                                                                 </View>
                                                                                         </View>
-                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -170,15 +168,15 @@ export default function NewEquipeScanScreen() {
                                                 })}
                                         </View>
                                 </View>
-                        
-                          <TouchableWithoutFeedback
-                                onPress={submitConfimer}
-                        >
-                                <View style={styles.butConfirmer}>
-                                        <Text style={styles.buttonText}>Confirmer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                </>
+
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </>
                 )
         }
 
@@ -230,7 +228,7 @@ export default function NewEquipeScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'equipe scanning</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -244,7 +242,7 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                {folio.volume.NUMERO_VOLUME}
+                                                        {folio.volume.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -253,11 +251,11 @@ export default function NewEquipeScanScreen() {
                                                                 <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                        Nombre de dossiers
+                                                                Nombre de dossiers
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                {folio.volume.NOMBRE_DOSSIER}
+                                                        {folio.volume.NOMBRE_DOSSIER}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
@@ -266,14 +264,14 @@ export default function NewEquipeScanScreen() {
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                        Equipe scanning
+                                                                Equipe scanning
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
+                                                        {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
                                                 </Text>
                                         </TouchableOpacity>
-                                        
+
                                         <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                 <View>
                                                         <Text style={styles.selectLabel}>
@@ -282,6 +280,7 @@ export default function NewEquipeScanScreen() {
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
+                                                                        {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -411,8 +410,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '80%',
+                height: '80%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',
