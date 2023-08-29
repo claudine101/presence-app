@@ -136,8 +136,6 @@ export default function NewEquipeScanScreen() {
                         }
 
                 }
-
-
                 return (
 
                         <>
@@ -282,9 +280,8 @@ export default function NewEquipeScanScreen() {
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
-                                                                        {multiFolios.length > 0 ? <Text> sélectionner</Text> : null}
+                                                                        {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
                                                                 </Text>
-
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>

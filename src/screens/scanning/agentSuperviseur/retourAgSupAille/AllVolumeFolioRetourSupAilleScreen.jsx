@@ -110,7 +110,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
         return (
                 <>
                         <AppHeaderPhPreparationRetour />
-
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ? <View style={styles.container}>
                                 {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -120,9 +119,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
-                                                <Text style={styles.emptyDesc}>
+                                                {/* <Text style={styles.emptyDesc}>
                                                         Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                </Text>
+                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -153,7 +152,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes.length} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -177,9 +176,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
-                                                <Text style={styles.emptyDesc}>
+                                                {/* <Text style={styles.emptyDesc}>
                                                         Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                </Text>
+                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -233,9 +232,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
-                                                        <Text style={styles.emptyDesc}>
+                                                        {/* <Text style={styles.emptyDesc}>
                                                                 Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text>
+                                                        </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
@@ -289,9 +288,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
-                                                <Text style={styles.emptyDesc}>
+                                                {/* <Text style={styles.emptyDesc}>
                                                         Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                </Text>
+                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -345,9 +344,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
-                                                <Text style={styles.emptyDesc}>
+                                                {/* <Text style={styles.emptyDesc}>
                                                         Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                </Text>
+                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -386,29 +385,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                 </View>
                                                                                         </TouchableNativeFeedback>
                                                                                 }
-
-                                                                                {/* {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
-                                                                                        <View>
-                                                                                                <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.carddetailItem}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                                </View>
-                                                                                                                <View style={styles.cardDescription}>
-                                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                                <View>
-                                                                                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                                                                                                        <Text>Nombre de dossiers {volume.volume.NOMBRE_DOSSIER}</Text>
-                                                                                                                                </View>
-                                                                                                                                <Text>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                } */}
                                                                         </>
                                                                 )
                                                         }}

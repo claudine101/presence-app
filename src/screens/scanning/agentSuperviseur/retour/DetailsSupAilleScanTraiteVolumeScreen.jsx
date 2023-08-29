@@ -52,6 +52,16 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
 
         return (
                 <>
+                        {(galexyIndex != null && PV_PATH && pvs?.result) &&
+                                <ImageView
+                                        images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH} : undefined]}
+                                        imageIndex={galexyIndex}
+                                        visible={(galexyIndex != null) ? true : false}
+                                        onRequestClose={() => setGalexyIndex(null)}
+                                        swipeToCloseEnabled
+                                        keyExtractor={(_, index) => index.toString()}
+                                />
+                        }
                         <View style={styles.container}>
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback

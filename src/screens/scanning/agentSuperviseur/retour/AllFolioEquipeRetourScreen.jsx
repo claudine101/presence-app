@@ -78,9 +78,9 @@ export default function AllFolioEquipeRetourScreen() {
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
-                                                                <Text style={styles.emptyDesc}>
+                                                                {/* <Text style={styles.emptyDesc}>
                                                                         Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                                </Text>
+                                                                </Text> */}
                                                         </View> :
                                                                 <FlatList
                                                                         style={styles.contain}
@@ -136,9 +136,9 @@ export default function AllFolioEquipeRetourScreen() {
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
-                                                                <Text style={styles.emptyDesc}>
+                                                                {/* <Text style={styles.emptyDesc}>
                                                                         Aucun folio planifier 
-                                                                </Text>
+                                                                </Text> */}
                                                         </View> :
                                                                 <FlatList
                                                                         style={styles.contain}

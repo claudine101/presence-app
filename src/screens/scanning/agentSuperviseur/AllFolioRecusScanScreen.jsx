@@ -51,11 +51,11 @@ export default function AllFolioRecusScanScreen() {
                                         allFolios.length == 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
-                                                        Aucun folio trouvé
+                                                        Aucun folio trouvés
                                                 </Text>
-                                                <Text style={styles.emptyDesc}>
+                                                {/* <Text style={styles.emptyDesc}>
                                                         Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                </Text>
+                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -93,31 +93,6 @@ export default function AllFolioRecusScanScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </TouchableNativeFeedback>
-
-
-
-
-
-                                                                                        // <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        //         onPress={()=>handleSubmit(folio)}
-                                                                                        // >
-                                                                                        //         <View style={styles.cardDetails}>
-                                                                                        //                 <View style={styles.carddetailItem}>
-                                                                                        //                         <View style={styles.cardImages}>
-                                                                                        //                                 <AntDesign name="folderopen" size={24} color="black" />
-                                                                                        //                         </View>
-                                                                                        //                         <View style={styles.cardDescription}>
-                                                                                        //                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                        //                                         <View>
-                                                                                        //                                                 <Text style={styles.itemVolume}>{folio.volume.NUMERO_VOLUME}</Text>
-                                                                                        //                                                 <Text>Nombre de dossiers {folio.folios.length}</Text>
-                                                                                        //                                         </View>
-                                                                                        //                                         <Text>{moment(folio.volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
-                                                                                        //                                 </View>
-                                                                                        //                         </View>
-                                                                                        //                 </View>
-                                                                                        //         </View>
-                                                                                        // </TouchableNativeFeedback>
                                                                                 }
                                                                         </>
                                                                 )

@@ -184,7 +184,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                         </View> : null}
                                                         <Text style={styles.selectedValue}>
                                                                 {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                {/* dggdggd */}
+                                                                Pv de départ
                                                         </Text>
                                                         {pvs?.result ?
                                                                 <>

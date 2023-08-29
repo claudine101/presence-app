@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather , MaterialIcons} from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
@@ -58,6 +58,39 @@ export default function NewAgentSupScanScreen() {
                 multSelectModalizeRef.current?.close();
         }
 
+        const [allFolios, setAllFolios] = useState([]);
+        const [foliosLoading, setFoliosLoading] = useState(false);
+
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                        setMultiFolios(newfolio)
+                } else {
+                        setMultiFolios(u => [...u, fol])
+                }
+
+        }
+
+        //fonction pour recuperer le folio par rapport de volume
+        useEffect(() => {
+                (async () => {
+                        try {
+
+                                if (id) {
+                                        setFoliosLoading(true)
+                                        const rep = await fetchApi(`/scanning/folio/${id}`)
+                                        setAllFolios(rep.result)
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setFoliosLoading(false)
+                        }
+                })()
+        }, [id])
+
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -107,7 +140,7 @@ export default function NewAgentSupScanScreen() {
                                                                                                                 <Text style={styles.itemTitleDesc}>{sup.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ?<MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                         <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
@@ -124,38 +157,6 @@ export default function NewAgentSupScanScreen() {
 
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
-
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-
-                }
-
-                //fonction pour recuperer le folio par rapport de volume
-                useEffect(() => {
-                        (async () => {
-                                try {
-
-                                        if (id) {
-                                                setFoliosLoading(true)
-                                                const rep = await fetchApi(`/scanning/folio/${id}`)
-                                                setAllFolios(rep.result)
-                                        }
-                                }
-                                catch (error) {
-                                        console.log(error)
-                                } finally {
-                                        setFoliosLoading(false)
-                                }
-                        })()
-                }, [id])
                 return (
 
                         <>
@@ -182,8 +183,8 @@ export default function NewAgentSupScanScreen() {
                                                                                                                 <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {isSelected(fol.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -334,9 +335,8 @@ export default function NewAgentSupScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} séléctionné{multiFolios.length>1 ? "s" :''}
                                                                 </Text>
-                                                               
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>
