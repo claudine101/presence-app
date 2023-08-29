@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, MaterialIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
 import { COLORS } from "../../../../styles/COLORS";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import moment from 'moment'
@@ -29,26 +29,7 @@ export default function DetailsVolumeChefEquipScanTraiteScreen() {
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
-        // const volume_ids = volume?.map(vol => vol.ID_VOLUME)
 
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoadingPvs(true)
-        //                         const form = new FormData()
-        //                         form.append('volume_ids', JSON.stringify(volume_ids))
-        //                         const res = await fetchApi(`/scanning/retour/agent/supAille/retour/pvs`, {
-        //                                 method: "POST",
-        //                                 body: form
-        //                         })
-        //                         setPvs(res)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoadingPvs(false)
-        //                 }
-        //         })()
-        // }, []))
 
         return (
                 <>
@@ -74,6 +55,32 @@ export default function DetailsVolumeChefEquipScanTraiteScreen() {
                                         <Text style={styles.title}>{volume[0]?.NUMERO_VOLUME}</Text>
                                 </View>
                                 <ScrollView style={styles.inputs}>
+                                        <TouchableOpacity style={styles.selectContainer1}>
+                                                <View style={styles.labelContainer1}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel1}>
+                                                                Nombre de dossiers
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue1}>
+                                                        {volume[0]?.NOMBRE_DOSSIER}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer1}>
+                                                <View style={styles.labelContainer1}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel1}>
+                                                                Malle
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue1}>
+                                                        {volume[0]?.maille?.NUMERO_MAILLE}
+                                                </Text>
+                                        </TouchableOpacity>
                                         <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={styles.labelContainer}>
@@ -142,6 +149,7 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                marginHorizontal:10
         },
         selectedValue: {
                 color: '#777',
@@ -214,5 +222,25 @@ const styles = StyleSheet.create({
                 textAlign: 'center',
                 maxWidth: 300,
                 lineHeight: 20
+        },
+        selectContainer1: {
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                marginVertical: 5,
+                marginHorizontal:10
+        },
+        selectedValue1: {
+                color: '#777',
+                marginTop: 2
+        },
+        labelContainer1: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel1: {
+                marginLeft: 5
         },
 })

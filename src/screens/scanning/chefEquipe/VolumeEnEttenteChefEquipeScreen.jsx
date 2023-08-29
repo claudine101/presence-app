@@ -10,7 +10,6 @@ import PROFILS from "../../../constants/PROFILS"
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/selectors/userSelector";
 
-console.log(PROFILS)
 
 /**
  * Screen pour afficher les volumes en ettente pour le chef equipe
@@ -187,7 +186,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes?.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NOMBRE_DOSSIER} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -273,9 +272,9 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
-                                                        <Text style={styles.emptyDesc}>
+                                                        {/* <Text style={styles.emptyDesc}>
                                                                 Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text>
+                                                        </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}

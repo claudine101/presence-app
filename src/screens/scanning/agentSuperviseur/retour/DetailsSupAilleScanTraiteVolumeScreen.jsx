@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, MaterialIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
 import { COLORS } from "../../../../styles/COLORS";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import moment from 'moment'
@@ -54,7 +54,7 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
                 <>
                         {(galexyIndex != null && PV_PATH && pvs?.result) &&
                                 <ImageView
-                                        images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH} : undefined]}
+                                        images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
                                         imageIndex={galexyIndex}
                                         visible={(galexyIndex != null) ? true : false}
                                         onRequestClose={() => setGalexyIndex(null)}
@@ -74,6 +74,32 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
                                         <Text style={styles.title}>{volume[0]?.NUMERO_VOLUME}</Text>
                                 </View>
                                 <ScrollView style={styles.inputs}>
+                                        <TouchableOpacity style={styles.selectContainer1}>
+                                                <View style={styles.labelContainer1}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel1}>
+                                                                Nombre de dossiers
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue1}>
+                                                        {volume[0]?.NOMBRE_DOSSIER}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer1}>
+                                                <View style={styles.labelContainer1}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel1}>
+                                                                Malle
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue1}>
+                                                        {volume[0]?.maille?.NUMERO_MAILLE}
+                                                </Text>
+                                        </TouchableOpacity>
                                         <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={styles.labelContainer}>
@@ -98,30 +124,29 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
                                                                                 <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                         </> : null}
                                                         </View>
-
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                        Chargement
-                                                                                </Text>
-                                                                        </View> : null}
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                PV de retour
-                                                                        </Text>
-                                                                        {pvs?.result ?
-                                                                                <>
-                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
-                                                                                        }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                        </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                </> : null}
-                                                                </View>
-                                                        </View>
+                                                </View>
+                                        </View>
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null}
+                                                        <Text style={styles.selectedValue}>
+                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
+                                                                PV de retour
+                                                        </Text>
+                                                        {pvs?.result ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}>
+                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                        </TouchableOpacity>
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
                                                 </View>
                                         </View>
 
@@ -166,6 +191,7 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                marginHorizontal: 10
         },
         selectedValue: {
                 color: '#777',
@@ -238,5 +264,25 @@ const styles = StyleSheet.create({
                 textAlign: 'center',
                 maxWidth: 300,
                 lineHeight: 20
+        },
+        selectContainer1: {
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                marginVertical: 5,
+                marginHorizontal:10
+        },
+        selectedValue1: {
+                color: '#777',
+                marginTop: 2
+        },
+        labelContainer1: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel1: {
+                marginLeft: 5
         },
 })
