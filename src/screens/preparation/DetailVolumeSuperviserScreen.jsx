@@ -6,12 +6,12 @@ import { COLORS } from '../../styles/COLORS';
 import moment from 'moment'
 import ImageView from "react-native-image-viewing";
 /**
- * Le screen pour details le volume, le dossier utilisable par un agent superviseur
+ * Le screen pour details le volume superviser  par  un agent  superviseur archive
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 12/7/2021
+ * @date 29/08/2021
  * @returns 
  */
-export default function DetaillerVolumeScreen() {
+export default function DetailVolumeSuperviserScreen() {
         const route = useRoute()
         const { volume } = route.params
         const [galexyIndex, setGalexyIndex] = useState(null)
@@ -73,10 +73,7 @@ export default function DetaillerVolumeScreen() {
                                                          <View style={styles.selectContainer}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        { volume.ID_ETAPE_VOLUME==2 ? 
-                                                                                           "Agent superviseur archive":
-                                                                                           volume.ID_ETAPE_VOLUME==5 ?"Agent superviseur aile":null}
-                                                                                       
+                                                                                        Agent  distributeur
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>

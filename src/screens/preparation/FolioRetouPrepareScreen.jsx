@@ -46,20 +46,15 @@ export default function FolioRetouPrepareScreen() {
 
         return (
                 <>
-                        <AppHeaderPhPreparationRetour />
+                        <AppHeader title="Dossiers préparés" />
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allDetails.length <= 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                                <Text style={styles.emptyTitle}>
-                                                        Aucun Folio trouvé
-                                                </Text>
-                                                <Text style={styles.emptyDesc}>
-                                                        Aucun folio deja envoyes chez un agent de preparation
-                                                </Text>
-                                        </View> :
+                                        allDetails.length <= 0 ?<View style={styles.emptyContainer}>
+                                        <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                        <Text style={styles.emptyLabel}>Aucun dossiers  trouvé</Text>
+                                    </View>  :
 
                                                 <FlatList
                                                         style={styles.contain}
@@ -233,4 +228,20 @@ const styles = StyleSheet.create({
             color: '#777',
             fontSize: 12
         },
+        emptyContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+            },
+            emptyImage: {
+                width: 100,
+                height: 100,
+                opacity: 0.8
+            },
+            emptyLabel: {
+                fontWeight: 'bold',
+                marginTop: 20,
+                color: '#777',
+                fontSize: 16
+            },
     })

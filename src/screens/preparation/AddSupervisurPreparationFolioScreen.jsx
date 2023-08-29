@@ -105,7 +105,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         setFoliosLoading(true)
                                         const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
                                         setAllFolios(rep.result)
-                                        console.log(volume.volume.ID_VOLUME)
                                 }
                         }
                         catch (error) {
@@ -401,7 +400,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length:'Selectionner les dossiers'} séléctionné{ multiFolios.length>1 ? "s" : ''} 
+                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Selectionner les dossiers'}
+
                                                                         </Text>
                                                                 </View>
                                                         </View>

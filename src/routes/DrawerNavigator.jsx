@@ -12,6 +12,9 @@ import AgentSuperviseurAileScreen from "../screens/preparation/AgentSuperviseurA
 import AllVolumeDetaillerScreen from "../screens/preparation/AllVolumeDetaillerScreen";
 import FolioRetouPrepareScreen from "../screens/preparation/FolioRetouPrepareScreen";
 import AllVolumeChefPlateauValidesScreen from "../screens/preparation/AllVolumeChefPlateauValidesScreen";
+import AllVolumeDesarchiveSreen from "../screens/preparation/AllVolumeDesarchiveSreen";
+
+
 
 
 
@@ -44,6 +47,8 @@ import FolioEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioEnre
 import FolioNoEnregistreScreen from "../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen";
 import ChefEquipeFlashUploadScreen from "../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashUploadScreen";
 import FolioInvalideScreen from "../screens/uploadEDRMS/agentUpload/FolioInvalideScreen";
+import AllVolumeSuperviseScreen from "../screens/preparation/AllVolumeSuperviseScreen";
+import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSreen";
 
 
 export default function DrawerNavigator() {
@@ -60,15 +65,16 @@ export default function DrawerNavigator() {
                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeDesarchiveSreen" component={AllVolumeDesarchiveSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>
                                 : null}
-
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
+                                        <Drawer.Screen name="AllVolumeSuperviseScreen" component={AllVolumeSuperviseScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>
@@ -76,6 +82,7 @@ export default function DrawerNavigator() {
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
+                                        <Drawer.Screen name="AllVolumeDistribueSreen" component={AllVolumeDistribueSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>

@@ -123,7 +123,7 @@ export default function FolioPrepareDetailScreen() {
                                                                 <View style={styles.folioList}>
                                                                         {pvs?.result?.foliosPrepares.map((folio, index) => {
                                                                                 return (
-                                                                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
                                                                                                 <View style={[styles.folio]}>
                                                                                                         <View style={styles.folioLeftSide}>
                                                                                                                 <View style={styles.folioImageContainer}>
@@ -158,7 +158,7 @@ export default function FolioPrepareDetailScreen() {
                                                                 <View style={styles.folioList}>
                                                                         {pvs?.result?.foliosNoPrepare.map((folio, index) => {
                                                                                 return (
-                                                                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
                                                                                                 <View style={[styles.folio]}>
                                                                                                         <View style={styles.folioLeftSide}>
                                                                                                                 <View style={styles.folioImageContainer}>

@@ -25,7 +25,6 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 export default function DetailsVolumeScreen() {
     const route = useRoute()
     const { volume } = route.params
-    console.log(volume.volume.NUMERO_VOLUME)
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false)
     const [document, setDocument] = useState(null)

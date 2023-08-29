@@ -301,8 +301,9 @@ export default function AddDetailsFolioScreen() {
                 setProvinces(prov)
         }
         //Composent pour afficher le modal des Provincess 
-        const ProvincesList = () => {
                 const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
+
+        const ProvincesList = () => {
                 return (
                         <>
                                 <>
