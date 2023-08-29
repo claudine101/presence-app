@@ -12,25 +12,24 @@ import PROFILS from "../../constants/PROFILS";
 
 
 /**
- * Screen pour la listes des volume planifier pour vous
+ * Screen pour la listes des volume supervise par  un agenr  superviseur  archive
  * @author claudine NDAYISABA <claudine@mediabox.bi>
- * @date 1/08/2023
+ * @date 29/08/2023
  * @returns 
  */
-export default function AllVolumeDetaillerScreen() {
+export default function AllVolumeSuperviseScreen() {
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
     const [loading, setLoading] = useState(false)
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
-
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
                 setLoading(true)
                 
-                    const vol = await fetchApi(`/preparation/volume/volumeDetailler`)
+                    const vol = await fetchApi(`/preparation/volume/volumeSuperviser`)
                     setAllVolumes(vol.result.data)
 
             } catch (error) {
@@ -44,64 +43,15 @@ export default function AllVolumeDetaillerScreen() {
     //fonction pour recuperer screen pour  detaillers
     useFocusEffect(useCallback(() => {
          if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
-            setNextRouteName('DetaillerFolioScreen')
+            setNextRouteName('DetailVolumeSuperviserScreen')
         }
     }, [user]))
 
 
     return (
         <>
-            <AppHeader  title={"Volumes détaillés"}/>
-            {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ? <View style={styles.container}>
-                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-
-                </View> : allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
-                                <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
-                            </View> :
-
-                    <FlatList
-                        style={styles.contain}
-                        data={allVolumes}
-                        renderItem={({ item: volume, index }) => {
-                            return (
-                                <>
-                                    {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                    </View> :
-
-                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                            onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                        >
-                                            {<View style={styles.cardDetails}>
-                                                <View style={styles.carddetailItem}>
-                                                    <View style={styles.cardImages}>
-                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                    </View>
-                                                    <View style={styles.cardDescription}>
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={styles.itemVolume}>{volume.folios.length}</Text>
-                                                            
-                                                            </View>
-                                                            <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            </View>}
-                                        </TouchableNativeFeedback>
-                                    }
-                                </>
-                            )
-                        }}
-                        keyExtractor={(volume, index) => index.toString()}
-                    />}
-            </View> :
-            
-                <View style={styles.container}>
+            <AppHeader  title={"Volumes supervisés"}/>
+            {<View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                         <ActivityIndicator animating size={'large'} color={'#777'} />
                     </View> :
@@ -132,6 +82,7 @@ export default function AllVolumeDetaillerScreen() {
                                                                 </View>
                                                                 <View style={styles.folioDesc}>
                                                                     <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                <Text style={styles.folioSubname}>Distributeur: { volume.traitant.NOM } { volume.traitant.PRENOM }</Text>
                                                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                             <AntDesign name="calendar" size={20} color="#777" />

@@ -33,18 +33,12 @@ export default function AddSuperviseurAileVolumeScreen() {
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
         const [data, handleChange, setValue] = useForm({
-                // document: null,
         })
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                // document: {
-                //         required: true
-                // }
+               
         }, {
-                // document: {
-                //         required: 'ce champ est obligatoire',
-                // }
+                
         })
-
         const isValidAdd = () => {
                 var isValid = false
                 isValid = volume != null && agentSuperviseur != null && document != null ? true : false
@@ -53,9 +47,6 @@ export default function AddSuperviseurAileVolumeScreen() {
         // Volume select
         const volumeModalizeRef = useRef(null);
         const [volumes, setVolumes] = useState(null);
-        const openVolumeModalize = () => {
-                volumeModalizeRef.current?.open();
-        };
         const setSelectedVolume = (vol) => {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
@@ -91,26 +82,6 @@ export default function AddSuperviseurAileVolumeScreen() {
                 );
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
-        }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
         }
 
         //Composent pour afficher le modal des chefs des platequx
@@ -303,17 +274,13 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
-                                                        <View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Agent superviseur aille
                                                                 </Text>
                                                                 <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {agentSuperviseur ? `${agentSuperviseur.NOM}` + `${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aille'}
+                                                                        <Text style={styles.selectedValue}> {agentSuperviseur ? `${agentSuperviseur.NOM}`  +  ` ${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aille'}
                                                                         </Text>
-                                                                </View>
                                                         </View>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={onTakePicha}>

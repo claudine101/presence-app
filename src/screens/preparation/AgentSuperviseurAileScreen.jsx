@@ -49,15 +49,10 @@ export default function AgentSuperviseurAileScreen() {
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allDetails.length <= 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                                <Text style={styles.emptyTitle}>
-                                                        Aucun Agent  superviseur trouvé
-                                                </Text>
-                                                <Text style={styles.emptyDesc}>
-                                                        Aucun folio deja envoyes chez un agent superviseur
-                                                </Text>
-                                        </View> :
+                                        allDetails.length <= 0 ? <View style={styles.emptyContainer}>
+                                        <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                        <Text style={styles.emptyLabel}>Aucun agent  superviseur aile trouvé</Text>
+                                    </View> :
 
                                                 <FlatList
                                                         style={styles.contain}
@@ -113,7 +108,6 @@ export default function AgentSuperviseurAileScreen() {
 const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: '#ddd'
         },
         image: {
                 width: "100%",
@@ -196,7 +190,7 @@ const styles = StyleSheet.create({
             fontWeight: "bold",
         },
         contain: {
-            backgroundColor: '#ddd'
+        //     backgroundColor: '#ddd'
         },
         folio: {
             flexDirection: 'row',
@@ -233,4 +227,20 @@ const styles = StyleSheet.create({
             color: '#777',
             fontSize: 12
         },
+        emptyContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+            },
+            emptyImage: {
+                width: 100,
+                height: 100,
+                opacity: 0.8
+            },
+            emptyLabel: {
+                fontWeight: 'bold',
+                marginTop: 20,
+                color: '#777',
+                fontSize: 16
+            },
     })

@@ -45,23 +45,16 @@ import ChefPlatauValideDetailsScreen from '../screens/preparation/ChefPlatauVali
 {/* phase uploadEDRMS */ }
 import SelectFolioAgentScreen from '../screens/uploadEDRMS/chefEquipe/SelectFolioAgentScreen';
 import ChefEquipeFlashDetailsScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeFlashDetailsScreen';
-
 import DetailleFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailleFlashScreen';
 import DetailsFolioFlashScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioFlashScreen';
 import DetailsFolioUploadScreen from '../screens/uploadEDRMS/agentUpload/DetailsFolioUploadScreen';
-
 import DetailsUploadScreen from '../screens/uploadEDRMS/verificateur/DetailsUploadScreen';
 import FolioEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioEnregistreScreen';
 import FolioNoEnregistreScreen from '../screens/uploadEDRMS/verificateur/FolioNoEnregistreScreen';
 import ChefEquipeDetailsFlashUploadScreen from '../screens/uploadEDRMS/chefEquipe/ChefEquipeDetailsFlashUploadScreen';
 import DetailValideScreen from '../screens/uploadEDRMS/chefEquipe/DetailValideScreen';
 import DetailIsUploadScreen from '../screens/uploadEDRMS/chefEquipe/DetailValideScreen';
-
-
-
-
-
-
+import DetailVolumeSuperviserScreen from '../screens/preparation/DetailVolumeSuperviserScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -81,6 +74,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='FolioPrepareDetailScreen' component={FolioPrepareDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AgentSuperviseurValideDetailScreen' component={AgentSuperviseurValideDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefPlatauValideDetailsScreen' component={ChefPlatauValideDetailsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailVolumeSuperviserScreen' component={DetailVolumeSuperviserScreen} options={{ headerShown: false }} />
                 
                 
                 {/* indexation */}

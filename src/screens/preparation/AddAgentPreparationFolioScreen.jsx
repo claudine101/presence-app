@@ -323,7 +323,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length:'Selectionner les dossiers'} séléctionné{ multiFolios.length>1 ? "s" : ''} 
+                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Selectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

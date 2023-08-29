@@ -22,6 +22,8 @@ export default function AllVolumeScreen() {
     const user = useSelector(userSelector)
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
+    const [title, setTitle] = useState(null)
+
     const [loading, setLoading] = useState(false)
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
     useFocusEffect(useCallback(() => {
@@ -36,6 +38,7 @@ export default function AllVolumeScreen() {
                     setLoading(true)
                     const vol = await fetchApi(`/preparation/folio/volumeFolios`)
                     setAllVolumes(vol.result)
+                    
                 }
                 else {
                     setLoading(true)
@@ -56,24 +59,31 @@ export default function AllVolumeScreen() {
     useFocusEffect(useCallback(() => {
         if (user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES) {
             setNextRouteName('DetaillerVolumeScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
             setNextRouteName('AddNombreFolioScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
             setNextRouteName('DetaillerFolioScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
             setNextRouteName('AddSuperviseurAileVolumeScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE) {
             setNextRouteName('AddChefPlateauVolumeScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU) {
             setNextRouteName('AddSupervisurPreparationFolioScreen')
+            setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR) {
             setNextRouteName('AddAgentPreparationFolioScreen')
+            setTitle("Attente de préparation")
         }
 
     }, [user]))
@@ -84,21 +94,18 @@ export default function AllVolumeScreen() {
     }
     return (
         <>
-            <AppHeader title='Volumes planifiés' />
+        
+            <AppHeader title={title} />
             {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
 
-                    </View> : allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                        <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                        <Text style={styles.emptyTitle}>
-                            Aucun volume trouvé
-                        </Text>
-                        <Text style={styles.emptyDesc}>
-                            Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                        </Text>
-                    </View> :
-
+                    </View> : allVolumes.length <= 0 ?
+                        <View style={styles.emptyContainer}>
+                            <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                            <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                        </View>
+                        :
                         <FlatList
                             style={styles.contain}
                             data={allVolumes}
@@ -132,7 +139,7 @@ export default function AllVolumeScreen() {
                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                {volume.folios.length ? volume.folios.length : "0"} dossier{volume.folios.length > 1 && 's'}
+                                                                                {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
                                                                             </Text>
                                                                         </View>
                                                                     </View>
@@ -156,14 +163,9 @@ export default function AllVolumeScreen() {
                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                             <ActivityIndicator animating size={'large'} color={'#777'} />
                         </View> :
-                            allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                <Text style={styles.emptyTitle}>
-                                    Aucun volume trouvé
-                                </Text>
-                                <Text style={styles.emptyDesc}>
-                                    Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                </Text>
+                            allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
+                                <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
                             </View> :
 
                                 <FlatList
@@ -174,7 +176,7 @@ export default function AllVolumeScreen() {
                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                     <ActivityIndicator animating size={'large'} color={'#777'} />
                                                 </View> :
-                                                    volume.folios.length > 0 ?
+                                                    // volume.folios.length > 0 ?
                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                             onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                                         >
@@ -198,7 +200,7 @@ export default function AllVolumeScreen() {
                                                                                     <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                     <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                            {volume.folios.length ? volume.folios.length : "0"} dossier{volume.folios.length > 1 && 's'}
+                                                                                            {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
                                                                                         </Text>
                                                                                     </Text>
                                                                                 </View>
@@ -207,7 +209,7 @@ export default function AllVolumeScreen() {
                                                                     </View>
                                                                 </View>
                                                             </View>
-                                                        </TouchableNativeFeedback> : null
+                                                        </TouchableNativeFeedback> 
                                                 }
                                             </>
                                         )
@@ -225,15 +227,10 @@ export default function AllVolumeScreen() {
                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                             <ActivityIndicator animating size={'large'} color={'#777'} />
                         </View> :
-                            allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                                <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                <Text style={styles.emptyTitle}>
-                                    Aucun volume trouvé
-                                </Text>
-                                <Text style={styles.emptyDesc}>
-                                    Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                </Text>
-                            </View> :
+                            allVolumes.length <= 0 ?  <View style={styles.emptyContainer}>
+                            <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                            <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                        </View> :
 
                                 <FlatList
                                     data={allVolumes}
@@ -372,7 +369,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
     },
-    
+
     folio: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -426,5 +423,21 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 20
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyImage: {
+        width: 100,
+        height: 100,
+        opacity: 0.8
+    },
+    emptyLabel: {
+        fontWeight: 'bold',
+        marginTop: 20,
+        color: '#777',
+        fontSize: 16
     },
 })
