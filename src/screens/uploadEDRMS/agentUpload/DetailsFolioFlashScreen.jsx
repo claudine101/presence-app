@@ -152,7 +152,7 @@ export default function DetailsFolioFlashScreen() {
                         <TouchableNativeFeedback onPress={() => setUpload(u => !u)}>
                             <View style={styles.selectContainer}>
                             <View style={styles.folioUpload}>
-                                <Text style={styles.folioName}>Is uploaded EDRMS</Text>
+                                <Text style={styles.folioName}>Dossier upload dans EDRMS</Text>
                                 {upload ?
                                     <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
                                     <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}

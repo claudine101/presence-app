@@ -28,11 +28,11 @@ export default function FolioEnregistreScreen() {
     }
     return (
         <>
-            <AppHeader title="Dossiers enregistre" />
+            <AppHeader title="Dossiers enregistrés" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
-                {folios.length > 0 ? <Text style={styles.title}>Dossiers enregistre</Text> : null}
+                {/* {folios.length > 0 ? <Text style={styles.title}>Dossiers enregistrés</Text> : null} */}
                 {folios.length == 0 ? <View style={styles.emptyContainer}>
                     <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                     <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>

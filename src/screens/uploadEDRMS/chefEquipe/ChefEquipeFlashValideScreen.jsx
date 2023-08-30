@@ -36,7 +36,6 @@ export default function ChefEquipeFlashRetourScreen() {
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Les dossiers en ettente de vérification</Text> : null}
                                         {flashs.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
