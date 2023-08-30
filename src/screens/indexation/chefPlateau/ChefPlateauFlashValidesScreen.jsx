@@ -14,7 +14,7 @@ export default function ChefPlateauFlashValidesScreen() {
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/indexation/flashs/chef_plateau?precision=valides`)
+                              const res = await fetchApi(`/indexation/flashs/chef_plateau/valides`)
                               setFlashs(res.result)
                     } catch (error) {
                               console.log(error)

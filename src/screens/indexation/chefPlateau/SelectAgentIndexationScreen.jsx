@@ -144,13 +144,13 @@ export default function SelectAgentIndexationScreen() {
                               if (!isRetourValid()) return false
                               setIsSubmitting(true)
                               const form = new FormData()
+                              form.append("ID_FLASH",  flashDetail.ID_FLASH)
                               if(selectedItems.length ==  flashDetail.folios.length){
                                 form.append("ID_FLASH_INDEXES",  flashDetail.ID_FLASH)
                               }
                               else{
                                 form.append("ID_FLASH_INDEXES", flashIndexes.ID_FLASH)
                               }
-                             
                               form.append("ID_AGENT_INDEXATION", flashDetail.agentIndexation.USER_TRAITEMENT)
                               form.append("foliosIndexesIds", JSON.stringify(selectedItems.map(folio => folio.ID_FOLIO)))
                               if(data.pv) {

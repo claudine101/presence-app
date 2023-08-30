@@ -14,7 +14,7 @@ export default function ChefPlateauFlashRetourScreen() {
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/indexation/flashs/chef_plateau?precision=ettente_retour`)
+                              const res = await fetchApi(`/indexation/flashs/chef_plateau/enattante`)
                               setFlashs(res.result)
                     } catch (error) {
                               console.log(error)
