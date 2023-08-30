@@ -74,7 +74,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                 </View> :
                                                         allFoliosRetour.length == 0 ? <View style={styles.emptyContaier}>
-                                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
@@ -132,7 +132,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                 </View> :
                                                         allFolios.length == 0 ? <View style={styles.emptyContaier}>
-                                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
@@ -176,28 +176,6 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </TouchableNativeFeedback>
-
-
-
-                                                                                                        // <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        //         onPress={() => handleSubmit(folio)}
-                                                                                                        // >
-                                                                                                        //         <View style={styles.cardDetails}>
-                                                                                                        //                 <View style={styles.carddetailItem}>
-                                                                                                        //                         <View style={styles.cardImages}>
-                                                                                                        //                                 <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                        //                         </View>
-                                                                                                        //                         <View style={styles.cardDescription}>
-                                                                                                        //                                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                        //                                         <View>
-                                                                                                        //                                                 <Text style={styles.itemVolume}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
-                                                                                                        //                                                 <Text>Nombre de dossier {folio.folios.length}</Text>
-                                                                                                        //                                         </View>
-                                                                                                        //                                 </View>
-                                                                                                        //                         </View>
-                                                                                                        //                 </View>
-                                                                                                        //         </View>
-                                                                                                        // </TouchableNativeFeedback>
                                                                                                 }
                                                                                         </>
                                                                                 )
@@ -265,6 +243,7 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
         },
         emptyContaier: {
+                flex:1,
                 justifyContent: 'center',
                 alignItems: 'center'
         },

@@ -49,7 +49,7 @@ export default function AllFolioRecusScanScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allFolios.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun folio trouvés
                                                 </Text>
@@ -146,42 +146,8 @@ const styles = StyleSheet.create({
                 flex:1,
                 marginLeft:8
         },
-
-
-
-
-
-        // cardDetails: {
-        //         borderRadius: 10,
-        //         elevation: 5,
-        //         shadowColor: '#c4c4c4',
-        //         marginTop: 10,
-        //         backgroundColor: '#fff',
-        //         padding: 10,
-        //         overflow: 'hidden',
-        //         marginHorizontal: 10
-        // },
-        // carddetailItem: {
-        //         flexDirection: 'row',
-        //         alignItems: 'center',
-        // },
-        // cardImages: {
-        //         backgroundColor: '#DCE4F7',
-        //         width: 50,
-        //         height: 50,
-        //         borderRadius: 50,
-        //         justifyContent: 'center',
-        //         alignItems: 'center'
-        // },
-        // cardDescription: {
-        //         marginLeft: 10,
-        //         flex: 1
-        // },
-        // itemVolume: {
-        //         fontSize: 15,
-        //         fontWeight: "bold",
-        // },
         emptyContaier: {
+                flex:1,
                 justifyContent: 'center',
                 alignItems: 'center'
         },

@@ -62,7 +62,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allVolumesPlateau.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume
                                                 </Text>
@@ -118,7 +118,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                                 allVolumes.length == 0 ? <View style={styles.emptyContaier}>
-                                                        <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                        <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume
                                                         </Text>
@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
                 fontWeight: "bold"
         },
         emptyContaier: {
+                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center'
         },

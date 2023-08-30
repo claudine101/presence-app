@@ -115,7 +115,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allVolumes.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
@@ -172,7 +172,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumes.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
@@ -228,7 +228,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                                 allRetourVolumesDistributeur.length == 0 ? <View style={styles.emptyContaier}>
-                                                        <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                        <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
@@ -284,7 +284,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesArchives.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
@@ -340,7 +340,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allRetourVolumesDesarchivages.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
+                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
                                                 </Text>
@@ -441,43 +441,8 @@ const styles = StyleSheet.create({
         titlePrincipal: {
                 fontWeight: "bold"
         },
-
-
-
-
-
-
-        // cardDetails: {
-        //         borderRadius: 10,
-        //         elevation: 5,
-        //         shadowColor: '#c4c4c4',
-        //         marginTop: 10,
-        //         backgroundColor: '#fff',
-        //         padding: 10,
-        //         overflow: 'hidden',
-        //         marginHorizontal: 10
-        // },
-        // carddetailItem: {
-        //         flexDirection: 'row',
-        //         alignItems: 'center',
-        // },
-        // cardImages: {
-        //         backgroundColor: '#DCE4F7',
-        //         width: 50,
-        //         height: 50,
-        //         borderRadius: 50,
-        //         justifyContent: 'center',
-        //         alignItems: 'center'
-        // },
-        // cardDescription: {
-        //         marginLeft: 10,
-        //         flex: 1
-        // },
-        // itemVolume: {
-        //         fontSize: 15,
-        //         fontWeight: "bold",
-        // },
         emptyContaier: {
+                flex:1,
                 justifyContent: 'center',
                 alignItems: 'center'
         },

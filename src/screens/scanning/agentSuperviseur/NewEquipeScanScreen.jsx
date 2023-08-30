@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 50,
+                marginHorizontal: 10,
                 marginVertical: 15
         },
 })
