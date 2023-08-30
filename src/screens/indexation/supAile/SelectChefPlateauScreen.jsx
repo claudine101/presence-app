@@ -373,7 +373,7 @@ export default function SelectChefPlateauScreen() {
                                         {loadingAgents ? null :
                                                   <View style={styles.modalContainer}>
                                                             <View style={styles.modalHeader}>
-                                                                      <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                                      <Text style={styles.modalTitle}>Sélectionner chef plateau</Text>
                                                             </View>
                                                             <View style={styles.modalList}>
                                                                       {agents.result.map((agent, index) => {
@@ -386,7 +386,7 @@ export default function SelectChefPlateauScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.listNames}>
                                                                                                                                   <Text style={styles.listItemTitle}>{agent.NOM} {agent.PRENOM}</Text>
-                                                                                                                                  <Text style={styles.listItemSubTitle}>TOSHIBA - 16GB</Text>
+                                                                                                                                  <Text style={styles.listItemSubTitle}>{agent.EMAIL}</Text>
                                                                                                                         </View>
                                                                                                               </View>
                                                                                                               {(data.agent && data.agent.USERS_ID == agent.USERS_ID) ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :

@@ -27,8 +27,8 @@ export default function ChefPlateauFlashValidesScreen() {
                               fetchFlash()
                     })()
           }, []))
-          const handleFlashPress = flash => {
-                    navigation.navigate("SelectAgentIndexationScreen", { flash })
+          const handleFlashPress =( flash ,flashindexe)=> {
+                    navigation.navigate("SelectAgentIndexationScreen", { flash ,flashindexe})
           }
           return (
                     <>
@@ -36,7 +36,6 @@ export default function ChefPlateauFlashValidesScreen() {
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Clés des dossiers indexés</Text> : null}
                                         {flashs.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
@@ -46,7 +45,7 @@ export default function ChefPlateauFlashValidesScreen() {
                                                   keyExtractor={(_, index) => index}
                                                   renderItem={({ item, index} ) => {
                                                             return (
-                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash)}>
+                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash, item.folio.flashindexe)}>
                                                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                                                           <View style={styles.folio}>
                                                                                                     <View style={styles.folioLeftSide}>
