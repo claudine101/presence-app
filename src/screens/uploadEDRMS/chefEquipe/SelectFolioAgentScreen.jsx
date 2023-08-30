@@ -22,7 +22,6 @@ export default function SelectFolioAgentScreen() {
         agent: null,
         pv: null
     })
-    //   const [loadingFlashs, flashs] = useFetch(`/indexation/flashs`)
     const [loadingAgents, agents] = useFetch(`/uploadEDMRS/folio/users/${PROFILS.AGENT_UPLOAD_EDRMS}`)
     const flashModalRef = useRef()
     const agentsModalRef = useRef()
@@ -31,8 +30,6 @@ export default function SelectFolioAgentScreen() {
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
     const [pvPhoto, setPvPhoto] = useState(null)
     const { flash } = route.params
-    console.log(flash?.flashs)
-
     const { hasError, getError, setErrors, checkFieldData, isValidate, setError } = useFormErrorsHandle(data, {
         agent: {
             required: true,
@@ -121,7 +118,7 @@ export default function SelectFolioAgentScreen() {
                             <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.title}>Choix d'un agent uploadEDMRS</Text>
+                    <Text style={styles.title}>Affecter un agent upload EDMRS</Text>
                 </View>
                 <ScrollView style={styles.inputs}>
 
@@ -154,7 +151,7 @@ export default function SelectFolioAgentScreen() {
                                 <Feather name="user" size={20} color="#777" />
                             </View>
                             <Text style={styles.selectLabel}>
-                                Agent uploadEDMRS
+                                Agent upload EDMRS
                             </Text>
                         </View>
                         <Text style={styles.selectedValue}>

@@ -18,8 +18,6 @@ export default function VerificateurFlashScreen() {
 
                 const res = await fetchApi(`/uploadEDMRS/folio/folioUploads`)
                 setFolios(res.result)
-                console.log(res)
-
             } catch (error) {
                 console.log(error)
             } finally {
@@ -32,7 +30,7 @@ export default function VerificateurFlashScreen() {
     }
     return (
         <>
-            <AppHeader title="Folio enregiste to  EDRMS" />
+            <AppHeader title="Dossiers en  attente" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
@@ -96,7 +94,6 @@ export default function VerificateurFlashScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
     },
     header: {
         flexDirection: 'row',

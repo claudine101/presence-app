@@ -487,7 +487,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashRetourScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
                                             En ettente d'indexation
                                         </Text>
@@ -522,7 +522,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('SupFlashRetourScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
                                             En ettente du retour
                                         </Text>
@@ -557,7 +557,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefPlateauFlashRetourScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
                                             En ettente du retour
                                         </Text>
@@ -592,7 +592,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashsRetourScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
                                             En ettente de vérification
                                         </Text>
@@ -602,7 +602,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('ChefEquipeFlashUploadScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
                                             Dossiers vérifies
                                         </Text>
@@ -619,7 +619,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                            En ettente de vérification
+                                            En ettente d'upload
                                         </Text>
                                     </View>
                                 </View>
@@ -627,9 +627,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioUploadScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                            Dossiers vérifies
+                                            Dossiers uploadés
                                         </Text>
                                     </View>
                                 </View>
@@ -637,9 +637,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioInvalideScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
-                                            Dossiers non validés
+                                            Dossiers non uploadés
                                         </Text>
                                     </View>
                                 </View>
@@ -662,9 +662,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioEnregistreScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                            Dossier enregistre
+                                            Dossiers enregistrés
                                         </Text>
                                     </View>
                                 </View>
@@ -672,9 +672,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioNoEnregistreScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/send-file.png')} style={styles.imageIcon} />
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
-                                            Dossier no enregistre
+                                            Dossiers no enregistrés
                                         </Text>
                                     </View>
                                 </View>

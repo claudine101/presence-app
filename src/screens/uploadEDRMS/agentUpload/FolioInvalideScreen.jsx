@@ -30,7 +30,7 @@ export default function FolioInvalideScreen() {
     }
     return (
         <>
-            <AppHeader title="Folio enregiste to  EDRMS" />
+            <AppHeader title="Dossiers non  uploadés" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
@@ -93,7 +93,6 @@ export default function FolioInvalideScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
     },
     header: {
         flexDirection: 'row',
