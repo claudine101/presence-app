@@ -21,7 +21,6 @@ export default function FoliosRetourdetailChefPlateauScreen() {
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
-        console.log(userTraite)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -79,7 +78,6 @@ export default function FoliosRetourdetailChefPlateauScreen() {
         const [multiFolios, setMultiFolios] = useState([]);
         const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (folio) => {
-                console.log(folio)
                 if (isSelected(folio.folio.ID_FOLIO)) {
                         const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != folio.folio.ID_FOLIO)
                         setMultiFolios(newfolio)
@@ -115,6 +113,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
+                        form.append('ID_FOLIO', JSON.stringify(folio_ids))
                         form.append('folio', JSON.stringify(multiFolios))
                         if (document) {
                                 const manipResult = await manipulateAsync(

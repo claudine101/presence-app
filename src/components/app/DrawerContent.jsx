@@ -418,6 +418,16 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     </View>
                                 </View>
                             </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeFoliosNonInvalidePlatoScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
+                                            Volume non validé
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
                         </>
                         : null
                 }
@@ -450,6 +460,26 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }]}>
                                             Folios traitées
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FoliosNonScanNonReconcilierScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
+                                            Folios non reconciliés
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeFoliosNonInvalidePlatoScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
+                                            Folios non validés
                                         </Text>
                                     </View>
                                 </View>

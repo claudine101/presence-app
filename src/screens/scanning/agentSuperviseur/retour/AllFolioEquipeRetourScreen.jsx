@@ -27,7 +27,6 @@ export default function AllFolioEquipeRetourScreen() {
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
-                        // navigation.navigate("DetailsFolioRetourChefPlateau", { folio: folio.folios, ID_ETAPE_FOLIO: folio.folios[0].folio.ID_ETAPE_FOLIO })
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
                         navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.folios[0].USER_TRAITEMENT,   ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })

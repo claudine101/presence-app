@@ -68,6 +68,9 @@ import DetailsVolumeAgentDistributeurTraiteScreen from '../screens/scanning/agen
 import DetailsVolumeAgentArchivesTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentArchivesTraiteScreen';
 import DetailVolumeSuperviserScreen from '../screens/preparation/DetailVolumeSuperviserScreen';
 import DetailsChefEquipePrepTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsChefEquipePrepTraiteVolumeScreen';
+import DetailsEquipeFoliosNonReconcilierScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosNonReconcilierScreen';
+import DetailsVolumeChefPlateauNonValideScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauNonValideScreen';
+import DetailsFoliosRetourSupScanNonValidScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFoliosRetourSupScanNonValidScreen';
 
 
 export default function RootNavigator() {
@@ -123,6 +126,9 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsVolumeAgentDistributeurTraiteScreen' component={DetailsVolumeAgentDistributeurTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeAgentArchivesTraiteScreen' component={DetailsVolumeAgentArchivesTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsChefEquipePrepTraiteVolumeScreen' component={DetailsChefEquipePrepTraiteVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsEquipeFoliosNonReconcilierScreen' component={DetailsEquipeFoliosNonReconcilierScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefPlateauNonValideScreen' component={DetailsVolumeChefPlateauNonValideScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFoliosRetourSupScanNonValidScreen' component={DetailsFoliosRetourSupScanNonValidScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />

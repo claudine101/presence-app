@@ -49,6 +49,8 @@ import ChefEquipeFlashUploadScreen from "../screens/uploadEDRMS/chefEquipe/ChefE
 import FolioInvalideScreen from "../screens/uploadEDRMS/agentUpload/FolioInvalideScreen";
 import AllVolumeSuperviseScreen from "../screens/preparation/AllVolumeSuperviseScreen";
 import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSreen";
+import FoliosNonScanNonReconcilierScreen from "../screens/scanning/agentSuperviseur/retour/FoliosNonScanNonReconcilierScreen";
+import VolumeFoliosNonInvalidePlatoScreen from "../screens/scanning/chefEquipe/VolumeFoliosNonInvalidePlatoScreen";
 
 
 export default function DrawerNavigator() {
@@ -151,6 +153,7 @@ export default function DrawerNavigator() {
                                                 <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                                                 <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
                                                 <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                                <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                         </>
                                         : null}
 
@@ -159,6 +162,8 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFolioRecusScanScreen" component={AllFolioRecusScanScreen} />
                                         <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
+                                        <Drawer.Screen name="FoliosNonScanNonReconcilierScreen" component={FoliosNonScanNonReconcilierScreen} />
+                                        <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?
