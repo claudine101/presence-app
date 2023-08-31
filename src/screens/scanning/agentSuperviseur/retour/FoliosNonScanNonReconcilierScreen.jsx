@@ -17,9 +17,10 @@ import moment from 'moment'
 export default function FoliosNonScanNonReconcilierScreen() {
         const navigation = useNavigation()
         const [allFolios, setAllFolios] = useState([])
+        console.log(allFolios)
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
-                navigation.navigate("DetailsEquipeFoliosNonReconcilierScreen", { folio: folio, userTraite: folio?.users, PV_PATH:folio?.PV_PATH, date:folio.date })
+                navigation.navigate("DetailsEquipeFoliosNonReconcilierScreen", { folio: folio, userTraite: folio?.users, PV_PATH: folio?.PV_PATH, date: folio.date })
         }
 
         //fonction pour recuperer les folios d'un agent qui est connecter
@@ -53,39 +54,47 @@ export default function FoliosNonScanNonReconcilierScreen() {
                                                         style={styles.contain}
                                                         data={allFolios}
                                                         renderItem={({ item: folio, index }) => {
+                                                                console.log(folio.folios.length)
                                                                 return (
                                                                         <>
 
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
+                                                                                        folio?.folios[0]?.equipe.NOM_EQUIPE != null ?
+                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                        onPress={() => handleSubmit(folio)}
+                                                                                                >
+                                                                                                        <View style={styles.cardDetails}>
+                                                                                                                <View style={styles.cardImages}>
+                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                </View>
+                                                                                                                <View style={styles.cardAllDetails}>
+                                                                                                                        <View>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.folios[0]?.equipe.NOM_EQUIPE}</Text>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                        <View>
+                                                                                                                                <View ><Text></Text></View>
+                                                                                                                                <View style={styles.cardDescDetails}>
+                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio.folios.length} dossiers</Text></View>
 
-                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => handleSubmit(folio)}
-                                                                                        >
-                                                                                                <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.cardImages}>
-                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.cardAllDetails}>
-                                                                                                                <View>
-                                                                                                                        <Text style={styles.titlePrincipal}>{folio?.folios[0]?.equipe.NOM_EQUIPE}</Text>
-                                                                                                                        <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <View>
-                                                                                                                        <View ><Text></Text></View>
-                                                                                                                        <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio.folios.length} dossiers</Text></View>
-
-                                                                                                                        </View>
-                                                                                                                </View>
                                                                                                         </View>
+                                                                                                </TouchableNativeFeedback> :
+
+                                                                                                <View style={styles.emptyContaier}>
+                                                                                                        <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
+                                                                                                        <Text style={styles.emptyTitle}>
+                                                                                                                Aucun folio trouvé
+                                                                                                        </Text>
                                                                                                 </View>
-                                                                                        </TouchableNativeFeedback>
                                                                                 }
                                                                         </>
                                                                 )
@@ -147,9 +156,10 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
         },
         emptyContaier: {
-                flex:1,
+                flex: 1,
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                marginTop:"8%"
         },
         emptyImage: {
                 width: 100,
