@@ -188,7 +188,20 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {detail.volume.NUMERO_VOLUME}
+                                                        {detail?.volume?.NUMERO_VOLUME}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Malle
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {detail?.volume?.maille?.NUMERO_MAILLE}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>

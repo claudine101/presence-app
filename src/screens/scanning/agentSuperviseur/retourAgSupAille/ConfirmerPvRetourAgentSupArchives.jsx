@@ -28,7 +28,6 @@ export default function ConfirmerPvRetourAgentSupArchives() {
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
         const { detail } = route.params
-        console.log(detail)
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
 
@@ -190,7 +189,20 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {detail.volume.NUMERO_VOLUME}
+                                                        {detail?.volume?.NUMERO_VOLUME}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Malle
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {detail?.volume?.maille?.NUMERO_MAILLE}
                                                 </Text>
                                         </TouchableOpacity>
                                         {/* <TouchableOpacity style={styles.selectContainer}>

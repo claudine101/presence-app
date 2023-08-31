@@ -76,6 +76,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                 {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent distributeur trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
                                                         {volumesAll.result.map((chef, index) => {
+                                                                console.log(chef)
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
@@ -86,6 +87,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                                <Text style={{...styles.itemTitle, color:"#777"}}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
                                                                                                 {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
