@@ -71,6 +71,8 @@ import DetailsChefEquipePrepTraiteVolumeScreen from '../screens/scanning/agentSu
 import DetailsEquipeFoliosNonReconcilierScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosNonReconcilierScreen';
 import DetailsVolumeChefPlateauNonValideScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauNonValideScreen';
 import DetailsFoliosRetourSupScanNonValidScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFoliosRetourSupScanNonValidScreen';
+import DetailsVolumeRetourSupAilleScanScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/DetailsVolumeRetourSupAilleScanScreen';
+import NewEquipeRetourScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeRetourScanScreen';
 
 
 export default function RootNavigator() {
@@ -129,6 +131,8 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsEquipeFoliosNonReconcilierScreen' component={DetailsEquipeFoliosNonReconcilierScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeChefPlateauNonValideScreen' component={DetailsVolumeChefPlateauNonValideScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsFoliosRetourSupScanNonValidScreen' component={DetailsFoliosRetourSupScanNonValidScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeRetourSupAilleScanScreen' component={DetailsVolumeRetourSupAilleScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewEquipeRetourScanScreen' component={NewEquipeRetourScanScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />

@@ -51,6 +51,7 @@ import AllVolumeSuperviseScreen from "../screens/preparation/AllVolumeSuperviseS
 import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSreen";
 import FoliosNonScanNonReconcilierScreen from "../screens/scanning/agentSuperviseur/retour/FoliosNonScanNonReconcilierScreen";
 import VolumeFoliosNonInvalidePlatoScreen from "../screens/scanning/chefEquipe/VolumeFoliosNonInvalidePlatoScreen";
+import AllSuperviseurAileScanVolumeScreen from "../screens/scanning/agentSuperviseur/retourAgSupAille/AllSuperviseurAileScanVolumeScreen";
 
 
 export default function DrawerNavigator() {
@@ -168,6 +169,7 @@ export default function DrawerNavigator() {
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?
                                 <>
+                                        <Drawer.Screen name="AllSuperviseurAileScanVolumeScreen" component={AllSuperviseurAileScanVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                 </>

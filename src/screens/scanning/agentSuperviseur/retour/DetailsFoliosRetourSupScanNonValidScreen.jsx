@@ -31,6 +31,10 @@ export default function DetailsFoliosRetourSupScanNonValidScreen() {
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
 
+        const handleSubmit = (folio) => {
+                navigation.navigate("NewEquipeRetourScanScreen", { folio: folio, typeClick : 2  })
+        }
+
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
 
         useFocusEffect(useCallback(() => {
@@ -121,7 +125,9 @@ export default function DetailsFoliosRetourSupScanNonValidScreen() {
                                                                                 <View style={styles.folioList}>
                                                                                         {folio?.folios.map((folio, index) => {
                                                                                                 return (
-                                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}
+                                                                                                                onPress={()=>handleSubmit(folio)}
+                                                                                                        >
                                                                                                                 <View style={[styles.folio]}>
                                                                                                                         <View style={styles.folioLeftSide}>
                                                                                                                                 <View style={styles.folioImageContainer}>
