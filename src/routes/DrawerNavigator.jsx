@@ -49,6 +49,7 @@ import ChefEquipeFlashUploadScreen from "../screens/uploadEDRMS/chefEquipe/ChefE
 import FolioInvalideScreen from "../screens/uploadEDRMS/agentUpload/FolioInvalideScreen";
 import AllVolumeSuperviseScreen from "../screens/preparation/AllVolumeSuperviseScreen";
 import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSreen";
+import NewIncidentsDeclarerScreen from "../incidents/NewIncidentsDeclarerScreen";
 
 
 export default function DrawerNavigator() {
@@ -191,7 +192,7 @@ export default function DrawerNavigator() {
 
                                 </>
                                 : null}
-
+                         <Drawer.Screen name="NewIncidentsDeclarerScreen" component={NewIncidentsDeclarerScreen} />
                 </Drawer.Navigator>
         )
 }
