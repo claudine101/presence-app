@@ -51,7 +51,6 @@ export default function DetailsFolioFlashScreen() {
 
                 const res = await fetchApi(`/uploadEDMRS/folio/typeDocument/${folio?.ID_NATURE}`)
                 setTypeDocument(res.result)
-                console.log(folio?.ID_NATURE)
             } catch (error) {
                 console.log(error)
             } finally {
