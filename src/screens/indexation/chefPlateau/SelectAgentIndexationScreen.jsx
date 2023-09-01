@@ -76,7 +76,6 @@ export default function SelectAgentIndexationScreen() {
                     agentsModalRef.current?.close()
                     handleChange('agent', agent)
           }
-
           useFocusEffect(useCallback(() => {
                     (async () => {
                               try {
