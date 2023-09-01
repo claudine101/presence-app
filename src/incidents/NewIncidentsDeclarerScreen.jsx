@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, TouchableNativeFeedback, ScrollView, ActivityIndicator, TouchableWithoutFeedback } from "react-native";
 import AppHeader from "../components/app/AppHeader";
-import { Feather, MaterialIcons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from "../hooks/useForm";
 import { useFormErrorsHandle } from "../hooks/useFormErrorsHandle";
@@ -14,6 +14,7 @@ import useFetch from "../hooks/useFetch";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Loading from "../components/app/Loading";
 import fetchApi from "../helpers/fetchApi";
+import moment from 'moment'
 
 /**
  * Le screen pour creer une incidents
@@ -63,28 +64,28 @@ export default function NewIncidentsDeclarerScreen() {
                 setTypesLogiciels(null)
         }
 
-         // Types incidents select
-         const typeByOrderModalizeRef = useRef(null);
-         const [typesOrdres, setTypesOrdres] = useState(null);
-         const openTypeIncidentByOrdreModalize = () => {
+        // Types incidents select
+        const typeByOrderModalizeRef = useRef(null);
+        const [typesOrdres, setTypesOrdres] = useState(null);
+        const openTypeIncidentByOrdreModalize = () => {
                 typeByOrderModalizeRef.current?.open();
-         };
-         const setSelectedTypeIncidentByOrdre = (type) => {
+        };
+        const setSelectedTypeIncidentByOrdre = (type) => {
                 typeByOrderModalizeRef.current?.close();
                 setTypesOrdres(type)
                 setTypesLogiciels(null)
-         }
+        }
 
-         // Types logiciels select
-         const typeLogicielModalizeRef = useRef(null);
-         const [typesLogiciels, setTypesLogiciels] = useState(null);
-         const openTypeLogicielsModalize = () => {
+        // Types logiciels select
+        const typeLogicielModalizeRef = useRef(null);
+        const [typesLogiciels, setTypesLogiciels] = useState(null);
+        const openTypeLogicielsModalize = () => {
                 typeLogicielModalizeRef.current?.open();
-         };
-         const setSelectedTypeLogiciel = (type) => {
+        };
+        const setSelectedTypeLogiciel = (type) => {
                 typeLogicielModalizeRef.current?.close();
                 setTypesLogiciels(type)
-         }
+        }
 
         //Composent pour afficher les ordres principal d'un incidents
         const TypeIncidentList = () => {
@@ -306,20 +307,27 @@ export default function NewIncidentsDeclarerScreen() {
         return (
                 <>
                         {loadingData && <Loading />}
-                        <AppHeader />
                         <View style={styles.container}>
-                                <View style={styles.inputs}>
+                                <View style={styles.header}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                                </View>
+                                        </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.titleName}>Déclarer une incident</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Déclarer une incident</Text>
                                         </View>
-
+                                </View>
+                                <ScrollView style={styles.inputs}>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openTypeIncidentModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <FontAwesome5 name="typo3" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Ordres
+                                                                Type d'incident
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
@@ -328,7 +336,7 @@ export default function NewIncidentsDeclarerScreen() {
                                         </TouchableOpacity>
                                         {types == 'autre' && <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
-                                                        label="Types"
+                                                        label="Nouveau type d'incident"
                                                         fontSize={14}
                                                         baseColor={COLORS.smallBrown}
                                                         tintColor={COLORS.primary}
@@ -351,7 +359,7 @@ export default function NewIncidentsDeclarerScreen() {
                                                                 <FontAwesome5 name="typo3" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Type incident
+                                                                Precisez l'incident
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
@@ -360,7 +368,7 @@ export default function NewIncidentsDeclarerScreen() {
                                         </TouchableOpacity> : null}
                                         {typesOrdres == 'autre' && <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
-                                                        label="Type incident"
+                                                        label="Nouveau incident"
                                                         fontSize={14}
                                                         baseColor={COLORS.smallBrown}
                                                         tintColor={COLORS.primary}
@@ -377,7 +385,7 @@ export default function NewIncidentsDeclarerScreen() {
                                                         multiline
                                                 />
                                         </View>}
-                                        {(typesOrdres?.ID_TYPE_INCIDENT==3) ? <TouchableOpacity style={styles.selectContainer} onPress={openTypeLogicielsModalize}>
+                                        {(typesOrdres?.ID_TYPE_INCIDENT == 3) ? <TouchableOpacity style={styles.selectContainer} onPress={openTypeLogicielsModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <FontAwesome5 name="typo3" size={20} color="#777" />
@@ -389,7 +397,7 @@ export default function NewIncidentsDeclarerScreen() {
                                                 <Text style={styles.selectedValue}>
                                                         {typesLogiciels ? `${typesLogiciels.NOM_LOGICIEL}` : "Cliquer pour choisir logiciel"}
                                                 </Text>
-                                        </TouchableOpacity>:null}
+                                        </TouchableOpacity> : null}
                                         <View style={{ marginVertical: 8 }}>
                                                 <OutlinedTextField
                                                         label="Description"
@@ -409,17 +417,16 @@ export default function NewIncidentsDeclarerScreen() {
                                                         multiline
                                                 />
                                         </View>
-                                </View>
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitIncidentData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </View>
-
-                        <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={submitIncidentData}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
                         <Modalize ref={typeIncidentModalizeRef}  >
                                 <TypeIncidentList />
                         </Modalize>
@@ -541,5 +548,22 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 fontWeight: 'bold',
                 marginLeft: 10
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+        },
+        cardTitle: {
+                maxWidth: "85%"
         },
 })

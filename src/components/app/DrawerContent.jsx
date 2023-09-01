@@ -702,7 +702,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         </View>
                     </View>
                 </TouchableNativeFeedback>
-                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('COLORS.handleColor')} onPress={() => handlePress('NewIncidentsDeclarerScreen')}>
+                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple('COLORS.handleColor')} onPress={() => handlePress('AllIncidentsDeclarerScreen')}>
                     <View style={{ borderRadius: 10, overflow: "hidden" }}>
                         <View style={styles.drawerItem}>
                             <MaterialIcons name="report-problem" size={24} color="black" />
