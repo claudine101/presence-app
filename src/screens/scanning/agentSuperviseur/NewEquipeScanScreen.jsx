@@ -16,7 +16,7 @@ import Loading from "../../../components/app/Loading";
 /**
  * Le screen pour de donner les folios au chef equipe
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 2/8/2021
+ * @date 2/8/2023
  * @returns 
  */
 

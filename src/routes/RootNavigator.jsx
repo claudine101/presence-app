@@ -68,6 +68,7 @@ import DetailsVolumeAgentDistributeurTraiteScreen from '../screens/scanning/agen
 import DetailsVolumeAgentArchivesTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentArchivesTraiteScreen';
 import DetailVolumeSuperviserScreen from '../screens/preparation/DetailVolumeSuperviserScreen';
 import DetailsChefEquipePrepTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsChefEquipePrepTraiteVolumeScreen';
+import NewIncidentsDeclarerScreen from '../incidents/NewIncidentsDeclarerScreen';
 
 
 export default function RootNavigator() {
@@ -123,6 +124,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsVolumeAgentDistributeurTraiteScreen' component={DetailsVolumeAgentDistributeurTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeAgentArchivesTraiteScreen' component={DetailsVolumeAgentArchivesTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsChefEquipePrepTraiteVolumeScreen' component={DetailsChefEquipePrepTraiteVolumeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewIncidentsDeclarerScreen' component={NewIncidentsDeclarerScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />

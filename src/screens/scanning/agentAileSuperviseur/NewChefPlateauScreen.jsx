@@ -17,7 +17,7 @@ import Loading from "../../../components/app/Loading";
 /**
  * Le screen pour de donner les volumes a un chef du plateau
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 1/8/2021
+ * @date 1/8/2023
  * @returns 
  */
 
