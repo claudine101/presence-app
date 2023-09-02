@@ -133,8 +133,8 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                                                                                                                         <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
                                                                                                                                 </View>
                                                                                                                         </View>
-                                                                                                                        {folio.IS_RECONCILIE != null ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                                        {folio.IS_RECONCILIE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
+                                                                                                                        {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
                                                                                                                 </View>
                                                                                                         </TouchableOpacity>
                                                                                                 )

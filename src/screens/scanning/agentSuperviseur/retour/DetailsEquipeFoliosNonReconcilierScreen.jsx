@@ -34,7 +34,7 @@ export default function DetailsEquipeFoliosNonReconcilierScreen() {
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
 
         const handleSubmit = (folio) => {
-                navigation.navigate("NewEquipeRetourScanScreen", { folio: folio, typeClick : 1 })
+                // navigation.navigate("NewEquipeRetourScanScreen", { folio: folio, typeClick : 1 })
         }
 
         useFocusEffect(useCallback(() => {

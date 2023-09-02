@@ -133,7 +133,6 @@ export default function DetailsVolumeRetourSupAilleScanScreen() {
                                         style={styles.contain}
                                         data={volume.volumes}
                                         renderItem={({ item: volume, index }) => {
-                                                console.log(volume)
                                                 return (
                                                         <>
                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

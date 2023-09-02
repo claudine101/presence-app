@@ -76,8 +76,8 @@ export default function NewChefPlateauScreen() {
                                                                                                                 <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>

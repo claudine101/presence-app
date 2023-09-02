@@ -1,95 +1,51 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useCallback, useRef } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
+import { COLORS } from "../../../../../styles/COLORS";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import { COLORS } from "../../../styles/COLORS";
-import { useRef } from "react";
-import { useState } from "react";
-import { Modalize } from 'react-native-modalize';
-import { Portal } from 'react-native-portalize';
-import useFetch from "../../../hooks/useFetch";
-import fetchApi from "../../../helpers/fetchApi";
-import { useCallback } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import Loading from "../../../components/app/Loading";
+import { useState } from "react";
+import Loading from "../../../../../components/app/Loading";
+import fetchApi from "../../../../../helpers/fetchApi";
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import useFetch from "../../../../../hooks/useFetch";
 
 /**
- * Le screen pour de donner les folios a un agent superviseur
+ * Screen pour signer le pv avec agents distibuteur
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 2/8/2021
+ * @date 2/9/2023
  * @returns 
  */
 
-export default function NewAgentSupScanScreen() {
-        const navigation = useNavigation()
+export default function ChoixAgentDistributeurRetourScreen() {
         const route = useRoute()
-        const { volume, id } = route.params
+        const navigation = useNavigation()
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const [malles, setMalles] = useState('')
-        const [loading, setLoading] = useState(false)
+        const { volume } = route.params
         const [loadingData, setLoadingData] = useState(false)
+
+        const [allVolumes, setAllVolumes] = useState([])
+        const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentSuperviseur != null && multiFolios.length > 0 && document != null ? true : false
+                isValid = document != null && equipe != null ? true : false
                 return isValid
         }
 
-        // Agent superviseur select
-        const agentSuperviseurRef = useRef(null);
-        const [agentSuperviseur, setAgentSuperviseur] = useState(null);
-        const openSuperviseurModalize = () => {
-                agentSuperviseurRef.current?.open();
+        // Agent distributeur select
+        const equipeModalizeRef = useRef(null);
+        const [equipe, setEquipe] = useState(null);
+        const openEquipeModalize = () => {
+                equipeModalizeRef.current?.open();
         };
-        const setSelectedAgentSuperviseur = (sup) => {
-                agentSuperviseurRef.current?.close();
-                setAgentSuperviseur(sup)
+        const setSelectedEquipe = (equi) => {
+                equipeModalizeRef.current?.close();
+                setEquipe(equi)
         }
-
-        // Modal folio multi select
-        const multSelectModalizeRef = useRef(null);
-        const [multiFolios, setMultiFolios] = useState([]);
-        const openMultiSelectModalize = () => {
-                multSelectModalizeRef.current?.open();
-        };
-        const submitConfimer = () => {
-                multSelectModalizeRef.current?.close();
-        }
-
-        const [allFolios, setAllFolios] = useState([]);
-        const [foliosLoading, setFoliosLoading] = useState(false);
-
-        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-        const setSelectedFolio = (fol) => {
-                if (isSelected(fol.ID_FOLIO)) {
-                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                        setMultiFolios(newfolio)
-                } else {
-                        setMultiFolios(u => [...u, fol])
-                }
-
-        }
-
-        //fonction pour recuperer le folio par rapport de volume
-        useEffect(() => {
-                (async () => {
-                        try {
-
-                                if (id) {
-                                        setFoliosLoading(true)
-                                        const rep = await fetchApi(`/scanning/folio/${id}`)
-                                        setAllFolios(rep.result)
-                                }
-                        }
-                        catch (error) {
-                                console.log(error)
-                        } finally {
-                                setFoliosLoading(false)
-                        }
-                })()
-        }, [id])
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -112,10 +68,11 @@ export default function NewAgentSupScanScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-
-        const AgentSuperviseurList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/superviseur')
+        //Composent pour afficher la listes des distributeurs
+        const EquipeScanningList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/distributeur')
                 return (
+
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -124,24 +81,24 @@ export default function NewAgentSupScanScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                 </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent distributeur trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
-                                                        {volumesAll.result.map((sup, index) => {
+                                                        {volumesAll.result.map((chef, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgentSuperviseur(sup)}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{sup.NOM} {sup.PRENOM}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{sup.EMAIL}</Text>
+                                                                                                                <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                                <Text style={{ ...styles.itemTitle, color: "#777" }}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -155,63 +112,11 @@ export default function NewAgentSupScanScreen() {
                 )
         }
 
-        //Composent pour afficher le modal de multi select des folio
-        const MultiFolioSelctList = () => {
-                return (
-
-                        <>
-                                {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View > :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
-                                                </View>
-                                                <View style={styles.modalList}>
-                                                        {allFolios.map((fol, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
-                                                                                        <View style={styles.listItem} >
-                                                                                                <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                                        </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
-                                                </View>
-                                        </View>
-                                }
-                                <TouchableWithoutFeedback
-                                        onPress={submitConfimer}
-                                >
-                                        <View style={styles.butConfirmer}>
-                                                <Text style={styles.buttonText}>Confirmer</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
-                        </>
-                )
-        }
-
-        const submitSupervieurData = async () => {
+        const submitChefEquScan = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('ID_VOLUME', id)
-                        form.append('folio', JSON.stringify(multiFolios))
-                        form.append('USER_TRAITEMENT', agentSuperviseur.USERS_ID)
+                        form.append('USER_TRAITEMENT', equipe.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -228,11 +133,12 @@ export default function NewAgentSupScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/volume/folio/plateau`, {
+                        console.log(form)
+                        const respo = await fetchApi(`/scanning/retour/agent/distributeur/${volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        navigation.navigate("AllVolumeFolioRetourSupAilleScreen")
                 }
                 catch (error) {
                         console.log(error)
@@ -241,20 +147,22 @@ export default function NewAgentSupScanScreen() {
                 }
         }
 
-        //fonction pour recuperer le malle correspond a un volume
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                setLoading(true)
-                                const vol = await fetchApi(`/scanning/volume/maille/${volume.volume.ID_VOLUME}`)
-                                setMalles(vol.result)
+                                if (volume) {
+                                        setLoadingAilleScanning(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/details/pretArchives/${volume.ID_VOLUME}`)
+                                        setAllVolumes(vol.result)
+                                }
                         } catch (error) {
                                 console.log(error)
                         } finally {
-                                setLoading(false)
+                                setLoadingAilleScanning(false)
                         }
                 })()
         }, [volume]))
+
         return (
                 <>
                         {loadingData && <Loading />}
@@ -268,7 +176,7 @@ export default function NewAgentSupScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent distributeur</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -282,7 +190,7 @@ export default function NewAgentSupScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
+                                                        {volume.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -294,51 +202,61 @@ export default function NewAgentSupScanScreen() {
                                                                 Malle
                                                         </Text>
                                                 </View>
-                                                <View>
-                                                        {malles ? <Text style={styles.selectedValue}>
-                                                                {malles.maille.NUMERO_MAILLE}
-                                                        </Text> : <Text>N/B</Text>}
-                                                </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Nombre de dossier
-                                                        </Text>
-                                                </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NOMBRE_DOSSIER}
+                                                        {volume.ID_MALLE}
                                                 </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>
+                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumes?.foliosValid?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        Les dossiers validés
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {allVolumes?.foliosValid?.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
+                                                                        </View>
+                                                                </View>
+                                                        </View> : null
+                                        }
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Agent superviseur
+                                                                Agent distributeur
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {agentSuperviseur ? `${agentSuperviseur.NOM}` + ' ' + `${agentSuperviseur.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                        {equipe ? `${equipe.NOM} ${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
-                                        </TouchableOpacity>
-
-
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
-                                                <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Selectioner les folios
-                                                        </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} séléctionné{multiFolios.length>1 ? "s" :''}
-                                                                </Text>
-                                                        </View>
-                                                </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
@@ -357,22 +275,27 @@ export default function NewAgentSupScanScreen() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitSupervieurData}
+                                        onPress={submitChefEquScan}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Modalize ref={agentSuperviseurRef}  >
-                                <AgentSuperviseurList />
-                        </Modalize>
-                        <Modalize ref={multSelectModalizeRef}  >
-                                <MultiFolioSelctList />
-                        </Modalize>
+                        <Portal>
+                                <Modalize ref={equipeModalizeRef}  >
+                                        <EquipeScanningList />
+                                </Modalize>
+                        </Portal>
+                        {/* <Portal>
+                                <Modalize ref={foliosModalizeRef}  >
+                                        <ListFolioStatusList />
+                                </Modalize>
+                        </Portal> */}
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
@@ -448,9 +371,7 @@ const styles = StyleSheet.create({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderBottomWidth: 1,
-                borderBottomColor: '#F1F1F1'
+                paddingHorizontal: 10
         },
         listItemImageContainer: {
                 width: 50,
@@ -506,17 +427,40 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
-        buttonText: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 16,
-                textAlign: "center"
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
         },
-        butConfirmer: {
-                borderRadius: 8,
-                paddingVertical: 14,
-                backgroundColor: COLORS.primary,
-                marginHorizontal: 10,
-                marginVertical: 15
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })

@@ -50,11 +50,11 @@ export default function DetailsParAgentClickVolumeScreen() {
                                                         </View>
                                                         <View>
                                                                 <View ><Text></Text></View>
-                                                                <View style={styles.cardDescDetails}>
+                                                                {/* <View style={styles.cardDescDetails}>
                                                                         <AntDesign name="filetext1" size={20} color="#777" />
                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{detail?.volume?.NOMBRE_DOSSIER} dossiers</Text></View>
 
-                                                                </View>
+                                                                </View> */}
                                                         </View>
                                                 </View>
                                         </TouchableOpacity>

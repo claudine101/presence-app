@@ -464,7 +464,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     </View>
                                 </View>
                             </TouchableNativeFeedback>
-                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FoliosNonScanNonReconcilierScreen')}>
+                            {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FoliosNonScanNonReconcilierScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
@@ -473,12 +473,12 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                         </Text>
                                     </View>
                                 </View>
-                            </TouchableNativeFeedback>
+                            </TouchableNativeFeedback> */}
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeFoliosNonInvalidePlatoScreen')}>
-                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                                        <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
+                                        <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
                                             Dossiers non validés
                                         </Text>
                                     </View>

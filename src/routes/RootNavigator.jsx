@@ -73,6 +73,8 @@ import DetailsVolumeChefPlateauNonValideScreen from '../screens/scanning/agentSu
 import DetailsFoliosRetourSupScanNonValidScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFoliosRetourSupScanNonValidScreen';
 import DetailsVolumeRetourSupAilleScanScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/DetailsVolumeRetourSupAilleScanScreen';
 import NewEquipeRetourScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeRetourScanScreen';
+import ChoixAgentDistributeurRetourScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/ChoixAgentDistributeurRetourScreen';
+import RetourPhaseScanningVolumeScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/RetourPhaseScanningVolumeScreen';
 
 
 export default function RootNavigator() {
@@ -133,6 +135,8 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsFoliosRetourSupScanNonValidScreen' component={DetailsFoliosRetourSupScanNonValidScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsVolumeRetourSupAilleScanScreen' component={DetailsVolumeRetourSupAilleScanScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='NewEquipeRetourScanScreen' component={NewEquipeRetourScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChoixAgentDistributeurRetourScreen' component={ChoixAgentDistributeurRetourScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='RetourPhaseScanningVolumeScreen' component={RetourPhaseScanningVolumeScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />

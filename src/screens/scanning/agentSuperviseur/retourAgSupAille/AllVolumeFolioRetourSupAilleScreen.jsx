@@ -150,11 +150,11 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
-                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                        {/* <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER}</Text></View>
 
-                                                                                                                        </View>
+                                                                                                                        </View> */}
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>

@@ -32,7 +32,7 @@ export default function DetailsFoliosRetourSupScanNonValidScreen() {
         const [pvs, setPvs] = useState(null)
 
         const handleSubmit = (folio) => {
-                navigation.navigate("NewEquipeRetourScanScreen", { folio: folio, typeClick : 2  })
+                // navigation.navigate("NewEquipeRetourScanScreen", { folio: folio, typeClick : 2  })
         }
 
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
