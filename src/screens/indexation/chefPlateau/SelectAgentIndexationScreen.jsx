@@ -20,7 +20,7 @@ import Folio from "../../../components/folio/Folio";
 
 export default function SelectAgentIndexationScreen() {
           const route = useRoute()
-          const { flash } = route.params
+          const { flash ,flashindexe} = route.params
           const [flashDetail, setFlashDetail] = useState({})
           const [loading, setLoading] = useState(true)
           const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
@@ -76,7 +76,6 @@ export default function SelectAgentIndexationScreen() {
                     agentsModalRef.current?.close()
                     handleChange('agent', agent)
           }
-
           useFocusEffect(useCallback(() => {
                     (async () => {
                               try {
@@ -94,7 +93,7 @@ export default function SelectAgentIndexationScreen() {
           }, []))
 
           const isRetourValid = () => {
-                    return selectedItems.length > 0 && data.pv && !isCompressingPhoto && flashIndexes ? true : false
+         return selectedItems.length > 0 && data.pv && !isCompressingPhoto && (selectedItems.length ==  flashDetail.folios.length)? flashIndexes ? false : true : flashIndexes ? true : false
           }
           /**
            * Permet d'envoyer le chef agent d'indexation
@@ -144,7 +143,13 @@ export default function SelectAgentIndexationScreen() {
                               if (!isRetourValid()) return false
                               setIsSubmitting(true)
                               const form = new FormData()
-                              form.append("ID_FLASH_INDEXES", flashIndexes.ID_FLASH)
+                              form.append("ID_FLASH",  flashDetail.ID_FLASH)
+                              if(selectedItems.length ==  flashDetail.folios.length){
+                                form.append("ID_FLASH_INDEXES",  flashDetail.ID_FLASH)
+                              }
+                              else{
+                                form.append("ID_FLASH_INDEXES", flashIndexes.ID_FLASH)
+                              }
                               form.append("ID_AGENT_INDEXATION", flashDetail.agentIndexation.USER_TRAITEMENT)
                               form.append("foliosIndexesIds", JSON.stringify(selectedItems.map(folio => folio.ID_FOLIO)))
                               if(data.pv) {
@@ -218,10 +223,7 @@ export default function SelectAgentIndexationScreen() {
                                         {(loading) ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                   <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> : <ScrollView style={styles.inputs}>
-                                                  {/* <View style={styles.flash}>
-                                                  <MaterialCommunityIcons name="usb-flash-drive-outline" size={24} color="black" />
-                                                  <Text style={styles.flashName}>{ flashDetail.NOM_FLASH }</Text>
-                                        </View> */}
+                                                  
                                                   <View style={styles.content}>
                                                             {flashDetail.agentIndexation ? null : <TouchableOpacity style={styles.selectContainer}>
                                                                       <View>
@@ -346,20 +348,21 @@ export default function SelectAgentIndexationScreen() {
                                                                       </View>
                                                             </View>
                                                             </> : null}
-                                                            {flashDetail.agentIndexation ? <TouchableOpacity style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline'}]} onPress={openFlashModalize} disabled={flashDetail.agentIndexationRetour ? true : false}>
+                                                            {(flashDetail.agentIndexation  && !(selectedItems.length ==  flashDetail.folios.length)) ? <TouchableOpacity style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline'}]} onPress={openFlashModalize} disabled={flashDetail.agentIndexationRetour ? true : false}>
                                                                       <View style={styles.labelContainer}>
                                                                                 <View style={styles.icon}>
                                                                                           <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
                                                                                 </View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                          Clé USB des dossiers indexés
+                                                                                         Support  de stockage des dossiers indexés
                                                                                 </Text>
                                                                       </View>
                                                                       {flashDetail.foliosIndexes.length > 0 ?<Text style={styles.selectedValue}>
-                                                                                {flashDetail.foliosIndexes[0].flash.NOM_FLASH}
+                                                                                {/* {flashDetail.foliosIndexes[0].flash.NOM_FLASH} */}
+                                                                                { flashindexe?.NOM_FLASH}
                                                                       </Text> : null}
                                                                       {flashDetail.agentIndexationRetour ? null :<Text style={styles.selectedValue}>
-                                                                                {flashIndexes ? flashIndexes.NOM_FLASH : 'Cliquer pour choisir la clé'}
+                                                                                {flashIndexes ? flashIndexes.NOM_FLASH : 'Cliquer pour choisir le support'}
                                                                       </Text>}
                                                             </TouchableOpacity> : null}
                                                             {flashDetail.agentIndexation ? <TouchableOpacity onPress={onTakePhoto} disabled={flashDetail.agentIndexationRetour ? true : false}>
@@ -430,7 +433,7 @@ export default function SelectAgentIndexationScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.listNames}>
                                                                                                                                   <Text style={styles.listItemTitle}>{agent.NOM} {agent.PRENOM}</Text>
-                                                                                                                                  <Text style={styles.listItemSubTitle}>TOSHIBA - 16GB</Text>
+                                                                                                                                  <Text style={styles.listItemSubTitle}>{agent.EMAIL}</Text>
                                                                                                                         </View>
                                                                                                               </View>
                                                                                                               {(data.agent && data.agent.USERS_ID == agent.USERS_ID) ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :

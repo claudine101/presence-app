@@ -5,13 +5,13 @@ import fetchApi from "../../../helpers/fetchApi";
 import IDS_ETAPES_FOLIO from "../../../constants/ETAPES_FOLIO";
 import Folio from "../../../components/folio/Folio";
 import { COLORS } from "../../../styles/COLORS";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 
 export default function IndexationChefEquipeFolioScreen() {
           const [folios, setFolios] = useState([])
           const [loading, setLoading] = useState(true)
           const [selectedItems, setSelectedItems] = useState([])
-
+          const route = useRoute()
           const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
           
           const handleFolioPress = (folio) => {
@@ -35,13 +35,18 @@ export default function IndexationChefEquipeFolioScreen() {
                               }
                     })()
           }, []))
+          useEffect(() => {
+            const { noSelectItems } = route.params || {}
+            if (noSelectItems) {
+                setSelectedItems([])
+            }
+        }, [route])
           return (
                     <>
-                    <AppHeader />
+                    <AppHeader title="Dossiers en attente " />
                     {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                               <ActivityIndicator animating size={'large'} color={'#777'} />
                     </View> : <View style={styles.container}>
-                              {folios.length > 0 ? <Text style={styles.title}>Dossiers en ettente de classement</Text> : null}
                               {folios.length == 0 ? <View style={styles.emptyContainer}>
                                         <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                         <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
