@@ -16,6 +16,7 @@ export default function ChefEquipeFlashValidesScreen() {
                     try {
                               const res = await fetchApi(`/indexation/flashs/chef_equipe?precision=valides`)
                               setFlashs(res.result)
+
                     } catch (error) {
                               console.log(error)
                     } finally {
@@ -30,6 +31,7 @@ export default function ChefEquipeFlashValidesScreen() {
           const handleFlashPress = flash => {
                     navigation.navigate("ChefEquipeFlashDetailScreen", { flash })
           }
+        //  return console.log(flashs) 
           return (
                     <>
                               <AppHeader title="Dossiers classés" />
@@ -46,7 +48,7 @@ export default function ChefEquipeFlashValidesScreen() {
                                                   keyExtractor={(_, index) => index}
                                                   renderItem={({ item, index} ) => {
                                                             return (
-                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash)}>
+                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.flash)}>
                                                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                                                           <View style={styles.folio}>
                                                                                                     <View style={styles.folioLeftSide}>
@@ -54,7 +56,7 @@ export default function ChefEquipeFlashValidesScreen() {
                                                                                                                         <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{ item.folio.flash.NOM_FLASH }</Text>
+                                                                                                                        <Text style={styles.folioName}>{ item.flash.NOM_FLASH }</Text>
                                                                                                                         {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -66,7 +68,7 @@ export default function ChefEquipeFlashValidesScreen() {
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folioCounts} dossier{item.folioCounts > 1 && 's'}
+                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>

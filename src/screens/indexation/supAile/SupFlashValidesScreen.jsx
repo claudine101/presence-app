@@ -14,7 +14,7 @@ export default function SupFlashValidesScreen() {
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/indexation/flashs/sup_aile_indexation?precision=valides`)
+                              const res = await fetchApi(`/indexation/flashs/sup_aile_indexation/valides`)
                               setFlashs(res.result)
                     } catch (error) {
                               console.log(error)
@@ -46,7 +46,7 @@ export default function SupFlashValidesScreen() {
                                                   keyExtractor={(_, index) => index}
                                                   renderItem={({ item, index} ) => {
                                                             return (
-                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash)}>
+                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.flash)}>
                                                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                                                           <View style={styles.folio}>
                                                                                                     <View style={styles.folioLeftSide}>
@@ -54,18 +54,18 @@ export default function SupFlashValidesScreen() {
                                                                                                                         <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{ item.NOM_FLASH }</Text>
+                                                                                                                        <Text style={styles.folioName}>{ item.flash.NOM_FLASH }</Text>
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                      {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folioCounts} dossier{item.folioCounts > 1 && 's'}
+                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>
