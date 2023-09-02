@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, TouchableNativeFeedback, ScrollView, ActivityIndicator, TouchableWithoutFeedback } from "react-native";
 import AppHeader from "../components/app/AppHeader";
-import { Feather, MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Feather, MaterialIcons, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from "../hooks/useForm";
 import { useFormErrorsHandle } from "../hooks/useFormErrorsHandle";
@@ -104,8 +104,8 @@ export default function NewIncidentsDeclarerScreen() {
                                                 <View style={styles.modalList}>
                                                         <TouchableNativeFeedback onPress={() => setSelectedTypeIncident('autre')}>
                                                                 <View style={styles.modalItem}>
-                                                                        {types == 'autre' ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                        {types == 'autre' ? <MaterialCommunityIcons name="radiobox-marked" size={24} color="#007bff" />:
+                                                                                <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
                                                                         <Text numberOfLines={1} style={styles.modalText}>Autre</Text>
                                                                 </View>
                                                         </TouchableNativeFeedback>
@@ -115,17 +115,16 @@ export default function NewIncidentsDeclarerScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedTypeIncident(type)}>
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                {/* <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} /> */}
+                                                                                                        {/* <View style={styles.listItemImageContainer}>
                                                                                                                 <FontAwesome5 name="typo3" size={24} color="black" />
-                                                                                                        </View>
+                                                                                                        </View> */}
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{type.ORDRE_INCIDENT}</Text>
                                                                                                                 {/* <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text> */}
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {types?.ID_ORDRE_INCIDENT == type.ID_ORDRE_INCIDENT ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {types?.ID_ORDRE_INCIDENT == type.ID_ORDRE_INCIDENT ? <MaterialCommunityIcons name="radiobox-marked" size={24} color="#007bff" />:
+                                                                                                         <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -155,8 +154,8 @@ export default function NewIncidentsDeclarerScreen() {
                                                 <View style={styles.modalList}>
                                                         <TouchableNativeFeedback onPress={() => setSelectedTypeIncidentByOrdre('autre')}>
                                                                 <View style={styles.modalItem}>
-                                                                        {typesOrdres == 'autre' ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                        {typesOrdres == 'autre' ? <MaterialCommunityIcons name="radiobox-marked" size={24} color="#007bff" /> :
+                                                                                <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
                                                                         <Text numberOfLines={1} style={styles.modalText}>Autre</Text>
                                                                 </View>
                                                         </TouchableNativeFeedback>
@@ -166,15 +165,15 @@ export default function NewIncidentsDeclarerScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedTypeIncidentByOrdre(type)}>
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                        {/* <View style={styles.listItemImageContainer}>
                                                                                                                 <FontAwesome5 name="typo3" size={24} color="black" />
-                                                                                                        </View>
+                                                                                                        </View> */}
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{type.TYPE_INCIDENT}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {typesOrdres?.ID_TYPE_INCIDENT == type.ID_TYPE_INCIDENT ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {typesOrdres?.ID_TYPE_INCIDENT == type.ID_TYPE_INCIDENT ? <MaterialCommunityIcons name="radiobox-marked" size={24} color="#007bff" /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -209,15 +208,15 @@ export default function NewIncidentsDeclarerScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedTypeLogiciel(type)}>
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                        {/* <View style={styles.listItemImageContainer}>
                                                                                                                 <FontAwesome5 name="typo3" size={24} color="black" />
-                                                                                                        </View>
+                                                                                                        </View> */}
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{type.NOM_LOGICIEL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {typesLogiciels?.ID_INCIDENT_LOGICIEL == type.ID_INCIDENT_LOGICIEL ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {typesLogiciels?.ID_INCIDENT_LOGICIEL == type.ID_INCIDENT_LOGICIEL ?  <MaterialCommunityIcons name="radiobox-marked" size={24} color="#007bff" /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -324,7 +323,7 @@ export default function NewIncidentsDeclarerScreen() {
                                         <TouchableOpacity style={styles.selectContainer} onPress={openTypeIncidentModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
-                                                                <FontAwesome5 name="typo3" size={20} color="#777" />
+                                                                {/* <FontAwesome5 name="typo3" size={20} color="#777" /> */}
                                                         </View>
                                                         <Text style={styles.selectLabel}>
                                                                 Type d'incident
@@ -356,7 +355,7 @@ export default function NewIncidentsDeclarerScreen() {
                                         {(types && types?.ID_ORDRE_INCIDENT) ? <TouchableOpacity style={styles.selectContainer} onPress={openTypeIncidentByOrdreModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
-                                                                <FontAwesome5 name="typo3" size={20} color="#777" />
+                                                                {/* <FontAwesome5 name="typo3" size={20} color="#777" /> */}
                                                         </View>
                                                         <Text style={styles.selectLabel}>
                                                                 Precisez l'incident
@@ -388,7 +387,7 @@ export default function NewIncidentsDeclarerScreen() {
                                         {(typesOrdres?.ID_TYPE_INCIDENT == 3) ? <TouchableOpacity style={styles.selectContainer} onPress={openTypeLogicielsModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
-                                                                <FontAwesome5 name="typo3" size={20} color="#777" />
+                                                                {/* <FontAwesome5 name="typo3" size={20} color="#777" /> */}
                                                         </View>
                                                         <Text style={styles.selectLabel}>
                                                                 Type de logiciel
@@ -472,7 +471,7 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         selectLabel: {
-                marginLeft: 5
+                // marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -512,7 +511,7 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listNames: {
-                marginLeft: 10
+                // marginLeft: 10
         },
         listItemTitle: {
                 fontWeight: 'bold'

@@ -46,7 +46,7 @@ export default function AllIncidentsDeclarerScreen() {
                                         <TouchableOpacity style={styles.buttonPlus}
                                                 onPress={() => navigation.navigate("NewIncidentsDeclarerScreen")}
                                         >
-                                                <Text style={styles.buttonTextPlus}>Nouveau</Text>
+                                                <Text style={styles.buttonTextPlus}>+</Text>
                                         </TouchableOpacity>
                                 </View>
                                 <FlatList
@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
                 color: '#777'
         },
         buttonPlus: {
-                width: 80,
-                height: 40,
-                borderRadius: 10,
+                width: 50,
+                height: 50,
+                borderRadius: 50,
                 backgroundColor: COLORS.primary,
                 justifyContent: "center",
                 alignContent: "center",
