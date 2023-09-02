@@ -49,6 +49,7 @@ import ChefEquipeFlashUploadScreen from "../screens/uploadEDRMS/chefEquipe/ChefE
 import FolioInvalideScreen from "../screens/uploadEDRMS/agentUpload/FolioInvalideScreen";
 import AllVolumeSuperviseScreen from "../screens/preparation/AllVolumeSuperviseScreen";
 import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSreen";
+import AgentSupAileScreen from "../screens/preparation/retourPreparation/AgentSupAileScreen";
 
 
 export default function DrawerNavigator() {
@@ -137,6 +138,8 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AgentSuperviseurAileScreen" component={AgentSuperviseurAileScreen} />
                                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="AgentSupAileScreen" component={AgentSupAileScreen} />
+                                        
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?

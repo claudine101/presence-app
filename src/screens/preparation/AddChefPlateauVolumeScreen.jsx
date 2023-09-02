@@ -26,7 +26,7 @@ export default function AddChefPlateauVolumeScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
         const route = useRoute()
-        const { volume } = route.params
+        const { volume ,histo_IDETAPE} = route.params
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
@@ -216,6 +216,7 @@ export default function AddChefPlateauVolumeScreen() {
                         setLoading(true)
                         const form = new FormData()
                         form.append('CHEF_PLATEAU', chefPlateaux.USERS_ID)
+                        form.append('histo_IDETAPE', histo_IDETAPE)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,

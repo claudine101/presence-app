@@ -68,6 +68,7 @@ import DetailsVolumeAgentDistributeurTraiteScreen from '../screens/scanning/agen
 import DetailsVolumeAgentArchivesTraiteScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeAgentArchivesTraiteScreen';
 import DetailVolumeSuperviserScreen from '../screens/preparation/DetailVolumeSuperviserScreen';
 import DetailsChefEquipePrepTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsChefEquipePrepTraiteVolumeScreen';
+import AgentSupAileDetailScreen from '../screens/preparation/retourPreparation/AgentSupAileDetailScreen';
 
 
 export default function RootNavigator() {
@@ -89,6 +90,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentSuperviseurValideDetailScreen' component={AgentSuperviseurValideDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefPlatauValideDetailsScreen' component={ChefPlatauValideDetailsScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailVolumeSuperviserScreen' component={DetailVolumeSuperviserScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AgentSupAileDetailScreen' component={AgentSupAileDetailScreen} options={{ headerShown: false }} />
                 
                 
                 {/* indexation */}

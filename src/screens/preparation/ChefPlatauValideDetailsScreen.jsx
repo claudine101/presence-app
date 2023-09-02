@@ -19,7 +19,6 @@ export default function ChefPlatauValideDetailsScreen() {
     const route = useRoute()
     const { volume } = route.params
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-    const [document, setDocument] = useState(null)
     const navigation = useNavigation()
     const agentsModalRef = useRef()
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -27,7 +26,7 @@ export default function ChefPlatauValideDetailsScreen() {
 
 
     const [loadingChefPlateau, supAile] = useFetch(`/preparation/volume/chefsPlateaux/${volume.volume.ID_VOLUME}`)
-    
+    console.log(supAile)
     const [data, handleChange] = useForm({
         agent: null,
         pv: null
