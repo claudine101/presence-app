@@ -41,14 +41,17 @@ export default function AllIncidentsDeclarerScreen() {
                         <View style={styles.container}>
                                 <View style={styles.cardHeader}>
                                         <View style={styles.modalHeader}>
-                                                <Text style={styles.modalTitle}>Les Incidents</Text>
+                                                <Text style={styles.modalTitle}>Les incidents</Text>
                                         </View>
                                         <TouchableOpacity style={styles.buttonPlus}
                                                 onPress={() => navigation.navigate("NewIncidentsDeclarerScreen")}
                                         >
-                                                <Text style={styles.buttonTextPlus}>+</Text>
+                                                <Text style={styles.buttonTextPlus}>+ Nouvelle</Text>
                                         </TouchableOpacity>
                                 </View>
+                                {allIncidents ? <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                                        <Text style={{ color: '#333', fontWeight: 'bold', opacity: 0.8}}>Aucune incident trouve</Text>
+                                </View> :
                                 <FlatList
                                         style={styles.contain}
                                         data={allIncidents}
@@ -85,7 +88,7 @@ export default function AllIncidentsDeclarerScreen() {
                                                 )
                                         }}
 
-                                />
+                                />}
 
                         </View>
                 </>
@@ -95,7 +98,7 @@ export default function AllIncidentsDeclarerScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                backgroundColor: '#E1EAF3'
         },
         cardNotification: {
                 backgroundColor: "#fff",
@@ -145,15 +148,15 @@ const styles = StyleSheet.create({
                 color: '#777'
         },
         buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
+                borderRadius: 8,
                 backgroundColor: COLORS.primary,
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
                 marginHorizontal: 10,
-                marginBottom: 10
+                marginBottom: 10,
+                paddingVertical: 10,
+                paddingHorizontal: 15
         },
         buttonTextPlus: {
                 color: "#fff",
