@@ -62,18 +62,18 @@ export default function AgentSupAileScreen() {
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> : folio.traitant ?
+                                                                                </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate("AgentSupAileDetailScreen", { volume:folio,users:folio.traitant})}
+                                                                                        onPress={() => navigation.navigate("AgentSupAileDetailScreen", { volume:folio,users:folio.users})}
                                                                                 ><View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
-                                                                                                                                {folio.traitant?.PHOTO_USER ? <Image source={{ uri: folio.traitant?.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
                                                                                                                                         <Image source={require('../../../../assets/images/user.png')} style={styles.image} />}
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.traitant?.NOM} {folio.traitant?.PRENOM}</Text>
+                                                                                                                                <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
@@ -84,7 +84,7 @@ export default function AgentSupAileScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {folio.volumes?.length ? folio.volumes?.length : "0"} volume{folio.volumes?.length > 1 && 's'}
+                                                                                                                                                       1 volume
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>

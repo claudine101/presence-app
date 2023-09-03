@@ -156,14 +156,14 @@ export default function AgentSupAileDetailScreen() {
                         </View>
                     </View>
                 </View> : null}
-                {volume.malleNonTraite ? <View style={styles.selectContainer}>
+                {volume.maille ? <View style={styles.selectContainer}>
                     <View>
                         <Text style={styles.selectLabel}>
                             Malle
                         </Text>
                         <View>
                             <Text style={styles.selectedValue}>
-                                {volume.volume.maille ? `${volume.volume.malleNonTraite?.NUMERO_MAILLE}` : 'N/B'}
+                                {volume.maille ? `${volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                             </Text>
                         </View>
                     </View>
