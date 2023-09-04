@@ -52,6 +52,8 @@ import AllVolumeDistribueSreen from "../screens/preparation/AllVolumeDistribueSr
 import FoliosNonScanNonReconcilierScreen from "../screens/scanning/agentSuperviseur/retour/FoliosNonScanNonReconcilierScreen";
 import VolumeFoliosNonInvalidePlatoScreen from "../screens/scanning/chefEquipe/VolumeFoliosNonInvalidePlatoScreen";
 import AllSuperviseurAileScanVolumeScreen from "../screens/scanning/agentSuperviseur/retourAgSupAille/AllSuperviseurAileScanVolumeScreen";
+import AllVolumeReenvoyerRecusScreen from "../screens/scanning/reenvoyerVolumeFolios/AllVolumeReenvoyerRecusScreen";
+import AllVolumeReenvoyezRetournerScreen from "../screens/scanning/reenvoyerVolumeFolios/AllVolumeReenvoyezRetournerScreen";
 
 
 export default function DrawerNavigator() {
@@ -147,6 +149,8 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
+                                        <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
                                 </> : null}
                         {
                                 user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
@@ -155,6 +159,8 @@ export default function DrawerNavigator() {
                                                 <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
                                                 <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                                 <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
+                                                <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
+                                                <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
                                         </>
                                         : null}
 
@@ -165,6 +171,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                         {/* <Drawer.Screen name="FoliosNonScanNonReconcilierScreen" component={FoliosNonScanNonReconcilierScreen} /> */}
                                         <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
+                                        <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?

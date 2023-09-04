@@ -1,27 +1,27 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
-import useFetch from "../../../hooks/useFetch";
-import fetchApi from "../../../helpers/fetchApi";
+import useFetch from "../../../../hooks/useFetch";
+import fetchApi from "../../../../helpers/fetchApi";
 import { useCallback } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import Loading from "../../../components/app/Loading";
+import Loading from "../../../../components/app/Loading";
 
 /**
- * Le screen pour de donner les volumes a un chef du plateau
+ * Le screen pour de donner les folios a un agent superviseur
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 1/8/2023
+ * @date 4/9/2021
  * @returns 
  */
 
-export default function NewChefPlateauScreen() {
+export default function NewAgentSupScanReenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
@@ -33,64 +33,43 @@ export default function NewChefPlateauScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = chefPlateau != null && document != null ? true : false
+                isValid = agentSuperviseur != null && multiFolios.length > 0 && document != null ? true : false
                 return isValid
         }
 
-        // Aile superviseur select
-        const chefPlateauModalizeRef = useRef(null);
-        const [chefPlateau, setChefPlateau] = useState(null);
-        const openChefPlateuModalize = () => {
-                chefPlateauModalizeRef.current?.open();
+        // Agent superviseur select
+        const agentSuperviseurRef = useRef(null);
+        const [agentSuperviseur, setAgentSuperviseur] = useState(null);
+        const openSuperviseurModalize = () => {
+                agentSuperviseurRef.current?.open();
         };
-        const setSelectedChefPlateu = (chef) => {
-                chefPlateauModalizeRef.current?.close();
-                setChefPlateau(chef)
+        const setSelectedAgentSuperviseur = (sup) => {
+                agentSuperviseurRef.current?.close();
+                setAgentSuperviseur(sup)
         }
 
-        //Composent pour afficher la listes les chefs plateaux
-        const ChefPlateauList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/plateau')
-                return (
-                        <>
-                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View > :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                                                </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
-                                                <View style={styles.modalList}>
-                                                        {volumesAll.result.map((chef, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedChefPlateu(chef)}>
-                                                                                        <View style={styles.listItem} >
-                                                                                                <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
-
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
-                                                </View>
-                                        </View>
-                                }
-                        </>
-
-                )
+        // Modal folio multi select
+        const multSelectModalizeRef = useRef(null);
+        const [multiFolios, setMultiFolios] = useState([]);
+        const openMultiSelectModalize = () => {
+                multSelectModalizeRef.current?.open();
+        };
+        const submitConfimer = () => {
+                multSelectModalizeRef.current?.close();
         }
+
+
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.folio.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.folio.ID_FOLIO)
+                        setMultiFolios(newfolio)
+                } else {
+                        setMultiFolios(u => [...u, fol.folio])
+                }
+
+        }
+
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -114,11 +93,103 @@ export default function NewChefPlateauScreen() {
                 //     handleChange('pv', manipResult)
         }
 
-        const submitChefPlateauData = async () => {
+        const AgentSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/superviseur')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((sup, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgentSuperviseur(sup)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{sup.NOM} {sup.PRENOM}</Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{sup.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de multi select des folio
+        const MultiFolioSelctList = () => {
+                return (
+
+                        <>
+                                {volume?.folios.length > 0 ?
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                </View>
+                                                <View style={styles.modalList}>
+                                                        {volume?.folios?.map((fol, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{fol?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{fol?.folio?.CODE_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View> : null
+                                }
+                                <TouchableWithoutFeedback
+                                        onPress={submitConfimer}
+                                >
+                                        <View style={styles.butConfirmer}>
+                                                <Text style={styles.buttonText}>Confirmer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </>
+                )
+        }
+
+        const submitSupervieurData = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('USER_TRAITEMENT', chefPlateau.USERS_ID)
+                        form.append('ID_VOLUME', id)
+                        form.append('folio', JSON.stringify(multiFolios))
+                        form.append('USER_TRAITEMENT', agentSuperviseur.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -135,7 +206,7 @@ export default function NewChefPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/chef/${id}`, {
+                        const volume = await fetchApi(`/scanning/retour/agent/reenvoyez/folios/superviseur`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -162,7 +233,6 @@ export default function NewChefPlateauScreen() {
                         }
                 })()
         }, [volume]))
-
         return (
                 <>
                         {loadingData && <Loading />}
@@ -176,7 +246,7 @@ export default function NewChefPlateauScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un chef plateau</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -202,24 +272,36 @@ export default function NewChefPlateauScreen() {
                                                                 Malle
                                                         </Text>
                                                 </View>
-                                                <View>
-                                                        {malles ? <Text style={styles.selectedValue}>
-                                                                {malles.maille.NUMERO_MAILLE}
-                                                        </Text> : <Text>N/B</Text>}
-                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {volume?.maille?.NUMERO_MAILLE}
+                                                </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Chef du plateau
+                                                                Agent superviseur
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {chefPlateau ? `${chefPlateau.NOM} ${chefPlateau.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                        {agentSuperviseur ? `${agentSuperviseur.NOM}` + ' ' + `${agentSuperviseur.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
+                                        </TouchableOpacity>
+
+
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Selectioner les folios
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} séléctionné{multiFolios.length > 1 ? "s" : ''}
+                                                                </Text>
+                                                        </View>
+                                                </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
@@ -238,15 +320,18 @@ export default function NewChefPlateauScreen() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitChefPlateauData}
+                                        onPress={submitSupervieurData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Modalize ref={chefPlateauModalizeRef}  >
-                                <ChefPlateauList />
+                        <Modalize ref={agentSuperviseurRef}  >
+                                <AgentSuperviseurList />
+                        </Modalize>
+                        <Modalize ref={multSelectModalizeRef}  >
+                                <MultiFolioSelctList />
                         </Modalize>
                 </>
         )
@@ -326,7 +411,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingVertical: 10,
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: '#F1F1F1'
         },
         listItemImageContainer: {
                 width: 50,
@@ -381,5 +468,18 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        buttonText: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 16,
+                textAlign: "center"
+        },
+        butConfirmer: {
+                borderRadius: 8,
+                paddingVertical: 14,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10,
+                marginVertical: 15
         },
 })

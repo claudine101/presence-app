@@ -75,6 +75,8 @@ import DetailsVolumeRetourSupAilleScanScreen from '../screens/scanning/agentSupe
 import NewEquipeRetourScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeRetourScanScreen';
 import ChoixAgentDistributeurRetourScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/ChoixAgentDistributeurRetourScreen';
 import RetourPhaseScanningVolumeScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/RetourPhaseScanningVolumeScreen';
+import NewChefPlateauReenvoyerVolScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewChefPlateauReenvoyerVolScreen';
+import NewAgentSupScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewAgentSupScanReenvoyerScreen';
 
 
 export default function RootNavigator() {
@@ -163,6 +165,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailValideScreen' component={DetailValideScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailIsUploadScreen' component={DetailIsUploadScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsIploadFlashScreen' component={DetailIsUploadScreen} options={{ headerShown: false }} />
+
+                 {/* retourner le volumes dans la phase scanning */}
+                <Stack.Screen name='NewChefPlateauReenvoyerVolScreen' component={NewChefPlateauReenvoyerVolScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewAgentSupScanReenvoyerScreen' component={NewAgentSupScanReenvoyerScreen} options={{ headerShown: false }} />
                
                 
             </Stack.Navigator>

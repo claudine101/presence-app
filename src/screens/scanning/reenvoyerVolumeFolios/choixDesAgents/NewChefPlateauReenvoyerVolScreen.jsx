@@ -2,29 +2,31 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
-import useFetch from "../../../hooks/useFetch";
-import fetchApi from "../../../helpers/fetchApi";
+import useFetch from "../../../../hooks/useFetch";
+import fetchApi from "../../../../helpers/fetchApi";
 import { useCallback } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import Loading from "../../../components/app/Loading";
+import Loading from "../../../../components/app/Loading";
 
 /**
- * Le screen pour de donner les volumes a un chef du plateau
+ * Le screen pour de donner les volumes reenvoyez a un chef du plateau
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 1/8/2023
+ * @date 4/9/2023
  * @returns 
  */
 
-export default function NewChefPlateauScreen() {
+export default function NewChefPlateauReenvoyerVolScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
+        console.log(volume)
+        console.log(id)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -77,7 +79,7 @@ export default function NewChefPlateauScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                                 {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -135,7 +137,7 @@ export default function NewChefPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/chef/${id}`, {
+                        const volume = await fetchApi(`/scanning/retour/agent/reenvoyez/chefPlateau/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -147,22 +149,6 @@ export default function NewChefPlateauScreen() {
                         setLoadingData(false)
                 }
         }
-
-        //fonction pour recuperer le malle correspond a un volume
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const vol = await fetchApi(`/scanning/volume/maille/${volume.volume.ID_VOLUME}`)
-                                setMalles(vol.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, [volume]))
-
         return (
                 <>
                         {loadingData && <Loading />}
@@ -190,7 +176,7 @@ export default function NewChefPlateauScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
+                                                        {volume?.volume?.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -202,12 +188,44 @@ export default function NewChefPlateauScreen() {
                                                                 Malle
                                                         </Text>
                                                 </View>
-                                                <View>
-                                                        {malles ? <Text style={styles.selectedValue}>
-                                                                {malles.maille.NUMERO_MAILLE}
-                                                        </Text> : <Text>N/B</Text>}
-                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {volume?.maille?.NUMERO_MAILLE}
+                                                </Text>
                                         </TouchableOpacity>
+                                        {volume?.folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        Listes des dossiers
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.folioList}>
+                                                                {volume?.folios?.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })}
+                                                        </View>
+                                                </View>
+                                        </View>:null}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -251,6 +269,7 @@ export default function NewChefPlateauScreen() {
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
@@ -381,5 +400,41 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })
