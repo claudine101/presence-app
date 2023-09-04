@@ -27,7 +27,7 @@ export default function AddDetailsFolioScreen() {
         const [loading, setLoading] = useState(false)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { folio, users } = route.params
+        const { folio,  } = route.params
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
@@ -231,23 +231,6 @@ export default function AddDetailsFolioScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-
-
-        //Fonction pour importer l'image dans le galerie
-
-        // const inporterImages = async () => {
-        //         modelRef.current.close()
-        //         const permission = await ImagePicker.requestCameraPermissionsAsync()
-        //         if (!permission.granted) return false
-        //         let photo = await ImagePicker.launchImageLibraryAsync({
-        //                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        //                 allowsMultipleSelection: true
-        //         })
-        //         if (!photo.cancelled) {
-        //                 setLogoImage(photo)
-        //         }
-        // }
-
         const submitData = async () => {
                 try {
                         setLoading(true)
@@ -277,6 +260,10 @@ export default function AddDetailsFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
 
+                        }
+                        if (folio?.mailleNoTraite) {
+
+                                form.append('ID_MAILLE_NO_TRAITE', folio?.mailleNoTraite.ID_MAILLE)
                         }
                         const volume = await fetchApi(`/preparation/folio/addDetails`, {
                                 method: "PUT",

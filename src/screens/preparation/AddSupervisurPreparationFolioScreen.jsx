@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons,FontAwesome5, Fontisto,MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import * as DocumentPicker from 'expo-document-picker';
@@ -34,6 +34,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
         const { volume } = route.params
+        // return console.log(volume)
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -50,7 +51,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const isValidAdd = () => {
                 var isValid = false
                 isValid = volume != null && supPreparations != null && multiFolios.length > 0 && document != null ? true : false
-                return isValid 
+                return isValid
         }
 
         // Volume select
@@ -63,7 +64,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
         }
-
         // Agent superviseur preparation select
         const preparationModalizeRef = useRef(null);
         const [supPreparations, setSupPreparations] = useState(null);
@@ -84,8 +84,6 @@ export default function AddSupervisurPreparationFolioScreen() {
         const submitConfimer = () => {
                 multSelectModalizeRef.current?.close();
         }
-
-        
         const [allFolios, setAllFolios] = useState([]);
         const [foliosLoading, setFoliosLoading] = useState(false);
         const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
@@ -103,8 +101,15 @@ export default function AddSupervisurPreparationFolioScreen() {
                         try {
                                 if (volume.volume) {
                                         setFoliosLoading(true)
-                                        const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
-                                        setAllFolios(rep.result)
+                                        if (volume?.mailleNoTraite) {
+                                                const rep = await fetchApi(`/preparation/folio/nonTraite/${volume?.mailleNoTraite.ID_MAILLE}`)
+                                                setAllFolios(rep.result)
+                                        }
+                                        else {
+                                                const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
+                                                setAllFolios(rep.result)
+                                        }
+
                                 }
                         }
                         catch (error) {
@@ -114,7 +119,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                         }
                 })()
         }, [])
-
         //Composent pour afficher le modal de volume 
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
@@ -177,8 +181,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21}  color={COLORS.primary} /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21}  color={COLORS.primary} />}
+                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -197,9 +201,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                         </>
                 )
         }
-
-      
-        
         //Composent pour afficher le modal des agents superviseur phase preparation
         const SupervisionPreparationList = () => {
                 // <AntDesign name="addusergroup" size={24} color="black" />
@@ -218,7 +219,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                <View style={styles.imageContainer}>
+                                                                                        <View style={styles.imageContainer}>
                                                                                                 {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
                                                                                                         <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
@@ -227,8 +228,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ?  <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -240,7 +241,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                         </>
                 )
         }
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -262,27 +262,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
-
         const submitDataPreparation = async () => {
                 try {
                         setLoading(true)
@@ -305,10 +284,20 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
-                                method: "PUT",
-                                body: form
-                        })
+                        if (volume?.mailleNoTraite) {
+
+                                form.append('ID_MAILLE_NO_TRAITE', volume?.mailleNoTraite.ID_MAILLE)
+                                const vol = await fetchApi(`/preparation/folio/renommerSuperviseurPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })
+                        }
+                        else{
+                                const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })    
+                        }
                         navigation.goBack()
                 }
                 catch (error) {
@@ -317,7 +306,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                         setLoading(false)
                 }
         }
-
         //Fonction pour appeller les autres information en passant l'id de volume selectionner
         useEffect(() => {
                 (async () => {
@@ -336,10 +324,9 @@ export default function AddSupervisurPreparationFolioScreen() {
                         }
                 })()
         }, [volumes])
-
         return (
                 <>
-                        {loading && <Loading/>}
+                        {loading && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
@@ -374,13 +361,16 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                         Malle
                                                                 </Text>
                                                                 <View>
-                                                                        <Text style={styles.selectedValue}>
+
+                                                                        {volume.volume.maille ? <Text style={styles.selectedValue}>
                                                                                 {volume.volume.maille ? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
-                                                                        </Text>
+                                                                        </Text> : <Text style={styles.selectedValue}>
+                                                                                {volume?.mailleNoTraite ? `${volume?.mailleNoTraite?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text>}
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                
+
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -400,13 +390,13 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Selectionner les dossiers'}
+                                                                                {multiFolios.length > 0 ? ` ${multiFolios.length} ` + `séléctionné` + `${multiFolios.length > 1 ? "s" : ''}` : 'Selectionner les dossiers'}
 
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                               
+
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -431,15 +421,15 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                                        <Modalize ref={preparationModalizeRef}  >
-                                                <SupervisionPreparationList />
-                                        </Modalize>
-                                        <Modalize ref={volumeModalizeRef}  >
-                                                <VolumeAgentSuperviseurList />
-                                        </Modalize>
-                                        <Modalize ref={multSelectModalizeRef}  >
-                                                <MultiFolioSelctList />
-                                        </Modalize>
+                                <Modalize ref={preparationModalizeRef}  >
+                                        <SupervisionPreparationList />
+                                </Modalize>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
+                                <Modalize ref={multSelectModalizeRef}  >
+                                        <MultiFolioSelctList />
+                                </Modalize>
                         </View>
                 </>
         )
@@ -454,7 +444,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 5,
-                 marginVertical: 10
+                marginVertical: 10
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -529,7 +519,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         buttonText: {
                 color: "#fff",
@@ -554,8 +544,8 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal:10
-            },
+                marginHorizontal: 10
+        },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8

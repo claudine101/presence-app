@@ -13,6 +13,7 @@ import Loading from "../../../components/app/Loading";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import IDS_ETAPES_FOLIO from "../../../constants/ETAPES_FOLIO";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 /**
@@ -26,7 +27,7 @@ export default function AgentSupAileDetailScreen() {
     const navigation = useNavigation()
     const route = useRoute()
     const { volume, users } = route.params
-    console.log(volume)
+
     // const [, setAllDetails] = useState([])
     const [loading, setLoading] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -50,26 +51,6 @@ export default function AgentSupAileDetailScreen() {
         var isValid = false
         isValid = document != null ? true : false
         return isValid
-    }
-
-    //Fonction pour upload un documents 
-    const selectdocument = async () => {
-        setError("document", "")
-        handleChange("document", null)
-        const document = await DocumentPicker.getDocumentAsync({
-            type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-        })
-        if (document.type == 'cancel') {
-            return false
-        }
-        var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-        if (sizeDocument <= 2) {
-            handleChange("document", document)
-        }
-        else {
-            setError("document", ["Document trop volumineux(max:2M)"])
-        }
-
     }
 
     //Fonction pour le prendre l'image avec l'appareil photos
@@ -100,6 +81,9 @@ export default function AgentSupAileDetailScreen() {
             const form = new FormData()
             form.append('volume', JSON.stringify(volume.volumes))
             form.append('AGENT_SUPERVISEUR_AILE', volume.users.USERS_ID)
+            if(volume?.malleNonTraite){
+                form.append('ID_MAILE_NO_TRAITE',volume.malleNonTraite.ID_MAILLE)
+            }
             if (document) {
                 const manipResult = await manipulateAsync(
                     document.uri,
@@ -144,6 +128,7 @@ export default function AgentSupAileDetailScreen() {
                         <Text style={styles.title} numberOfLines={2}>{users.NOM} {users.PRENOM}</Text>
                     </View>
                 </View>
+                <ScrollView>
                 {volume ? <View style={styles.selectContainer}>
                     <View>
                         <Text style={styles.selectLabel}>
@@ -156,14 +141,14 @@ export default function AgentSupAileDetailScreen() {
                         </View>
                     </View>
                 </View> : null}
-                {volume.maille ? <View style={styles.selectContainer}>
+                {volume?.folios?.mailleNoTraite ? <View style={styles.selectContainer}>
                     <View>
                         <Text style={styles.selectLabel}>
                             Malle
                         </Text>
                         <View>
                             <Text style={styles.selectedValue}>
-                                {volume.maille ? `${volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                {volume?.folios?.mailleNoTraite ? `${volume?.folios?.mailleNoTraite?.NUMERO_MAILLE}` : 'N/B'}
                             </Text>
                         </View>
                     </View>
@@ -201,7 +186,7 @@ export default function AgentSupAileDetailScreen() {
                                         }}>
                                             <Image source={{ uri: volume?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                         </TouchableOpacity>
-                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(volume?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(volume?.date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                     </> : null}
 
 
@@ -223,6 +208,7 @@ export default function AgentSupAileDetailScreen() {
                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                     </View>
                 </TouchableOpacity>
+                </ScrollView>
                 <TouchableWithoutFeedback
                     disabled={!isValidAdd()}
                     onPress={submitData}

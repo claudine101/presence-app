@@ -75,7 +75,6 @@ export default function FolioRetourSuperviseurScreen() {
                                         body: form
                                 })
                                 setCheck(res.result)
-                                console.log(res.result)
 
                         } catch (error) {
                                 console.log(error)
@@ -270,7 +269,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {check.length > 0 && !(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                        {/* {check.length > 0 && !(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                                                 <OutlinedTextField
                                                         label="Motif"
                                                         fontSize={14}
@@ -289,7 +288,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         blurOnSubmit={false}
                                                         multiline={true}
                                                 />
-                                        </View> : null}
+                                        </View> : null} */}
                                         {check.length > 0 ?
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>

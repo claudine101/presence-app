@@ -1,15 +1,15 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, FlatList, TouchableNativeFeedback } from "react-native";
-import { COLORS } from "../../styles/COLORS";
-import AppHeader from "../../components/app/AppHeader";
+import { COLORS } from "../../../styles/COLORS";
+import AppHeader from "../../../components/app/AppHeader";
 import { useSelector } from 'react-redux';
-import { userSelector } from '../../store/selectors/userSelector';
+import { userSelector } from '../../../store/selectors/userSelector';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from "react";
-import fetchApi from "../../helpers/fetchApi";
+import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
-import PROFILS from "../../constants/PROFILS";
-import ETAPES_VOLUME from "../../constants/ETAPES_VOLUME";
+import PROFILS from "../../../constants/PROFILS";
+import ETAPES_VOLUME from "../../../constants/ETAPES_VOLUME";
 
 
 /**
@@ -24,31 +24,14 @@ export default function VolumeRetourneScreen() {
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
     const [title, setTitle] = useState(null)
-
     const [loading, setLoading] = useState(false)
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
-                if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR) {
-                    setLoading(true)
-                    const vol = await fetchApi(`/preparation/folio/folios`)
-                    setAllVolumes(vol.result)
-                }
-                else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU) {
-                    setLoading(true)
-                    const vol = await fetchApi(`/preparation/folio/volumeFolios`)
-                    setAllVolumes(vol.result)
-
-                }
-                else {
-                    setLoading(true)
-                    const vol = await fetchApi(`/preparation/volume`)
-                    // console.log(vol.result[0])
-                    setAllVolumes(vol.result.data)
-
-                }
-
+                setLoading(true)
+                const vol = await fetchApi(`/preparation/volume/volumeRetourPhase`)
+                setAllVolumes(vol.result)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -59,24 +42,8 @@ export default function VolumeRetourneScreen() {
 
     //fonction pour recuperer screen pour  detaillers
     useFocusEffect(useCallback(() => {
-        if (user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES) {
-            setNextRouteName('DetaillerVolumeScreen')
-            setTitle("Volumes planifiés")
-        }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
-            setNextRouteName('AddNombreFolioScreen')
-            setTitle("Volumes planifiés")
-        }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
-            setNextRouteName('DetaillerFolioScreen')
-            setTitle("Volumes planifiés")
-        }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
-            setNextRouteName('AddSuperviseurAileVolumeScreen')
-            setTitle("Volumes planifiés")
-        }
-        else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE) {
-            setNextRouteName('AddChefPlateauVolumeScreen')
+        if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE) {
+            setNextRouteName('AddChefPlateauScreen')
             setTitle("Volumes planifiés")
         }
         else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU) {
@@ -87,47 +54,37 @@ export default function VolumeRetourneScreen() {
             setNextRouteName('AddAgentPreparationFolioScreen')
             setTitle("Attente de préparation")
         }
-
     }, [user]))
-
-    //Fonction pour ajouter un volume
-    const onPressAdd = () => {
-        navigation.navigate("NewVolumeScreen")
-    }
     return (
         <>
-
             <AppHeader title={title} />
-            {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
+            {
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-
-                    </View> : allVolumes.length <= 0 ?
-                        <View style={styles.emptyContainer}>
-                            <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                    </View> :
+                        allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
+                            <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                             <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
-                        </View>
-                        :
-                        <FlatList
-                            style={styles.contain}
-                            data={allVolumes}
-                            renderItem={({ item: volume, index }) => {
-                                return (
-                                    <>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                            <ActivityIndicator animating size={'large'} color={'#777'} />
-                                        </View> :
+                        </View> :
 
-                                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                            <FlatList
+                                data={allVolumes}
+                                renderItem={({ item: volume, index }) => {
+                                    return (
+                                        <>
+                                            {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                            </View> :
 
-                                                onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                            >
-                                                {
+                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                    onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
+                                                >
                                                     <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                         <View style={styles.folio}>
                                                             <View style={styles.folioLeftSide}>
                                                                 <View style={styles.folioImageContainer}>
-                                                                    <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                    <Image source={require("../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                                                 </View>
                                                                 <View style={styles.folioDesc}>
                                                                     <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
@@ -136,163 +93,32 @@ export default function VolumeRetourneScreen() {
                                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                 {moment(volume?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                {/* {volume.DATE_INSERTION} */}
                                                                             </Text>
                                                                         </View>
                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                            <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
-                                                                            </Text>
+                                                                            {
+                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                    {volume?.folios ? volume?.folios.length : "0"} dossier{volume?.folios.length > 1 && 's'}
+                                                                                </Text>
+                                                                            }
                                                                         </View>
                                                                     </View>
                                                                 </View>
                                                             </View>
                                                         </View>
                                                     </View>
+                                                </TouchableNativeFeedback>
+                                            }
+                                        </>
+                                    )
+                                }}
+                                keyExtractor={(volume, index) => index.toString()}
+                            />}
 
 
-                                                }
-                                            </TouchableNativeFeedback>
-                                        }
-                                    </>
-                                )
-                            }}
-                            keyExtractor={(volume, index) => index.toString()}
-                        />}
-                </View> :
-                user.ID_PROFIL == PROFILS.CHEF_PLATEAU ?
-                    <View style={styles.container}>
-                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                            <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View> :
-                            allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
-                                <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
-                            </View> :
-
-                                <FlatList
-                                    data={allVolumes}
-                                    renderItem={({ item: volume, index }) => {
-                                        return (
-                                            <>
-                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                </View> :
-                                                    // volume.folios.length > 0 ?
-                                                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                        onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
-                                                    >
-                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
-                                                            <View style={styles.folio}>
-                                                                <View style={styles.folioLeftSide}>
-                                                                    <View style={styles.folioImageContainer}>
-                                                                        <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                    </View>
-                                                                    <View style={styles.folioDesc}>
-                                                                        <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <AntDesign name="calendar" size={20} color="#777" />
-                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                    {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                    {/* {volume.DATE_INSERTION} */}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                    <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                        {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
-                                                                                    </Text>
-                                                                                </Text>
-                                                                            </View>
-                                                                        </View>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </TouchableNativeFeedback>
-                                                }
-                                            </>
-                                        )
-                                    }}
-                                    keyExtractor={(volume, index) => index.toString()}
-                                />}
-                        {user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <View style={[styles.amountChanger]}>
-                            <TouchableOpacity onPress={onPressAdd} >
-                                <Text style={styles.amountChangerText}>+</Text>
-                            </TouchableOpacity>
-                        </View> : null}
-
-                    </View> :
-                    <View style={styles.container}>
-                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                            <ActivityIndicator animating size={'large'} color={'#777'} />
-                        </View> :
-                            allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
-                                <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
-                            </View> :
-
-                                <FlatList
-                                    data={allVolumes}
-                                    renderItem={({ item: volume, index }) => {
-                                        return (
-                                            <>
-                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                </View> :
-
-                                                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                        onPress={() => navigation.navigate(nextRouteName, { volume: volume ,histo_IDETAPE:volume.ID_ETAPE_VOLUME})}
-                                                    >
-                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
-                                                            <View style={styles.folio}>
-                                                                <View style={styles.folioLeftSide}>
-                                                                    <View style={styles.folioImageContainer}>
-                                                                        <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                    </View>
-                                                                    <View style={styles.folioDesc}>
-                                                                        <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <AntDesign name="calendar" size={20} color="#777" />
-                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                    {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                    {/* {volume.DATE_INSERTION} */}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                {volume?.ID_ETAPE_VOLUME == ETAPES_VOLUME.RETOUR_PREPARATION ? <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                    {volume?.foliosNoPrepare.length ? volume?.foliosNoPrepare.length : "0"} dossier{volume?.foliosNoPrepare.length  > 1 && 's'}
-                                                                                </Text> :
-                                                                                    <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                        {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
-                                                                                    </Text>
-                                                                                }
-                                                                            </View>
-                                                                        </View>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </TouchableNativeFeedback>
-                                                }
-                                            </>
-                                        )
-                                    }}
-                                    keyExtractor={(volume, index) => index.toString()}
-                                />}
-                        {user.ID_PROFIL == PROFILS.CHEF_DIVISION_ARCHIGES ? <View style={[styles.amountChanger]}>
-                            <TouchableOpacity onPress={onPressAdd} >
-                                <Text style={styles.amountChangerText}>+</Text>
-                            </TouchableOpacity>
-                        </View> : null}
-
-                    </View>}
-
-
+                </View>
+            }
         </>
     )
 }

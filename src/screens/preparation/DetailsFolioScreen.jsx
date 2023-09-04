@@ -63,27 +63,6 @@ export default function DetailsFolioScreen() {
 
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                setIsCompressingPhoto(true)
-                const permission = await ImagePicker.requestCameraPermissionsAsync()
-                if (!permission.granted) return false
-                const image = await ImagePicker.launchCameraAsync()
-                if (image.canceled) {
-                        return setIsCompressingPhoto(false)
-                }
-                const photo = image.assets[0]
-                setDocument(photo)
-                const manipResult = await manipulateAsync(
-                        photo.uri,
-                        [
-                                { resize: { width: 500 } }
-                        ],
-                        { compress: 0.7, format: SaveFormat.JPEG }
-                );
-                setIsCompressingPhoto(false)
-                //     handleChange('pv', manipResult)
-        }
         const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
 
         const handleFolioPress = (folio) => {
@@ -164,7 +143,7 @@ export default function DetailsFolioScreen() {
                                                                                 </View> :
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }}>
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio })}
+                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio,ID_MAILLE:folio?.mailleNoTraite?.ID_MAILLE })}
                                                                                                 >
                                                                                                         <View style={[styles.folio]}>
                                                                                                                 <View style={styles.folioLeftSide}>
