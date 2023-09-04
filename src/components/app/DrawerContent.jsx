@@ -249,7 +249,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }, { marginBottom: 3 }]}>
-                                            Dossiers en attente gggg
+                                            Dossiers en attente
                                         </Text>
                                     </View>
                                 </View>
