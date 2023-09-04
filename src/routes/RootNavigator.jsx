@@ -77,6 +77,11 @@ import ChoixAgentDistributeurRetourScreen from '../screens/scanning/agentSupervi
 import RetourPhaseScanningVolumeScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/RetourPhaseScanningVolumeScreen';
 import NewChefPlateauReenvoyerVolScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewChefPlateauReenvoyerVolScreen';
 import NewAgentSupScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewAgentSupScanReenvoyerScreen';
+import NewEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewEquipeScanReenvoyerScreen';
+import RetourReenvoyezFoliosEquipeScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/RetourReenvoyezFoliosEquipeScreen';
+import DetailsFoliosReenvoyezretourPlateauScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsFoliosReenvoyezretourPlateauScreen';
+import DetailsTraitesPlateauRenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsTraitesPlateauRenvoyerScreen';
+import DetailsVolReenvoyerRetourSupAilleScanScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsVolReenvoyerRetourSupAilleScanScreen';
 
 
 export default function RootNavigator() {
@@ -169,6 +174,11 @@ export default function RootNavigator() {
                  {/* retourner le volumes dans la phase scanning */}
                 <Stack.Screen name='NewChefPlateauReenvoyerVolScreen' component={NewChefPlateauReenvoyerVolScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='NewAgentSupScanReenvoyerScreen' component={NewAgentSupScanReenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewEquipeScanReenvoyerScreen' component={NewEquipeScanReenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='RetourReenvoyezFoliosEquipeScreen' component={RetourReenvoyezFoliosEquipeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFoliosReenvoyezretourPlateauScreen' component={DetailsFoliosReenvoyezretourPlateauScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraitesPlateauRenvoyerScreen' component={DetailsTraitesPlateauRenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolReenvoyerRetourSupAilleScanScreen' component={DetailsVolReenvoyerRetourSupAilleScanScreen} options={{ headerShown: false }} />
                
                 
             </Stack.Navigator>
