@@ -30,6 +30,26 @@ export default function DetailsVolumeChefEquipScanTraiteScreen() {
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
 
+        const [allVolumes, setAllVolumes] = useState([])
+        const [loading, setLoading] = useState(false)
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                if (volume) {
+                                        setLoading(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/details/chefEquiScan/validFolios/${volume[0]?.ID_VOLUME}`)
+                                        setAllVolumes(vol.result)
+                                }
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [volume]))
+
+
 
         return (
                 <>
@@ -81,6 +101,45 @@ export default function DetailsVolumeChefEquipScanTraiteScreen() {
                                                         {volume[0]?.maille?.NUMERO_MAILLE}
                                                 </Text>
                                         </TouchableOpacity>
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumes?.foliosValid?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        Les dossiers validés
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {allVolumes?.foliosValid?.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
+                                                                        </View>
+                                                                </View>
+                                                        </View> : null
+                                        }
                                         <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={styles.labelContainer}>
@@ -149,7 +208,7 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue: {
                 color: '#777',
@@ -230,7 +289,7 @@ const styles = StyleSheet.create({
                 borderWidth: 0.5,
                 borderColor: "#ddd",
                 marginVertical: 5,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue1: {
                 color: '#777',
@@ -242,5 +301,56 @@ const styles = StyleSheet.create({
         },
         selectLabel1: {
                 marginLeft: 5
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
+        },
+        modalItem: {
+                paddingHorizontal: 20,
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 20
+        },
+        modalItemTitle: {
+                marginLeft: 10,
+                fontWeight: "bold"
+        },
+        separator: {
+                height: 1,
+                width: "100%",
+                backgroundColor: '#F1F1F1'
         },
 })

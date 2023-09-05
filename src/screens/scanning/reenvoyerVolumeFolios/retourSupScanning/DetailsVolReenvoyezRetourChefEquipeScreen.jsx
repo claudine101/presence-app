@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import Loading from "../../../../components/app/Loading";
 
-export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
+export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
@@ -23,7 +23,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
 
-        const folio_ids = details?.map(folio => folio.folio.ID_FOLIO)
+        const folio_ids = details?.map(folio => folio.ID_FOLIO)
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null ? true : false
@@ -37,7 +37,8 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/pvssss`, {
+                                console.log(form)
+                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/pvssss/final`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -94,8 +95,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
-                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/bien/traitees`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/final`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -181,8 +181,8 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
                                                                                                         <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                 </View>
                                                                                                 <View style={styles.folioDesc}>
-                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
                                                                                                 </View>
                                                                                         </View>
                                                                                         <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> 

@@ -239,8 +239,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
                                 >
                                         <View style={styles.modalContent}>
-                                                {checkIsvalid?.foliosNonValid?.length == 0 ?
-                                                       <>
+                                               { allVolumes?.foliosValid?.length > 0 ?  <>
                                                         <TouchableNativeFeedback
                                                                 onPress={() => choixArchives(volume)}
                                                         >
@@ -251,22 +250,22 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                         </Text>
                                                                 </View>
                                                         </TouchableNativeFeedback>
-                                                                <View style={styles.separator} />
-                                                        </>:null}
-                                                {checkIsvalid?.foliosNonValid?.length > 0 ?
-                                                        <>
-                                                                <TouchableNativeFeedback
-                                                                        onPress={() => choixRetourScanning(volume)}
-                                                                >
-                                                                        <View style={styles.modalItem}>
-                                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                                                <Text style={styles.modalItemTitle}>
-                                                                                        Retour phase scanning
-                                                                                </Text>
-                                                                        </View>
-                                                                </TouchableNativeFeedback>
-                                                                <View style={styles.separator} />
-                                                        </> : null}
+                                                        <View style={styles.separator} />
+                                                </>:null}
+
+                                                { allVolumes?.foliosNonValid?.length > 0 ? <>
+                                                        <TouchableNativeFeedback
+                                                                onPress={() => choixRetourScanning(volume)}
+                                                        >
+                                                                <View style={styles.modalItem}>
+                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                        <Text style={styles.modalItemTitle}>
+                                                                                Retour phase scanning
+                                                                        </Text>
+                                                                </View>
+                                                        </TouchableNativeFeedback>
+                                                        <View style={styles.separator} />
+                                                </>:null}
                                         </View>
                                 </Modalize>
                         </Portal>

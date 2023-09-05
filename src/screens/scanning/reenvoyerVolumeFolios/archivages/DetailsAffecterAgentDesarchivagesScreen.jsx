@@ -1,41 +1,33 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React, { useRef } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { COLORS } from "../../../../styles/COLORS";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import { useState } from "react";
-import Loading from "../../../../components/app/Loading";
-import fetchApi from "../../../../helpers/fetchApi";
+import React, { useCallback, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
+import { Ionicons, AntDesign, MaterialIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { COLORS } from "../../../../styles/COLORS"
 import moment from 'moment'
 import ImageView from "react-native-image-viewing";
+import fetchApi from "../../../../helpers/fetchApi";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import Loading from "../../../../components/app/Loading";
 import useFetch from "../../../../hooks/useFetch";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
-import { useCallback } from "react";
+import { useRef } from "react";
 
-/**
- * Screen pour signer le pv entre agent distributeur et agent superviseur archives
- * @author Vanny Boy <vanny@mediabox.bi>
- * @date 27/8/2023
- * @returns 
- */
-
-
-export default function ConfirmerPvRetourAgentSupArchives() {
+export default function DetailsAffecterAgentDesarchivagesScreen() {
+        const route = useRoute()
         const navigation = useNavigation()
+        const { details, userTraite } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const route = useRoute()
-        const { detail, id } = route.params
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
+        const [loadingPvs, setLoadingPvs] = useState(false)
+        const [pvs, setPvs] = useState(false)
+        const [check, setCheck] = useState([])
+        const [loadingCheck, setLoadingCheck] = useState(false)
 
-        const [allVolumes, setAllVolumes] = useState([])
-        const [loading, setLoading] = useState(false)
-
-
+        const folio_ids = details?.map(folio => folio?.folio?.ID_FOLIO)
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null && equipe != null ? true : false
@@ -53,9 +45,9 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                 setEquipe(equi)
         }
 
-        //Composent pour afficher la listes des agents superviseurs archives
+       //Composent pour afficher la listes des agents desarchivages
         const EquipeScanningList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/superviseurArchives')
+                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/desarchivages')
                 return (
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
@@ -96,6 +88,26 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                 )
         }
 
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingPvs(true)
+                                const form = new FormData()
+                                form.append('folioIds', JSON.stringify(folio_ids))
+                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
+                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/archivages`, {
+                                        method: "POST",
+                                        body: form
+                                })
+                                setPvs(res)
+
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingPvs(false)
+                        }
+                })()
+        }, [userTraite]))
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -119,11 +131,12 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                 //     handleChange('pv', manipResult)
         }
 
-        const submitAgentSup = async () => {
+        const submitPlateauData = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('USER_TRAITEMENT', equipe.USERS_ID)
+                        form.append('ID_FOLIOS', JSON.stringify(folio_ids))
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -140,27 +153,23 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
-                        const volume = await fetchApi(`/scanning/retour/agent/archives/${detail.volume.ID_VOLUME}`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/archivages/equi/desarchivages`, {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.navigate('AllVolumeFolioRetourSupAilleScreen')
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
                 } finally {
                         setLoadingData(false)
                 }
-
         }
-
-
         return (
                 <>
-                        {(galexyIndex != null && detail) &&
+                        {(galexyIndex != null && pvs?.result && pvs?.result) &&
                                 <ImageView
-                                        images={[{ uri: detail?.PV_PATH } ? { uri: detail?.PV_PATH } : undefined]}
+                                        images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
                                         imageIndex={galexyIndex}
                                         visible={(galexyIndex != null) ? true : false}
                                         onRequestClose={() => setGalexyIndex(null)}
@@ -168,8 +177,10 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                         keyExtractor={(_, index) => index.toString()}
                                 />
                         }
+
                         {loadingData && <Loading />}
                         <View style={styles.container}>
+
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
@@ -179,63 +190,84 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur archive</Text>
+                                                <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text>
                                         </View>
                                 </View>
-
                                 <ScrollView>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null}
+                                                        <Text style={styles.selectedValue}>
+                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
+                                                                Pv
                                                         </Text>
+                                                        {pvs?.result ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}>
+                                                                                <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                        </TouchableOpacity>
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
                                                 </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {detail?.volume?.NUMERO_VOLUME}
-                                                </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                        </View>
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
                                                         </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Malle
-                                                        </Text>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.length} validé{details.length > 1 && 's'}
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.contain}>
+                                                                {details.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })
+                                                                }
+                                                        </View>
                                                 </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {detail?.volume?.maille?.NUMERO_MAILLE}
-                                                </Text>
-                                        </TouchableOpacity>
-                                        {/* <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
+                                        </View>
+
+                                        <TouchableOpacity style={styles.selectContainer1} onPress={openEquipeModalize}>
+                                                <View style={styles.labelContainer1}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Nombre de dossier
+                                                        Agent desarchivage
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
                                                         {equipe ? `${equipe.NOM}` + ' ' + `${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
-                                        </TouchableOpacity> */}
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <Feather name="user" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                        Agent superviseurs archives
-                                                        </Text>
-                                                </View>
-                                                <Text style={styles.selectedValue}>
-                                                {equipe ? `${equipe.NOM}` + ' ' + `${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
-                                                </Text>
                                         </TouchableOpacity>
+
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -253,13 +285,13 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitAgentSup}
+                                        onPress={submitPlateauData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                        </View>
+                        </View >
                         <Portal>
                                 <Modalize ref={equipeModalizeRef}  >
                                         <EquipeScanningList />
@@ -268,43 +300,65 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#fff'
-        }, header: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 10
         },
-        headerBtn: {
-                padding: 10
-        },
-        title: {
-                paddingHorizontal: 5,
-                fontSize: 17,
-                fontWeight: 'bold',
-                color: '#777',
-        },
-        cardTitle: {
-                maxWidth: "85%"
-        },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#000",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5,
+        cardDetails: {
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                elevation: 5,
+                shadowColor: '#c4c4c4',
+                marginTop: 10,
+                backgroundColor: '#fff',
+                padding: 15,
+                overflow: 'hidden',
                 marginHorizontal: 10
         },
-        labelContainer: {
+        carddetailItem: {
                 flexDirection: 'row',
                 alignItems: 'center',
         },
-        addImageLabel: {
-                marginLeft: 5,
-                opacity: 0.8
+        cardImages: {
+                backgroundColor: '#DCE4F7',
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        cardDescription: {
+                marginLeft: 10,
+                flex: 1
+        },
+        itemVolume: {
+                fontSize: 15,
+                fontWeight: "bold",
+        },
+        cardHeader: {
+                flexDirection: 'row',
+                // marginTop: StatusBar.currentHeight,
+                alignContent: "center",
+                alignItems: "center",
+                marginBottom: 15,
+                marginHorizontal: 10,
+                marginVertical: 10
+        },
+        backBtn: {
+                backgroundColor: COLORS.primary,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 50,
+                height: 50,
+                borderRadius: 50,
+        },
+        titlePrincipal: {
+                fontSize: 18,
+                fontWeight: "bold",
+                marginLeft: 10,
+                color: COLORS.primary
         },
         button: {
                 marginTop: 10,
@@ -321,6 +375,112 @@ const styles = StyleSheet.create({
                 textAlign: "center"
         },
         selectContainer: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#777",
+                marginVertical: 10,
+                marginHorizontal: 10
+        },
+        selectedValue: {
+                color: '#777'
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#000",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5,
+                marginHorizontal: 10
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#f1f1f1",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                marginBottom: 10,
+                marginHorizontal: 10
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10,
+                borderRadius: 10,
+        },
+        contain: {
+                flex: 1
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        flash: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 10
+        },
+        flashName: {
+                marginLeft: 5
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        selectContainer1: {
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,

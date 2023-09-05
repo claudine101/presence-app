@@ -35,7 +35,7 @@ export default function DetailsClickAgentDistributeurVolumeScreen() {
                         {details.map((detail, index) => {
                                 return (
                                         <TouchableOpacity style={styles.cardDetails} key={index}
-                                                onPress={()=>navigation.navigate("ConfirmerPvRetourAgentSupArchives", {detail:detail})}
+                                                onPress={()=>navigation.navigate("ConfirmerPvRetourAgentSupArchives", {detail:detail, id:detail.volume.ID_VOLUME})}
                                         >
                                                 <View style={styles.cardImages}>
                                                         <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />

@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import Loading from "../../../../components/app/Loading";
 
-export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
+export default function DetailsTraiteesReenvoyezChefEquipeScreen(){
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
@@ -37,7 +37,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/pvssss`, {
+                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/chefEqui/pvssss`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -94,8 +94,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen(){
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
-                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/bien/traitees`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/chefEquipe/bien/traitees`, {
                                 method: "PUT",
                                 body: form
                         })
