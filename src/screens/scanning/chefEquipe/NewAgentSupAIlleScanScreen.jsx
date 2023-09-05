@@ -13,6 +13,7 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import fetchApi from "../../../helpers/fetchApi";
 import Loading from "../../../components/app/Loading";
 import { useEffect } from "react";
+import ETAPES_VOLUME from "../../../constants/ETAPES_VOLUME";
 
 /**
  * Le screen pour de donner les volumes a un agent superviseur aile scanning
@@ -24,7 +25,8 @@ import { useEffect } from "react";
 export default function NewAgentSupAIlleScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
+        const { volume, id ,mailleNoTraite} = route.params
+        // return console.log(volume)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [isCompressingPhotoPreparation, setIsCompressingPhotoPreparation] = useState(false)
         const [document, setDocument] = useState(null)
@@ -450,6 +452,7 @@ export default function NewAgentSupAIlleScanScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('USER_TRAITEMENT', ailleSuperviseur.USERS_ID)
+                        form.append('ID_ETAPE_VOLUME', volume.ID_ETAPE_VOLUME)
                         if (folios.length > 0) {
                                 form.append('MAILLE', males.ID_MAILLE)
                                 form.append('AGENT_SUP_AILE', agentSupPreparation.USERS_ID)
@@ -487,10 +490,11 @@ export default function NewAgentSupAIlleScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/volume/${id}`, {
+                        const volumes = await fetchApi(`/scanning/volume/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
+                        
                         navigation.goBack()
                 }
                 catch (error) {
@@ -505,7 +509,7 @@ export default function NewAgentSupAIlleScanScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const vol = await fetchApi(`/scanning/volume/maille/${volume.volume.ID_VOLUME}`)
+                                const vol = await fetchApi(`/scanning/volume/maille/${volume.ID_VOLUME}`)
                                 setMalles(vol.result)
                         } catch (error) {
                                 console.log(error)
@@ -542,7 +546,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
+                                                        {volume.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -555,12 +559,26 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <View>
-                                                        {malles ? <Text style={styles.selectedValue}>
+                                                        {mailleNoTraite ? <Text style={styles.selectedValue}>
+                                                                {mailleNoTraite.NUMERO_MAILLE}
+                                                        </Text> :malles?<Text style={styles.selectedValue}>
                                                                 {malles.maille.NUMERO_MAILLE}
-                                                        </Text> : <Text>N/B</Text>}
+                                                        </Text>:
+                                                         <Text>N/B</Text>
+                                                        }
                                                 </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
+                                        {volume.ID_ETAPE_VOLUME!=ETAPES_VOLUME.RETOUR_AGENT_SUP_AILE_VERS_CHEF_EQUIPE? <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <Feather name="user" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Voir folios
+                                                        </Text>
+                                                </View>
+                                        </TouchableOpacity>:
+                                         <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
@@ -569,7 +587,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                                 Voir folio
                                                         </Text>
                                                 </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity>}
 
                                         <TouchableOpacity style={styles.selectContainer} onPress={openAilleSUperviseurModalize}>
                                                 <View style={styles.labelContainer}>

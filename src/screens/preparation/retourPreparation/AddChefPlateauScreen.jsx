@@ -216,7 +216,7 @@ export default function AddChefPlateauScreen() {
                         setLoading(true)
                         const form = new FormData()
                         form.append('CHEF_PLATEAU', chefPlateaux.USERS_ID)
-                        form.append('ID_MAILLE', volume?.maille?.ID_MAILLE)
+                        form.append('ID_MAILLE', volume.mailleNoTraite?.ID_MAILLE)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -233,6 +233,7 @@ export default function AddChefPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
+                        // return console.log(form)
                         const vol = await fetchApi(`/preparation/volume/addChefEquipe`, {
                                 method: "PUT",
                                 body: form

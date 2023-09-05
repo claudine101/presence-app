@@ -44,7 +44,6 @@ export default function AgentSuperviseurRetourPhaseScreen() {
                                 setLoading(true)
                                 const res = await fetchApi('/preparation/folio/superviseurRetourPhase')
                                 setAllDetails(res.result)
-                                console.log(res)
                         } catch (error) {
                                 console.log(error)
                         } finally {

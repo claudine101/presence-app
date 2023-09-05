@@ -217,7 +217,6 @@ export default function AddChefPlateauVolumeScreen() {
                         setLoading(true)
                         const form = new FormData()
                         form.append('CHEF_PLATEAU', chefPlateaux.USERS_ID)
-                        form.append('histo_IDETAPE', histo_IDETAPE)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,

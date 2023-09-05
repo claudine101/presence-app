@@ -26,7 +26,7 @@ export default function AllVolumeRecusChefEquiScreen() {
 
         const handleSubmit = (volume) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE) {
-                        navigation.navigate("NewAgentSupAIlleScanScreen", { volume: volume, id: volume.volume.ID_VOLUME })
+                        navigation.navigate("NewAgentSupAIlleScanScreen", { volume: volume.volume, id: volume.volume.ID_VOLUME })
                 } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                         navigation.navigate("NewChefPlateauScreen", { volume: volume, id: volume.volume.ID_VOLUME })
                 } else {

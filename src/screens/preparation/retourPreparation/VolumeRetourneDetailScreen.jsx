@@ -23,7 +23,7 @@ import ImageView from "react-native-image-viewing";
  * @returns 
  */
 
-export default function AgentSupAileDetailScreen() {
+export default function VolumeRetourneDetailScreen() {
     const navigation = useNavigation()
     const route = useRoute()
     const { volume, users } = route.params
@@ -38,7 +38,7 @@ export default function AgentSupAileDetailScreen() {
                 const form = new FormData()
                 form.append('folioIds', JSON.stringify(folio_ids))
                 form.append('USERS_ID', users.USERS_ID)
-                const res = await fetchApi(`/preparation/folio/checkAgentsupAile`, {
+                const res = await fetchApi(`/preparation/folio/checkAgentsuper`, {
                     method: "POST",
                     body: form
                 })
@@ -100,7 +100,7 @@ export default function AgentSupAileDetailScreen() {
             setLoadingSubmit(true)
             const form = new FormData()
             form.append('volume', JSON.stringify(volume.volumes))
-            form.append('AGENT_SUPERVISEUR_AILE', volume.users.USERS_ID)
+            form.append('CHEF_PLATEAU', volume.users.USERS_ID)
             if (volume?.mailleNoTraite) {
                 form.append('ID_MAILE_NO_TRAITE', volume.mailleNoTraite.ID_MAILLE)
             }
@@ -120,7 +120,7 @@ export default function AgentSupAileDetailScreen() {
                     uri: localUri, name: filename, type
                 })
             }
-            const res = await fetchApi(`/preparation/volume/retourAgentSupAile`, {
+            const res = await fetchApi(`/preparation/volume/retournerChefPlateau`, {
                 method: "PUT",
                 body: form
             })

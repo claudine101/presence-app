@@ -32,7 +32,6 @@ export default function FolioPrepareDetailScreen() {
                                         body: form
                                 })
                                 setPvs(res)
-                                console.log(res)
 
                         } catch (error) {
                                 console.log(error)

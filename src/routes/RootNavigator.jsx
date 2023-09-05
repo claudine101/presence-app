@@ -70,6 +70,9 @@ import DetailVolumeSuperviserScreen from '../screens/preparation/DetailVolumeSup
 import DetailsChefEquipePrepTraiteVolumeScreen from '../screens/scanning/agentSuperviseur/retour/DetailsChefEquipePrepTraiteVolumeScreen';
 import AgentSupAileDetailScreen from '../screens/preparation/retourPreparation/AgentSupAileDetailScreen';
 import AddChefPlateauScreen from '../screens/preparation/retourPreparation/AddChefPlateauScreen';
+import ChefPlateauValideRetourneDetailScreen from '../screens/preparation/ChefPlateauValideRetourneDetailScreen';
+import AgentSupRetraiteDetailScreen from '../screens/preparation/AgentSupRetraiteDetailScreen';
+import VolumeRetourneDetailScreen from '../screens/preparation/retourPreparation/VolumeRetourneDetailScreen';
 
 
 export default function RootNavigator() {
@@ -93,6 +96,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailVolumeSuperviserScreen' component={DetailVolumeSuperviserScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AgentSupAileDetailScreen' component={AgentSupAileDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AddChefPlateauScreen' component={AddChefPlateauScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefPlateauValideRetourneDetailScreen' component={ChefPlateauValideRetourneDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='AgentSupRetraiteDetailScreen' component={AgentSupRetraiteDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='VolumeRetourneDetailScreen' component={VolumeRetourneDetailScreen} options={{ headerShown: false }} />
+             
                 {/* indexation */}
                 <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }} />

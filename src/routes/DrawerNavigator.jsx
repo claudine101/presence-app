@@ -56,6 +56,9 @@ import AgentSuperviseurRetourPhaseScreen from "../screens/preparation/AgentSuper
 import AgentPreparationFolioRetourneScreen from "../screens/preparation/AgentPreparationFolioRetourneScreen";
 import FolioRetourneScreen from "../screens/preparation/FolioRetourneScreen";
 import AgentSuperviseurReValideScreen from "../screens/preparation/AgentSuperviseurReValideScreen";
+import ChefPlateauValideRetourneScreen from "../screens/preparation/ChefPlateauValideRetourneScreen";
+import AgentSupRetourneScreen from "../screens/preparation/AgentSupRetourneScreen";
+import AgentSupRetraiteScreen from "../screens/preparation/AgentSupRetraiteScreen";
 
 
 export default function DrawerNavigator() {
@@ -111,7 +114,7 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="ChefPlateauScreen" component={ChefPlateauScreen} />
                                         <Drawer.Screen name="AllVolumeChefPlateauValidesScreen" component={AllVolumeChefPlateauValidesScreen} />
                                         <Drawer.Screen name="ChefPlateauRetourneScreen" component={ChefPlateauRetourneScreen} />
-
+                                        <Drawer.Screen name="ChefPlateauValideRetourneScreen" component={ChefPlateauValideRetourneScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
@@ -153,7 +156,8 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AgentSupAileScreen" component={AgentSupAileScreen} />
-
+                                        <Drawer.Screen name="AgentSupRetourneScreen" component={AgentSupRetourneScreen} />
+                                        <Drawer.Screen name="AgentSupRetraiteScreen" component={AgentSupRetraiteScreen} />
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?

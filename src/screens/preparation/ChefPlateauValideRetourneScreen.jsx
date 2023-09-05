@@ -1,41 +1,49 @@
 import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import AppHeader from "../../../components/app/AppHeader";
+import AppHeader from "../../components/app/AppHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import fetchApi from "../../../helpers/fetchApi";
+import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
 import { useSelector } from "react-redux";
-import { userSelector } from "../../../store/selectors/userSelector";
+import { userSelector } from "../../store/selectors/userSelector";
 import { FloatingAction } from "react-native-floating-action";
-import AppHeaderPhPreparationRetour from "../../../components/app/AppHeaderPhPreparationRetour";
+import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
- * Screen pour afficher les AGENT  SUP EN RETOUR  DU PHASE PREPARATION
- * @author claudine NDAYISABA <claudine@mediabox.bi>
- * @date 03/08/2023
+ * Screen pour afficher le details de folio avec leurs natures deja donnees a un agent de preparation
+ * @author Vanny Boy <vanny@mediabox.bi>
+ * @date 17/7/2023
  * @returns 
  */
 
 
-export default function AgentSupAileScreen() {
+export default function ChefPlateauValideRetourneScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
-        const [header, setHeader] = useState("Agents superviseurs ailes")
-
+        const [header, setHeader] = useState("Agents superviseurs")
         const user = useSelector(userSelector)
 
+        const Action = ({ title, image }) => {
+                return (
+                        <View style={styles.action}>
+                                <Text style={styles.actionLabel}>{title}</Text>
+                                <View style={styles.actionIcon}>
+                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
+                                </View>
+                        </View>
+                )
+        }
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const res = await fetchApi('/preparation/volume/agentSupRetourPhase')
-                                setAllDetails(res.result.PvFolios)
-                                console.log(res.result)
+                                const res = await fetchApi('/preparation/folio/ChefPlateauReValides')
+                                setAllDetails(res.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -43,6 +51,10 @@ export default function AgentSupAileScreen() {
                         }
                 })()
         }, []))
+        const handleAgentsPress = (agent,folio) => {
+            navigation.navigate("ChefPlateauValideRetourneDetailScreen", { agent,folio })
+ }
+
         return (
                 <>
                         <AppHeaderPhPreparationRetour header={header} />
@@ -51,8 +63,8 @@ export default function AgentSupAileScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         allDetails.length <= 0 ? <View style={styles.emptyContainer}>
-                                        <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                        <Text style={styles.emptyLabel}>Aucun agent  superviseur aile trouvé</Text>
+                                        <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                        <Text style={styles.emptyLabel}>Aucun dossier  trouvé</Text>
                                     </View> :
 
                                                 <FlatList
@@ -65,13 +77,15 @@ export default function AgentSupAileScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate("AgentSupAileDetailScreen", { volume:folio,users:folio.users})}
-                                                                                ><View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                        onPress={() =>handleAgentsPress(folio.users,folio.folios)}
+                                                                                >
+     
+                                                                                                <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
                                                                                                                                 {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
-                                                                                                                                        <Image source={require('../../../../assets/images/user.png')} style={styles.image} />}
+                                                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
@@ -85,7 +99,7 @@ export default function AgentSupAileScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                       1 volume
+                                                                                                                                                        {folio.folios?.length ? folio.folios?.length : "0"} dossier{folio.folios?.length > 1 && 's'}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>
@@ -99,8 +113,7 @@ export default function AgentSupAileScreen() {
                                                                 )
                                                         }}
                                                         keyExtractor={(folio, index) => index.toString()}
-                                                />
-                                                }
+                                                />}
                         </View>
                 </>
         )
@@ -191,7 +204,7 @@ const styles = StyleSheet.create({
             fontWeight: "bold",
         },
         contain: {
-        //     backgroundColor: '#ddd'
+            backgroundColor: '#ddd'
         },
         folio: {
             flexDirection: 'row',
@@ -243,5 +256,5 @@ const styles = StyleSheet.create({
                 marginTop: 20,
                 color: '#777',
                 fontSize: 16
-            },
+            }
     })
