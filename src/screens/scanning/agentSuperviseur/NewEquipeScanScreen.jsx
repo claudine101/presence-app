@@ -106,8 +106,8 @@ export default function NewEquipeScanScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>

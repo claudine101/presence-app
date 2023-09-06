@@ -127,6 +127,7 @@ export default function DetailsFolioRetourScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
+                        form.append('ID_FOLIO', JSON.stringify(folio_ids))
                         form.append('folio', JSON.stringify(multiFolios))
                         if (document) {
                                 const manipResult = await manipulateAsync(

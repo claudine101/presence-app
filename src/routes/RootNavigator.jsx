@@ -74,6 +74,29 @@ import AddChefPlateauScreen from '../screens/preparation/retourPreparation/AddCh
 import ChefPlateauValideRetourneDetailScreen from '../screens/preparation/ChefPlateauValideRetourneDetailScreen';
 import AgentSupRetraiteDetailScreen from '../screens/preparation/AgentSupRetraiteDetailScreen';
 import VolumeRetourneDetailScreen from '../screens/preparation/retourPreparation/VolumeRetourneDetailScreen';
+import DetailsEquipeFoliosNonReconcilierScreen from '../screens/scanning/agentSuperviseur/retour/DetailsEquipeFoliosNonReconcilierScreen';
+import DetailsVolumeChefPlateauNonValideScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeChefPlateauNonValideScreen';
+import DetailsFoliosRetourSupScanNonValidScreen from '../screens/scanning/agentSuperviseur/retour/DetailsFoliosRetourSupScanNonValidScreen';
+import DetailsVolumeRetourSupAilleScanScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/DetailsVolumeRetourSupAilleScanScreen';
+import NewEquipeRetourScanScreen from '../screens/scanning/agentSuperviseur/NewEquipeRetourScanScreen';
+import ChoixAgentDistributeurRetourScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/ChoixAgentDistributeurRetourScreen';
+import RetourPhaseScanningVolumeScreen from '../screens/scanning/agentSuperviseur/retourAgSupAille/choixRetourScanning/RetourPhaseScanningVolumeScreen';
+import NewChefPlateauReenvoyerVolScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewChefPlateauReenvoyerVolScreen';
+import NewAgentSupScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewAgentSupScanReenvoyerScreen';
+import NewEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/choixDesAgents/NewEquipeScanReenvoyerScreen';
+import RetourReenvoyezFoliosEquipeScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/RetourReenvoyezFoliosEquipeScreen';
+import DetailsFoliosReenvoyezretourPlateauScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsFoliosReenvoyezretourPlateauScreen';
+import DetailsTraitesPlateauRenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsTraitesPlateauRenvoyerScreen';
+import DetailsVolReenvoyerRetourSupAilleScanScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsVolReenvoyerRetourSupAilleScanScreen';
+import DetailsTraitesReenvoyerAgentSupAilleScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsTraitesReenvoyerAgentSupAilleScreen';
+import DetailsTraiteesReenvoyezChefEquipeScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsTraiteesReenvoyezChefEquipeScreen';
+import DetailsTraitesChefEquipeScanScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsTraitesChefEquipeScanScreen';
+import DetailsVolReenvoyezRetourChefEquipeScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsVolReenvoyezRetourChefEquipeScreen';
+import DetailsAffecterAgentArchivagesScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsAffecterAgentArchivagesScreen';
+import DetailsArchivagesReenvoyezDistrScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsArchivagesReenvoyezDistrScreen';
+import DetailsAffecterAgentDesarchivagesScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsAffecterAgentDesarchivagesScreen';
+import DetailsTraitesArchivesReenvoyezScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsTraitesArchivesReenvoyezScreen';
+import DetailsAccepteVolArchivesScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsAccepteVolArchivesScreen';
 
 
 export default function RootNavigator() {
@@ -134,6 +157,13 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsVolumeAgentArchivesTraiteScreen' component={DetailsVolumeAgentArchivesTraiteScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsChefEquipePrepTraiteVolumeScreen' component={DetailsChefEquipePrepTraiteVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='NewIncidentsDeclarerScreen' component={NewIncidentsDeclarerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsEquipeFoliosNonReconcilierScreen' component={DetailsEquipeFoliosNonReconcilierScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeChefPlateauNonValideScreen' component={DetailsVolumeChefPlateauNonValideScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFoliosRetourSupScanNonValidScreen' component={DetailsFoliosRetourSupScanNonValidScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeRetourSupAilleScanScreen' component={DetailsVolumeRetourSupAilleScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewEquipeRetourScanScreen' component={NewEquipeRetourScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChoixAgentDistributeurRetourScreen' component={ChoixAgentDistributeurRetourScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='RetourPhaseScanningVolumeScreen' component={RetourPhaseScanningVolumeScreen} options={{ headerShown: false }} />
 
 
                 <Stack.Screen name='DetailsFolioRetourChefPlateau' component={DetailsFolioRetourChefPlateau} options={{ headerShown: false }} />
@@ -160,6 +190,24 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailValideScreen' component={DetailValideScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailIsUploadScreen' component={DetailIsUploadScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsIploadFlashScreen' component={DetailIsUploadScreen} options={{ headerShown: false }} />
+
+                 {/* retourner le volumes dans la phase scanning */}
+                <Stack.Screen name='NewChefPlateauReenvoyerVolScreen' component={NewChefPlateauReenvoyerVolScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewAgentSupScanReenvoyerScreen' component={NewAgentSupScanReenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='NewEquipeScanReenvoyerScreen' component={NewEquipeScanReenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='RetourReenvoyezFoliosEquipeScreen' component={RetourReenvoyezFoliosEquipeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsFoliosReenvoyezretourPlateauScreen' component={DetailsFoliosReenvoyezretourPlateauScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraitesPlateauRenvoyerScreen' component={DetailsTraitesPlateauRenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolReenvoyerRetourSupAilleScanScreen' component={DetailsVolReenvoyerRetourSupAilleScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraitesReenvoyerAgentSupAilleScreen' component={DetailsTraitesReenvoyerAgentSupAilleScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraiteesReenvoyezChefEquipeScreen' component={DetailsTraiteesReenvoyezChefEquipeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraitesChefEquipeScanScreen' component={DetailsTraitesChefEquipeScanScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolReenvoyezRetourChefEquipeScreen' component={DetailsVolReenvoyezRetourChefEquipeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAffecterAgentArchivagesScreen' component={DetailsAffecterAgentArchivagesScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsArchivagesReenvoyezDistrScreen' component={DetailsArchivagesReenvoyezDistrScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAffecterAgentDesarchivagesScreen' component={DetailsAffecterAgentDesarchivagesScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsTraitesArchivesReenvoyezScreen' component={DetailsTraitesArchivesReenvoyezScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsAccepteVolArchivesScreen' component={DetailsAccepteVolArchivesScreen} options={{ headerShown: false }} />
                
                 
             </Stack.Navigator>

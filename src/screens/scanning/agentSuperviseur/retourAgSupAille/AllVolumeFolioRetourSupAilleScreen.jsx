@@ -56,7 +56,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                         try {
                                 setLoadingChefPlateau(true)
                                 const vol = await fetchApi(`/scanning/retour/agent/chefEquipe`)
-                                setAllRetourVolumes(vol.volu)
+                                setAllRetourVolumes(vol.allVolume)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -150,11 +150,11 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
-                                                                                                                        <View style={styles.cardDescDetails}>
+                                                                                                                        {/* <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER}</Text></View>
 
-                                                                                                                        </View>
+                                                                                                                        </View> */}
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
@@ -171,7 +171,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allRetourVolumes.length == 0 ? <View style={styles.emptyContaier}>
+                                        allRetourVolumes?.length == 0 ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
@@ -190,7 +190,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("ConfirmerPvRetourAgentDistrScreen", { volume: volume, id: volume.ID_VOLUME })}
+                                                                                                onPress={() => navigation.navigate("ConfirmerPvRetourAgentDistrScreen", { volume: volume?.volume, id: volume.ID_VOLUME })}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.cardImages}>
@@ -198,17 +198,17 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                         </View>
                                                                                                         <View style={styles.cardAllDetails}>
                                                                                                                 <View>
-                                                                                                                        <Text style={styles.titlePrincipal}>{volume.NUMERO_VOLUME}</Text>
+                                                                                                                        <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios.length} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -263,8 +263,8 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes.length} dossiers</Text></View>
+                                                                                                                                        {/* <AntDesign name="filetext1" size={20} color="#777" /> */}
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NUMERO_VOLUME}</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -320,7 +320,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NUMERO_VOLUME}</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>

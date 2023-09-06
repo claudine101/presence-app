@@ -173,53 +173,48 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>{detail?.volume?.NUMERO_VOLUME}</Text>
+                                                <Text style={styles.title} numberOfLines={2}>affecter un agent desarchivages</Text>
                                         </View>
                                 </View>
 
                                 <ScrollView>
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        {/* {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                        Chargement
-                                                                </Text>
-                                                        </View> : null} */}
-                                                        <View style={styles.labelContainer}>
-                                                                <View style={styles.icon}>
-                                                                        <Feather name="user" size={20} color="#777" />
-                                                                </View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Agent distributeur
-                                                                </Text>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
                                                         </View>
-                                                        <Text style={styles.selectedValue}>
-                                                                {detail?.users?.NOM} {detail?.users?.PRENOM}
+                                                        <Text style={styles.selectLabel}>
+                                                                Volume
                                                         </Text>
-                                                        {detail ?
-                                                                <>
-                                                                        <TouchableOpacity onPress={() => {
-                                                                                setGalexyIndex(0)
-                                                                        }}
-                                                                        >
-                                                                                <Image source={{ uri: detail?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                        </TouchableOpacity>
-                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(detail?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                </> : null}
                                                 </View>
-                                        </View>
-                                        <TouchableOpacity style={styles.selectContainer1} onPress={openEquipeModalize}>
-                                                <View style={styles.labelContainer1}>
+                                                <Text style={styles.selectedValue}>
+                                                        {detail?.volume?.NUMERO_VOLUME}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Malle
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {detail?.volume?.maille?.NUMERO_MAILLE}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                                <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
-                                                        <Text style={styles.selectLabel1}>
-                                                                Agent desarchivage
+                                                        <Text style={styles.selectLabel}>
+                                                        Agent desarchivage
                                                         </Text>
                                                 </View>
-                                                <Text style={styles.selectedValue1}>
-                                                        {equipe ? `${equipe.NOM} ${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                <Text style={styles.selectedValue}>
+                                                {equipe ? `${equipe.NOM}` + ' ' + `${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
                                         </TouchableOpacity>
 
@@ -276,21 +271,6 @@ const styles = StyleSheet.create({
         cardTitle: {
                 maxWidth: "85%"
         },
-        selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "#fff",
-                padding: 13,
-                borderRadius: 5,
-                borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10,
-                marginHorizontal: 10
-        },
-        selectedValue: {
-                color: '#777'
-        },
         addImageItem: {
                 borderWidth: 0.5,
                 borderColor: "#000",
@@ -303,10 +283,6 @@ const styles = StyleSheet.create({
         labelContainer: {
                 flexDirection: 'row',
                 alignItems: 'center',
-        },
-        selectLabel: {
-                marginLeft: 5,
-                fontWeight: "bold"
         },
         addImageLabel: {
                 marginLeft: 5,
@@ -326,7 +302,7 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
-        selectContainer1: {
+        selectContainer: {
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
@@ -335,7 +311,7 @@ const styles = StyleSheet.create({
                 marginVertical: 10,
                 marginHorizontal: 10
         },
-        selectedValue1: {
+        selectedValue: {
                 color: '#777',
                 marginTop: 2
         },
@@ -343,7 +319,7 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center'
         },
-        selectLabel1: {
+        selectLabel: {
                 marginLeft: 5
         },
         modalHeader: {
