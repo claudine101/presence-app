@@ -49,7 +49,7 @@ export default function AllIncidentsDeclarerScreen() {
                                                 <Text style={styles.buttonTextPlus}>+ Nouvelle</Text>
                                         </TouchableOpacity>
                                 </View>
-                                {allIncidents ? <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                                {allIncidents.length == 0 ? <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
                                         <Text style={{ color: '#333', fontWeight: 'bold', opacity: 0.8}}>Aucune incident trouve</Text>
                                 </View> :
                                 <FlatList
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
         cardHeader: {
                 flexDirection: "row",
                 justifyContent: "space-between",
+                alignItems: 'center',
                 marginTop: 7
         },
         modalHeader: {
