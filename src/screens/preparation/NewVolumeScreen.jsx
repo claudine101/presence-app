@@ -174,12 +174,12 @@ export default function NewVolumeScreen() {
                         </View>
                     </TouchableNativeFeedback>
                     <View style={styles.cardTitle}>
-                        <Text style={styles.title} numberOfLines={2}>Planifier les volumes</Text>
+                        <Text style={styles.title} numberOfLines={2}>Planification des volumes</Text>
                     </View>
                 </View>
                 <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                     <OutlinedTextField
-                        label="Nom du volume"
+                        label="Numero du volume"
                         fontSize={14}
                         baseColor={COLORS.smallBrown}
                         tintColor={COLORS.primary}

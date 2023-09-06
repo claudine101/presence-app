@@ -120,7 +120,7 @@ export default function AddFolioScreen() {
                                 setDossier(null)
                         }
                         else {
-                                setError("folio", ["folio existe"])
+                                setError("folio", ["Folio existe déjà"])
                         }
                 }
                 else {

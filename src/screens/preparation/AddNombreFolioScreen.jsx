@@ -198,7 +198,7 @@ export default function AddNombreFolioScreen() {
         catch (error) {
             console.log(error)
             // setError("numero", ["folio existe"])
-            setError("numero", [error.message])
+            // setError("numero", [error.message])
         } finally {
             setLoading(false)
         }
@@ -216,7 +216,7 @@ export default function AddNombreFolioScreen() {
                     </View>
                 </TouchableNativeFeedback>
                 <View style={styles.cardTitle}>
-                    <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur </Text>
+                    <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur archive </Text>
                 </View>
             </View>
             <ScrollView style={styles.inputs}>
@@ -258,7 +258,7 @@ export default function AddNombreFolioScreen() {
                             <Feather name="user" size={20} color="#777" />
                         </View>
                         <Text style={styles.selectLabel}>
-                            Agent superviseur 
+                            Agent superviseur archive
                         </Text>
                     </View>
                     <Text style={styles.selectedValue}>
