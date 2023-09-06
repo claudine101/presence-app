@@ -25,7 +25,7 @@ import ETAPES_VOLUME from "../../../constants/ETAPES_VOLUME";
 export default function NewAgentSupAIlleScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id ,mailleNoTraite} = route.params
+        const { volume, id, mailleNoTraite } = route.params
         // return console.log(volume)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [isCompressingPhotoPreparation, setIsCompressingPhotoPreparation] = useState(false)
@@ -173,27 +173,28 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des malles</Text>
                                                 </View>
-                                                {mallesAll.result.map((mal, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
-                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                {mallesAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun malles trouvés</Text></View> :
+                                                        mallesAll?.result.map((mal, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                                {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                                                                        </View>
+                                                                                                        {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -262,26 +263,27 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des batiments</Text>
                                                         </View>
-                                                        {batimentsAll.result.map((bat, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
-                                                                                        <View style={styles.modalItem} >
-                                                                                                <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.modalItemCard}>
-                                                                                                        <View>
-                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                        {batimentsAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun batiment trouvés</Text></View> :
+                                                                batimentsAll?.result?.map((bat, index) => {
+                                                                        return (
+                                                                                <ScrollView key={index}>
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                                <View style={styles.modalItem} >
+                                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                         </View>
-                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        <View style={styles.modalItemCard}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                                </View>
+                                                                                                                {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
+                                                                                        </TouchableNativeFeedback>
+                                                                                </ScrollView>
+                                                                        )
+                                                                })}
                                                 </View>
                                         }
                                 </>
@@ -319,26 +321,27 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des ailles</Text>
                                                 </View>
-                                                {allailles.map((ail, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                {allailles?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun aile trouvés</Text></View> :
+                                                        allailles?.map((ail, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                        </View>
+                                                                                                        {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -376,7 +379,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                 </View>
-                                                {superviseurList?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                {superviseurList?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouvés</Text></View> : null}
                                                 <View style={styles.modalList}>
                                                         {superviseurList?.map((sup, index) => {
                                                                 return (
@@ -494,7 +497,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        
+
                         navigation.goBack()
                 }
                 catch (error) {
@@ -561,33 +564,23 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 <View>
                                                         {mailleNoTraite ? <Text style={styles.selectedValue}>
                                                                 {mailleNoTraite.NUMERO_MAILLE}
-                                                        </Text> :malles?<Text style={styles.selectedValue}>
+                                                        </Text> : malles ? <Text style={styles.selectedValue}>
                                                                 {malles.maille.NUMERO_MAILLE}
-                                                        </Text>:
-                                                         <Text>N/B</Text>
+                                                        </Text> :
+                                                                <Text>N/B</Text>
                                                         }
                                                 </View>
                                         </TouchableOpacity>
-                                        {volume.ID_ETAPE_VOLUME!=ETAPES_VOLUME.RETOUR_AGENT_SUP_AILE_VERS_CHEF_EQUIPE? <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
-                                                                <Feather name="user" size={20} color="#777" />
+                                                                <Ionicons name= "eye-off-outline"  size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                                Voir folios
+                                                                Voir les dossiers
                                                         </Text>
                                                 </View>
-                                        </TouchableOpacity>:
-                                         <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <Feather name="user" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Voir folio
-                                                        </Text>
-                                                </View>
-                                        </TouchableOpacity>}
+                                        </TouchableOpacity> 
 
                                         <TouchableOpacity style={styles.selectContainer} onPress={openAilleSUperviseurModalize}>
                                                 <View style={styles.labelContainer}>
