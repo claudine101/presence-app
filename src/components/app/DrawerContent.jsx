@@ -120,7 +120,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
-                                            Volumes détaillés
+                                            En  attente de distribution
                                         </Text>
                                     </View>
                                 </View>
@@ -130,7 +130,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                            Volumes supervisés
+                                            Volumes distribués
                                         </Text>
                                     </View>
                                 </View>
