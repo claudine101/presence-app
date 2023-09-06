@@ -618,7 +618,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                                 <View style={styles.labelContainer}>
 
                                                                         <Text style={styles.selectLabel}>
-                                                                                Malle des folios non préparés
+                                                                                Malle des dossiers non préparés
                                                                         </Text>
                                                                 </View>
                                                                 <Text style={styles.selectedValue}>

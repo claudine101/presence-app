@@ -267,32 +267,22 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                 }
                 {(user.ID_PROFIL == PROFILS.CHEF_PLATEAU) ?
                     <>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                        Volumes planifiés
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                <View style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                        Volumes planifiés
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurScreen')}>
-                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
-                                <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
-                                    <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Agents superviseurs
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurValideScreen')}>
-                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
-                                <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
-                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Dossiers prépares
+                                        Nouveaux
                                     </Text>
                                 </View>
                             </View>
@@ -300,9 +290,32 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeRetourneScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <View style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
-                                        Volumes retournés
+                                        Retournés
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+
+
+
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                        Agents superviseurs
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <View style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
+                                       Nouveaux
                                     </Text>
                                 </View>
                             </View>
@@ -310,9 +323,30 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurRetourPhaseScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                    <View style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
-                                        Volumes en attente
+                                        Retournés
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableNativeFeedback>
+
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                    <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                        Dossiers prépares
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurValideScreen')}>
+                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
+                                <View style={styles.drawerItem}>
+                                    <View  style={styles.imageIcon} />
+                                    <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
+                                       Nouveau
                                     </Text>
                                 </View>
                             </View>
@@ -320,9 +354,9 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentSuperviseurReValideScreen')}>
                             <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
                                 <View style={styles.drawerItem}>
-                                    <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
+                                    <View  style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Dossiers réprépares
+                                       Retournés
                                     </Text>
                                 </View>
                             </View>
@@ -333,12 +367,43 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                 {
                     user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
                         <>
+                        
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                            En  attente de préparation
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllVolumeScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 0) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
+                                        <View style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                            En  attente de préparation
+                                            Nouveaux
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeRetourneScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <View  style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
+                                            Retournés
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                        Agents preparations
                                         </Text>
                                     </View>
                                 </View>
@@ -346,9 +411,30 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentPreparationFolioScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 1) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
+                                        <View style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }, { marginBottom: 3 }]}>
-                                            Agents preparations
+                                            Nouveaux
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentPreparationFolioRetourneScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <View  style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }]}>
+                                            Retournés
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+                           
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}  disabled>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }]}>
+                                    <View style={[styles.drawerItem,{paddingVertical:5}]}>
+                                    <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel]}>
+                                       Dossiers non détaillés
                                         </Text>
                                     </View>
                                 </View>
@@ -356,13 +442,24 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioRetourScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 2) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                        <View style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                            Folio préparés
+                                           Nouveaux
                                         </Text>
                                     </View>
                                 </View>
                             </TouchableNativeFeedback>
+                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioRetourneScreen')}>
+                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 6) && { backgroundColor: COLORS.handleColor }]}>
+                                    <View style={styles.drawerItem}>
+                                        <View style={styles.imageIcon} />
+                                        <Text style={[styles.drawerItemLabel, (state.index == 6) && { color: '#777' }]}>
+                                            Retournés
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableNativeFeedback>
+
                             <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioRetouPrepareScreen')}>
                                 <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 3) && { backgroundColor: COLORS.handleColor }]}>
                                     <View style={styles.drawerItem}>
@@ -373,36 +470,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     </View>
                                 </View>
                             </TouchableNativeFeedback>
-                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('VolumeRetourneScreen')}>
-                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 4) && { backgroundColor: COLORS.handleColor }]}>
-                                    <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                                        <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
-                                            Dossiers retournés
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableNativeFeedback>
-                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AgentPreparationFolioRetourneScreen')}>
-                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
-                                    <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                                        <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }]}>
-                                            Dossiers en attente
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableNativeFeedback>
-                            <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('FolioRetourneScreen')}>
-                                <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 6) && { backgroundColor: COLORS.handleColor }]}>
-                                    <View style={styles.drawerItem}>
-                                        <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
-                                        <Text style={[styles.drawerItemLabel, (state.index == 6) && { color: '#777' }]}>
-                                            Dossiers preparés
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableNativeFeedback>
+                            
 
                         </> : null
                 }

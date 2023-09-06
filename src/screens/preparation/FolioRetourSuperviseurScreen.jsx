@@ -32,6 +32,7 @@ export default function FolioRetourSuperviseurScreen() {
         const [document, setDocument] = useState(null)
         const [nbre, setNbre] = useState(null)
         const [check, setCheck] = useState([])
+        const [checkDetails, setDetails] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
@@ -83,6 +84,26 @@ export default function FolioRetourSuperviseurScreen() {
                         }
                 })()
         }, [folio.users]))
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const form = new FormData()
+                                form.append('folioIds', JSON.stringify(folio_ids))
+                                form.append('USERS_ID', folio.users.USERS_ID)
+                                const res = await fetchApi(`/preparation/folio/checkAgentsupDetails`, {
+                                        method: "POST",
+                                        body: form
+                                })
+                                setDetails(res.result)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
+                        }
+                })()
+        }, [folio.users]))
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
                 // document: {
                 //         required: true
@@ -104,19 +125,19 @@ export default function FolioRetourSuperviseurScreen() {
                 return isValid
         }
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoading(true)
-                                const res = await fetchApi(`/preparation/folio/nbrefolios/${folio.users.USERS_ID}`)
-                                setNbre(res.result[0]?.folios?.length)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoading(false)
-                        }
-                })()
-        }, [folio.users]))
+        // useFocusEffect(useCallback(() => {
+        //         (async () => {
+        //                 try {
+        //                         setLoading(true)
+        //                         const res = await fetchApi(`/preparation/folio/nbrefolios/${folio.users.USERS_ID}`)
+        //                         setNbre(res.result[0]?.folios?.length)
+        //                 } catch (error) {
+        //                         console.log(error)
+        //                 } finally {
+        //                         setLoading(false)
+        //                 }
+        //         })()
+        // }, [folio.users]))
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -176,22 +197,8 @@ export default function FolioRetourSuperviseurScreen() {
                         setLoadingSubmit(false)
                 }
         }
-        //Fonction pour recuperer les details
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                folio?.folios
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/preparation/folio/checkAgentsup/${folio.users.USERS_ID}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [folio.users]))
+        
+      
         return (
                 <>{(galexyIndex != null && pvs?.result && pvs?.result) &&
                         <ImageView
@@ -289,7 +296,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         multiline={true}
                                                 />
                                         </View> : null} */}
-                                        {check.length > 0 ?
+                                        {check.length > 0 && !checkDetails.length>0  ?
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -305,7 +312,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         </View>
                                                 </TouchableOpacity> : null}
                                 </ScrollView>
-                                {check.length > 0 ?
+                                {check.length > 0 && !checkDetails.length>0 ?
                                         <TouchableWithoutFeedback
                                                 disabled={!isValidAdd()}
                                                 onPress={submitData}

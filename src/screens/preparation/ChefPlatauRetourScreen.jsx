@@ -19,10 +19,12 @@ import Folio from "../../components/folio/Folio";
 export default function ChefPlatauRetourScreen() {
   const route = useRoute()
   const { volume } = route.params
+  // return  console.log()
   const [volumeDetail, setVolumeDetail] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
   const [document, setDocument] = useState(null)
+  const [check, setCheck] = useState(null)
   const navigation = useNavigation()
   const agentsModalRef = useRef()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -43,6 +45,25 @@ export default function ChefPlatauRetourScreen() {
     }
   })
 
+  useFocusEffect(useCallback(() => {
+    (async () => {
+            try {
+                    // setLoadingCheck(true)
+                    const form = new FormData()
+                    form.append('ID_VOLUME', volume.volume.ID_VOLUME)
+                    const res = await fetchApi(`/preparation/folio/checkPlateau`, {
+                            method: "POST",
+                            body: form
+                    })
+                    setCheck(res.result)
+                    
+            } catch (error) {
+                    console.log(error)
+            } finally {
+                    // setLoadingCheck(false)
+            }
+    })()
+}, [volume]))
   const openAgentModalize = () => {
     agentsModalRef.current?.open()
   }
@@ -271,7 +292,7 @@ export default function ChefPlatauRetourScreen() {
               </View> : null}
 
 
-            {supAile?.result?.check?.length > 0 ?
+            {supAile?.result?.check?.length > 0 && check.length==check[0].volume.NOMBRE_DOSSIER ?
               <TouchableOpacity onPress={onTakePicha}>
                 <View style={[styles.addImageItem]}>
                   <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -289,7 +310,7 @@ export default function ChefPlatauRetourScreen() {
 
 
           </View>
-          {supAile?.result?.check?.length > 0 ?
+          {supAile?.result?.check?.length > 0 && check.length==check[0].volume.NOMBRE_DOSSIER ?
             <TouchableNativeFeedback
               disabled={!isValidAdd()}
               onPress={handleSubmitRetour}
