@@ -26,7 +26,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
         const [allVolumesDistributeur, setAllVolumesDistributeur] = useState([])
         const [allVolumesArchives, setAllVolumesArchives] = useState([])
         const [allVolumesDesarchives, setAllVolumesDesarchives] = useState([])
-        console.log(allVolumesDesarchives)
         const user = useSelector(userSelector)
 
         const handleSubmit = (folio) => {

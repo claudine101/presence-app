@@ -137,7 +137,7 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                 </View>
                                                 {allMalles.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent malle trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
-                                                        {allMalles.result.map((mal, index) => {
+                                                        {allMalles?.result?.map((mal, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedMale(mal)}>
@@ -147,11 +147,11 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                                                                                 <Image source={{ uri: mal.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View> */}
                                                                                                         <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                                <Text style={styles.itemTitle}>{mal?.NUMERO_MAILLE}</Text>
                                                                                                                 {/* <Text style={{ ...styles.itemTitle, color: "#777" }}>{mal.NUMERO_MAILLE}</Text> */}
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {allMales?.ID_MAILLE == mal.ID_MAILLE ? <MaterialCommunityIcons style={styles.checkIndicator} name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                {allMales?.ID_MAILLE == mal?.ID_MAILLE ? <MaterialCommunityIcons style={styles.checkIndicator} name="radiobox-marked" size={24} color={COLORS.primary} /> :
                                                                                                         <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
