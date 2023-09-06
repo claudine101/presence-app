@@ -69,7 +69,7 @@ export default function AllVolumeScreen() {
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
             setNextRouteName('DetaillerFolioScreen')
-            setTitle("Volumes planifiés")
+            setTitle("Volumes non detaillés")
         }
         else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
             setNextRouteName('AddSuperviseurAileVolumeScreen')
