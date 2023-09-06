@@ -22,7 +22,7 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsVolumeChefPlateauTraitesScreen() {
+export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
@@ -39,7 +39,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour/Pvscscs`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -86,7 +86,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                         <Feather name="user" size={20} color="#777" />
                                                                                 </View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Agent superviseur
+                                                                                        Chef plateau
                                                                                 </Text>
                                                                         </View>
                                                                         <Text style={styles.selectedValue}>

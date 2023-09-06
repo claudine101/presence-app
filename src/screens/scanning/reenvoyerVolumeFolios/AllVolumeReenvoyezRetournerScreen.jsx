@@ -10,80 +10,67 @@ import PROFILS from "../../../constants/PROFILS"
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/selectors/userSelector";
 
-
 /**
- * Screen pour afficher les volumes en ettente pour le chef equipe
+ * Screen pour afficher les volumes reenvoyez qui attend le retour chez agent sup aille scanning
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 9/8/2023
+ * @date 4/9/2023
  * @returns 
  */
 
-export default function VolumeEnEttenteChefEquipeScreen() {
-        const [allVolumes, setAllVolumes] = useState([])
-        const [loading, setLoading] = useState(false)
+export default function AllVolumeReenvoyezRetournerScreen() {
         const navigation = useNavigation()
-
+        const [loading, setLoading] = useState(false)
+        const [allVolumes, setAllVolumes] = useState([])
         const [allVolumesChefPlateau, setAllVolumesChefPlateau] = useState([])
-        const [allVolumesSupAilleScan, setAllVolumesSupAilleScan] = useState([])
-        const [allVolumesChefEquiScan, setAllVolumesChefEquiScan] = useState([])
-        const [allVolumesAgentDistributeur, setAllVolumesAgentDistributeur] = useState([])
-        const [allVolumesAgentArchives, setAllVolumesAgentArchives] = useState([])
-        const [allVolumesDesarchivages, setAllVolumesDesarchivages] = useState([])
-        const [allVolumesChefEquipePrep, setAllVolumesChefEquipePrep] = useState([])
+        const [allVolumesChefEquipe, setAllVolumesChefEquipe] = useState([])
+        const [allVolumesDistributeur, setAllVolumesDistributeur] = useState([])
+        const [allVolumesArchives, setAllVolumesArchives] = useState([])
+        const [allVolumesDesarchives, setAllVolumesDesarchives] = useState([])
         const user = useSelector(userSelector)
 
-        const handleSubmit = (volume) => {
+        const handleSubmit = (folio) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
-                        navigation.navigate("DetailsVolumeChefPlateauTraitesScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                } else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
-                        navigation.navigate("DetailsVolumeChefEquipScanTraiteScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                        navigation.navigate("DetailsFoliosReenvoyezretourPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
+                } else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
+                        navigation.navigate("DetailsVolReenvoyerRetourSupAilleScanScreen", { details: folio?.folios, userTraite: folio?.users })
+                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
+                        navigation.navigate("DetailsVolReenvoyezRetourChefEquipeScreen", { details: folio?.folios, userTraite: folio?.users })
                 }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
-                        navigation.navigate("DetailsVolumeAgentDistributeurTraiteScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                        navigation.navigate("DetailsAffecterAgentArchivagesScreen", { details: folio?.folios, userTraite: folio?.users })
                 }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
-                        navigation.navigate("DetailsVolumeAgentArchivesTraiteScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE){
-                        navigation.navigate("DetailsChefEquipePrepTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else {
-                        navigation.navigate("DetailsSupAilleScanTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                        navigation.navigate("DetailsAffecterAgentDesarchivagesScreen", { details: folio?.folios, userTraite: folio?.users })
+                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                        navigation.navigate("DetailsAccepteVolArchivesScreen", { details: folio?.folios, userTraite: folio?.users })
                 }
         }
 
-        //fonction pour recuperer les volumes associer a un chef d'equipe
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
-                                if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
+                                if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau`)
-                                        setAllVolumesChefPlateau(vol.PvFolios)
-                                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
+                                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/aileSupe/retour`)
+                                        setAllVolumes(vol.UserFolios)
+                                } else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/supaillescanning`)
-                                        setAllVolumesSupAilleScan(vol.PvVolume)
-                                } else if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) {
+                                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/chefPlateau/bien`)
+                                        setAllVolumesChefPlateau(vol.UserFolios)
+                                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/chefEquiScanning`)
-                                        setAllVolumesChefEquiScan(vol.PvVolume)
-                                } else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
+                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/ChefEquipe/getVol`)
+                                        setAllVolumesChefEquipe(vol.PvFolios)
+                                }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/agentDistributeur`)
-                                        setAllVolumesAgentDistributeur(vol.PvVolume)
+                                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/dist`)
+                                        setAllVolumesDistributeur(vol.UserFolios)
                                 }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/agentSupArchives`)
-                                        setAllVolumesAgentArchives(vol.PvVolume)
+                                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/archives`)
+                                        setAllVolumesArchives(vol.UserFolios)
                                 }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/agentDesarchivages`)
-                                        setAllVolumesDesarchivages(vol.result)
-                                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE){
-                                        setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/chefequipepreparation`)
-                                        setAllVolumesChefEquipePrep(vol.PvVolume)
-                                }else {
-                                        setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/chefEquipe/envoyer`)
-                                        setAllVolumes(vol.result)
+                                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/archives/finito`)
+                                        setAllVolumesDesarchives(vol.UserFolios)
                                 }
                         } catch (error) {
                                 console.log(error)
@@ -92,85 +79,28 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                         }
                 })()
         }, [user, PROFILS]))
+
         return (
                 <>
                         <AppHeader />
-                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING ?
+                        {(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesChefEquiScan.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumes?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
-                                                        </Text>
-                                                </View> :
-                                                        <FlatList
-                                                                style={styles.contain}
-                                                                data={allVolumesChefEquiScan}
-                                                                renderItem={({ item: volume, index }) => {
-                                                                        console.log(volume)
-                                                                        return (
-                                                                                <>
-                                                                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                        </View> :
-
-                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
-                                                                                                >
-                                                                                                        <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
-                                                                                                                </View>
-                                                                                                                <View style={styles.cardAllDetails}>
-                                                                                                                        <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
-                                                                                                                                <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
-                                                                                                                                </View>
-                                                                                                                        </View>
-                                                                                                                        <View>
-                                                                                                                                <View ><Text></Text></View>
-                                                                                                                                <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NUMERO_VOLUME}</Text></View>
-
-                                                                                                                                </View>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                        </View>
-                                                                                                </TouchableNativeFeedback>
-
-                                                                                        }
-                                                                                </>
-                                                                        )
-                                                                }}
-                                                                keyExtractor={(volume, index) => index.toString()}
-                                                        />}
-                                </View> : null
-                        }
-
-                        {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
-                                <View style={styles.container}>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                                        </View> :
-                                                allVolumesSupAilleScan.length == 0 ? <View style={styles.emptyContaier}>
-                                                        <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
-                                                        <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
                                                         {/* <Text style={styles.emptyDesc}>
-                                                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text> */}
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumesSupAilleScan}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                data={allVolumes}
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -178,7 +108,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -186,48 +116,49 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
-
-                        {user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
+                                </View>
+                        </View> : null}
+                        {(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesChefPlateau.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesChefPlateau?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
+                                                        {/* <Text style={styles.emptyDesc}>
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
                                                                 data={allVolumesChefPlateau}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -235,7 +166,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -243,50 +174,49 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
-                        {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ?
+                                </View>
+                        </View> : null}
+                        {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesAgentDistributeur.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesChefEquipe?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
                                                         {/* <Text style={styles.emptyDesc}>
-                                                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text> */}
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumesAgentDistributeur}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                data={allVolumesChefEquipe}
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -294,7 +224,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -302,47 +232,49 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
-                        {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
+                                </View>
+                        </View> : null}
+                        {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesAgentArchives.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesDistributeur?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
+                                                        {/* <Text style={styles.emptyDesc}>
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumesAgentArchives}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                data={allVolumesDistributeur}
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -350,7 +282,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -358,50 +290,49 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
-                        {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
+                                </View>
+                        </View> : null}
+                        {(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesDesarchivages.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesArchives?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
-                                                        <Text style={styles.emptyDesc}>
-                                                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text>
+                                                        {/* <Text style={styles.emptyDesc}>
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumesDesarchivages}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                data={allVolumesArchives}
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -409,7 +340,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        // onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -417,47 +348,49 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volume?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
-                        {user.ID_PROFIL == PROFILS.CHEF_EQUIPE ?
+                                </View>
+                        </View> : null}
+                        {(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) ? <View style={styles.container}>
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesChefEquipePrep.length == 0 ? <View style={styles.emptyContaier}>
+                                                allVolumesDesarchives?.length == 0 ? <View style={styles.emptyContaier}>
                                                         <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                         <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
+                                                                Aucun folio trouvé
                                                         </Text>
+                                                        {/* <Text style={styles.emptyDesc}>
+                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
+                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
-                                                                data={allVolumesChefEquipePrep}
-                                                                renderItem={({ item: volume, index }) => {
+                                                                data={allVolumesDesarchives}
+                                                                renderItem={({ item: folio, index }) => {
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -465,7 +398,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -473,34 +406,33 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0]?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </TouchableNativeFeedback>
-
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
-                                                                keyExtractor={(volume, index) => index.toString()}
+                                                                keyExtractor={(folio, index) => index.toString()}
                                                         />}
-                                </View> : null
-                        }
+                                </View>
+                        </View> : null}
+                        
                 </>
-
         )
 }
 
@@ -549,12 +481,8 @@ const styles = StyleSheet.create({
         titlePrincipal: {
                 fontWeight: "bold"
         },
-        itemVolume: {
-                fontSize: 15,
-                fontWeight: "bold",
-        },
         emptyContaier: {
-                flex:1,
+                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center'
         },

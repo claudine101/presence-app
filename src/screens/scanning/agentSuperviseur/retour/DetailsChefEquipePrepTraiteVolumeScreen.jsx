@@ -54,7 +54,7 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
                                         <Text style={styles.title}>{volume[0]?.NUMERO_VOLUME}</Text>
                                 </View>
                                 <ScrollView style={styles.inputs}>
-                                        <TouchableOpacity style={styles.selectContainer1}>
+                                        {/* <TouchableOpacity style={styles.selectContainer1}>
                                                 <View style={styles.labelContainer1}>
                                                         <View style={styles.icon}>
                                                                 <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
@@ -66,7 +66,7 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
                                                 <Text style={styles.selectedValue1}>
                                                         {volume[0]?.NOMBRE_DOSSIER}
                                                 </Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                         <TouchableOpacity style={styles.selectContainer1}>
                                                 <View style={styles.labelContainer1}>
                                                         <View style={styles.icon}>

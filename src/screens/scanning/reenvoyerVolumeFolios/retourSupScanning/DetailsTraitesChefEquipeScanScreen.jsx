@@ -14,6 +14,9 @@ import PROFILS from "../../../../constants/PROFILS";
 import ImageView from "react-native-image-viewing";
 import { useRef } from "react";
 import { useCallback } from "react";
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import useFetch from "../../../../hooks/useFetch";
 
 /**
  * Screen pour afficher les details de volumes contenant les folios traites
@@ -22,16 +25,137 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsVolumeChefPlateauTraitesScreen() {
+export default function DetailsTraitesChefEquipeScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
 
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
+        const [loadingData, setLoadingData] = useState(false)
         const [pvs, setPvs] = useState(null)
+        const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
+
+        const isValidAdd = () => {
+                var isValid = false
+                isValid = document != null && equipe != null ? true : false
+                return isValid
+        }
+
+        // Agent distributeur select
+        const equipeModalizeRef = useRef(null);
+        const [equipe, setEquipe] = useState(null);
+        const openEquipeModalize = () => {
+                equipeModalizeRef.current?.open();
+        };
+        const setSelectedEquipe = (equi) => {
+                equipeModalizeRef.current?.close();
+                setEquipe(equi)
+        }
+
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
+                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
+        }
+
+        //Composent pour afficher la listes des distributeurs
+        const EquipeScanningList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/distributeur')
+                return (
+
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent distributeur trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((chef, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
+                                                                                                                <Text style={{ ...styles.itemTitle, color: "#777" }}>{chef.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        const submitChefEquScan = async () => {
+                try {
+                        setLoadingData(true)
+                        const form = new FormData()
+                        form.append('ID_FOLIOS', JSON.stringify(folio_ids))
+                        form.append('USER_TRAITEMENT', equipe.USERS_ID)
+                        if (document) {
+                                const manipResult = await manipulateAsync(
+                                        document.uri,
+                                        [
+                                                { resize: { width: 500 } }
+                                        ],
+                                        { compress: 0.8, format: SaveFormat.JPEG }
+                                );
+                                let localUri = manipResult.uri;
+                                let filename = localUri.split('/').pop();
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type = match ? `image/${match[1]}` : `image`;
+                                form.append('PV', {
+                                        uri: localUri, name: filename, type
+                                })
+                        }
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/archivages/equi/distr`, {
+                                method: "PUT",
+                                body: form
+                        })
+                        navigation.goBack()
+                }
+                catch (error) {
+                        console.log(error)
+                } finally {
+                        setLoadingData(false)
+                }
+        }
 
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -39,7 +163,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/ChefEquipe/retour/Pvscscs`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -63,6 +187,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                 keyExtractor={(_, index) => index.toString()}
                         />
                 }
+                        {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
@@ -86,7 +211,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                         <Feather name="user" size={20} color="#777" />
                                                                                 </View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Agent superviseur
+                                                                                        Agent superviseur aille
                                                                                 </Text>
                                                                         </View>
                                                                         <Text style={styles.selectedValue}>
@@ -166,8 +291,48 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                 </> : null}
                                                                 </View>
                                                         </View>
+                                                        <TouchableOpacity style={styles.selectContainer1} onPress={openEquipeModalize}>
+                                                                <View style={styles.labelContainer}>
+                                                                        <View style={styles.icon}>
+                                                                                <Feather name="user" size={20} color="#777" />
+                                                                        </View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Agent distributeur
+                                                                        </Text>
+                                                                </View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {equipe ? `${equipe.NOM} ${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                                </Text>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={onTakePicha}>
+                                                                <View style={[styles.addImageItem1]}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                        <Text style={styles.addImageLabel}>
+                                                                                                Photo du procès verbal
+                                                                                        </Text>
+                                                                                </View>
+                                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                                        </View>
+                                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                                </View>
+                                                        </TouchableOpacity>
                                                 </ScrollView>}
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                onPress={submitChefEquScan}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </View>
+                        <Portal>
+                                <Modalize ref={equipeModalizeRef}  >
+                                        <EquipeScanningList />
+                                </Modalize>
+                        </Portal>
                 </>
         )
 }
@@ -348,5 +513,33 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        selectContainer1: {
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+        },
+        selectedValue: {
+                color: '#777',
+                marginTop: 2
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        addImageItem1: {
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                borderRadius: 5,
+                paddingVertical: 15,
+                marginBottom: 5,
+                marginHorizontal:10
         },
 })

@@ -1,56 +1,58 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React, { useRef } from "react";
+import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { COLORS } from "../../../../styles/COLORS";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import { COLORS } from "../../../../styles/COLORS";
+import { useRef } from "react";
 import { useState } from "react";
-import Loading from "../../../../components/app/Loading";
-import fetchApi from "../../../../helpers/fetchApi";
-import moment from 'moment'
-import ImageView from "react-native-image-viewing";
-import useFetch from "../../../../hooks/useFetch";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
+import useFetch from "../../../../hooks/useFetch";
+import fetchApi from "../../../../helpers/fetchApi";
+import { useCallback } from "react";
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import Loading from "../../../../components/app/Loading";
 
 /**
- * Screen pour signer le pv entre agent superviseur archives et agents desarchibages
+ * Le screen pour de donner les volumes reenvoyez a un chef du plateau
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 27/8/2023
+ * @date 4/9/2023
  * @returns 
  */
 
-
-export default function ConfirmerPvRetourAgentDesarchivages() {
+export default function NewChefPlateauReenvoyerVolScreen() {
         const navigation = useNavigation()
+        const route = useRoute()
+        const { volume, id } = route.params
+        console.log(volume)
+        console.log(id)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const route = useRoute()
-        const { detail } = route.params
+        const [malles, setMalles] = useState('')
+        const [loading, setLoading] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
-        const [galexyIndex, setGalexyIndex] = useState(null)
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = document != null && equipe != null ? true : false
+                isValid = chefPlateau != null && document != null ? true : false
                 return isValid
         }
 
-        // Agent agent superviseur archive select
-        const equipeModalizeRef = useRef(null);
-        const [equipe, setEquipe] = useState(null);
-        const openEquipeModalize = () => {
-                equipeModalizeRef.current?.open();
+        // Aile superviseur select
+        const chefPlateauModalizeRef = useRef(null);
+        const [chefPlateau, setChefPlateau] = useState(null);
+        const openChefPlateuModalize = () => {
+                chefPlateauModalizeRef.current?.open();
         };
-        const setSelectedEquipe = (equi) => {
-                equipeModalizeRef.current?.close();
-                setEquipe(equi)
+        const setSelectedChefPlateu = (chef) => {
+                chefPlateauModalizeRef.current?.close();
+                setChefPlateau(chef)
         }
 
-        //Composent pour afficher la listes des agents desarchivages
-        const EquipeScanningList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/retour/agent/desarchivages')
+        //Composent pour afficher la listes les chefs plateaux
+        const ChefPlateauList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/plateau')
                 return (
                         <>
                                 {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
@@ -60,12 +62,12 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                 </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent desarchivages trouves</Text></View> : null}
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
                                                         {volumesAll.result.map((chef, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedEquipe(chef)}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedChefPlateu(chef)}>
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
@@ -76,8 +78,8 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                                                                                 <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -88,9 +90,9 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                         </View>
                                 }
                         </>
+
                 )
         }
-
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -114,11 +116,11 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                 //     handleChange('pv', manipResult)
         }
 
-        const submitAgentSup = async () => {
+        const submitChefPlateauData = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('USER_TRAITEMENT', equipe.USERS_ID)
+                        form.append('USER_TRAITEMENT', chefPlateau.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -135,33 +137,20 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/desarchivages/${detail.volume.ID_VOLUME}`, {
+                        const volume = await fetchApi(`/scanning/retour/agent/reenvoyez/chefPlateau/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.navigate('AllVolumeFolioRetourSupAilleScreen')
+                        navigation.goBack()
                 }
                 catch (error) {
                         console.log(error)
                 } finally {
                         setLoadingData(false)
                 }
-
         }
-
-
         return (
                 <>
-                        {(galexyIndex != null && detail) &&
-                                <ImageView
-                                        images={[{ uri: detail?.PV_PATH } ? { uri: detail?.PV_PATH } : undefined]}
-                                        imageIndex={galexyIndex}
-                                        visible={(galexyIndex != null) ? true : false}
-                                        onRequestClose={() => setGalexyIndex(null)}
-                                        swipeToCloseEnabled
-                                        keyExtractor={(_, index) => index.toString()}
-                                />
-                        }
                         {loadingData && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
@@ -173,11 +162,10 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>affecter un agent desarchivages</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un chef plateau</Text>
                                         </View>
                                 </View>
-
-                                <ScrollView>
+                                <ScrollView style={styles.inputs}>
                                         <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -188,7 +176,7 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {detail?.volume?.NUMERO_VOLUME}
+                                                        {volume?.volume?.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -201,23 +189,56 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {detail?.volume?.maille?.NUMERO_MAILLE}
+                                                        {volume?.maille?.NUMERO_MAILLE}
                                                 </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                        {volume?.folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        Listes des dossiers
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.folioList}>
+                                                                {volume?.folios?.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })}
+                                                        </View>
+                                                </View>
+                                        </View>:null}
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <Feather name="user" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
-                                                        Agent desarchivage
+                                                                Chef du plateau
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                {equipe ? `${equipe.NOM}` + ' ' + `${equipe.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                        {chefPlateau ? `${chefPlateau.NOM} ${chefPlateau.PRENOM}` : "Cliquer pour choisir l'agent"}
                                                 </Text>
                                         </TouchableOpacity>
-
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -235,26 +256,26 @@ export default function ConfirmerPvRetourAgentDesarchivages() {
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                        onPress={submitAgentSup}
+                                        onPress={submitChefPlateauData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Portal>
-                                <Modalize ref={equipeModalizeRef}  >
-                                        <EquipeScanningList />
-                                </Modalize>
-                        </Portal>
+                        <Modalize ref={chefPlateauModalizeRef}  >
+                                <ChefPlateauList />
+                        </Modalize>
                 </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
                 backgroundColor: '#fff'
-        }, header: {
+        },
+        header: {
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingVertical: 10
@@ -267,40 +288,13 @@ const styles = StyleSheet.create({
                 fontSize: 17,
                 fontWeight: 'bold',
                 color: '#777',
+                // color: COLORS.primary
         },
         cardTitle: {
                 maxWidth: "85%"
         },
-        addImageItem: {
-                borderWidth: 0.5,
-                borderColor: "#000",
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 15,
-                marginBottom: 5,
-                marginHorizontal: 10
-        },
-        labelContainer: {
-                flexDirection: 'row',
-                alignItems: 'center',
-        },
-        addImageLabel: {
-                marginLeft: 5,
-                opacity: 0.8
-        },
-        button: {
-                marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 10,
-                backgroundColor: COLORS.primary,
-                marginHorizontal: 10
-        },
-        buttonText: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 16,
-                textAlign: "center"
+        inputs: {
+                paddingHorizontal: 10
         },
         selectContainer: {
                 backgroundColor: "#fff",
@@ -308,19 +302,30 @@ const styles = StyleSheet.create({
                 borderRadius: 5,
                 borderWidth: 0.5,
                 borderColor: "#ddd",
-                marginVertical: 10,
-                marginHorizontal: 10
+                marginVertical: 10
         },
         selectedValue: {
                 color: '#777',
                 marginTop: 2
         },
-        labelContainer1: {
+        labelContainer: {
                 flexDirection: 'row',
                 alignItems: 'center'
         },
         selectLabel: {
                 marginLeft: 5
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
         },
         modalHeader: {
                 flexDirection: "row",
@@ -369,5 +374,67 @@ const styles = StyleSheet.create({
                 color: '#777',
                 fontSize: 12,
                 marginTop: 5
+        },
+        addImageItem: {
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
+        addImageLabel: {
+                marginLeft: 5,
+                opacity: 0.8
+        },
+        button: {
+                marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                paddingHorizontal: 10,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10
+        },
+        buttonText: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 16,
+                textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })

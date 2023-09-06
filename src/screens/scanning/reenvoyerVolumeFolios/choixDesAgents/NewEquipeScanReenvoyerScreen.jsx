@@ -2,28 +2,29 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import React, { useCallback } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
-import { COLORS } from "../../../styles/COLORS";
+import { COLORS } from "../../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../../../hooks/useFetch";
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import fetchApi from "../../../helpers/fetchApi";
-import Loading from "../../../components/app/Loading";
+import fetchApi from "../../../../helpers/fetchApi";
+import Loading from "../../../../components/app/Loading";
 
 /**
  * Le screen pour de donner les folios au chef equipe
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 2/8/2023
+ * @date 4/9/2021
  * @returns 
  */
 
-export default function NewEquipeScanScreen() {
+
+export default function NewEquipeScanReenvoyerScreen(){
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio } = route.params
+        const { volume, id } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -99,7 +100,7 @@ export default function NewEquipeScanScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
+                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.listItemImage} />
                                                                                                                 {/* <AntDesign name="folderopen" size={20} color="black" /> */}
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
@@ -144,7 +145,7 @@ export default function NewEquipeScanScreen() {
                                                 <Text style={styles.modalTitle}>Listes des folios</Text>
                                         </View>
                                         <View style={styles.modalList}>
-                                                {folio.folios.map((fol, index) => {
+                                                {volume.folios.map((fol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
@@ -184,7 +185,7 @@ export default function NewEquipeScanScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('ID_VOLUME', folio.ID_VOLUME)
+                        form.append('ID_VOLUME', volume.ID_VOLUME)
                         form.append('folio', JSON.stringify(multiFolios))
                         form.append('USER_TRAITEMENT', equipe.ID_EQUIPE)
                         if (document) {
@@ -203,7 +204,8 @@ export default function NewEquipeScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/folio/equipeScanning`, {
+                        console.log(form)
+                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/plateau`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -215,113 +217,115 @@ export default function NewEquipeScanScreen() {
                         setLoadingData(false)
                 }
         }
-        return (
-                <>
-                        {loadingData && <Loading />}
-                        <View style={styles.container}>
-                                <View style={styles.header}>
-                                        <TouchableNativeFeedback
-                                                onPress={() => navigation.goBack()}
-                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.headerBtn}>
-                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
-                                                </View>
-                                        </TouchableNativeFeedback>
-                                        <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
-                                        </View>
-                                </View>
-                                <ScrollView style={styles.inputs}>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Volume
-                                                        </Text>
-                                                </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {folio.volume.NUMERO_VOLUME}
-                                                </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Nombre de dossiers
-                                                        </Text>
-                                                </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {folio.volume.NOMBRE_DOSSIER}
-                                                </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
-                                                <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <Feather name="user" size={20} color="#777" />
-                                                        </View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Equipe scanning
-                                                        </Text>
-                                                </View>
-                                                <Text style={styles.selectedValue}>
-                                                        {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
-                                                </Text>
-                                        </TouchableOpacity>
 
-                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+        return(
+                <>
+                {loadingData && <Loading />}
+                <View style={styles.container}>
+                        <View style={styles.header}>
+                                <TouchableNativeFeedback
+                                        onPress={() => navigation.goBack()}
+                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                        <View style={styles.headerBtn}>
+                                                <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                        </View>
+                                </TouchableNativeFeedback>
+                                <View style={styles.cardTitle}>
+                                        <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
+                                </View>
+                        </View>
+                        <ScrollView style={styles.inputs}>
+                                <TouchableOpacity style={styles.selectContainer}>
+                                        <View style={styles.labelContainer}>
+                                                <View style={styles.icon}>
+                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                </View>
+                                                <Text style={styles.selectLabel}>
+                                                        Volume
+                                                </Text>
+                                        </View>
+                                        <Text style={styles.selectedValue}>
+                                                {volume.volume.NUMERO_VOLUME}
+                                        </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.selectContainer}>
+                                        <View style={styles.labelContainer}>
+                                                <View style={styles.icon}>
+                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                </View>
+                                                <Text style={styles.selectLabel}>
+                                                        Nombre de dossiers
+                                                </Text>
+                                        </View>
+                                        <Text style={styles.selectedValue}>
+                                                {volume.folios.length}
+                                        </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                        <View style={styles.labelContainer}>
+                                                <View style={styles.icon}>
+                                                        <Feather name="user" size={20} color="#777" />
+                                                </View>
+                                                <Text style={styles.selectLabel}>
+                                                        Equipe scanning
+                                                </Text>
+                                        </View>
+                                        <Text style={styles.selectedValue}>
+                                                {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
+                                        </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                        <View>
+                                                <Text style={styles.selectLabel}>
+                                                        Folios
+                                                </Text>
                                                 <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Folios
+                                                        <Text style={styles.selectedValue}>
+                                                                {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
+                                                                {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
                                                         </Text>
-                                                        <View>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
-                                                                        {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
+                                                </View>
+                                        </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={onTakePicha}>
+                                        <View style={[styles.addImageItem]}>
+                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                <Text style={styles.addImageLabel}>
+                                                                        Photo du procès verbal
                                                                 </Text>
                                                         </View>
+                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                 </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={onTakePicha}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du procès verbal
-                                                                        </Text>
-                                                                </View>
-                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                                                        </View>
-                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                                                </View>
-                                        </TouchableOpacity>
-                                </ScrollView>
-                                <TouchableWithoutFeedback
-                                        disabled={!isValidAdd()}
-                                        onPress={submitEquipeData}
-                                >
-                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
-                                </TouchableWithoutFeedback>
-                        </View>
-                        <Portal>
-                                <Modalize ref={equipeModalizeRef}  >
-                                        <EquipeScanningList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={multSelectModalizeRef}  >
-                                        <MultiFolioSelctList />
-                                </Modalize>
-                        </Portal>
-                </>
+                                </TouchableOpacity>
+                        </ScrollView>
+                        <TouchableWithoutFeedback
+                                disabled={!isValidAdd()}
+                                onPress={submitEquipeData}
+                        >
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                </View>
+                        </TouchableWithoutFeedback>
+                </View>
+                <Portal>
+                        <Modalize ref={equipeModalizeRef}  >
+                                <EquipeScanningList />
+                        </Modalize>
+                </Portal>
+                <Portal>
+                        <Modalize ref={multSelectModalizeRef}  >
+                                <MultiFolioSelctList />
+                        </Modalize>
+                </Portal>
+        </>
         )
 }
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,

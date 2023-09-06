@@ -22,7 +22,7 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsVolumeChefPlateauTraitesScreen() {
+export default function DetailsTraitesArchivesReenvoyezScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
@@ -33,24 +33,6 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
 
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingPvs(true)
-                                const form = new FormData()
-                                form.append('folioIds', JSON.stringify(folio_ids))
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
-                                        method: "POST",
-                                        body: form
-                                })
-                                setPvs(res)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingPvs(false)
-                        }
-                })()
-        }, []))
 
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
@@ -86,7 +68,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                         <Feather name="user" size={20} color="#777" />
                                                                                 </View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Agent superviseur
+                                                                                        Agents desarchivages
                                                                                 </Text>
                                                                         </View>
                                                                         <Text style={styles.selectedValue}>
@@ -143,29 +125,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                         </View>
                                                                 </View>
                                                         </View> : null}
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                        Chargement
-                                                                                </Text>
-                                                                        </View> : null}
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                PV de retour
-                                                                        </Text>
-                                                                        {pvs?.result ?
-                                                                                <>
-                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
-                                                                                        }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                        </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                </> : null}
-                                                                </View>
-                                                        </View>
+                                                        
                                                 </ScrollView>}
                         </View>
                 </>

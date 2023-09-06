@@ -16,17 +16,21 @@ import Loading from "../../../components/app/Loading";
 /**
  * Le screen pour de donner les folios au chef equipe
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 2/8/2023
+ * @date 2/8/2021
  * @returns 
  */
 
-export default function NewEquipeScanScreen() {
+export default function NewEquipeRetourScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio } = route.params
+        const { folio, typeClick } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
+
+        const [allFolios, setAllFolios] = useState([])
+        const [loading, setLoading] = useState(false)
+
 
         const isValidAdd = () => {
                 var isValid = false
@@ -106,8 +110,8 @@ export default function NewEquipeScanScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -123,8 +127,6 @@ export default function NewEquipeScanScreen() {
 
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
 
                 const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
                 const setSelectedFolio = (fol) => {
@@ -143,30 +145,35 @@ export default function NewEquipeScanScreen() {
                                         <View style={styles.modalHeader}>
                                                 <Text style={styles.modalTitle}>Listes des folios</Text>
                                         </View>
-                                        <View style={styles.modalList}>
-                                                {folio.folios.map((fol, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
-                                                                                <View style={styles.listItem} >
-                                                                                        <View style={styles.listItemDesc}>
-                                                                                                <View style={styles.listItemImageContainer}>
-                                                                                                        {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
-                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.listNames}>
-                                                                                                        <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalList}>
+                                                        {allFolios.map((fol, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                {fol?.folio?.NUMERO_FOLIO ?
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                                <View style={styles.listItem} >
+                                                                                                        <View style={styles.listItemDesc}>
+                                                                                                                <View style={styles.listItemImageContainer}>
+                                                                                                                        {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
+                                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                </View>
+                                                                                                                {fol?.folio?.NUMERO_FOLIO ? <View style={styles.listNames}>
+                                                                                                                        <Text style={styles.itemTitle}>{fol?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                </View> : null}
+                                                                                                        </View>
+                                                                                                                {isSelected(fol?.folio?.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                      
 
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
-                                        </View>
+                                                                                                </View>
+                                                                                        </TouchableNativeFeedback> : null}
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>}
                                 </View>
 
                                 <TouchableWithoutFeedback
@@ -184,7 +191,6 @@ export default function NewEquipeScanScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('ID_VOLUME', folio.ID_VOLUME)
                         form.append('folio', JSON.stringify(multiFolios))
                         form.append('USER_TRAITEMENT', equipe.ID_EQUIPE)
                         if (document) {
@@ -215,6 +221,28 @@ export default function NewEquipeScanScreen() {
                         setLoadingData(false)
                 }
         }
+
+        //fonction pour recuperer les folios d'un agent qui est connecter
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                if(typeClick==1){
+                                        setLoading(true)
+                                        const fol = await fetchApi(`/scanning/retour/agent/foliosRecus/retours`)
+                                        setAllFolios(fol.result)
+                                }else{
+                                        setLoading(true)
+                                        const fol = await fetchApi(`/scanning/retour/agent/foliosRecus/retours/notValid`)
+                                        setAllFolios(fol.result)
+                                }
+                               
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [typeClick]))
         return (
                 <>
                         {loadingData && <Loading />}
@@ -232,7 +260,7 @@ export default function NewEquipeScanScreen() {
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
-                                        <TouchableOpacity style={styles.selectContainer}>
+                                        {/* <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
@@ -243,9 +271,10 @@ export default function NewEquipeScanScreen() {
                                                 </View>
                                                 <Text style={styles.selectedValue}>
                                                         {folio.volume.NUMERO_VOLUME}
+                                                        ddd
                                                 </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.selectContainer}>
+                                        </TouchableOpacity> */}
+                                        {/* <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
                                                                 <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
@@ -257,7 +286,7 @@ export default function NewEquipeScanScreen() {
                                                 <Text style={styles.selectedValue}>
                                                         {folio.volume.NOMBRE_DOSSIER}
                                                 </Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -280,7 +309,7 @@ export default function NewEquipeScanScreen() {
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
-                                                                        {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
+                                                                        {multiFolios.length > 0 ? <Text> sélectionnés</Text> : null}
                                                                 </Text>
                                                         </View>
                                                 </View>

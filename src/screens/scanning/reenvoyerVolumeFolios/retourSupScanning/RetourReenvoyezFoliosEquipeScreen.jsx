@@ -18,14 +18,15 @@ import { useCallback } from "react";
 /**
  * Screen pour afficher les details des folios par equipe
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 3/8/2023
+ * @date 4/9/2023
  * @returns 
  */
 
-export default function DetailsFolioRetourScreen() {
+export default function RetourReenvoyezFoliosEquipeScreen(){
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio, ID_ETAPE_FOLIO, ID_EQUIPE, userTraite } = route.params
+        const { folio, ID_EQUIPE, userTraite } = route.params
+        console.log(folio)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -41,7 +42,7 @@ export default function DetailsFolioRetourScreen() {
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
 
-        const folio_ids = folio?.folios?.map(foli => foli.folio.ID_FOLIO)
+        const folio_ids = folio?.map(foli => foli.ID_FOLIO)
 
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -50,7 +51,7 @@ export default function DetailsFolioRetourScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite)
-                                const res = await fetchApi(`/scanning/retour/agent/equipe/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/equipe/pvs/reenvoyez`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -63,30 +64,15 @@ export default function DetailsFolioRetourScreen() {
                 })()
         }, []))
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/equipeScanning/${userTraite}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [userTraite]))
-
         //Multi select pour selectionner les folios reconcilier
         const [multiFolios, setMultiFolios] = useState([]);
-        const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
-        const setSelectedFolio = (folio) => {
-                if (isSelected(folio.folio.ID_FOLIO)) {
-                        const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != folio.folio.ID_FOLIO)
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
                         setMultiFolios(newfolio)
                 } else {
-                        setMultiFolios(u => [...u, folio])
+                        setMultiFolios(u => [...u, fol])
                 }
 
         }
@@ -145,7 +131,7 @@ export default function DetailsFolioRetourScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const folioss = await fetchApi(`/scanning/volume/retour/chef`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/equipe/superviseur`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -157,7 +143,7 @@ export default function DetailsFolioRetourScreen() {
                         setLoadingData(false)
                 }
         }
-        return (
+        return(
                 <>
                         {(galexyIndex != null && pvs?.result && pvs?.result) &&
                                 <ImageView
@@ -179,7 +165,7 @@ export default function DetailsFolioRetourScreen() {
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.title}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
+                                        <Text style={styles.title}>{ID_EQUIPE.NOM_EQUIPE}</Text>
                                 </View>
                                 {loadingPvs ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -211,7 +197,7 @@ export default function DetailsFolioRetourScreen() {
                                                                 </View>
                                                         </View>
 
-                                                        {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                        {folio?.length > 0 ? <View style={styles.selectContainer}>
                                                                 <View style={{ width: '100%' }}>
                                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
@@ -221,24 +207,24 @@ export default function DetailsFolioRetourScreen() {
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
                                                                                         {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                        {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'}
+                                                                                        {folio?.length} pret à être reconcilier{folio?.length > 1 && 's'}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
-                                                                                {folio?.folios.map((folio, index) => {
+                                                                                {folio.map((fol, index) => {
                                                                                         return (
-                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index} onPress={() => setSelectedFolio(fol)}>
                                                                                                         <View style={[styles.folio]}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
                                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioName}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{fol.NUMERO_FOLIO}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                {isSelected(fol.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                                         <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
@@ -248,7 +234,7 @@ export default function DetailsFolioRetourScreen() {
                                                                 </View>
                                                         </View> : null}
 
-                                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                                         <TouchableOpacity onPress={onTakePicha}>
                                                                 <View style={[styles.addImageItem]}>
                                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -261,18 +247,18 @@ export default function DetailsFolioRetourScreen() {
                                                                         </View>
                                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                 </View>
-                                                        </TouchableOpacity> : null}
+                                                        </TouchableOpacity> 
 
                                                 </View>
                                         </ScrollView>}
-                                {check.length > 0 ? <TouchableWithoutFeedback
+                                <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitEquipeData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback> : null}
+                                </TouchableWithoutFeedback> 
 
                         </View>
 

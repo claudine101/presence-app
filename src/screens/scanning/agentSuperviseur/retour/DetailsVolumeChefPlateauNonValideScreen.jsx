@@ -16,13 +16,13 @@ import { useRef } from "react";
 import { useCallback } from "react";
 
 /**
- * Screen pour afficher les details de volumes contenant les folios traites
+ * Screen pour afficher les details de volumes contenant les folios non valide
  * @author Vanny Boy <vanny@mediabox.bi>
  * @date 28/8/2023
  * @returns 
  */
 
-export default function DetailsVolumeChefPlateauTraitesScreen() {
+export default function DetailsVolumeChefPlateauNonValideScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
@@ -133,9 +133,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                                                                 <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                {folio.IS_VALIDE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
-                                                                                                                {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
-                                                                                                                {(folio.IS_VALIDE == 0 && folio.IS_RECONCILIE == 1) ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+                                                                                                                {folio.	IS_VALIDE ==0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )

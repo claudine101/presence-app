@@ -22,7 +22,7 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsVolumeChefPlateauTraitesScreen() {
+export default function DetailsTraitesPlateauRenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
@@ -39,7 +39,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour`, {
                                         method: "POST",
                                         body: form
                                 })

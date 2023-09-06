@@ -1,8 +1,8 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
 import { COLORS } from "../../../../styles/COLORS";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useState } from "react";
@@ -27,6 +27,9 @@ export default function ConfimerPvScreen() {
         const { detail } = route.params
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
+
+        const [allVolumes, setAllVolumes] = useState([])
+        const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
 
         const isValidAdd = () => {
                 var isValid = false
@@ -90,6 +93,22 @@ export default function ConfimerPvScreen() {
                 }
         }
 
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                if (detail) {
+                                        setLoadingAilleScanning(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/details/volume/${detail.volume.ID_VOLUME}`)
+                                        setAllVolumes(vol.result)
+                                }
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingAilleScanning(false)
+                        }
+                })()
+        }, [detail]))
+
 
         return (
                 <>
@@ -150,6 +169,121 @@ export default function ConfimerPvScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
+                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumes?.foliosValid?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        Les dossiers validés
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {allVolumes?.foliosValid?.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
+                                                                        </View>
+                                                                </View>
+                                                        </View> : null
+                                        }
+                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumes?.foliosNonValid?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        Les dossiers non validés
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {allVolumes?.foliosNonValid?.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
+                                                                        </View>
+                                                                </View>
+                                                        </View> : null}
+                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                </View> :
+                                                        allVolumes?.foliosNoScanReconcilier?.length > 0 ?
+                                                                <View style={styles.selectContainer}>
+                                                                        <View style={{ width: '100%' }}>
+                                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                                </View>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                        </Text>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                                Les dossiers non scannés
+                                                                                        </Text>
+                                                                                </View>
+                                                                                <View style={styles.folioList}>
+                                                                                        {allVolumes?.foliosNoScanReconcilier?.map((folio, index) => {
+                                                                                                return (
+                                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                                <View style={[styles.folio]}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                </View>
+                                                                                                        </TouchableOpacity>
+                                                                                                )
+                                                                                        })}
+                                                                                </View>
+                                                                        </View>
+                                                                </View> : null}
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -247,5 +381,41 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })

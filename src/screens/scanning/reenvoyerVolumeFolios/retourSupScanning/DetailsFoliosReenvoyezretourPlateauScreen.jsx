@@ -13,11 +13,11 @@ import Loading from "../../../../components/app/Loading";
 /**
  * Screen pour afficher le details de folios lors de retours chez un chef plateau
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 23/8/2023
+ * @date 4/9/2023
  * @returns 
  */
 
-export default function FoliosRetourdetailChefPlateauScreen() {
+export default function DetailsFoliosReenvoyezretourPlateauScreen(){
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
@@ -45,7 +45,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/retour`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -63,7 +63,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                 (async () => {
                         try {
                                 setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/pvs/${userTraite.USERS_ID}`)
+                                const res = await fetchApi(`/scanning/retour/agent/retour/check/action/${userTraite.USERS_ID}`)
                                 setCheck(res.result)
 
                         } catch (error) {
@@ -131,7 +131,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -143,125 +143,122 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                         setLoadingData(false)
                 }
         }
-
-        return (
+        return(
                 <>
-                        {(galexyIndex != null && pvs?.result && pvs?.result) &&
-                                <ImageView
-                                        images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
-                                        imageIndex={galexyIndex}
-                                        visible={(galexyIndex != null) ? true : false}
-                                        onRequestClose={() => setGalexyIndex(null)}
-                                        swipeToCloseEnabled
-                                        keyExtractor={(_, index) => index.toString()}
-                                />
-                        }
+                {(galexyIndex != null && pvs?.result && pvs?.result) &&
+                        <ImageView
+                                images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
+                                imageIndex={galexyIndex}
+                                visible={(galexyIndex != null) ? true : false}
+                                onRequestClose={() => setGalexyIndex(null)}
+                                swipeToCloseEnabled
+                                keyExtractor={(_, index) => index.toString()}
+                        />
+                }
 
-                        {loadingData && <Loading />}
-                        <View style={styles.container}>
+                {loadingData && <Loading />}
+                <View style={styles.container}>
 
-                                <View style={styles.header}>
-                                        <TouchableNativeFeedback
-                                                onPress={() => navigation.goBack()}
-                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.headerBtn}>
-                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
-                                                </View>
-                                        </TouchableNativeFeedback>
-                                        <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text>
+                        <View style={styles.header}>
+                                <TouchableNativeFeedback
+                                        onPress={() => navigation.goBack()}
+                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                        <View style={styles.headerBtn}>
+                                                <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                        </View>
+                                </TouchableNativeFeedback>
+                                <View style={styles.cardTitle}>
+                                        <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text>
+                                </View>
+                        </View>
+                        <ScrollView>
+                                <View style={styles.selectContainer}>
+                                        <View style={{ width: '100%' }}>
+                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                Chargement
+                                                        </Text>
+                                                </View> : null}
+                                                <Text style={styles.selectedValue}>
+                                                        {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
+                                                        Pv de départ
+                                                </Text>
+                                                {pvs?.result ?
+                                                        <>
+                                                                <TouchableOpacity onPress={() => {
+                                                                        setGalexyIndex(0)
+                                                                }}>
+                                                                        <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                </TouchableOpacity>
+                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                        </> : null}
                                         </View>
                                 </View>
-                                <ScrollView>
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                        Chargement
-                                                                </Text>
-                                                        </View> : null}
+                                <View style={styles.selectContainer}>
+                                        <View style={{ width: '100%' }}>
+                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                         <Text style={styles.selectedValue}>
-                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                Pv de départ
                                                         </Text>
-                                                        {pvs?.result ?
-                                                                <>
-                                                                        <TouchableOpacity onPress={() => {
-                                                                                setGalexyIndex(0)
-                                                                        }}>
-                                                                                <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                        </TouchableOpacity>
-                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                </> : null}
+                                                        <Text style={styles.selectedValue}>
+                                                                {details.length} pret à être validé{details.length > 1 && 's'}
+                                                        </Text>
                                                 </View>
-                                        </View>
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-
-                                                        </View>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                <Text style={styles.selectedValue}>
-                                                                </Text>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {details.length} pret à être validé{details.length > 1 && 's'}
-                                                                </Text>
-                                                        </View>
-                                                        <View style={styles.contain}>
-                                                                {details.map((folio, index) => {
-                                                                        return (
-                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
-                                                                                        <View style={[styles.folio]}>
-                                                                                                <View style={styles.folioLeftSide}>
-                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                        </View>
+                                                <View style={styles.contain}>
+                                                        {details.map((folio, index) => {
+                                                                return (
+                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                <View style={[styles.folio]}>
+                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                 </View>
-                                                                                                {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-
+                                                                                                <View style={styles.folioDesc}>
+                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                </View>
                                                                                         </View>
-                                                                                </TouchableOpacity>
-                                                                        )
-                                                                })
-                                                                }
-                                                        </View>
+                                                                                        {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+
+                                                                                </View>
+                                                                        </TouchableOpacity>
+                                                                )
+                                                        })
+                                                        }
                                                 </View>
                                         </View>
+                                </View>
 
-                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
-                                                <View style={[styles.addImageItem]}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du procès verbal
-                                                                        </Text>
-                                                                </View>
-                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                        <View style={[styles.addImageItem]}>
+                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                <Text style={styles.addImageLabel}>
+                                                                        Photo du procès verbal
+                                                                </Text>
                                                         </View>
-                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                 </View>
-                                        </TouchableOpacity> : null}
-                                </ScrollView>
-                                {check.length > 0 ? <TouchableWithoutFeedback
-                                        disabled={!isValidAdd()}
-                                        onPress={submitPlateauData}
-                                >
-                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
-                                </TouchableWithoutFeedback> : null}
-                        </View >
-                </>
-
+                                </TouchableOpacity> : null}
+                        </ScrollView>
+                        {check.length > 0 ? <TouchableWithoutFeedback
+                                disabled={!isValidAdd()}
+                                onPress={submitPlateauData}
+                        >
+                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                        <Text style={styles.buttonText}>Enregistrer</Text>
+                                </View>
+                        </TouchableWithoutFeedback> : null}
+                </View >
+        </>
         )
-
 }
 
 const styles = StyleSheet.create({
