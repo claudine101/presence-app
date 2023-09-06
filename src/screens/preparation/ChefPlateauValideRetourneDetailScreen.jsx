@@ -11,7 +11,7 @@ import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import ImageView from "react-native-image-viewing";
 import moment from "moment";
 
-export default function AgentSuperviseurValideDetailScreen() {
+export default function ChefPlateauValideRetourneDetailScreen() {
           const route = useRoute()
           const { agent,folio } = route.params
           const [loading, setLoading] = useState(true)
@@ -29,8 +29,8 @@ export default function AgentSuperviseurValideDetailScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', agent.USERS_ID)
-                                const res = await fetchApi(`/preparation/folio/getPvAgRetour`, {
+                                form.append('CHEF_PLATEAU', agent.USERS_ID)
+                                const res = await fetchApi(`/preparation/folio/getPvChefPlateau`, {
                                         method: "POST",
                                         body: form
                                 })

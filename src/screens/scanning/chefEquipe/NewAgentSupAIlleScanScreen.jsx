@@ -12,6 +12,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import fetchApi from "../../../helpers/fetchApi";
 import Loading from "../../../components/app/Loading";
+import { useEffect } from "react";
+import ETAPES_VOLUME from "../../../constants/ETAPES_VOLUME";
 
 /**
  * Le screen pour de donner les volumes a un agent superviseur aile scanning
@@ -23,21 +25,46 @@ import Loading from "../../../components/app/Loading";
 export default function NewAgentSupAIlleScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
-
+        const { volume, id ,mailleNoTraite} = route.params
+        // return console.log(volume)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
+        const [isCompressingPhotoPreparation, setIsCompressingPhotoPreparation] = useState(false)
         const [document, setDocument] = useState(null)
+        const [documentPreparation, setDocumentPreparation] = useState(null)
 
         const [malles, setMalles] = useState('')
         const [loading, setLoading] = useState(false)
+        const [loadingFolio, setLoadingFolio] = useState(true)
+        const [folios, setFolios] = useState(true)
         const [loadingData, setLoadingData] = useState(false)
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingFolio(true)
+                                const vol = await fetchApi(`/preparation/folio/folioChefEquipeNonPrepare/${id}`)
+                                setFolios(vol.result)
+
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoading(false)
+                        }
+                })()
+        }, [id]))
 
         const isValidAdd = () => {
                 var isValid = false
+                var isValidPreparation = true
+                if (folios.length > 0) {
+                        isValidPreparation = agentSupPreparation != null && documentPreparation != null && males != null
+                }
                 isValid = ailleSuperviseur != null && document != null ? true : false
-                return isValid
+                return isValid && isValidPreparation
         }
-
+        const FolioModalizeRef = useRef(null);
+        const openFolioModalize = () => {
+                FolioModalizeRef.current?.open();
+        };
         // Aile superviseur select
         const superviseurModalizeRef = useRef(null);
         const [ailleSuperviseur, setAilleSuperviseur] = useState(null);
@@ -47,6 +74,337 @@ export default function NewAgentSupAIlleScanScreen() {
         const setSelectedAgentSupAille = (sup) => {
                 superviseurModalizeRef.current?.close();
                 setAilleSuperviseur(sup)
+        }
+        // Malle select
+        const maleModalizeRef = useRef(null);
+        const [males, setMales] = useState(null);
+        const openMallesModalize = () => {
+                maleModalizeRef.current?.open();
+        };
+        const setSelectedMalle = (mal) => {
+                maleModalizeRef.current?.close();
+                setMales(mal)
+        }
+        // Batiment select
+        const batimentModalizeRef = useRef(null);
+        const [batiments, setBatiments] = useState(null);
+        const openBatimentModalize = () => {
+                batimentModalizeRef.current?.open();
+        };
+        const setSelectedBatiment = (bat) => {
+                batimentModalizeRef.current?.close();
+                setBatiments(bat)
+        }
+
+        // Ailles select
+        const aillesModalizeRef = useRef(null);
+        const [ailles, setAilles] = useState(null);
+        const openAilleModalize = () => {
+                aillesModalizeRef.current?.open();
+        };
+        const setSelectedAille = (ail) => {
+                aillesModalizeRef.current?.close();
+                setAilles(ail)
+        }
+
+        //superviseur aile preparation select
+        const agentSupPreparationModalizeRef = useRef(null);
+        const [agentSupPreparation, setAgentSupPreparation] = useState(null);
+        const openAgentSupPreparationModalize = () => {
+                agentSupPreparationModalizeRef.current?.open();
+        };
+        const setSelectedAgent = (agent) => {
+                agentSupPreparationModalizeRef.current?.close();
+                setAgentSupPreparation(agent)
+        }
+
+        //Composent pour afficher la listes des agents aille superviseur 
+        const AilleSuperviseurList = () => {
+                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/agentSupAille')
+                return (
+                        <>
+                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {volumesAll.result.map((sup, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgentSupAille(sup)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.listItemTitle}>{sup.NOM} {sup.PRENOM}</Text>
+                                                                                                                <Text style={styles.listItemSubTitle}>{sup.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {ailleSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View>
+                                }
+                        </>
+                )
+        }
+
+        //Composent pour afficher le maille existant
+        const MalleList = () => {
+                const [loadingMalle, mallesAll] = useFetch('/preparation/batiment/mailles')
+                return (
+                        <>
+                                {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des malles</Text>
+                                                </View>
+                                                {mallesAll.result.map((mal, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                                                                </View>
+                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+        //Composent pour afficher la listes folios
+        const FolioList = () => {
+                const [loadingFolio, allfolios] = useFetch(`/preparation/folio/folioChefEquipe/${id}`)
+                // return console.log(allfolios)
+                return (
+                        <>
+                                {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Folios</Text>
+                                                </View>
+                                                {allfolios?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun folio trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {allfolios?.result?.map((folio, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <View style={{ marginTop: 5, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {
+                                                                                                        folio.IS_PREPARE == 1 ?
+                                                                                                                <>
+                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                </> : <>
+                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                                                                                                </>
+                                                                                                }
+
+
+                                                                                        </View>
+                                                                                </View>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View>
+                                }
+                        </>
+                )
+        }
+        //Composent pour afficher le modal des batiments 
+        const BatimentList = () => {
+                const [loadingBatiment, batimentsAll] = useFetch('/preparation/batiment')
+                return (
+                        <>
+                                <>
+                                        {loadingBatiment ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                <View style={styles.modalContainer}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des batiments</Text>
+                                                        </View>
+                                                        {batimentsAll.result.map((bat, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                        </View>
+                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        }
+                                </>
+                        </>
+                )
+        }
+
+        //Composent pour afficher le modal de liste des ailles
+        const AillesList = ({ batiments }) => {
+                const [allailles, setAllailles] = useState([]);
+                const [aillesLoading, setAillesLoading] = useState(false);
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (batiments) {
+                                                setAillesLoading(true)
+                                                const aie = await fetchApi(`/preparation/batiment/aile/${batiments.ID_BATIMENT}`)
+                                                setAllailles(aie.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setAillesLoading(false)
+                                }
+                        })()
+                }, [batiments])
+                return (
+                        <>
+                                {aillesLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View> :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Listes des ailles</Text>
+                                                </View>
+                                                {allailles.map((ail, index) => {
+                                                        return (
+                                                                <ScrollView key={index}>
+                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                <View style={styles.modalItem} >
+                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                        </View>
+                                                                                        <View style={styles.modalItemCard}>
+                                                                                                <View>
+                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                </View>
+                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                        </View>
+                                                                                </View>
+                                                                        </TouchableNativeFeedback>
+                                                                </ScrollView>
+                                                        )
+                                                })}
+                                        </View>
+                                }
+                        </>
+                )
+        }
+        //Composent pour afficher la listes des agents aille superviseur  prepration
+
+        const AilleSuperviseurPreparationList = (ailes) => {
+                const [superviseurList, setSuperviseurList] = useState([]);
+                const [loadingSuperviseur, setLoadingSuperviseur] = useState(false);
+                useEffect(() => {
+                        (async () => {
+                                try {
+
+                                        if (ailes) {
+                                                setLoadingSuperviseur(true)
+                                                const distr = await fetchApi(`/preparation/batiment/superviseurAile?aile=${ailles.ID_AILE}`)
+                                                setSuperviseurList(distr.result)
+                                        }
+                                }
+                                catch (error) {
+                                        console.log(error)
+                                } finally {
+                                        setLoadingSuperviseur(false)
+                                }
+                        })()
+                }, [ailles])
+
+                return (
+                        <>
+                                {loadingSuperviseur ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                </View > :
+                                        <View style={styles.modalContainer}>
+                                                <View style={styles.modalHeader}>
+                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                </View>
+                                                {superviseurList?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                <View style={styles.modalList}>
+                                                        {superviseurList?.map((sup, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgent(sup)}>
+                                                                                        <View style={styles.listItem} >
+                                                                                                <View style={styles.listItemDesc}>
+                                                                                                        <View style={styles.listItemImageContainer}>
+                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.listNames}>
+                                                                                                                <Text style={styles.listItemTitle}>{sup.NOM} {sup.PRENOM}</Text>
+                                                                                                                <Text style={styles.listItemSubTitle}>{sup.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {agentSupPreparation?.USERS_ID == sup.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+
+                                                                                        </View>
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
+                                                </View>
+                                        </View>
+                                }
+                        </>
+                )
         }
 
         const onTakePicha = async () => {
@@ -69,56 +427,53 @@ export default function NewAgentSupAIlleScanScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-
-        //Composent pour afficher la listes des agents aille superviseur 
-        const AilleSuperviseurList = () => {
-                const [loadingVolume, volumesAll] = useFetch('/scanning/volume/agentSupAille')
-                return (
-                        <>
-                                {loadingVolume ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View > :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
-                                                </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
-                                                <View style={styles.modalList}>
-                                                        {volumesAll.result.map((sup, index) => {
-                                                                console.log(sup)
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgentSupAille(sup)}>
-                                                                                        <View style={styles.listItem} >
-                                                                                                <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.listItemTitle}>{sup.NOM} {sup.PRENOM}</Text>
-                                                                                                                <Text style={styles.listItemSubTitle}>{sup.EMAIL}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                                {ailleSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
-                                                </View>
-                                        </View>
-                                }
-                        </>
-                )
+        const onTakePichaPreparation = async () => {
+                setIsCompressingPhotoPreparation(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhotoPreparation(false)
+                }
+                const photo = image.assets[0]
+                setDocumentPreparation(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhotoPreparation(false)
+                //     handleChange('pv', manipResult)
         }
-
         const submitAgSupAilleData = async () => {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('USER_TRAITEMENT', ailleSuperviseur.USERS_ID)
+                        form.append('ID_ETAPE_VOLUME', volume.ID_ETAPE_VOLUME)
+                        if (folios.length > 0) {
+                                form.append('MAILLE', males.ID_MAILLE)
+                                form.append('AGENT_SUP_AILE', agentSupPreparation.USERS_ID)
+                                if (documentPreparation) {
+                                        const manipResult = await manipulateAsync(
+                                                documentPreparation.uri,
+                                                [
+                                                        { resize: { width: 500 } }
+                                                ],
+                                                { compress: 0.8, format: SaveFormat.JPEG }
+                                        );
+                                        let localUri = manipResult.uri;
+                                        let filename = localUri.split('/').pop();
+                                        let match = /\.(\w+)$/.exec(filename);
+                                        let type = match ? `image/${match[1]}` : `image`;
+                                        form.append('PV_PREPARATION', {
+                                                uri: localUri, name: filename, type
+                                        })
+                                }
+                        }
+
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -135,10 +490,11 @@ export default function NewAgentSupAIlleScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/volume/${id}`, {
+                        const volumes = await fetchApi(`/scanning/volume/${id}`, {
                                 method: "PUT",
                                 body: form
                         })
+                        
                         navigation.goBack()
                 }
                 catch (error) {
@@ -153,7 +509,7 @@ export default function NewAgentSupAIlleScanScreen() {
                 (async () => {
                         try {
                                 setLoading(true)
-                                const vol = await fetchApi(`/scanning/volume/maille/${volume.volume.ID_VOLUME}`)
+                                const vol = await fetchApi(`/scanning/volume/maille/${volume.ID_VOLUME}`)
                                 setMalles(vol.result)
                         } catch (error) {
                                 console.log(error)
@@ -190,7 +546,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NUMERO_VOLUME}
+                                                        {volume.NUMERO_VOLUME}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
@@ -203,11 +559,36 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <View>
-                                                        {malles ? <Text style={styles.selectedValue}>
+                                                        {mailleNoTraite ? <Text style={styles.selectedValue}>
+                                                                {mailleNoTraite.NUMERO_MAILLE}
+                                                        </Text> :malles?<Text style={styles.selectedValue}>
                                                                 {malles.maille.NUMERO_MAILLE}
-                                                        </Text> : <Text>N/B</Text>}
+                                                        </Text>:
+                                                         <Text>N/B</Text>
+                                                        }
                                                 </View>
                                         </TouchableOpacity>
+                                        {volume.ID_ETAPE_VOLUME!=ETAPES_VOLUME.RETOUR_AGENT_SUP_AILE_VERS_CHEF_EQUIPE? <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <Feather name="user" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Voir folios
+                                                        </Text>
+                                                </View>
+                                        </TouchableOpacity>:
+                                         <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <Feather name="user" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Voir folio
+                                                        </Text>
+                                                </View>
+                                        </TouchableOpacity>}
+
                                         <TouchableOpacity style={styles.selectContainer} onPress={openAilleSUperviseurModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -235,6 +616,78 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
                                         </TouchableOpacity>
+                                        {
+                                                folios.length > 0 ? <View style={styles.cardPreparation}>
+                                                        <Text style={styles.selectLabelPreration}>
+                                                                Phase préparation
+                                                        </Text>
+                                                        <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
+                                                                <View style={styles.labelContainer}>
+
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Malle des folios non préparés
+                                                                        </Text>
+                                                                </View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {males ? `${males.NUMERO_MAILLE}` : ' Sélectionner le malle'}
+                                                                </Text>
+                                                        </TouchableOpacity>
+
+                                                        <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
+                                                                <View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Batiment
+                                                                        </Text>
+                                                                        <View>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {batiments ? `${batiments.NUMERO_BATIMENT}` : ' Sélectionner le batiment'}
+                                                                                </Text>
+                                                                        </View>
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                        {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
+                                                                <View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Aile
+                                                                        </Text>
+                                                                        <View>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {ailles ? `${ailles.NUMERO_AILE}` : ' Sélectionner ailles'}
+                                                                                </Text>
+                                                                        </View>
+                                                                </View>
+                                                        </TouchableOpacity> : null}
+                                                        {ailles ?
+                                                                <TouchableOpacity style={styles.selectContainer} onPress={openAgentSupPreparationModalize}>
+                                                                        <View style={styles.labelContainer}>
+                                                                                <View style={styles.icon}>
+                                                                                        <Feather name="user" size={20} color="#777" />
+                                                                                </View>
+                                                                                <Text style={styles.selectLabel}>
+                                                                                        Agent superviseur aile préparation
+                                                                                </Text>
+                                                                        </View>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {agentSupPreparation ? `${agentSupPreparation.NOM} ${agentSupPreparation.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                                        </Text>
+                                                                </TouchableOpacity> : null
+                                                        }
+                                                        <TouchableOpacity onPress={onTakePichaPreparation}>
+                                                                <View style={[styles.addImageItem]}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                        <Text style={styles.addImageLabel}>
+                                                                                                Photo du procès verbal
+                                                                                        </Text>
+                                                                                </View>
+                                                                                {isCompressingPhotoPreparation ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                                        </View>
+                                                                        {documentPreparation && <Image source={{ uri: documentPreparation.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                                </View>
+                                                        </TouchableOpacity>
+                                                </View> : null
+                                        }
                                 </ScrollView>
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
@@ -248,6 +701,22 @@ export default function NewAgentSupAIlleScanScreen() {
                         <Modalize ref={superviseurModalizeRef}  >
                                 <AilleSuperviseurList />
                         </Modalize>
+                        <Modalize ref={FolioModalizeRef}  >
+                                <FolioList />
+                        </Modalize>
+                        <Modalize ref={maleModalizeRef}  >
+                                <MalleList />
+                        </Modalize>
+                        <Modalize ref={batimentModalizeRef}  >
+                                <BatimentList />
+                        </Modalize>
+                        <Modalize ref={aillesModalizeRef}  >
+                                <AillesList batiments={batiments} />
+                        </Modalize>
+                        <Modalize ref={agentSupPreparationModalizeRef}  >
+                                <AilleSuperviseurPreparationList ailes={ailles} />
+                        </Modalize>
+
                 </>
         )
 }
@@ -287,7 +756,8 @@ const styles = StyleSheet.create({
         },
         selectedValue: {
                 color: '#777',
-                marginTop: 2
+                marginTop: 2,
+                marginHorizontal: 5
         },
         labelContainer: {
                 flexDirection: 'row',
@@ -295,6 +765,11 @@ const styles = StyleSheet.create({
         },
         selectLabel: {
                 marginLeft: 5
+        },
+        selectLabelPreration: {
+                textAlign: "center",
+                fontWeight: 'bold',
+                color: '#777',
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -364,6 +839,14 @@ const styles = StyleSheet.create({
                 paddingVertical: 15,
                 marginBottom: 5
         },
+        addImageItemPreparation: {
+                borderWidth: 0.5,
+                borderColor: "#fff",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
+        },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -381,5 +864,78 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#ddd',
+                padding: 10,
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#fff',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        modalList: {
+                marginHorizontal: 10
+        },
+        modalItem: {
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                paddingVertical: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: '#F1F1F1'
+        },
+        modalImageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 50,
+                justifyContent: "center",
+                alignItems: "center"
+        },
+        imageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: COLORS.handleColor,
+                borderRadius: 10,
+                padding: 5
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        cardPreparation: {
+                backgroundColor: "#f1f1f1",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                marginVertical: 10
         },
 })

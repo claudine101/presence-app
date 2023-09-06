@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View,TouchableWithoutFeedback } from "react-native"
+import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View, TouchableWithoutFeedback } from "react-native"
 import { StyleSheet } from "react-native"
-import { Ionicons, MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
 import { useCallback, useRef, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
@@ -27,7 +27,7 @@ export default function ChefPlatauRetourScreen() {
   const agentsModalRef = useRef()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [galexyIndex, setGalexyIndex] = useState(null)
-  
+
 
   const [loadingChefPlateau, supAile] = useFetch(`/preparation/volume/chefsPlateaux/${volume.volume.ID_VOLUME}`)
   const [data, handleChange] = useForm({
@@ -50,7 +50,7 @@ export default function ChefPlatauRetourScreen() {
     var isValid = false
     isValid = document != null ? true : false
     return isValid
-}
+  }
   //Fonction pour le prendre l'image avec l'appareil photos
   const onTakePicha = async () => {
     setIsCompressingPhoto(true)
@@ -58,20 +58,20 @@ export default function ChefPlatauRetourScreen() {
     if (!permission.granted) return false
     const image = await ImagePicker.launchCameraAsync()
     if (image.canceled) {
-            return setIsCompressingPhoto(false)
+      return setIsCompressingPhoto(false)
     }
     const photo = image.assets[0]
     setDocument(photo)
     const manipResult = await manipulateAsync(
-            photo.uri,
-            [
-                    { resize: { width: 500 } }
-            ],
-            { compress: 0.7, format: SaveFormat.JPEG }
+      photo.uri,
+      [
+        { resize: { width: 500 } }
+      ],
+      { compress: 0.7, format: SaveFormat.JPEG }
     );
     setIsCompressingPhoto(false)
     //     handleChange('pv', manipResult)
-}
+  }
 
 
   /**
@@ -85,27 +85,27 @@ export default function ChefPlatauRetourScreen() {
       setIsSubmitting(true)
       const form = new FormData()
       form.append('volume', volume.volume.ID_VOLUME)
-      form.append('CHEF_PLATEAU',supAile?.result?.traitant.USERS_ID)
+      form.append('CHEF_PLATEAU', supAile?.result?.traitant.USERS_ID)
       console.log(form)
       if (document) {
-              const manipResult = await manipulateAsync(
-                      document.uri,
-                      [
-                              { resize: { width: 500 } }
-                      ],
-                      { compress: 0.8, format: SaveFormat.JPEG }
-              );
-              let localUri = manipResult.uri;
-              let filename = localUri.split('/').pop();
-              let match = /\.(\w+)$/.exec(filename);
-              let type = match ? `image/${match[1]}` : `image`;
-              form.append('PV', {
-                      uri: localUri, name: filename, type
-              })
+        const manipResult = await manipulateAsync(
+          document.uri,
+          [
+            { resize: { width: 500 } }
+          ],
+          { compress: 0.8, format: SaveFormat.JPEG }
+        );
+        let localUri = manipResult.uri;
+        let filename = localUri.split('/').pop();
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        form.append('PV', {
+          uri: localUri, name: filename, type
+        })
       }
       const res = await fetchApi(`/preparation/volume/retourChefPlateau`, {
-              method: "PUT",
-              body: form
+        method: "PUT",
+        body: form
       })
       ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
       navigation.goBack()
@@ -177,7 +177,7 @@ export default function ChefPlatauRetourScreen() {
                     <Feather name="user" size={20} color="#777" />
                   </View>
                   <Text style={styles.selectLabel}>
-                    Superviseur aile indexation
+                    chef plateau
                   </Text>
                 </View>
                 {loadingChefPlateau ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -200,6 +200,77 @@ export default function ChefPlatauRetourScreen() {
                   </> : null}
               </View>
             </TouchableOpacity>
+            {supAile?.result?.foliosPrepares?.length > 0 ? <View style={styles.selectContainer}>
+              <View style={{ width: '100%' }}>
+                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Text style={styles.selectedValue}>
+                  </Text>
+                  <Text style={styles.selectedValue}>
+                    {supAile?.result?.foliosPrepares?.length} préparé{supAile?.result?.foliosPrepares.length > 1 && 's'}
+                  </Text>
+                </View>
+                <View style={styles.folioList}>
+                  {supAile?.result?.foliosPrepares.map((folio, index) => {
+                    return (
+                      <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                        <View style={[styles.folio]}>
+                          <View style={styles.folioLeftSide}>
+                            <View style={styles.folioImageContainer}>
+                              <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                            </View>
+                            <View style={styles.folioDesc}>
+                              <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                              <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                            </View>
+                          </View>
+                          <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                        </View>
+                      </View>
+                    )
+                  })}
+                </View>
+              </View>
+            </View> : null}
+            {supAile?.result?.foliosNoPrepare?.length > 0 ?
+              <View style={styles.selectContainer}>
+                <View style={{ width: '100%' }}>
+                  <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Text style={styles.selectedValue}>
+                    </Text>
+                    <Text style={styles.selectedValue}>
+                      {supAile?.result?.foliosNoPrepare.length} non préparé{supAile?.result?.foliosPrepares.length > 1 && 's'}
+                    </Text>
+                  </View>
+                  <View style={styles.folioList}>
+                    {supAile?.result?.foliosNoPrepare.map((folio, index) => {
+                      return (
+                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                          <View style={[styles.folio]}>
+                            <View style={styles.folioLeftSide}>
+                              <View style={styles.folioImageContainer}>
+                                <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                              </View>
+                              <View style={styles.folioDesc}>
+                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                              </View>
+                            </View>
+                            <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                          </View>
+                        </View>
+                      )
+                    })}
+                  </View>
+                </View>
+              </View> : null}
+
+
             {supAile?.result?.check?.length > 0 ?
               <TouchableOpacity onPress={onTakePicha}>
                 <View style={[styles.addImageItem]}>
@@ -219,20 +290,20 @@ export default function ChefPlatauRetourScreen() {
 
           </View>
           {supAile?.result?.check?.length > 0 ?
-          <TouchableNativeFeedback
-            disabled={!isValidAdd()}
-            onPress={handleSubmitRetour}
-          >
-            <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-              <Text style={styles.buttonText}>Enregistrer</Text>
-            </View>
-          </TouchableNativeFeedback> : null}
+            <TouchableNativeFeedback
+              disabled={!isValidAdd()}
+              onPress={handleSubmitRetour}
+            >
+              <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                <Text style={styles.buttonText}>Enregistrer</Text>
+              </View>
+            </TouchableNativeFeedback> : null}
         </ScrollView>
-        
-        
+
+
         }
 
-       
+
       </View>
 
     </>
@@ -276,11 +347,11 @@ const styles = StyleSheet.create({
   flashName: {
     marginLeft: 5
   },
-  folio: {
+folio: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: '#ddd',
     padding: 10
   },
   folioLeftSide: {
@@ -291,7 +362,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 40,
-    backgroundColor: '#ddd',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -410,11 +481,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
     marginHorizontal: 10
-},
-buttonText: {
+  },
+  buttonText: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center"
-},
+  },
 })

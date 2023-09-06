@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView,TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
@@ -47,25 +47,6 @@ export default function DetailsAgentPreparationScreen() {
                 return isValid
         }
 
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -121,6 +102,10 @@ export default function DetailsAgentPreparationScreen() {
                                 form.append('PV', {
                                         uri: localUri, name: filename, type
                                 })
+                        }
+
+                        if (folio?.mailleNoTraite) {
+                                form.append('ID_MAILLE_NO_TRAITE', folio?.mailleNoTraite.ID_MAILLE)
                         }
                         const res = await fetchApi(`/preparation/folio/retourAgentPreparation`, {
                                 method: "PUT",
@@ -193,7 +178,7 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                                 </View> :
                                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)} 
+                                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)}
                                                                                                                         onPress={() => handleFolioPress(folio)}>
                                                                                                                         <View style={[styles.folio]}>
                                                                                                                                 <View style={styles.folioLeftSide}>
@@ -247,16 +232,16 @@ export default function DetailsAgentPreparationScreen() {
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
                                         </TouchableOpacity>
-                                        
+
                                 </ScrollView>
                                 <TouchableWithoutFeedback
-                                                disabled={!isValidAdd()}
-                                                onPress={submitData}
-                                        >
-                                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                                </View>
-                                        </TouchableWithoutFeedback>
+                                        disabled={!isValidAdd()}
+                                        onPress={submitData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>
                         </View>
                 </>
 

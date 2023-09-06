@@ -27,6 +27,7 @@ export default function AddChefPlateauVolumeScreen() {
         const [loading, setLoading] = useState(false)
         const route = useRoute()
         const { volume } = route.params
+
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
