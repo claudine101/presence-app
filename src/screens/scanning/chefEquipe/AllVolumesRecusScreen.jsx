@@ -45,15 +45,6 @@ export default function AllVolumesRecusScreen() {
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View>:
-                                //  <View style={styles.emptyContaier}>
-                                //         <Image source={require('../../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                                //         <Text style={styles.emptyTitle}>
-                                //                 Aucun volume trouvé
-                                //         </Text>
-                                //         <Text style={styles.emptyDesc}>
-                                //                 Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                //         </Text>
-                                // </View>
                                 <FlatList
                                         style={styles.contain}
                                         data={allVolumes}

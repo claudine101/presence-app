@@ -269,7 +269,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` +`${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'N/B'}
+                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER} dossier` +`${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

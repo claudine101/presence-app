@@ -180,8 +180,8 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
-                                                {volumesAll.result.map((vol, index) => {
+                                                {volumesAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
+                                                {volumesAll?.result?.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
@@ -220,7 +220,7 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Nature du dossier</Text>
                                                 </View>
-                                                {allNatures.result.map((nat, index) => {
+                                                {allNatures?.result?.map((nat, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedNtures(nat)}>
@@ -286,31 +286,38 @@ export default function AddFolioScreen() {
                                 {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
+
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des malles</Text>
                                                 </View>
-                                                {mallesAll.result.map((mal, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
-                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                {mallesAll?.result?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun malle trouvé</Text>
+                                                        </View>
+                                                        :
+                                                        mallesAll?.result?.map((mal, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                                {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                                                                        </View>
+                                                                                                        {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })
+                                                }
                                         </View>
                                 }
                         </>
@@ -332,7 +339,12 @@ export default function AddFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des batiments</Text>
                                                         </View>
-                                                        {batimentsAll.result.map((bat, index) => {
+                                                        {batimentsAll?.result?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun batiment trouvé</Text>
+                                                        </View>
+                                                        :
+                                                        batimentsAll?.result?.map((bat, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
@@ -389,7 +401,12 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des ailles</Text>
                                                 </View>
-                                                {allailles.map((ail, index) => {
+                                                {allailles?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun aile trouvé</Text>
+                                                        </View>
+                                                        :
+                                                allailles?.map((ail, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
@@ -446,7 +463,13 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des distributeurs</Text>
                                                 </View>
-                                                {allDistributeur.map((distr, index) => {
+                                                {allDistributeur?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun distributeur trouvé</Text>
+                                                        </View>
+                                                        :
+                                                
+                                                allDistributeur?.map((distr, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
@@ -605,7 +628,7 @@ export default function AddFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER}` : 'Aucun'}
+                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER} dossier`+ `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -743,7 +766,7 @@ export default function AddFolioScreen() {
                                                                 </View>
                                                         </>}
 
-                                                                {folios.map((folio, index) => {
+                                                                {folios?.map((folio, index) => {
                                                                         return (
                                                                                 <View style={[styles.headerRead]} key={index}>
                                                                                         <View style={styles.folioImageContainer}>
@@ -1046,5 +1069,21 @@ const styles = StyleSheet.create({
         folioSubname: {
                 color: '#777',
                 fontSize: 12
-        }
+        },
+        emptyContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        emptyImage: {
+                width: 100,
+                height: 100,
+                opacity: 0.8
+        },
+        emptyLabel: {
+                fontWeight: 'bold',
+                marginTop: 20,
+                color: '#777',
+                fontSize: 16
+        },
 })

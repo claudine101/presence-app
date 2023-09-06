@@ -200,7 +200,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                             </View>
                         </TouchableNativeFeedback>
                     </> : null}
-
                 {
                     user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_AILE ?
                         <>
@@ -425,7 +424,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                            Volume Reçus
+                                            Volumes reçus
                                         </Text>
                                     </View>
                                 </View>
