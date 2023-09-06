@@ -463,7 +463,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={[styles.drawerItem, { paddingVertical: 5 }]}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel]}>
-                                            En  attente de préparation
+                                            En  attente de préparation 
                                         </Text>
                                     </View>
                                 </View>
@@ -602,7 +602,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 3) && { color: '#777' }]}>
-                                            Folio non préparés
+                                        Dossiers non préparés
                                         </Text>
                                     </View>
                                 </View>
@@ -612,7 +612,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 4) && { color: '#777' }]}>
-                                            Folio préparés
+                                            Dossiers préparés
                                         </Text>
                                     </View>
                                 </View>
@@ -622,7 +622,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }]}>
-                                            Folio traitées
+                                        Dossiers traitées
                                         </Text>
                                     </View>
                                 </View>

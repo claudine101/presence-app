@@ -42,7 +42,7 @@ export default function VolumeRetourneDetailScreen() {
                     method: "POST",
                     body: form
                 })
-                setCheck(res.result)
+                setCheck(res.result[0].folios)
 
             } catch (error) {
                 console.log(error)
@@ -186,11 +186,11 @@ export default function VolumeRetourneDetailScreen() {
                     {volume ? <View style={styles.selectContainer}>
                         <View>
                             <Text style={styles.selectLabel}>
-                                Dossier
+                                Nombre des dossiers
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
-                                    {volume?.folios?.length ? `${volume?.folios?.length}` : 'N/B'}
+                                    {volume?.folios?.length ? `${volume?.folios?.length} dossier${volume?.folios?.length>1?"s":""}` : 'N/B'}
                                 </Text>
                             </View>
                         </View>
@@ -224,7 +224,7 @@ export default function VolumeRetourneDetailScreen() {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                    {check?.length==volume?.folios?.length  ? <TouchableOpacity onPress={onTakePicha}>
                         <View style={[styles.addImageItem]}>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -239,7 +239,7 @@ export default function VolumeRetourneDetailScreen() {
                         </View>
                     </TouchableOpacity> : null}
                 </ScrollView>
-                {check.length > 0 ? <TouchableWithoutFeedback
+                {check?.length==volume?.folios?.length ? <TouchableWithoutFeedback
                     disabled={!isValidAdd()}
                     onPress={submitData}
                 >

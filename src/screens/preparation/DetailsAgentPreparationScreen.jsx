@@ -171,13 +171,13 @@ export default function DetailsAgentPreparationScreen() {
                                                                         </Text>
                                                                 </View>
                                                                 <View style={styles.folioList}>
-                                                                        {folio?.folios.map((folio, index) => {
+                                                                        {folio?.folios?.map((folio, index) => {
                                                                                 return (
-                                                                                        <>
+                                                                                        <View key={index}>
                                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                                 </View> :
-                                                                                                        <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                                        <View style={{ marginTop: 10, borderRadius: 80, }} >
                                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)}
                                                                                                                         onPress={() => handleFolioPress(folio)}>
                                                                                                                         <View style={[styles.folio]}>
@@ -198,7 +198,7 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                                 </TouchableNativeFeedback>
                                                                                                         </View>
                                                                                                 }
-                                                                                        </>
+                                                                                        </View>
                                                                                 )
                                                                         })}
 

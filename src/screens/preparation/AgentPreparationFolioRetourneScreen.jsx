@@ -73,7 +73,7 @@ export default function AgentPreparationFolioRetourneScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("DetailsAgentPreparationScreen", { folio:folio})}
+                                                                                                onPress={() => navigation.navigate("DetailsAgentPreparationRetourneScreen", { folio:folio})}
                                                                                         >
                                                                                                 
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>

@@ -130,9 +130,9 @@ export default function NewAgentSupAIlleScanScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
                                                 </View>
-                                                {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
+                                                {volumesAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun agent superviseur trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
-                                                        {volumesAll.result.map((sup, index) => {
+                                                        {volumesAll?.result?.map((sup, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedAgentSupAille(sup)}>
@@ -174,7 +174,7 @@ export default function NewAgentSupAIlleScanScreen() {
                                                         <Text style={styles.modalTitle}>Listes des malles</Text>
                                                 </View>
                                                 {mallesAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun malles trouvés</Text></View> :
-                                                        mallesAll?.result.map((mal, index) => {
+                                                        mallesAll?.result?.map((mal, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
@@ -497,7 +497,6 @@ export default function NewAgentSupAIlleScanScreen() {
                                 method: "PUT",
                                 body: form
                         })
-
                         navigation.goBack()
                 }
                 catch (error) {
