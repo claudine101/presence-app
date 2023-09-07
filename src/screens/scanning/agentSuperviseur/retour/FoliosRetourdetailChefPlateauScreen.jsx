@@ -116,6 +116,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                         const form = new FormData()
                         form.append('ID_FOLIO', JSON.stringify(folio_ids))
                         form.append('folio', JSON.stringify(multiFolios))
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,

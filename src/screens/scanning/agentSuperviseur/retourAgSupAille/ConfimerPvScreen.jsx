@@ -24,7 +24,7 @@ export default function ConfimerPvScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { detail } = route.params
+        const { detail , userTraite} = route.params
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
 
@@ -64,6 +64,7 @@ export default function ConfimerPvScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,

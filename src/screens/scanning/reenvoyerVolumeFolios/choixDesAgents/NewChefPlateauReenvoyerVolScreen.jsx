@@ -139,7 +139,7 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        navigation.navigate('AllVolumeReenvoyerRecusScreen')
                 }
                 catch (error) {
                         console.log(error)

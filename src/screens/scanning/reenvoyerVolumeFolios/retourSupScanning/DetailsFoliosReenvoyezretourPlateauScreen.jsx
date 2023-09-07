@@ -100,6 +100,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                         const form = new FormData()
                         form.append('ID_FOLIO', JSON.stringify(folio_ids))
                         form.append('folio', JSON.stringify(multiFolios))
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -258,8 +259,8 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                                                                         <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                        {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                        {/* {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />} */}
 
                                                                                                 </View>
                                                                                         </View>

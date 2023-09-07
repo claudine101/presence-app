@@ -26,7 +26,6 @@ export default function AllVolumeReenvoyerRecusScreen() {
         const user = useSelector(userSelector)
 
         const handleSubmit = (volume) => {
-                // console.log(volume)
                 if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                         navigation.navigate("NewChefPlateauReenvoyerVolScreen", {volume: volume, id:volume.ID_VOLUME})
                 } else if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
