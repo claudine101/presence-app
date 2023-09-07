@@ -14,7 +14,6 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
-        console.log(userTraite)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -79,6 +78,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('ID_FOLIOS', JSON.stringify(folio_ids))
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -95,7 +95,6 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/bien/traitees`, {
                                 method: "PUT",
                                 body: form

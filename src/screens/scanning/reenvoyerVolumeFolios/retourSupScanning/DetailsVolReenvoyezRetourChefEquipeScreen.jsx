@@ -22,7 +22,6 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
         const [check, setCheck] = useState([])
-        console.log(check)
         const [loadingCheck, setLoadingCheck] = useState(false)
 
         const folio_ids = details?.map(folio => folio.ID_FOLIO)
@@ -81,6 +80,7 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('ID_FOLIOS', JSON.stringify(folio_ids))
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
