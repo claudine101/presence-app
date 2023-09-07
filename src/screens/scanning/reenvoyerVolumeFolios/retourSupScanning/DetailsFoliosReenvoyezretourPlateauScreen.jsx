@@ -60,7 +60,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
         }, [userTraite]))
 
         //Multi select pour selectionner les filios bien renconciliers
-        const [multiFolios, setMultiFolios] = useState([]);
+        const [multiFolios, setMultiFolios] = useState(details);
         const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (folio) => {
                 if (isSelected(folio.folio.ID_FOLIO)) {
@@ -204,7 +204,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                 <Text style={styles.selectedValue}>
                                                                 </Text>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {details.length} pret à être validé{details.length > 1 && 's'}
+                                                                        {details.length} validé{details.length > 1 && 's'}
                                                                 </Text>
                                                         </View>
                                                         <View style={styles.contain}>

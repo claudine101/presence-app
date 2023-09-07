@@ -218,15 +218,16 @@ export default function DetailsTraitesChefEquipeScanScreen() {
                                                                                 {userTraite?.NOM} {userTraite?.PRENOM}
                                                                         </Text>
                                                                         <View style={{ width: '100%' }}>
-                                                                                {PV_PATH ?
+                                                                                {pvs?.result ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
                                                                                                         setGalexyIndex(0)
                                                                                                 }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                        <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                         </> : null}
+
                                                                         </View>
                                                                 </View>
                                                         </View>
@@ -280,14 +281,14 @@ export default function DetailsTraitesChefEquipeScanScreen() {
                                                                                 {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
                                                                                 PV de retour
                                                                         </Text>
-                                                                        {pvs?.result ?
+                                                                        {PV_PATH ?
                                                                                 <>
                                                                                         <TouchableOpacity onPress={() => {
                                                                                                 setGalexyIndex(0)
                                                                                         }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                         </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                 </> : null}
                                                                 </View>
                                                         </View>
@@ -321,7 +322,7 @@ export default function DetailsTraitesChefEquipeScanScreen() {
                                                 </ScrollView>}
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
-                                onPress={submitChefEquScan}
+                                        onPress={submitChefEquScan}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
@@ -540,6 +541,6 @@ const styles = StyleSheet.create({
                 borderRadius: 5,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
 })

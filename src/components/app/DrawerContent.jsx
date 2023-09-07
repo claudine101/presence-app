@@ -689,7 +689,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }]}>
-                                        Volumes reenvoyez traites
+                                        Volumes reenvoyés traités
                                     </Text>
                                 </View>
                             </View>
