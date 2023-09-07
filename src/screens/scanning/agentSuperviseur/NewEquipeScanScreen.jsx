@@ -23,7 +23,7 @@ import Loading from "../../../components/app/Loading";
 export default function NewEquipeScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio } = route.params
+        const { folio, fol } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -255,7 +255,7 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {folio.volume.NOMBRE_DOSSIER}
+                                                        {fol.length}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>

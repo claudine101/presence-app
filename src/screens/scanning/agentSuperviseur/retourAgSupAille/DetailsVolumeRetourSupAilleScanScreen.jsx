@@ -155,12 +155,12 @@ export default function DetailsVolumeRetourSupAilleScanScreen() {
                                                                                             </Text>
                                                                                         </View>
                                                                                         
-                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                 {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
                                                                                             </Text>
-                                                                                        </View>
+                                                                                        </View> */}
                                                                                     </View>
                                                                                 </View>
                                                                             </View>

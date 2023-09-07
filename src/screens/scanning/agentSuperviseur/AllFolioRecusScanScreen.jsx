@@ -24,7 +24,7 @@ export default function AllFolioRecusScanScreen() {
         const [loading, setLoading] = useState(false)
 
         const handleSubmit = (folio) => {
-                navigation.navigate("NewEquipeScanScreen", { folio: folio })
+                navigation.navigate("NewEquipeScanScreen", { folio: folio, fol:folio.folios })
         }
 
         //fonction pour recuperer les folios d'un agent qui est connecter

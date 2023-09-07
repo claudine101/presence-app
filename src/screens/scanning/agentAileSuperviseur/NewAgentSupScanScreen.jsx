@@ -24,7 +24,7 @@ import Loading from "../../../components/app/Loading";
 export default function NewAgentSupScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
+        const { volume, id, folios } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -310,7 +310,7 @@ export default function NewAgentSupScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NOMBRE_DOSSIER}
+                                                        {folios?.length}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>

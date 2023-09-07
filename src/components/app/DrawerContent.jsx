@@ -639,7 +639,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 0) && { color: '#777' }]}>
-                                        Volume Reçus
+                                        Volumes reçus
                                     </Text>
                                 </View>
                             </View>
@@ -649,7 +649,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                        Volumes Retourner
+                                        Volumes retournés
                                     </Text>
                                 </View>
                             </View>
@@ -714,7 +714,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                            Folios Retourner
+                                            Dossiers retournés
                                         </Text>
                                     </View>
                                 </View>
@@ -790,7 +790,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={styles.drawerItem}>
                                         <Image source={require('../../../assets/images/team.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                            Dossiers Retourner
+                                            Dossiers retournés
                                         </Text>
                                     </View>
                                 </View>
@@ -875,7 +875,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossier.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 1) && { color: '#777' }]}>
-                                        Volumes Reçus
+                                        Volumes reçus
                                     </Text>
                                 </View>
                             </View>

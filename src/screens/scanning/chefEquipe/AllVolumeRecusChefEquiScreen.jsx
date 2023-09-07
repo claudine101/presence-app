@@ -28,9 +28,9 @@ export default function AllVolumeRecusChefEquiScreen() {
                 if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE) {
                         navigation.navigate("NewAgentSupAIlleScanScreen", { volume: volume.volume, id: volume.volume.ID_VOLUME })
                 } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
-                        navigation.navigate("NewChefPlateauScreen", { volume: volume, id: volume.volume.ID_VOLUME })
+                        navigation.navigate("NewChefPlateauScreen", { volume: volume, id: volume.volume.ID_VOLUME, folios:volume.folios })
                 } else {
-                        navigation.navigate("NewAgentSupScanScreen", { volume: volume, id: volume.volume.ID_VOLUME })
+                        navigation.navigate("NewAgentSupScanScreen", { volume: volume, id: volume.volume.ID_VOLUME, folios:volume.folios  })
                 }
         }
 
@@ -44,7 +44,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                         setAllVolumesPlateau(vol.result)
                                 } else {
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/volume`)
+                                        const vol = await fetchApi(`/scanning/retour/agent/volume/tousVolume`)
                                         setAllVolumes(vol.result)
                                 }
                         } catch (error) {
@@ -99,7 +99,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume.volume.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossier{volume?.folios?.length>1 ?"s" : ''}</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -130,6 +130,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                 style={styles.contain}
                                                                 data={allVolumes}
                                                                 renderItem={({ item: volume, index }) => {
+                                                                        console.log(volume)
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -144,18 +145,17 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
-                                                                                                                                <Text style={styles.titlePrincipal}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                                                                                                <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume.volume.NOMBRE_DOSSIER} dossiers</Text></View>
-
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossier{volume?.folios?.length>1 ?"s" : ''}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>

@@ -80,7 +80,7 @@ export default function AllSuperviseurAileScanVolumeScreen() {
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                                {/* <Ionicons name="ios-document-text-outline" size={20} color="#777" /> */}
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                                                                         {folio.volumes?.length ? folio.volumes?.length : "0"} volume{folio.volumes?.length > 1 && 's'}
                                                                                                                                                 </Text>
