@@ -25,8 +25,6 @@ export default function NewChefPlateauReenvoyerVolScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
-        console.log(volume)
-        console.log(id)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')

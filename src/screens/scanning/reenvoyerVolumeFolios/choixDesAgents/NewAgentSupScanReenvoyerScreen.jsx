@@ -25,6 +25,7 @@ export default function NewAgentSupScanReenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
+        console.log(volume)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -274,6 +275,19 @@ export default function NewAgentSupScanReenvoyerScreen() {
                                                 </View>
                                                 <Text style={styles.selectedValue}>
                                                         {volume?.maille?.NUMERO_MAILLE}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Nombre de dossier{volume?.folios?.length > 1 && 's'}
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {volume?.folios?.length}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>

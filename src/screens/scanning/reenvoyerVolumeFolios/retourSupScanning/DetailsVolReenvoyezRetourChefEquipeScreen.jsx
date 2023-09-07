@@ -219,7 +219,7 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                                         <Text style={styles.selectedValue}>
                                                         </Text>
                                                         <Text style={styles.selectedValue}>
-                                                                {details.length} attente de scanné{details.length > 1 && 's'}
+                                                                {details.length} attente d'être scanné{details.length > 1 && 's'}
                                                         </Text>
                                                 </View>
                                                 <View style={styles.contain}>
