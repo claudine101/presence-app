@@ -85,6 +85,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                 multSelectModalizeRef.current?.close();
         }
         const [allFolios, setAllFolios] = useState([]);
+
         const [foliosLoading, setFoliosLoading] = useState(false);
         const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (fol) => {
@@ -168,7 +169,11 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
-                                                {allFolios.map((fol, index) => {
+                                                {
+                                                        allFolios.length==0? 
+                                                        <Text style={styles.modalTitle}>Aucun dossier trouvé</Text>
+:
+                                                allFolios.map((fol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
@@ -179,7 +184,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.FOLIO}</Text>
                                                                                                 </View>
                                                                                                 {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
@@ -337,7 +342,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent supeviseur</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
                                         </View>
                                 </View>
                                 <ScrollView>

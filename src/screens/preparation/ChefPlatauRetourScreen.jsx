@@ -129,7 +129,7 @@ export default function ChefPlatauRetourScreen() {
         body: form
       })
       ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-      navigation.goBack()
+      navigation.navigate("ChefPlateauScreen")
     } catch (error) {
       console.log(error)
       ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);

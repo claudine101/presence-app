@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
-import { Ionicons, AntDesign, Fontisto, FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto,MaterialIcons, FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -126,7 +126,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
                                                 </View>
-                                                {superviseurList.result.map((chef, index) => {
+                                                {superviseurList?.result?.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
@@ -140,8 +140,10 @@ export default function AddChefPlateauVolumeScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? 
+                                                                                                <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
+                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />
+                                                                                                }
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -293,11 +295,12 @@ export default function AddChefPlateauVolumeScreen() {
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Nombre des dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
+                                                                                {volume.volume.NOMBRE_DOSSIER ?
+                                                                                        `${volume.volume.NOMBRE_DOSSIER} dossier` + `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : "0"}
                                                                         </Text>
                                                                 </View>
                                                         </View>

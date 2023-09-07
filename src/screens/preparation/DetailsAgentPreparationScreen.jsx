@@ -13,8 +13,7 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 import moment from 'moment'
 import ImageView from "react-native-image-viewing";
-
-
+import { OutlinedTextField } from 'rn-material-ui-textfield'
 /**
  * Screen pour afficher le details de folio avec leur nature  
  * @author claudine NDAYISABA <claudine@mediabox.bi>
@@ -32,22 +31,23 @@ export default function DetailsAgentPreparationScreen() {
         const [document, setDocument] = useState(null)
         const [selectedItems, setSelectedItems] = useState([])
         const [galexyIndex, setGalexyIndex] = useState(null)
-
-
         const [data, handleChange, setValue] = useForm({
-                // document: null,
+         motif: null,
         })
-
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
         }, {
         })
         const isValidAdd = () => {
                 var isValid = false
-                isValid = document != null ? true : false
-                return isValid
+                var existMotif = false
+                var motif = true
+                existMotif = (folio.folios.length!=selectedItems.length) ? true : false
+                if(existMotif){
+                        motif=data.motif != null ? true : false
+                }
+                isValid = (document != null && selectedItems.length>0)? true : false
+                return isValid && motif
         }
-
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -70,7 +70,6 @@ export default function DetailsAgentPreparationScreen() {
                 //     handleChange('pv', manipResult)
         }
         const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
-
         const handleFolioPress = (folio) => {
                 if (isSelected(folio)) {
                         const removed = selectedItems.filter(f => f.ID_FOLIO != folio.ID_FOLIO)
@@ -79,14 +78,16 @@ export default function DetailsAgentPreparationScreen() {
                         setSelectedItems(items => [...items, folio])
                 }
         }
-
         const submitData = async () => {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
                         form.append('folio', JSON.stringify(folio.folios))
                         form.append('folioPrepare', JSON.stringify(selectedItems))
-                        form.append('AGENT_PREPARATION', folio.users.USERS_ID)
+                        form.append('AGENT_PREPARATION',folio.users.USERS_ID)
+                        if(data.motif!=null && selectedItems.length!=folio.folios.length){
+                          form.append('MOTIF',data.motif)
+                        }
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -103,7 +104,6 @@ export default function DetailsAgentPreparationScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-
                         if (folio?.mailleNoTraite) {
                                 form.append('ID_MAILLE_NO_TRAITE', folio?.mailleNoTraite.ID_MAILLE)
                         }
@@ -111,6 +111,7 @@ export default function DetailsAgentPreparationScreen() {
                                 method: "PUT",
                                 body: form
                         })
+                        
                         navigation.goBack()
                 }
                 catch (error) {
@@ -119,8 +120,6 @@ export default function DetailsAgentPreparationScreen() {
                         setLoadingSubmit(false)
                 }
         }
-
-
         return (
                 <>
                         {(galexyIndex != null && folio && folio) &&
@@ -148,7 +147,7 @@ export default function DetailsAgentPreparationScreen() {
                                                 <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                         </View>
                                 </View>
-                                <ScrollView>
+                                <ScrollView keyboardShouldPersistTaps='handled'>
                                         {folio.folios.length > 0 ?
                                                 <View style={styles.selectContainer}>
                                                         <View style={{ width: '100%' }}>
@@ -218,6 +217,29 @@ export default function DetailsAgentPreparationScreen() {
                                                         </>
                                                 </View>
                                         </View>
+                                {folio.folios.length!=selectedItems?.length ?
+                                               
+                                                
+                                                <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                <OutlinedTextField
+                                                        label="Motif"
+                                                        fontSize={14}
+                                                        baseColor={COLORS.smallBrown}
+                                                        tintColor={COLORS.primary}
+                                                        containerStyle={{ borderRadius: 20 }}
+                                                        lineWidth={1}
+                                                        activeLineWidth={1}
+                                                        errorColor={COLORS.error}
+                                                        value={data.motif}
+                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                        onBlur={() => checkFieldData('motif')}
+                                                        error={hasError('motif') ? getError('motif') : ''}
+                                                        autoCompleteType='off'
+                                                        // keyboardType='number-pad'
+                                                        blurOnSubmit={false}
+                                                        multiline={true}
+                                                />
+                                        </View>:null}
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -312,7 +334,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                
         },
         buttonText: {
                 color: "#fff",

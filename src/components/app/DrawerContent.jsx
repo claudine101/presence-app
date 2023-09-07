@@ -436,7 +436,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <View style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Nouveau
+                                        Nouveaux
                                     </Text>
                                 </View>
                             </View>
