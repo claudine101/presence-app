@@ -254,7 +254,7 @@ export default function NewEquipeScanReenvoyerScreen(){
                                                         <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
                                                 </View>
                                                 <Text style={styles.selectLabel}>
-                                                        Nombre de dossiers
+                                                        Nombre de dossier{volume.folios.length > 1 && 's'}
                                                 </Text>
                                         </View>
                                         <Text style={styles.selectedValue}>

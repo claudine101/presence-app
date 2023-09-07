@@ -24,7 +24,7 @@ import Loading from "../../../components/app/Loading";
 export default function NewChefPlateauScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
+        const { volume, id, folios } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -77,7 +77,7 @@ export default function NewChefPlateauScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                                 {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -208,6 +208,40 @@ export default function NewChefPlateauScreen() {
                                                         </Text> : <Text>N/B</Text>}
                                                 </View>
                                         </TouchableOpacity>
+                                        {folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        Listes des dossiers
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.folioList}>
+                                                                {folios?.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                                {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })}
+                                                        </View>
+                                                </View>
+                                        </View> : null}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -381,5 +415,41 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })

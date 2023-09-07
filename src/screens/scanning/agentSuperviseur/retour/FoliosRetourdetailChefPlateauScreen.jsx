@@ -45,6 +45,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
+                                console.log(form)
                                 const res = await fetchApi(`/scanning/retour/agent/pvs`, {
                                         method: "POST",
                                         body: form
@@ -115,6 +116,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                         const form = new FormData()
                         form.append('ID_FOLIO', JSON.stringify(folio_ids))
                         form.append('folio', JSON.stringify(multiFolios))
+                        form.append('USER_TRAITEMENT', userTraite.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -196,7 +198,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        <View style={styles.selectContainer}>
+                                        {check.length > 0 ? <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
@@ -232,8 +234,40 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                                 }
                                                         </View>
                                                 </View>
-                                        </View>
+                                        </View> : <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.length} pret à être validé{details.length > 1 && 's'}
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.contain}>
+                                                                {details.map((folio, index) => {
+                                                                        return (
+                                                                                <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </View>
+                                                                        )
+                                                                })
+                                                                }
+                                                        </View>
+                                                </View>
+                                        </View>}
                                         {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>

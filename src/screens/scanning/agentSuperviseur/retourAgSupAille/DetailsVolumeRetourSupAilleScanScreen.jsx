@@ -25,7 +25,7 @@ import IDS_ETAPES_FOLIO from "../../../../constants/ETAPES_FOLIO";
 export default function DetailsVolumeRetourSupAilleScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume } = route.params
+        const { volume, users } = route.params
         // const [, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -85,6 +85,7 @@ export default function DetailsVolumeRetourSupAilleScanScreen() {
                         setLoadingSubmit(true)
                         const form = new FormData()
                         form.append('volume', JSON.stringify(volume.volumes))
+                        form.append('USER_TRAITEMENT', users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -155,12 +156,12 @@ export default function DetailsVolumeRetourSupAilleScanScreen() {
                                                                                             </Text>
                                                                                         </View>
                                                                                         
-                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                 {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
                                                                                             </Text>
-                                                                                        </View>
+                                                                                        </View> */}
                                                                                     </View>
                                                                                 </View>
                                                                             </View>

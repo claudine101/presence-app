@@ -35,7 +35,7 @@ export default function DetailsParAgentClickVolumeScreen() {
                         {details.map((detail, index) => {
                                 return (
                                         <TouchableOpacity style={styles.cardDetails} key={index}
-                                                onPress={()=>navigation.navigate("ConfimerPvScreen", {detail:detail})}
+                                                onPress={()=>navigation.navigate("ConfimerPvScreen", {detail:detail, userTraite:userTraite})}
                                         >
                                                 <View style={styles.cardImages}>
                                                         <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />

@@ -50,7 +50,7 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
                                 setLoadingPvs(false)
                         }
                 })()
-        }, []))
+        }, [userTraite]))
 
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
@@ -93,15 +93,17 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
                                                                                 {userTraite?.NOM} {userTraite?.PRENOM}
                                                                         </Text>
                                                                         <View style={{ width: '100%' }}>
-                                                                                {PV_PATH ?
+                                                                                {pvs?.result ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
                                                                                                         setGalexyIndex(0)
                                                                                                 }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                        <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                         </> : null}
+
+
                                                                         </View>
                                                                 </View>
                                                         </View>
@@ -155,14 +157,14 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
                                                                                 {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
                                                                                 PV de retour
                                                                         </Text>
-                                                                        {pvs?.result ?
+                                                                        {PV_PATH ?
                                                                                 <>
                                                                                         <TouchableOpacity onPress={() => {
                                                                                                 setGalexyIndex(0)
                                                                                         }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                         </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                 </> : null}
                                                                 </View>
                                                         </View>

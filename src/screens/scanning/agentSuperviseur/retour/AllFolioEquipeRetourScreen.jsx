@@ -29,7 +29,7 @@ export default function AllFolioEquipeRetourScreen() {
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
-                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.folios[0].USER_TRAITEMENT,   ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
+                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.folios[0].USER_TRAITEMENT, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
                 }
         }
 

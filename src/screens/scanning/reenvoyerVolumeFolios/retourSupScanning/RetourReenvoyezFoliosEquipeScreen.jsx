@@ -26,7 +26,6 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, ID_EQUIPE, userTraite } = route.params
-        console.log(folio)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -65,7 +64,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
         }, []))
 
         //Multi select pour selectionner les folios reconcilier
-        const [multiFolios, setMultiFolios] = useState([]);
+        const [multiFolios, setMultiFolios] = useState(folio);
         const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (fol) => {
                 if (isSelected(fol.ID_FOLIO)) {
@@ -207,7 +206,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
                                                                                         {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                        {folio?.length} pret à être reconcilier{folio?.length > 1 && 's'}
+                                                                                        {folio?.length} reconcilié{folio?.length > 1 && 's'}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -224,8 +223,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                                                                                 <Text style={styles.folioSubname}>{fol.NUMERO_FOLIO}</Text>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                {isSelected(fol.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> 
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
