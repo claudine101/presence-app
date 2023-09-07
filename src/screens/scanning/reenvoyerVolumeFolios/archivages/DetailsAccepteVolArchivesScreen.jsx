@@ -49,7 +49,6 @@ export default function DetailsAccepteVolArchivesScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('folio', JSON.stringify(multiFolios))
-                        console.log(form)
                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/desarchivages/nice`, {
                                 method: "PUT",
                                 body: form

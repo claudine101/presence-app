@@ -95,7 +95,7 @@ export default function DetailsAffecterAgentDesarchivagesScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/archivages`, {
+                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/archivages/pvs`, {
                                         method: "POST",
                                         body: form
                                 })
