@@ -21,7 +21,7 @@ export default function ChefPlateauScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
-        const [header, setHeader] = useState("Chefs plateau")
+        const [header, setHeader] = useState("Chefs plateaux")
 
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {

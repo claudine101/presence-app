@@ -1,7 +1,7 @@
-import React, {  useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
 import { Ionicons, AntDesign, Feather, MaterialIcons, Fontisto, FontAwesome5 } from '@expo/vector-icons';
-import {  useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -27,7 +27,7 @@ export default function AddDetailsFolioScreen() {
         const [loading, setLoading] = useState(false)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { folio,  } = route.params
+        const { folio, } = route.params
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
@@ -82,11 +82,13 @@ export default function AddDetailsFolioScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentPreparation != null ? true : false
-                isValid = allFolio != null ? true : false
-                isValid = logoImage != null ? true : false
-                isValid = collines?.COLLINE_ID!= null ? true : false
-                return isValid && isValidate()
+                var isPhoto = false
+                var isColline = false
+                // isValid = agentPreparation != null ? true : false
+                // isValid = allFolio != null ? true : false
+                isPhoto = logoImage != null ? true : false
+                isValid = collines?.COLLINE_ID != null ? true : false
+                return isValid && isPhoto && isValidate()
         }
 
         // Agent preparation select
@@ -138,7 +140,7 @@ export default function AddDetailsFolioScreen() {
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
                                                                                                 {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -198,7 +200,7 @@ export default function AddDetailsFolioScreen() {
                                                                                                         <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
                                                                                                 </View>
                                                                                                 {allFolio?.ID_FOLIO == fol.ID_FOLIO ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -288,11 +290,9 @@ export default function AddDetailsFolioScreen() {
                 setProvinces(prov)
         }
         //Composent pour afficher le modal des Provincess 
-                const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
-
+        const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
         const ProvincesList = () => {
                 return (
-                        <>
                                 <>
                                         {loadingProvinces ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -314,7 +314,7 @@ export default function AddDetailsFolioScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{prov.PROVINCE_NAME}</Text>
                                                                                                         </View>
                                                                                                         {provinces?.PROVINCE_ID == prov.PROVINCE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -324,10 +324,8 @@ export default function AddDetailsFolioScreen() {
                                                 </View>
                                         }
                                 </>
-                        </>
                 )
         }
-
         // Communes select
         const communeModalizeRef = useRef(null);
         const [communes, setCommunes] = useState(null);
@@ -364,7 +362,7 @@ export default function AddDetailsFolioScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{comm.COMMUNE_NAME}</Text>
                                                                                                         </View>
                                                                                                         {communes?.COMMUNE_ID == comm.COMMUNE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -413,8 +411,8 @@ export default function AddDetailsFolioScreen() {
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{zone.ZONE_NAME}</Text>
                                                                                                         </View>
-                                                                                                        {zones?.ZONE_ID == zone.ZONE_ID ?<MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                        {zones?.ZONE_ID == zone.ZONE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -464,7 +462,7 @@ export default function AddDetailsFolioScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{colline.COLLINE_NAME}</Text>
                                                                                                         </View>
                                                                                                         {collines?.COLLINE_ID == colline.COLLINE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                         <MaterialIcons name="radio-button-unchecked" size={24}  color={COLORS.primary}/>}
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -626,19 +624,19 @@ export default function AddDetailsFolioScreen() {
 
                                                 }
                                                 <TouchableOpacity onPress={onTakePicha}>
-                    <View style={[styles.addImageItem]}>
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                <Text style={styles.addImageLabel}>
-                                    Photo du procès verbal
-                                </Text>
-                            </View>
-                            {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                        </View>
-                        {logoImage && <Image source={{ uri: logoImage.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
-                    </View>
-                </TouchableOpacity>
+                                                        <View style={[styles.addImageItem]}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du dossier
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                                </View>
+                                                                {logoImage && <Image source={{ uri: logoImage.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                        </View>
+                                                </TouchableOpacity>
                                                 <View style={{ marginVertical: 8 }}>
                                                         <OutlinedTextField
                                                                 label="Nombre de feuille"
@@ -682,7 +680,7 @@ export default function AddDetailsFolioScreen() {
 
                                         </View>
                                 </ScrollView>
-                                      
+
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitData}
@@ -692,25 +690,25 @@ export default function AddDetailsFolioScreen() {
                                         </View>
                                 </TouchableWithoutFeedback>
                                 <Modalize ref={provinceModalizeRef}  >
-                                                <ProvincesList />
-                                        </Modalize>
-                                        <Modalize ref={communeModalizeRef}  >
-                                                <CommunesList provinces={provinces} />
-                                        </Modalize>
-                                        <Modalize ref={zoneModalizeRef}  >
-                                                <ZonesList communes={communes} />
-                                        </Modalize>
-                                        <Modalize ref={collineModalizeRef}  >
-                                                <CollinesList zones={zones} />
-                                        </Modalize>
-                               
-                                        <Modalize ref={preparationModalizeRef}  >
-                                                <PreparationList />
-                                        </Modalize>
-                               
-                                        <Modalize ref={folioModalizeRef}  >
-                                                <FolioList agentPreparation={agentPreparation} />
-                                        </Modalize>
+                                        <ProvincesList />
+                                </Modalize>
+                                <Modalize ref={communeModalizeRef}  >
+                                        <CommunesList provinces={provinces} />
+                                </Modalize>
+                                <Modalize ref={zoneModalizeRef}  >
+                                        <ZonesList communes={communes} />
+                                </Modalize>
+                                <Modalize ref={collineModalizeRef}  >
+                                        <CollinesList zones={zones} />
+                                </Modalize>
+
+                                <Modalize ref={preparationModalizeRef}  >
+                                        <PreparationList />
+                                </Modalize>
+
+                                <Modalize ref={folioModalizeRef}  >
+                                        <FolioList agentPreparation={agentPreparation} />
+                                </Modalize>
 
                         </View>
 
@@ -773,7 +771,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 15,
                 marginBottom: 5
         },
-        
+
         modalHeader: {
                 flexDirection: "row",
                 alignItems: "center",
@@ -891,7 +889,7 @@ const styles = StyleSheet.create({
                 borderRadius: 10,
                 resizeMode: "center"
         },
-        
+
         modalImageContainer: {
                 width: 40,
                 height: 40,

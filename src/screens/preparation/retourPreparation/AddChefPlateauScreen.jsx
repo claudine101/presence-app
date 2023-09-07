@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
-import { Ionicons, AntDesign, Fontisto, FontAwesome5,MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -26,7 +26,7 @@ export default function AddChefPlateauScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
         const route = useRoute()
-        const { volume ,histo_IDETAPE} = route.params
+        const { volume, histo_IDETAPE } = route.params
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
@@ -139,8 +139,8 @@ export default function AddChefPlateauScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ?  <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -266,7 +266,7 @@ export default function AddChefPlateauScreen() {
                                 </View>
                                 <ScrollView>
                                         <View>
-                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <TouchableOpacity style={styles.selectContainer}>
                                                         <View style={styles.labelContainer}>
                                                                 <View style={styles.icon}>
                                                                         <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
@@ -294,11 +294,12 @@ export default function AddChefPlateauScreen() {
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Nombre des dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.folios?.length ? volume.folios?.length : "0"} dossier{volume.folios?.length > 1 && 's'}
+                                                                                {volume.folios?.length ?
+                                                                                        `${volume.folios?.length} dossier` + `${volume.folios?.length > 1 ? "s" : ''}` : "0"}
 
                                                                         </Text>
                                                                 </View>
@@ -434,7 +435,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         buttonText: {
                 color: "#fff",
@@ -459,8 +460,8 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 15,
                 marginBottom: 5,
-                marginHorizontal:10
-            },
+                marginHorizontal: 10
+        },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -495,7 +496,7 @@ const styles = StyleSheet.create({
         cardTitle: {
                 maxWidth: "85%"
         },
-       
+
         labelContainer: {
                 flexDirection: 'row',
                 alignItems: 'center'

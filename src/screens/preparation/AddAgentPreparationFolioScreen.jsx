@@ -108,7 +108,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les agents de preparations</Text>
                                                 </View>
-                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                {allAgentsPreparation?.result?.map((prep, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
@@ -166,7 +166,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.folio.CODE_FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>{fol.folio.FOLIO}</Text>
                                                                                                 </View>
                                                                                                 {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
                                                                                                         <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
@@ -289,7 +289,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         {volume ? <Text style={styles.selectedValue}>
-                                                                                {volume.folios.length}
+                                                                                {volume.folios.length} dossier{volume.folios.length>1 ?"s" : ''}
                                                                         </Text> :
                                                                                 <Text style={styles.selectedValue}>
                                                                                         aucun

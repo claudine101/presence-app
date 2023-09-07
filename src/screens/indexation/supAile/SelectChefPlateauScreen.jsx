@@ -200,7 +200,7 @@ export default function SelectChefPlateauScreen() {
                                                                                                     <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
                                                                                           </View>
                                                                                           <Text style={styles.selectLabel}>
-                                                                                                    Dossiers
+                                                                                                    Nombre des dossiers
                                                                                           </Text>
                                                                                 </View>
                                                                                 <Text style={styles.selectedValue}>

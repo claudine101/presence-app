@@ -95,7 +95,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs aile</Text>
                                                 </View>
                                                 {superviseurList?.result?.map((chef, index) => {
                                                         return (
@@ -232,7 +232,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent supeviseur aille</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur aile</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
@@ -276,10 +276,10 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 </View> : null}
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Agent superviseur aille
+                                                                        Agent superviseur aile
                                                                 </Text>
                                                                 <View>
-                                                                        <Text style={styles.selectedValue}> {agentSuperviseur ? `${agentSuperviseur.NOM}`  +  ` ${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aille'}
+                                                                        <Text style={styles.selectedValue}> {agentSuperviseur ? `${agentSuperviseur.NOM}`  +  ` ${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aile'}
                                                                         </Text>
                                                         </View>
                                                 </TouchableOpacity>

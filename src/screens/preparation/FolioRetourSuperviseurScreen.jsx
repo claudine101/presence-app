@@ -5,7 +5,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5,Fontisto } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import Loading from "../../components/app/Loading";
@@ -124,21 +124,6 @@ export default function FolioRetourSuperviseurScreen() {
                 isValid = document != null ? true : false
                 return isValid
         }
-
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoading(true)
-        //                         const res = await fetchApi(`/preparation/folio/nbrefolios/${folio.users.USERS_ID}`)
-        //                         setNbre(res.result[0]?.folios?.length)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoading(false)
-        //                 }
-        //         })()
-        // }, [folio.users]))
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -239,10 +224,13 @@ export default function FolioRetourSuperviseurScreen() {
                                                                                                 </View>
                                                                                                 <View style={styles.folioDesc}>
                                                                                                         <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                        <Text style={styles.folioSubname}>{folio.FOLIO}</Text>
                                                                                                 </View>
                                                                                         </View>
-                                                                                        {folio.IS_PREPARE == 0 ?
+                                                                                        {
+                                                                                       !( check.length > 0 ) ?
+                                                                                         <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />:
+                                                                                        folio.IS_PREPARE == 0  ?
                                                                                                 <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
                                                                                                 : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                         }
@@ -276,26 +264,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {/* {check.length > 0 && !(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                                                <OutlinedTextField
-                                                        label="Motif"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.motif}
-                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                        onBlur={() => checkFieldData('motif')}
-                                                        error={hasError('motif') ? getError('motif') : ''}
-                                                        autoCompleteType='off'
-                                                        // keyboardType='number-pad'
-                                                        blurOnSubmit={false}
-                                                        multiline={true}
-                                                />
-                                        </View> : null} */}
+                                       
                                         {check.length > 0 && !checkDetails.length>0  ?
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>

@@ -39,11 +39,13 @@ export default function AddFolioScreen() {
         const [document, setDocument] = useState(null)
         const [dossier, setDossier] = useState(null)
         const [folios, setFolios] = useState([])
+        const [dossierExiste, setDossierExiste] = useState([])
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
 
         const [data, handleChange, setValue] = useForm({
                 folio: '',
+                dossier: '',
                 // document: null
         })
 
@@ -62,9 +64,12 @@ export default function AddFolioScreen() {
         const isValidAdd = () => {
                 var isValid = false
                 var isValidFolio = false
+                var isValidDossier = false
+
                 isValidFolio = data.folio != "" ? true : false
+                isValidDossier = data.dossier != "" ? true : false
                 isValid = natures != null ? true : false
-                return isValid && isValidFolio
+                return isValid && isValidFolio && isValidDossier
         }
 
         const isValidFin = () => {
@@ -114,10 +119,18 @@ export default function AddFolioScreen() {
                 if (data.folio <= 200) {
                         const folio = folios.find(f => f.NUMERO_FOLIO == data.folio)
                         if (!folio) {
-                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: natures.DESCRIPTION + data.folio, ID_NATURE: natures.ID_NATURE_FOLIO }])
-                                handleChange("folio", "")
-                                setNatures(null)
-                                setDossier(null)
+                                if (data.dossier) {
+                                        const dossier = folios.find(f => f.NUMERO_DOSSIER == data.dossier)
+                                        if (!dossier) {
+                                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: data.dossier, nature: natures.DESCRIPTION ,ID_NATURE:natures.ID_NATURE_FOLIO}])
+                                                handleChange("folio", "")
+                                                handleChange("dossier", "")
+                                                setNatures(null)
+                                        }
+                                        else {
+                                                setError("dossier", ["dossier existe déjà"])
+                                        }
+                                }
                         }
                         else {
                                 setError("folio", ["Folio existe déjà"])
@@ -165,9 +178,6 @@ export default function AddFolioScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-
-
-
         //Composent pour afficher le modal de volume associer a un agent superviceur
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
@@ -207,7 +217,6 @@ export default function AddFolioScreen() {
                         </>
                 )
         }
-
         //Composent pour afficher le modal de nature de folio
         const NatureDossierList = () => {
                 const [loadingNature, allNatures] = useFetch('/preparation/volume/nature')
@@ -340,30 +349,30 @@ export default function AddFolioScreen() {
                                                                 <Text style={styles.modalTitle}>Listes des batiments</Text>
                                                         </View>
                                                         {batimentsAll?.result?.length <= 0 ?
-                                                        <View style={styles.emptyContainer}>
-                                                                <Text style={styles.emptyLabel}>Aucun batiment trouvé</Text>
-                                                        </View>
-                                                        :
-                                                        batimentsAll?.result?.map((bat, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
-                                                                                        <View style={styles.modalItem} >
-                                                                                                <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.modalItemCard}>
-                                                                                                        <View>
-                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                <View style={styles.emptyContainer}>
+                                                                        <Text style={styles.emptyLabel}>Aucun batiment trouvé</Text>
+                                                                </View>
+                                                                :
+                                                                batimentsAll?.result?.map((bat, index) => {
+                                                                        return (
+                                                                                <ScrollView key={index}>
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                                <View style={styles.modalItem} >
+                                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                         </View>
-                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        <View style={styles.modalItemCard}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                                </View>
+                                                                                                                {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
+                                                                                        </TouchableNativeFeedback>
+                                                                                </ScrollView>
+                                                                        )
+                                                                })}
                                                 </View>
                                         }
                                 </>
@@ -406,26 +415,26 @@ export default function AddFolioScreen() {
                                                                 <Text style={styles.emptyLabel}>Aucun aile trouvé</Text>
                                                         </View>
                                                         :
-                                                allailles?.map((ail, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                        allailles?.map((ail, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                        </View>
+                                                                                                        {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -468,30 +477,30 @@ export default function AddFolioScreen() {
                                                                 <Text style={styles.emptyLabel}>Aucun distributeur trouvé</Text>
                                                         </View>
                                                         :
-                                                
-                                                allDistributeur?.map((distr, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
-                                                                                <View style={styles.modalItem} >
 
-                                                                                        <View style={styles.imageContainer}>
-                                                                                                {distr.PHOTO_USER ? <Image source={{ uri: distr.PHOTO_USER }} style={styles.image} /> :
-                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                        allDistributeur?.map((distr, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
+                                                                                        <View style={styles.modalItem} >
+
+                                                                                                <View style={styles.imageContainer}>
+                                                                                                        {distr.PHOTO_USER ? <Image source={{ uri: distr.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                                 </View>
-                                                                                                {distributeur?.USERS_ID == distr.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                        {distributeur?.USERS_ID == distr.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -510,7 +519,6 @@ export default function AddFolioScreen() {
 
         //fonction pour envoyer les donnees dans la base
         const submitFolio = async () => {
-
                 try {
                         setLoading(true)
                         const form = new FormData()
@@ -540,7 +548,9 @@ export default function AddFolioScreen() {
                         navigation.goBack()
                 }
                 catch (error) {
-                        console.log(error)
+                        console.log(error.result)
+                        setDossierExiste(error.result)
+
                 } finally {
                         setLoading(false)
                 }
@@ -569,13 +579,6 @@ export default function AddFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
                         const vol = await fetchApi(`/preparation/volume/nommerDistributeur/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
@@ -588,7 +591,6 @@ export default function AddFolioScreen() {
                         setLoading(false)
                 }
         }
-
         return (
                 <>
                         {loading && <Loading />}
@@ -628,7 +630,7 @@ export default function AddFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER} dossier`+ `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'Aucun'}
+                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER} dossier` + `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -743,16 +745,26 @@ export default function AddFolioScreen() {
                                                                                 </View>
                                                                         </View>
                                                                 </TouchableOpacity>
-                                                                <TouchableOpacity style={styles.selectContainer}>
-                                                                        <View style={styles.labelContainer}>
-                                                                                <Text style={styles.selectLabel}>
-                                                                                        Numéro dossier
-                                                                                </Text>
-                                                                        </View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {dossier ? `${dossier}` : 'Aucun'}
-                                                                        </Text>
-                                                                </TouchableOpacity>
+                                                                <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                                        <OutlinedTextField
+                                                                                label="Numéro du dossier"
+                                                                                fontSize={14}
+                                                                                baseColor={COLORS.smallBrown}
+                                                                                tintColor={COLORS.primary}
+                                                                                containerStyle={{ borderRadius: 20 }}
+                                                                                lineWidth={0.25}
+                                                                                activeLineWidth={0.25}
+                                                                                errorColor={COLORS.error}
+                                                                                value={data.dossier}
+                                                                                onChangeText={(newValue) => handleChange('dossier', newValue)}
+                                                                                onBlur={() => checkFieldData('dossier')}
+                                                                                error={hasError('dossier') ? getError('dossier') : ''}
+                                                                                autoCompleteType='off'
+                                                                                blurOnSubmit={false}
+                                                                                keyboardType='number-pad'
+
+                                                                        />
+                                                                </View>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                                                         <View></View>
                                                                         <TouchableOpacity
@@ -767,19 +779,30 @@ export default function AddFolioScreen() {
                                                         </>}
 
                                                                 {folios?.map((folio, index) => {
+                                                                        const isExists = dossierExiste?.find(dossier => dossier.NUMERO_FOLIO == folio.NUMERO_DOSSIER) ? true : false
                                                                         return (
-                                                                                <View style={[styles.headerRead]} key={index}>
-                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                <>
+                                                                                        <View style={[styles.headerRead]} key={index}>
+                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                        <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                </View>
+                                                                                                <View style={styles.folioDesc}>
+                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_DOSSIER}</Text>
+                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.nature}</Text>
+                                                                                                                <Text style={styles.folioSubname}></Text>
+                                                                                                                <Text style={styles.folioSubname}>{isExists}</Text>
+
+                                                                                                        </View>
+
+                                                                                                </View>
+                                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveFolio(index)}>
+                                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                                                                                </TouchableOpacity>
                                                                                         </View>
-                                                                                        <View style={styles.folioDesc}>
-                                                                                                <Text style={styles.folioName}>{folio.NUMERO_DOSSIER}</Text>
-                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
-                                                                                        </View>
-                                                                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveFolio(index)}>
-                                                                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                        </TouchableOpacity>
-                                                                                </View>
+                                                                                        {isExists ? <Text style={{ color: 'red',marginTop:-10,marginLeft:10,marginBottom:5 }}>Dossiesr existe déjà</Text> : null}
+                                                                                </>
                                                                         )
                                                                 })}
                                                                 <TouchableOpacity onPress={onTakePicha}>
@@ -1068,6 +1091,10 @@ const styles = StyleSheet.create({
         },
         folioSubname: {
                 color: '#777',
+                fontSize: 12
+        },
+        dossierError: {
+                color: 'red',
                 fontSize: 12
         },
         emptyContainer: {

@@ -186,7 +186,7 @@ export default function AgentSupAileDetailScreen() {
                     {volume ? <View style={styles.selectContainer}>
                         <View>
                             <Text style={styles.selectLabel}>
-                                Dossier
+                                Nombre des dossiers
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
