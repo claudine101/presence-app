@@ -45,7 +45,6 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                console.log(form)
                                 const res = await fetchApi(`/scanning/retour/agent/pvs`, {
                                         method: "POST",
                                         body: form

@@ -130,7 +130,6 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                 style={styles.contain}
                                                                 data={allVolumes}
                                                                 renderItem={({ item: volume, index }) => {
-                                                                        console.log(volume)
                                                                         return (
                                                                                 <>
                                                                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

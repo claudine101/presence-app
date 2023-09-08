@@ -39,7 +39,8 @@ export default function DetailsVolumeChefPlateauNonValideScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
+                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/nonValid/plateau`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -92,17 +93,15 @@ export default function DetailsVolumeChefPlateauNonValideScreen() {
                                                                         <Text style={styles.selectedValue}>
                                                                                 {userTraite?.NOM} {userTraite?.PRENOM}
                                                                         </Text>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                {PV_PATH ?
-                                                                                        <>
-                                                                                                <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
-                                                                                                }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                        </> : null}
-                                                                        </View>
+                                                                        {pvs?.result ?
+                                                                                <>
+                                                                                        <TouchableOpacity onPress={() => {
+                                                                                                setGalexyIndex(0)
+                                                                                        }}>
+                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                        </TouchableOpacity>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                </> : null}
                                                                 </View>
                                                         </View>
 
@@ -153,15 +152,17 @@ export default function DetailsVolumeChefPlateauNonValideScreen() {
                                                                                 {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
                                                                                 PV de retour
                                                                         </Text>
-                                                                        {pvs?.result ?
-                                                                                <>
-                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
-                                                                                        }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                        </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                </> : null}
+                                                                        <View style={{ width: '100%' }}>
+                                                                                {PV_PATH ?
+                                                                                        <>
+                                                                                                <TouchableOpacity onPress={() => {
+                                                                                                        setGalexyIndex(0)
+                                                                                                }}>
+                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                </TouchableOpacity>
+                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                        </> : null}
+                                                                        </View>
                                                                 </View>
                                                         </View>
                                                 </ScrollView>}
