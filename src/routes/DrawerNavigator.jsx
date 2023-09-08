@@ -86,9 +86,9 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDesarchiveSreen" component={AllVolumeDesarchiveSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
-                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />       
                                 </>
                                 : null}
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
@@ -97,18 +97,18 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
                                         <Drawer.Screen name="AllVolumeSuperviseScreen" component={AllVolumeSuperviseScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
-                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />       
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name="AllVolumeDistribueSreen" component={AllVolumeDistribueSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                        <Drawer.Screen name="AllVolumeDistribueSreen" component={AllVolumeDistribueSreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                 </>
                                 : null}
