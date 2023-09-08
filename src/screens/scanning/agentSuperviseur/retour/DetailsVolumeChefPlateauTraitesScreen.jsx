@@ -39,6 +39,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
+                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
                                 const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs`, {
                                         method: "POST",
                                         body: form

@@ -32,7 +32,6 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
         const volume_ids = volume?.map(vol => vol.ID_VOLUME)
 
         const [allVolumes, setAllVolumes] = useState([])
-        console.log(allVolumes)
         const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
 
         useFocusEffect(useCallback(() => {

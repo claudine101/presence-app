@@ -101,7 +101,9 @@ import DetailsAgentPreparationRetourneScreen from '../screens/preparation/Detail
 import ChefPlateauFlashValideDetailScreen from '../screens/indexation/chefPlateau/ChefPlateauFlashValideDetailScreen';
 import ChefPlateauFlashRetourDetailScreen from '../screens/indexation/chefPlateau/ChefPlateauFlashRetourDetailScreen';
 import SupFlashRetourDetailScreen from '../screens/indexation/supAile/SupFlashRetourDetailScreen';
-
+import DetailsChefEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsChefEquipeScanReenvoyerScreen';
+import DetailsBienArchiverScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsBienArchiverScreen';
+import DetailsVolumeBienArchivesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeBienArchivesScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -217,6 +219,10 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsAffecterAgentDesarchivagesScreen' component={DetailsAffecterAgentDesarchivagesScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsTraitesArchivesReenvoyezScreen' component={DetailsTraitesArchivesReenvoyezScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsAccepteVolArchivesScreen' component={DetailsAccepteVolArchivesScreen} options={{ headerShown: false }} />
+
+                <Stack.Screen name='DetailsChefEquipeScanReenvoyerScreen' component={DetailsChefEquipeScanReenvoyerScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsBienArchiverScreen' component={DetailsBienArchiverScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='DetailsVolumeBienArchivesScreen' component={DetailsVolumeBienArchivesScreen} options={{ headerShown: false }} />
                
                 
             </Stack.Navigator>

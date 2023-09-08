@@ -22,41 +22,40 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsTraitesPlateauRenvoyerScreen() {
+export default function DetailsBienArchiverScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
-        console.log(PV_PATH)
+
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
 
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingPvs(true)
-                                const form = new FormData()
-                                form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                console.log(form)
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour`, {
-                                        method: "POST",
-                                        body: form
-                                })
-                                setPvs(res)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingPvs(false)
-                        }
-                })()
-        }, []))
+        // useFocusEffect(useCallback(() => {
+        //         (async () => {
+        //                 try {
+        //                         setLoadingPvs(true)
+        //                         const form = new FormData()
+        //                         form.append('folioIds', JSON.stringify(folio_ids))
+        //                         const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour/Pvscscs`, {
+        //                                 method: "POST",
+        //                                 body: form
+        //                         })
+        //                         setPvs(res)
+        //                 } catch (error) {
+        //                         console.log(error)
+        //                 } finally {
+        //                         setLoadingPvs(false)
+        //                 }
+        //         })()
+        // }, [userTraite]))
+
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
                         <ImageView
-                                images={[{ uri: pvs?.result.PV_PATH }, PV_PATH ? { uri: PV_PATH } : undefined]}
+                                images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
                                 imageIndex={galexyIndex}
                                 visible={(galexyIndex != null) ? true : false}
                                 onRequestClose={() => setGalexyIndex(null)}
@@ -80,31 +79,6 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
                                                 <ScrollView style={styles.inputs}>
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        <View style={styles.labelContainer}>
-                                                                                <View style={styles.icon}>
-                                                                                        <Feather name="user" size={20} color="#777" />
-                                                                                </View>
-                                                                                <Text style={styles.selectLabel}>
-                                                                                        Agent superviseur
-                                                                                </Text>
-                                                                        </View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {userTraite?.NOM} {userTraite?.PRENOM}
-                                                                        </Text>
-                                                                        {pvs?.result ?
-                                                                                <>
-                                                                                        <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
-                                                                                        }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                        </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                </> : null}
-                                                                </View>
-                                                        </View>
-
                                                         {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
                                                                 <View style={{ width: '100%' }}>
                                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
@@ -114,8 +88,7 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                        {/* {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'} */}
+                                                                                        Les dossiers validés
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -142,31 +115,6 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                         </View>
                                                                 </View>
                                                         </View> : null}
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                        Chargement
-                                                                                </Text>
-                                                                        </View> : null}
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                PV de retour
-                                                                        </Text>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                {PV_PATH ?
-                                                                                        <>
-                                                                                                <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
-                                                                                                }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                        </> : null}
-                                                                        </View>
-                                                                </View>
-                                                        </View>
                                                 </ScrollView>}
                         </View>
                 </>

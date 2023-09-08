@@ -239,7 +239,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
                                 >
                                         <View style={styles.modalContent}>
-                                               { allVolumes?.foliosValid?.length > 0 ?  <>
+                                               { volume.ID_ETAPE_VOLUME == 9  ?  <>
                                                         <TouchableNativeFeedback
                                                                 onPress={() => choixArchives(volume)}
                                                         >

@@ -22,11 +22,11 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function DetailsTraitesPlateauRenvoyerScreen() {
+export default function DetailsChefEquipeScanReenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
-        console.log(PV_PATH)
+
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
@@ -39,9 +39,7 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                console.log(form)
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour`, {
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour/Pvscscs`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -52,11 +50,11 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                 setLoadingPvs(false)
                         }
                 })()
-        }, []))
+        }, [userTraite]))
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
                         <ImageView
-                                images={[{ uri: pvs?.result.PV_PATH }, PV_PATH ? { uri: PV_PATH } : undefined]}
+                                images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
                                 imageIndex={galexyIndex}
                                 visible={(galexyIndex != null) ? true : false}
                                 onRequestClose={() => setGalexyIndex(null)}
@@ -87,20 +85,20 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                                         <Feather name="user" size={20} color="#777" />
                                                                                 </View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Agent superviseur
+                                                                                        Agents distributeurs
                                                                                 </Text>
                                                                         </View>
                                                                         <Text style={styles.selectedValue}>
                                                                                 {userTraite?.NOM} {userTraite?.PRENOM}
                                                                         </Text>
-                                                                        {pvs?.result ?
+                                                                        {PV_PATH ?
                                                                                 <>
                                                                                         <TouchableOpacity onPress={() => {
                                                                                                 setGalexyIndex(0)
                                                                                         }}>
-                                                                                                <Image source={{ uri: pvs?.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                                                <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                         </TouchableOpacity>
-                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                                                                 </> : null}
                                                                 </View>
                                                         </View>
@@ -142,31 +140,6 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                         </View>
                                                                 </View>
                                                         </View> : null}
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                        Chargement
-                                                                                </Text>
-                                                                        </View> : null}
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                PV de retour
-                                                                        </Text>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                {PV_PATH ?
-                                                                                        <>
-                                                                                                <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
-                                                                                                }}>
-                                                                                                        <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                                </TouchableOpacity>
-                                                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(date).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                        </> : null}
-                                                                        </View>
-                                                                </View>
-                                                        </View>
                                                 </ScrollView>}
                         </View>
                 </>

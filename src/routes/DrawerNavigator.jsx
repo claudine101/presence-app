@@ -68,6 +68,7 @@ import AllVolumeReenvoyezRetournerScreen from "../screens/scanning/reenvoyerVolu
 import AllRetourFoliosReenvoyezSupScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/AllRetourFoliosReenvoyezSupScreen";
 import FoliosReenvoyezTraitesScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/FoliosReenvoyezTraitesScreen";
 import ChePlateauVolReenvoyerTraitesScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/ChePlateauVolReenvoyerTraitesScreen";
+import AllFoliosBienTraitesApresRetourScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/AllFoliosBienTraitesApresRetourScreen";
 
 
 export default function DrawerNavigator() {
@@ -86,8 +87,8 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeDesarchiveSreen" component={AllVolumeDesarchiveSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                 </>
                                 : null}
@@ -97,18 +98,18 @@ export default function DrawerNavigator() {
                                         <Drawer.Screen name="AllVolumeDetaillerScreen" component={AllVolumeDetaillerScreen} />
                                         <Drawer.Screen name="AllVolumeSuperviseScreen" component={AllVolumeSuperviseScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) ?
                                 <>
                                         <Drawer.Screen name="AllVolumeScreen" component={AllVolumeScreen} />
-                                        <Drawer.Screen name="AllVolumeDistribueSreen" component={AllVolumeDistribueSreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                        <Drawer.Screen name="AllVolumeDistribueSreen" component={AllVolumeDistribueSreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                 </>
                                 : null}
@@ -178,44 +179,44 @@ export default function DrawerNavigator() {
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
                                 <>
                                         <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
-                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
+                                        <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                 </> : null}
                         {
                                 user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING ?
                                         <>
                                                 <Drawer.Screen name="AllVolumeRecusChefEquiScreen" component={AllVolumeRecusChefEquiScreen} />
-                                                <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
-                                                <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
-                                                <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                                 <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
+                                                <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
                                                 <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
+                                                <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                                 <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
+                                                <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                         </>
                                         : null}
 
                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING ?
                                 <>
                                         <Drawer.Screen name="AllFolioRecusScanScreen" component={AllFolioRecusScanScreen} />
-                                        <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
-                                        <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
-                                        {/* <Drawer.Screen name="FoliosNonScanNonReconcilierScreen" component={FoliosNonScanNonReconcilierScreen} /> */}
-                                        <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyerRecusScreen" component={AllVolumeReenvoyerRecusScreen} />
+                                        <Drawer.Screen name="AllFolioEquipeRetourScreen" component={AllFolioEquipeRetourScreen} />
                                         <Drawer.Screen name="AllRetourFoliosReenvoyezSupScreen" component={AllRetourFoliosReenvoyezSupScreen} />
+                                        <Drawer.Screen name="AllFoliosSuperviseurPvScreen" component={AllFoliosSuperviseurPvScreen} />
                                         <Drawer.Screen name="FoliosReenvoyezTraitesScreen" component={FoliosReenvoyezTraitesScreen} />
+                                        <Drawer.Screen name="VolumeFoliosNonInvalidePlatoScreen" component={VolumeFoliosNonInvalidePlatoScreen} />
                                 </>
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?
                                 <>
                                         <Drawer.Screen name="AllSuperviseurAileScanVolumeScreen" component={AllSuperviseurAileScanVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
-                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
                                         <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
+                                        <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="AllFoliosBienTraitesApresRetourScreen" component={AllFoliosBienTraitesApresRetourScreen} />
                                 </>
                                 : null}
 
@@ -242,7 +243,7 @@ export default function DrawerNavigator() {
 
                                 </>
                                 : null}
-                         <Drawer.Screen name="AllIncidentsDeclarerScreen" component={AllIncidentsDeclarerScreen} />
+                        <Drawer.Screen name="AllIncidentsDeclarerScreen" component={AllIncidentsDeclarerScreen} />
                 </Drawer.Navigator>
         )
 }

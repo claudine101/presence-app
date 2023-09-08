@@ -43,6 +43,8 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                         navigation.navigate("DetailsVolumeAgentArchivesTraiteScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE){
                         navigation.navigate("DetailsChefEquipePrepTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                        navigation.navigate("DetailsVolumeBienArchivesScreen", { vol: volume.volume, date: volume.DATE_INSERTION, detail:volume.folios })
                 }else {
                         navigation.navigate("DetailsSupAilleScanTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }
@@ -409,7 +411,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                         </View> :
 
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        // onPress={() => handleSubmit(volume)}
+                                                                                                        onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
@@ -427,7 +429,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volume?.NUMERO_VOLUME}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>

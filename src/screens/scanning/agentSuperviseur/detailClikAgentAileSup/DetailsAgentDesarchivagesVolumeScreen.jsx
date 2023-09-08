@@ -75,13 +75,13 @@ export default function DetailsAgentDesarchivagesVolumeScreen() {
                                                                         <MaterialCommunityIcons name="radiobox-blank" size={20} color="#777" style={{ marginLeft: 5 }} />}
                                                         </View>
                                                 </TouchableWithoutFeedback>
-                                                <TouchableWithoutFeedback onPress={() => setValide(0)}>
+                                                {/* <TouchableWithoutFeedback onPress={() => setValide(0)}>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 15 }}>
                                                                 <Text style={{ color: "#000" }}>Non</Text>
                                                                 {valide == 0 ? <MaterialCommunityIcons name="radiobox-marked" size={20} color="#007bff" style={{ marginLeft: 5 }} /> :
                                                                         <MaterialCommunityIcons name="radiobox-blank" size={20} color="#777" style={{ marginLeft: 5 }} />}
                                                         </View>
-                                                </TouchableWithoutFeedback>
+                                                </TouchableWithoutFeedback> */}
                                         </View>
                                         <View style={styles.separator} />
                                         <TouchableWithoutFeedback
