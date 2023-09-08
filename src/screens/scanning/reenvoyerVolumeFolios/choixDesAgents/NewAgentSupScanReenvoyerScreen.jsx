@@ -25,7 +25,6 @@ export default function NewAgentSupScanReenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
-        console.log(volume)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')

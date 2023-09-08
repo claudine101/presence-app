@@ -68,6 +68,7 @@ import AllVolumeReenvoyezRetournerScreen from "../screens/scanning/reenvoyerVolu
 import AllRetourFoliosReenvoyezSupScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/AllRetourFoliosReenvoyezSupScreen";
 import FoliosReenvoyezTraitesScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/FoliosReenvoyezTraitesScreen";
 import ChePlateauVolReenvoyerTraitesScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/ChePlateauVolReenvoyerTraitesScreen";
+import AllFoliosBienTraitesApresRetourScreen from "../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/AllFoliosBienTraitesApresRetourScreen";
 
 
 export default function DrawerNavigator() {
@@ -210,12 +211,12 @@ export default function DrawerNavigator() {
                                 : null}
                         {(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) ?
                                 <>
+                                        <Drawer.Screen name="AllSuperviseurAileScanVolumeScreen" component={AllSuperviseurAileScanVolumeScreen} />
                                         <Drawer.Screen name="AllVolumeFolioRetourSupAilleScreen" component={AllVolumeFolioRetourSupAilleScreen} />
                                         <Drawer.Screen name="AllVolumeReenvoyezRetournerScreen" component={AllVolumeReenvoyezRetournerScreen} />
-
-                                        {/* <Drawer.Screen name="AllSuperviseurAileScanVolumeScreen" component={AllSuperviseurAileScanVolumeScreen} />
-                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} /> */}
+                                        <Drawer.Screen name="ChePlateauVolReenvoyerTraitesScreen" component={ChePlateauVolReenvoyerTraitesScreen} />
                                         <Drawer.Screen name="VolumeEnEttenteChefEquipeScreen" component={VolumeEnEttenteChefEquipeScreen} />
+                                        <Drawer.Screen name="AllFoliosBienTraitesApresRetourScreen" component={AllFoliosBienTraitesApresRetourScreen} />
                                 </>
                                 : null}
 

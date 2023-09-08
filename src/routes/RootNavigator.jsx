@@ -98,6 +98,7 @@ import DetailsAffecterAgentDesarchivagesScreen from '../screens/scanning/reenvoy
 import DetailsTraitesArchivesReenvoyezScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsTraitesArchivesReenvoyezScreen';
 import DetailsAccepteVolArchivesScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsAccepteVolArchivesScreen';
 import DetailsAgentPreparationRetourneScreen from '../screens/preparation/DetailsAgentPreparationRetourneScreen';
+import DetailsChefEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsChefEquipeScanReenvoyerScreen';
 
 
 export default function RootNavigator() {
@@ -211,6 +212,8 @@ export default function RootNavigator() {
                 <Stack.Screen name='DetailsAffecterAgentDesarchivagesScreen' component={DetailsAffecterAgentDesarchivagesScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsTraitesArchivesReenvoyezScreen' component={DetailsTraitesArchivesReenvoyezScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsAccepteVolArchivesScreen' component={DetailsAccepteVolArchivesScreen} options={{ headerShown: false }} />
+
+                <Stack.Screen name='DetailsChefEquipeScanReenvoyerScreen' component={DetailsChefEquipeScanReenvoyerScreen} options={{ headerShown: false }} />
                
                 
             </Stack.Navigator>
