@@ -28,7 +28,7 @@ export default function ChefPlateauFlashRetourScreen() {
                     })()
           }, []))
           const handleFlashPress = flash => {
-                    navigation.navigate("SelectAgentIndexationScreen", { flash })
+                    navigation.navigate("ChefPlateauFlashRetourDetailScreen", { flash })
           }
           return (
                     <>

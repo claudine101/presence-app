@@ -98,6 +98,9 @@ import DetailsAffecterAgentDesarchivagesScreen from '../screens/scanning/reenvoy
 import DetailsTraitesArchivesReenvoyezScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsTraitesArchivesReenvoyezScreen';
 import DetailsAccepteVolArchivesScreen from '../screens/scanning/reenvoyerVolumeFolios/archivages/DetailsAccepteVolArchivesScreen';
 import DetailsAgentPreparationRetourneScreen from '../screens/preparation/DetailsAgentPreparationRetourneScreen';
+import ChefPlateauFlashValideDetailScreen from '../screens/indexation/chefPlateau/ChefPlateauFlashValideDetailScreen';
+import ChefPlateauFlashRetourDetailScreen from '../screens/indexation/chefPlateau/ChefPlateauFlashRetourDetailScreen';
+import SupFlashRetourDetailScreen from '../screens/indexation/supAile/SupFlashRetourDetailScreen';
 
 
 export default function RootNavigator() {
@@ -128,6 +131,9 @@ export default function RootNavigator() {
                
                 
                 {/* indexation */}
+                <Stack.Screen name='SupFlashRetourDetailScreen' component={SupFlashRetourDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefPlateauFlashRetourDetailScreen' component={ChefPlateauFlashRetourDetailScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='ChefPlateauFlashValideDetailScreen' component={ChefPlateauFlashValideDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectFlashAgentSupScreen' component={SelectFlashAgentSupScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectChefPlateauScreen' component={SelectChefPlateauScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SelectAgentIndexationScreen' component={SelectAgentIndexationScreen} options={{ headerShown: false }} />

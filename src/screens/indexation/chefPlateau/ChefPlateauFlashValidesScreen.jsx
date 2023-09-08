@@ -10,8 +10,8 @@ import moment from "moment"
 export default function ChefPlateauFlashValidesScreen() {
           const [loading, setLoading] = useState(true)
           const [flashs, setFlashs] = useState([])
-
           const navigation = useNavigation()
+
           const fetchFlash = async () => {
                     try {
                               const res = await fetchApi(`/indexation/flashs/chef_plateau/valides`)
@@ -27,8 +27,9 @@ export default function ChefPlateauFlashValidesScreen() {
                               fetchFlash()
                     })()
           }, []))
+// return console.log(flashs)
           const handleFlashPress =( flash ,flashindexe)=> {
-                    navigation.navigate("SelectAgentIndexationScreen", { flash ,flashindexe})
+                    navigation.navigate("ChefPlateauFlashValideDetailScreen", { flash ,flashindexe})
           }
           return (
                     <>
@@ -45,7 +46,7 @@ export default function ChefPlateauFlashValidesScreen() {
                                                   keyExtractor={(_, index) => index}
                                                   renderItem={({ item, index} ) => {
                                                             return (
-                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.folio.flash, item.folio.flashindexe)}>
+                                                                      <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item.flash, item.flash)}>
                                                                                 <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
                                                                                           <View style={styles.folio}>
                                                                                                     <View style={styles.folioLeftSide}>
@@ -53,19 +54,19 @@ export default function ChefPlateauFlashValidesScreen() {
                                                                                                                         <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{ item.folio.flash.NOM_FLASH }</Text>
-                                                                                                                        <Text style={styles.folioSubname}>Superviseur aile: { item.user.NOM } { item.user.PRENOM }</Text>
+                                                                                                                        <Text style={styles.folioName}>{ item.flash.NOM_FLASH }</Text>
+                                                                                                                        {/* <Text style={styles.folioSubname}>Superviseur aile: { item.user.NOM } { item.user.PRENOM }</Text> */}
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                      {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folioCounts} dossier{item.folioCounts > 1 && 's'}
+                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>
