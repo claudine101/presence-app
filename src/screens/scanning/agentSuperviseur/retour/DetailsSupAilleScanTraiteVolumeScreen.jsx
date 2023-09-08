@@ -40,8 +40,7 @@ export default function DetailsSupAilleScanTraiteVolumeScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('volume_ids', JSON.stringify(volume_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/supAille/pvs`, {
+                                const res = await fetchApi(`/scanning/retour/agent/supAille/retour/pvs`, {
                                         method: "POST",
                                         body: form
                                 })

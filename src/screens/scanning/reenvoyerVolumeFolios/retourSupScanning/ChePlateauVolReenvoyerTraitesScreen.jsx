@@ -42,6 +42,8 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                         navigation.navigate("DetailsArchivagesReenvoyezDistrScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
                         navigation.navigate("DetailsTraitesArchivesReenvoyezScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
+                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                        navigation.navigate("DetailsBienArchiverScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }
         }
 
