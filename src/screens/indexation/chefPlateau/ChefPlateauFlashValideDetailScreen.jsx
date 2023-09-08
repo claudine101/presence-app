@@ -99,7 +99,7 @@ export default function ChefPlateauFlashValideDetailScreen() {
                   </Text>
                 </View>
                 {flashDetail ? <><Text style={styles.selectedValue}>
-                  {flashDetail.pv.traitement.NOM} {flashDetail.pv.traitement.PRENOM}
+                  {flashDetail?.pv?.traitement?.NOM} {flashDetail?.pv?.traitement?.PRENOM}
                 </Text>
                   <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
                     <FontAwesome5 name="file-signature" size={20} color="#777" />
@@ -110,9 +110,9 @@ export default function ChefPlateauFlashValideDetailScreen() {
                   <TouchableOpacity onPress={() => {
                     setGalexyIndex(0)
                   }}>
-                    <Image source={{ uri: flashDetail.pv.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                    <Image source={{ uri: flashDetail?.pv?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                   </TouchableOpacity>
-                  {flashDetail.pv ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashDetail.pv.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
+                  {flashDetail?.pv ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashDetail?.pv?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
                 </> : null}
               </View>
             </TouchableOpacity>
@@ -125,7 +125,7 @@ export default function ChefPlateauFlashValideDetailScreen() {
                       {selectedItems.length} indexé{selectedItems.length > 1 && 's'}
                     </Text>
                   </View>
-              {flashDetail.folios.map((folio, index) => {
+              {flashDetail?.folios?.map((folio, index) => {
                 return (
                   <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)} key={index}>
                     <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
@@ -146,7 +146,7 @@ export default function ChefPlateauFlashValideDetailScreen() {
                 )
               })}
             </View>}
-            {(flashDetail.pv) ? 
+            {(flashDetail?.pv) ? 
             <TouchableOpacity style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]} disabled>
               <View style={styles.labelContainer}>
                 <View style={styles.icon}>
@@ -157,7 +157,7 @@ export default function ChefPlateauFlashValideDetailScreen() {
                 </Text>
               </View>
               <Text style={styles.selectedValue}>
-                {flashDetail.pv.folio.flash ? flashDetail.pv.folio.flash.NOM_FLASH:"N/A"}
+                {flashDetail?.pv?.folio?.flash ? flashDetail?.pv?.folio?.flash?.NOM_FLASH:"N/A"}
               </Text> 
             </TouchableOpacity> : null}
             <TouchableOpacity style={styles.selectContainer} disabled>
@@ -172,9 +172,9 @@ export default function ChefPlateauFlashValideDetailScreen() {
                   <TouchableOpacity onPress={() => {
                     setGalexyIndex(1)
                   }}>
-                    <Image source={{ uri: flashDetail.pvRetour.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                    <Image source={{ uri: flashDetail?.pvRetour?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                   </TouchableOpacity>
-                  {flashDetail.pvRetour ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashDetail.pvRetour.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
+                  {flashDetail?.pvRetour ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashDetail.pvRetour.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
                 </> : null}
               </View>
             </TouchableOpacity>

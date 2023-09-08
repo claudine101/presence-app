@@ -27,7 +27,7 @@ export default function SupFlashRetourScreen() {
                               fetchFlash()
                     })()
           }, []))
-          const handleFlashPress = flash => {
+          const handleFlashPress = (flash ) => {
                     navigation.navigate("SupFlashRetourDetailScreen", { flash })
                     return console.log(flash)
           }

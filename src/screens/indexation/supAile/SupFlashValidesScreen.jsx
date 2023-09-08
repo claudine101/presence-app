@@ -28,7 +28,7 @@ export default function SupFlashValidesScreen() {
                     })()
           }, []))
           const handleFlashPress = flash => {
-                    navigation.navigate("SelectChefPlateauScreen", { flash })
+                    navigation.navigate("SupFlashValideDetailScreen", { flash })
           }
           return (
                     <>
