@@ -145,7 +145,7 @@ export default function DetailsTraiteesReenvoyezChefEquipeScreen(){
                                                 </View> : null}
                                                 <Text style={styles.selectedValue}>
                                                         {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                        Pv de départ
+                                                        Pv
                                                 </Text>
                                                 {pvs?.result ?
                                                         <>
