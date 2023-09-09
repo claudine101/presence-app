@@ -105,6 +105,7 @@ import SupFlashValideDetailScreen from '../screens/indexation/supAile/SupFlashVa
 import DetailsChefEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsChefEquipeScanReenvoyerScreen';
 import DetailsBienArchiverScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsBienArchiverScreen';
 import DetailsVolumeBienArchivesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeBienArchivesScreen';
+import ChefEquipeFlashValideDetailScreen from '../screens/indexation/chefEquipe/ChefEquipeFlashValideDetailScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -135,6 +136,7 @@ export default function RootNavigator() {
                 
                 {/* indexation */}
                 
+                <Stack.Screen name='ChefEquipeFlashValideDetailScreen' component={ChefEquipeFlashValideDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SupFlashValideDetailScreen' component={SupFlashValideDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='SupFlashRetourDetailScreen' component={SupFlashRetourDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='ChefPlateauFlashRetourDetailScreen' component={ChefPlateauFlashRetourDetailScreen} options={{ headerShown: false }} />

@@ -59,7 +59,7 @@ export default function ChefEquipeFlashRetourScreen() {
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {moment(item.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                   hd  {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>

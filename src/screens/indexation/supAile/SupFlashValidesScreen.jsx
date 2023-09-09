@@ -32,11 +32,10 @@ export default function SupFlashValidesScreen() {
           }
           return (
                     <>
-                              <AppHeader title="Dossiers classés" />
+                              <AppHeader title="Dossiers indexés" />
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Clés des dossiers indexés</Text> : null}
                                         {flashs.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
@@ -65,7 +64,7 @@ export default function SupFlashValidesScreen() {
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                                                                                                   {item.folios.length} dossier{item.folios.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>

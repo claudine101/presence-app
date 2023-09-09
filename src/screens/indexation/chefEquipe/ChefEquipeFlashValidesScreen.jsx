@@ -14,9 +14,8 @@ export default function ChefEquipeFlashValidesScreen() {
           const navigation = useNavigation()
           const fetchFlash = async () => {
                     try {
-                              const res = await fetchApi(`/indexation/flashs/chef_equipe?precision=valides`)
+                              const res = await fetchApi(`/indexation/flashs/chef_equipe_indexation/valides`)
                               setFlashs(res.result)
-
                     } catch (error) {
                               console.log(error)
                     } finally {
@@ -29,16 +28,14 @@ export default function ChefEquipeFlashValidesScreen() {
                     })()
           }, []))
           const handleFlashPress = flash => {
-                    navigation.navigate("ChefEquipeFlashDetailScreen", { flash })
+                    navigation.navigate("ChefEquipeFlashValideDetailScreen", { flash })
           }
-        //  return console.log(flashs) 
           return (
                     <>
-                              <AppHeader title="Dossiers classés" />
+                              <AppHeader title="Dossiers indexés" />
                               {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                               </View> : <View style={styles.container}>
-                                        {!loading && flashs.length > 0 ? <Text style={styles.title}>Les dossiers indexés</Text> : null}
                                         {flashs.length == 0 ? <View style={styles.emptyContainer}>
                                                   <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
                                                   <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
@@ -57,18 +54,17 @@ export default function ChefEquipeFlashValidesScreen() {
                                                                                                               </View>
                                                                                                               <View style={styles.folioDesc}>
                                                                                                                         <Text style={styles.folioName}>{ item.flash.NOM_FLASH }</Text>
-                                                                                                                        {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                      {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                             <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                             <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                      {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                                                                                                   {item.folios.length} dossier{item.folios.length > 1 && 's'}
                                                                                                                                             </Text>
                                                                                                                                   </View>
                                                                                                                         </View>

@@ -17,7 +17,7 @@ import Loading from "../../../components/app/Loading";
 import moment from "moment";
 import ImageView from "react-native-image-viewing";
 import Folio from "../../../components/folio/Folio";
-export default function SupFlashValideDetailScreen() {
+export default function ChefEquipeFlashValideDetailScreen() {
   const route = useRoute()
   const { flash, flashindexe } = route.params
   const [flashDetail, setFlashDetail] = useState({})
@@ -29,7 +29,7 @@ export default function SupFlashValideDetailScreen() {
   useFocusEffect(useCallback(() => {
     (async () => {
       try {
-        const res = await fetchApi(`/indexation/flashs/chef_plateau/details_valide/${flash.ID_FLASH}`)
+        const res = await fetchApi(`/indexation/flashs/chef_equipe/details_valide/${flash.ID_FLASH}`)
         setFlashDetail(res.result)
         console.log(res.result.folios)
         if (res.result.folios) {
