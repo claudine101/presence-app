@@ -75,8 +75,7 @@ export default function DetailsAccepteVolArchivesScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                {/* <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text> */}
-                                                <Text>Archives les dossiers</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Archives les dossiers</Text>
                                         </View>
                                 </View>
                                 <ScrollView>
@@ -117,7 +116,7 @@ export default function DetailsAccepteVolArchivesScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                backgroundColor: '#fff'
         },
         header: {
                 flexDirection: 'row',
@@ -236,5 +235,14 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center'
         },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777'
+        },
+        listNames:{
+                marginLeft:10
+        }
 
 })

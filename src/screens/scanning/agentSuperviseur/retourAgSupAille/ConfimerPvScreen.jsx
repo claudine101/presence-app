@@ -27,6 +27,8 @@ export default function ConfimerPvScreen() {
         const { detail , userTraite} = route.params
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
+        const [check, setCheck] = useState([])
+        const [loadingCheck, setLoadingCheck] = useState(false)
 
         const [allVolumes, setAllVolumes] = useState([])
         const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
@@ -106,6 +108,21 @@ export default function ConfimerPvScreen() {
                                 console.log(error)
                         } finally {
                                 setLoadingAilleScanning(false)
+                        }
+                })()
+        }, [detail]))
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingCheck(true)
+                                const res = await fetchApi(`/scanning/retour/agent/retour/pvs/supAilles/${detail.volume.ID_VOLUME}`)
+                                setCheck(res.result)
+
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
                         }
                 })()
         }, [detail]))
@@ -285,7 +302,7 @@ export default function ConfimerPvScreen() {
                                                                                 </View>
                                                                         </View>
                                                                 </View> : null}
-                                        <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -298,16 +315,16 @@ export default function ConfimerPvScreen() {
                                                         </View>
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity>:null}
                                 </ScrollView>
-                                <TouchableWithoutFeedback
+                                {check.length > 0 ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitAgentSup}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback>
+                                </TouchableWithoutFeedback>:null}
                         </View>
                 </>
         )

@@ -14,7 +14,6 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
-        // console.log(userTraite)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
@@ -163,7 +162,7 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                                 </View> : null}
                                                 <Text style={styles.selectedValue}>
                                                         {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                        Pv de départ
+                                                        Pv
                                                 </Text>
                                                 {pvs?.result ?
                                                         <>

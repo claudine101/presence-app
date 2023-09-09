@@ -93,7 +93,7 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                                                                 </View> : null}
                                                                                 <Text style={styles.selectedValue}>
                                                                                         {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                                        PV de départ
+                                                                                        PV
                                                                                 </Text>
                                                                                 {pvs?.result ?
                                                                                         <>
