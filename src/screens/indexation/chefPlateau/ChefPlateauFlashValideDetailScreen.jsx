@@ -42,7 +42,7 @@ export default function ChefPlateauFlashValideDetailScreen() {
     })()
   }, []))
   // console.log()
-  // return console.log(selectedItems)
+// console.log(flashDetail.folios)
   return (
     <>
       {(galexyIndex != null && flashDetail && flashDetail?.pv) &&
@@ -135,8 +135,8 @@ export default function ChefPlateauFlashValideDetailScreen() {
                             <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
                           </View>
                           <View style={styles.folioDesc}>
-                            <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                            <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                            <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                            <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
                           </View>
                         </View>
                         <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />

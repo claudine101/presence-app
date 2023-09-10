@@ -118,7 +118,7 @@ export default function SupFlashValideDetailScreen() {
                       {flashDetail?.folios?.length} dossier{flashDetail?.folios?.length > 1 && 's'}
                     </Text>
                     <Text style={styles.selectedValue}>
-                      {selectedItems.length} indexétttt{selectedItems.length > 1 && 's'}
+                      {selectedItems.length} indexé{selectedItems.length > 1 && 's'}
                     </Text>
                   </View>
               {flashDetail?.folios?.map((folio, index) => {
@@ -131,8 +131,8 @@ export default function SupFlashValideDetailScreen() {
                             <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
                           </View>
                           <View style={styles.folioDesc}>
-                            <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                            <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                            <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                            <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
                           </View>
                         </View>
                         <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />

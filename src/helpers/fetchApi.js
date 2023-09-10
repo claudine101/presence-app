@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import cache from "../utils/cache";
 export const API_URL = false
   ? "https://prodev.mediabox.bi:33204"
-  : "http://192.168.48.187:3000";
+  : "http://192.168.43.134:3000";
 /**
  * consomer une api avec les options par défaut
  * @param {string} url - le lien à appeler
