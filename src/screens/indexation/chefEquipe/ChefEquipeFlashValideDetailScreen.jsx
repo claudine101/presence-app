@@ -34,7 +34,6 @@ export default function ChefEquipeFlashValideDetailScreen() {
         console.log(res.result.folios)
         if (res.result.folios) {
           setSelectedItems(res.result.folios)
-          console.log(res.result.folios)
         }
       } catch (error) {
         console.log(error)

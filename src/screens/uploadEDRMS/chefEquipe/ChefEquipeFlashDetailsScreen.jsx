@@ -26,8 +26,7 @@ export default function ChefEquipeFlashDetailsScreen() {
     const agentsModalRef = useRef()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [galexyIndex, setGalexyIndex] = useState(null)
-
-
+    const [selectedItems, setSelectedItems] = useState([])
     const [data, handleChange] = useForm({
         agent: null,
         pv: null
@@ -49,7 +48,9 @@ export default function ChefEquipeFlashDetailsScreen() {
         (async () => {
             try {
                 const res = await fetchApi(`/uploadEDMRS/folio/check/${flashs.flash.ID_FLASH}`)
-                setCheck(res.result[0].folios)
+                setCheck(res.result)
+                setSelectedItems(res.result)
+                console.log(res.result.length)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -179,51 +180,54 @@ export default function ChefEquipeFlashDetailsScreen() {
                             </View>
                         </TouchableOpacity>
                         <View style={styles.selectContainer1}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text style={styles.selectedValue}>
-                                {flashs.folios.length} dossier{flashs.folios.length > 1 && 's'}
-                            </Text>
-                            
-                           { check?.length > 0 ? <Text style={styles.selectedValue}>
-                                {flashs.folios.length} upload{flashs.folios.length > 1 && 's'}
-                            </Text>: <Text style={styles.selectedValue}>
-                                {flashs.folios.length} indexé{flashs.folios.length > 1 && 's'}
-                            </Text>}
-                        </View>
-                        <View style={styles.folioList}>
-                            {flashs?.folios.map((folio, index) => {
-                                return (
-                                    <>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                            <ActivityIndicator animating size={'large'} color={'#777'} />
-                                        </View> :
-                                            <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)}
-                                                    onPress={() => handleFolioPress(folio)}>
-                                                    <View style={[styles.folio]}>
-                                                        <View style={styles.folioLeftSide}>
-                                                            <View style={styles.folioLeft}>
-                                                                <View style={styles.folioImageContainer}>
-                                                                    <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                </View>
-                                                                <View style={styles.folioDesc}>
-                                                                    <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                    <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
-                                                                </View>
-                                                            </View>
-                                                            <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
-                                                        </View>
-                                                    </View>
-                                                </TouchableNativeFeedback>
-                                            </View>
-                                        }
-                                    </>
-                                )
-                            })}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <Text style={styles.selectedValue}>
+                                    {flashs.folios.length} dossier{flashs.folios.length > 1 && 's'}
+                                </Text>
 
+                                {check?.length > 0 ? <Text style={styles.selectedValue}>
+                                    {selectedItems.length} upload{selectedItems.length > 1 && 's'}
+                                </Text> : <Text style={styles.selectedValue}>
+                                    {flashs.folios.length} indexé{flashs.folios.length > 1 && 's'}
+                                </Text>}
+                            </View>
+                            <View style={styles.folioList}>
+                                {flashs?.folios.map((folio, index) => {
+                                    const isExists = selectedItems?.find(fol => fol.ID_FOLIO == folio.ID_FOLIO) ? true : false
+                                    return (
+                                        <View key={index}>
+                                            {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                            </View> :
+                                                <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                    <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)}
+                                                    >
+                                                        <View style={[styles.folio]}>
+                                                            <View style={styles.folioLeftSide}>
+                                                                <View style={styles.folioLeft}>
+                                                                    <View style={styles.folioImageContainer}>
+                                                                        <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                    </View>
+                                                                    <View style={styles.folioDesc}>
+                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                    </View>
+                                                                </View>
+                                                                {isExists ?
+                                                                    <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                    <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                                            </View>
+                                                        </View>
+                                                    </TouchableNativeFeedback>
+                                                </View>
+                                            }
+                                        </View>
+                                    )
+                                })}
+
+                            </View>
                         </View>
-                        </View>
-                        {check?.length > 0 ? <TouchableOpacity onPress={onTakePhoto}>
+                        {check?.length==flashs.folios.length ? <TouchableOpacity onPress={onTakePhoto}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -239,13 +243,11 @@ export default function ChefEquipeFlashDetailsScreen() {
                         </TouchableOpacity> : null}
                     </View>
                 </ScrollView>}
-                {check?.length > 0 ?
+                {check?.length==flashs.folios.length ?
                     <View style={styles.actions}>
-                        <View style={styles.actions}>
                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                                 <Text style={styles.actionText}>Envoyer</Text>
                             </TouchableOpacity>
-                        </View>
                     </View> : null}
             </View>
 

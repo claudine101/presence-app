@@ -54,7 +54,7 @@ export default function AgentFlashScreen() {
                                                     <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
                                                 </View>
                                                 <View style={styles.folioDesc}>
-                                                    <Text style={styles.folioName}>{item.flash.NOM_FLASH}</Text>
+                                                    <Text style={styles.folioName}>{item?.flash?.NOM_FLASH}</Text>
                                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                             <AntDesign name="calendar" size={20} color="#777" />

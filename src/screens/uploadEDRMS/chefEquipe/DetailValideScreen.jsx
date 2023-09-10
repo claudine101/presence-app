@@ -81,68 +81,6 @@ export default function DetailValideScreen() {
         })()
     }, []))
 
-    /**
-     * Permet de traiter le retour entre le sup aile indexation et le chef d'equipe
-     * @author darcydev <darcy@mediabox.bi>
-     * @date 04/08/2023
-     * @returns 
-     */
-    const handleSubmitRetour = async () => {
-        try {
-            if (!isRetourValid()) return false
-
-            setIsSubmitting(true)
-            const form = new FormData()
-            form.append("ID_FLASH", flashs.flash.ID_FLASH)
-            form.append("AGENT_UPLOAD", flashs.users.USERS_ID)
-            if (data.pv) {
-                const photo = data.pv
-                let localUri = photo.uri;
-                let filename = localUri.split('/').pop();
-                let match = /\.(\w+)$/.exec(filename);
-                let type = match ? `image/${match[1]}` : `image`;
-                form.append(`pv`, {
-                    uri: localUri, name: filename, type
-                })
-            }
-            const res = await fetchApi(`/uploadEDMRS/folio/retour`, {
-                method: 'POST',
-                body: form
-            })
-            ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-            navigation.goBack()
-        } catch (error) {
-            console.log(error)
-            ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
-
-    const isRetourValid = () => {
-        return data.pv && !isCompressingPhoto
-    }
-
-    const onTakePhoto = async () => {
-        setIsCompressingPhoto(true)
-        const permission = await ImagePicker.requestCameraPermissionsAsync()
-        if (!permission.granted) return false
-        const image = await ImagePicker.launchCameraAsync()
-        if (image.canceled) {
-            return setIsCompressingPhoto(false)
-        }
-        const photo = image.assets[0]
-        setPvPhoto(photo)
-        const manipResult = await manipulateAsync(
-            photo.uri,
-            [
-                { resize: { width: 500 } }
-            ],
-            { compress: 0.7, format: SaveFormat.JPEG }
-        );
-        setIsCompressingPhoto(false)
-        handleChange('pv', manipResult)
-    }
     return (
         <>
            
@@ -216,7 +154,7 @@ export default function DetailValideScreen() {
                             <View style={styles.folioList}>
                                 {flashs?.folios.map((folio, index) => {
                                     return (
-                                        <>
+                                        <View key={index}>
                                             {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                             </View> :
@@ -230,8 +168,8 @@ export default function DetailValideScreen() {
                                                                         <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                     </View>
                                                                     <View style={styles.folioDesc}>
-                                                                        {/* <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text> */}
+                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
                                                                     </View>
                                                                 </View>
                                                                 <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
@@ -240,7 +178,7 @@ export default function DetailValideScreen() {
                                                     </TouchableNativeFeedback>
                                                 </View>
                                             }
-                                        </>
+                                        </View>
                                     )
                                 })}
 

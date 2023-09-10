@@ -10,7 +10,6 @@ export default function DetailleFlashScreen() {
     const { flash } = route.params
     const navigation = useNavigation()
     const handleFoliosPress = folio => {
-        //  return console.log(folio.ID_ETAPE_FOLIO)
         navigation.navigate("DetailsFolioFlashScreen", { folio })
     }
     return (

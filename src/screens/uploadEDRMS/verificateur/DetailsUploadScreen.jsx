@@ -1,35 +1,21 @@
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { ActivityIndicator, Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableNativeFeedbackBase, TouchableOpacity, View } from "react-native"
+import {  useNavigation, useRoute } from "@react-navigation/native"
+import { Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
-import { AntDesign, Ionicons, MaterialCommunityIcons, Entypo, Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {  useState } from "react";
 import fetchApi from "../../../helpers/fetchApi";
 import { COLORS } from "../../../styles/COLORS";
-import { useForm } from "../../../hooks/useForm";
-import { useFormErrorsHandle } from "../../../hooks/useFormErrorsHandle";
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
-import { Modalize } from "react-native-modalize";
-import useFetch from "../../../hooks/useFetch";
-import PROFILS from "../../../constants/PROFILS";
 import Loading from "../../../components/app/Loading";
-import moment from "moment";
-import ImageView from "react-native-image-viewing";
-import Folio from "../../../components/folio/Folio";
-import Folios from "../../../components/folio/Folios";
+
 
 export default function DetailsFolioUploadScreen() {
     const route = useRoute()
     const { flash } = route.params
-    const [flashDetail, setFlashDetail] = useState({})
-    const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-    const [pvPhoto, setPvPhoto] = useState(null)
+
     const navigation = useNavigation()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
-    // console.log(selectedItems)
-
     const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
     const handleFolioPress = (folio) => {
         if (isSelected(folio)) {
@@ -54,7 +40,6 @@ export default function DetailsFolioUploadScreen() {
             const form = new FormData()
             form.append("ID_FLASH", flash.flashs.ID_FLASH)
             form.append("FOLIO_ENREGISTRE", JSON.stringify(selectedItems))
-            // return console.log(form)
             const res = await fetchApi(`/uploadEDMRS/folio/folioEnregsitre`, {
                 method: 'POST',
                 body: form
