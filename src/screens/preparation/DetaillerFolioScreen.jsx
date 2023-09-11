@@ -781,7 +781,7 @@ export default function AddFolioScreen() {
                                                                 {folios?.map((folio, index) => {
                                                                         const isExists = dossierExiste?.find(dossier => dossier.NUMERO_FOLIO == folio.NUMERO_DOSSIER) ? true : false
                                                                         return (
-                                                                                <>
+                                                                                <View key={index}>
                                                                                         <View style={[styles.headerRead]} key={index}>
                                                                                                 <View style={styles.folioImageContainer}>
                                                                                                         <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
@@ -802,7 +802,7 @@ export default function AddFolioScreen() {
                                                                                                 </TouchableOpacity>
                                                                                         </View>
                                                                                         {isExists ? <Text style={{ color: 'red',marginTop:-10,marginLeft:10,marginBottom:5 }}>Dossiesr existe déjà</Text> : null}
-                                                                                </>
+                                                                                </View>
                                                                         )
                                                                 })}
                                                                 <TouchableOpacity onPress={onTakePicha}>

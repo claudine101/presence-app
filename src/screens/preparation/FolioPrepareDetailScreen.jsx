@@ -186,7 +186,7 @@ export default function FolioPrepareDetailScreen() {
                                                                         </Text>
                                                                 </View>
                                                         </View>
-                                                        <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
+                                                        <TouchableOpacity  onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
                                                                 <View style={{ width: '100%' }}>
 
                                                                         {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>

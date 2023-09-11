@@ -1,12 +1,9 @@
 import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Fontisto, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
-import moment from 'moment'
-import { useSelector } from "react-redux";
-import { userSelector } from "../../store/selectors/userSelector";
 import AppHeaderPhPreparationRetour from "../../components/app/AppHeaderPhPreparationRetour";
 
 /**
@@ -72,9 +69,9 @@ export default function ChefPlateauScreen() {
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <Fontisto name="email" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                     {folio.users?.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

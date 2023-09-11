@@ -1102,7 +1102,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={[styles.drawerItem, { paddingVertical: 5 }]}>
                                     <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel]}>
-                                        Dossiers prépares
+                                        Dossiers préparés
                                     </Text>
                                 </View>
                             </View>
