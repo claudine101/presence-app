@@ -79,7 +79,7 @@ export default function ChefPlatauValideDetailsScreen() {
                                         <Feather name="user" size={20} color="#777" />
                                     </View>
                                     <Text style={styles.selectLabel}>
-                                        Superviseur aile indexation
+                                        Chef plateau
                                     </Text>
                                 </View>
                                 {loadingChefPlateau ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -112,7 +112,7 @@ export default function ChefPlatauValideDetailsScreen() {
                                 </View>
                                 {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                             </View>
-                            <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={supAile.result.retour ? true : false}>
+                            <TouchableOpacity  onPress={openAgentModalize} disabled={supAile.result.retour ? true : false}>
                                 <View style={{ width: '100%' }}>
 
                                     {loadingChefPlateau ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>

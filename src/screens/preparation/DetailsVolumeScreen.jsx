@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     modalImage: {
         width: "85%",
         height: "85%",
-        resizeMode: "center",
+      resizeMode: "cover",
         borderRadius: 100,
     },
     modalTitle: {
@@ -442,6 +442,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 10,
-        resizeMode: "center"
+      resizeMode: "cover"
     }
 })

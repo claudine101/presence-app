@@ -11,7 +11,7 @@ import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import ImageView from "react-native-image-viewing";
 import moment from "moment";
 
-export default function ChefPlateauValideRetourneDetailScreen() {
+export default function AgentSuperviseurReValideDetailScreen() {
           const route = useRoute()
           const { agent,folio } = route.params
           const [loading, setLoading] = useState(true)
@@ -29,8 +29,8 @@ export default function ChefPlateauValideRetourneDetailScreen() {
                                 setLoadingPvs(true)
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('CHEF_PLATEAU', agent.USERS_ID)
-                                const res = await fetchApi(`/preparation/folio/getPvChefPlateau`, {
+                                form.append('AGENT_SUPERVISEUR', agent.USERS_ID)
+                                const res = await fetchApi(`/preparation/folio/getRePvAgRetour`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -193,7 +193,7 @@ export default function ChefPlateauValideRetourneDetailScreen() {
                                                                                           </View>
                                                                                           {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                                 </View>
-                                                            <TouchableOpacity  onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
+                                                            <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
                                                                       <View style={{ width: '100%' }}>
                                                                                
                                                                                 {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>

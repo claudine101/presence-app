@@ -106,6 +106,7 @@ import DetailsChefEquipeScanReenvoyerScreen from '../screens/scanning/reenvoyerV
 import DetailsBienArchiverScreen from '../screens/scanning/reenvoyerVolumeFolios/retourSupScanning/DetailsBienArchiverScreen';
 import DetailsVolumeBienArchivesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeBienArchivesScreen';
 import ChefEquipeFlashValideDetailScreen from '../screens/indexation/chefEquipe/ChefEquipeFlashValideDetailScreen';
+import AgentSuperviseurReValideDetailScreen from '../screens/preparation/AgentSuperviseurReValideDetailScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -132,8 +133,7 @@ export default function RootNavigator() {
                 <Stack.Screen name='AgentSupRetraiteDetailScreen' component={AgentSupRetraiteDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='VolumeRetourneDetailScreen' component={VolumeRetourneDetailScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DetailsAgentPreparationRetourneScreen' component={DetailsAgentPreparationRetourneScreen} options={{ headerShown: false }} />
-               
-                
+                <Stack.Screen name='AgentSuperviseurReValideDetailScreen' component={AgentSuperviseurReValideDetailScreen} options={{ headerShown: false }} />
                 {/* indexation */}
                 
                 <Stack.Screen name='ChefEquipeFlashValideDetailScreen' component={ChefEquipeFlashValideDetailScreen} options={{ headerShown: false }} />

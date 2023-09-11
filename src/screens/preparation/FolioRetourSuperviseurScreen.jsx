@@ -229,7 +229,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                                                         </View>
                                                                                         {
                                                                                        !( check.length > 0 ) ?
-                                                                                         <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />:
+                                                                                         <Fontisto name="checkbox-passive" size={21} color="#ddd" />:
                                                                                         folio.IS_PREPARE == 0  ?
                                                                                                 <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
                                                                                                 : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />

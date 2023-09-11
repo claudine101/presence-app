@@ -604,7 +604,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                     <View style={[styles.drawerItem, { paddingVertical: 5 }]}>
                                         <Image source={require('../../../assets/images/valid-doc.png')} style={styles.imageIcon} />
                                         <Text style={[styles.drawerItemLabel]}>
-                                            Dossiers validés
+                                            Dossiers validés 
                                         </Text>
                                     </View>
                                 </View>
@@ -1793,7 +1793,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 10,
-        resizeMode: "center"
+      resizeMode: "cover"
     },
     userNames: {
         marginLeft: 10,
