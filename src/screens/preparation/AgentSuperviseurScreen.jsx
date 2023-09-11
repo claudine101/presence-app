@@ -51,7 +51,6 @@ export default function AgentSuperviseurScreen() {
                         }
                 })()
         }, []))
-        // return console.log(allDetails)
         return (
                 <>
                         <AppHeaderPhPreparationRetour header={header} />

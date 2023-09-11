@@ -26,7 +26,6 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
-                // console.log(folio)
                 if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING) {
                         navigation.navigate("RetourReenvoyezFoliosEquipeScreen", { folio: folio.folios, userTraite: folio.USERS_ID, ID_EQUIPE: folio.equipe  })
                 } else {
@@ -70,7 +69,6 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                                                         style={styles.contain}
                                                         data={allFolios}
                                                         renderItem={({ item: folio, index }) => {
-                                                                console.log(folio.equipe.NOM_EQUIPE)
                                                                 return (
                                                                         <>
                                                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>

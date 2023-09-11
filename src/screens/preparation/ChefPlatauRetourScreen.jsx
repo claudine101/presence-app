@@ -19,7 +19,6 @@ import Folio from "../../components/folio/Folio";
 export default function ChefPlatauRetourScreen() {
   const route = useRoute()
   const { volume } = route.params
-  // return  console.log()
   const [volumeDetail, setVolumeDetail] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)

@@ -140,7 +140,6 @@ export default function ConfirmerPvRetourAgentSupArchives() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const volume = await fetchApi(`/scanning/retour/agent/archives/${detail.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form

@@ -233,7 +233,6 @@ export default function AddChefPlateauScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // return console.log(form)
                         const vol = await fetchApi(`/preparation/volume/addChefEquipe`, {
                                 method: "PUT",
                                 body: form

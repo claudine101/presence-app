@@ -32,26 +32,6 @@ export default function DetailsBienArchiverScreen() {
         const [pvs, setPvs] = useState(null)
 
         const folio_ids = folio?.folios?.map(foli => foli.ID_FOLIO)
-
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoadingPvs(true)
-        //                         const form = new FormData()
-        //                         form.append('folioIds', JSON.stringify(folio_ids))
-        //                         const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/original/retour/Pvscscs`, {
-        //                                 method: "POST",
-        //                                 body: form
-        //                         })
-        //                         setPvs(res)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoadingPvs(false)
-        //                 }
-        //         })()
-        // }, [userTraite]))
-
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
                         <ImageView

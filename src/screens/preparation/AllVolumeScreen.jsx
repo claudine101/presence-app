@@ -44,7 +44,6 @@ export default function AllVolumeScreen() {
                 else {
                     setLoading(true)
                     const vol = await fetchApi(`/preparation/volume`)
-                    // console.log(vol.result[0])
                     setAllVolumes(vol.result.data)
 
                 }

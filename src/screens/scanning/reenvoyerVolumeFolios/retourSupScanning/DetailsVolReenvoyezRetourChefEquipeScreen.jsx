@@ -37,7 +37,6 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                console.log(form)
                                 const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/pvssss/final`, {
                                         method: "POST",
                                         body: form

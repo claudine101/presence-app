@@ -34,7 +34,6 @@ export default function AddSupervisurPreparationFolioScreen() {
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
         const { volume } = route.params
-        // return console.log(volume)
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })

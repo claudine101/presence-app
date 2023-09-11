@@ -26,7 +26,6 @@ export default function ChefPlatauValideDetailsScreen() {
 
 
     const [loadingChefPlateau, supAile] = useFetch(`/preparation/volume/chefsPlateaux/${volume.volume.ID_VOLUME}`)
-    console.log(supAile)
     const [data, handleChange] = useForm({
         agent: null,
         pv: null

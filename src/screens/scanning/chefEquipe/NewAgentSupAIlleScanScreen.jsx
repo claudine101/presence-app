@@ -26,7 +26,6 @@ export default function NewAgentSupAIlleScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id, mailleNoTraite } = route.params
-        // return console.log(volume)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [isCompressingPhotoPreparation, setIsCompressingPhotoPreparation] = useState(false)
         const [document, setDocument] = useState(null)
@@ -203,7 +202,6 @@ export default function NewAgentSupAIlleScanScreen() {
         //Composent pour afficher la listes folios
         const FolioList = () => {
                 const [loadingFolio, allfolios] = useFetch(`/preparation/folio/folioChefEquipe/${id}`)
-                // return console.log(allfolios)
                 return (
                         <>
                                 {loadingFolio ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >

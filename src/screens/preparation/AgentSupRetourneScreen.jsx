@@ -51,7 +51,6 @@ export default function AgentSupRetourneScreen() {
                 })()
         }, []))
         const handleAgentsPress = (volume, mailleNoTraite) => {
-            // return console.log(mailleNoTraite)
             navigation.navigate("NewAgentSupAIlleScanScreen", { volume: volume, id: volume.ID_VOLUME,mailleNoTraite: volume.mailleNoTraite })
  }
 

@@ -28,7 +28,6 @@ export default function ChefEquipeFlashRetourScreen() {
         })()
     }, []))
     const handleFlashPress = flash => {
-        //  return console.log(flash)
         navigation.navigate("ChefEquipeFlashDetailsScreen", { flashs: flash })
     }
     return (

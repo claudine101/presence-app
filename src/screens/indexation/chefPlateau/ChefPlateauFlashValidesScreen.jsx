@@ -27,7 +27,6 @@ export default function ChefPlateauFlashValidesScreen() {
                               fetchFlash()
                     })()
           }, []))
-// return console.log(flashs)
           const handleFlashPress =( flash ,flashindexe)=> {
                     navigation.navigate("ChefPlateauFlashValideDetailScreen", { flash ,flashindexe})
           }

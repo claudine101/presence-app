@@ -17,7 +17,6 @@ import moment from 'moment'
 export default function FoliosNonScanNonReconcilierScreen() {
         const navigation = useNavigation()
         const [allFolios, setAllFolios] = useState([])
-        console.log(allFolios)
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
                 navigation.navigate("DetailsEquipeFoliosNonReconcilierScreen", { folio: folio, userTraite: folio?.users, PV_PATH: folio?.PV_PATH, date: folio.date })
@@ -54,7 +53,6 @@ export default function FoliosNonScanNonReconcilierScreen() {
                                                         style={styles.contain}
                                                         data={allFolios}
                                                         renderItem={({ item: folio, index }) => {
-                                                                console.log(folio.folios.length)
                                                                 return (
                                                                         <>
 

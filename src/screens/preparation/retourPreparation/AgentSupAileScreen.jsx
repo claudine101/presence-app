@@ -35,7 +35,6 @@ export default function AgentSupAileScreen() {
                                 setLoading(true)
                                 const res = await fetchApi('/preparation/volume/agentSupRetourPhase')
                                 setAllDetails(res.result.PvFolios)
-                                console.log(res.result)
                         } catch (error) {
                                 console.log(error)
                         } finally {

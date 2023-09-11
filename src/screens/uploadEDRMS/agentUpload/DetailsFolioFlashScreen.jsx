@@ -13,7 +13,6 @@ import ETAPES_FOLIO from "../../../constants/ETAPES_FOLIO";
 export default function DetailsFolioFlashScreen() {
     const route = useRoute()
     const { folio } = route.params
-    // return console.log(folio)
     const navigation = useNavigation()
     const natureModalRef = useRef()
     const [selectedType, setSelectedType] = useState([])
@@ -99,7 +98,6 @@ export default function DetailsFolioFlashScreen() {
             const form = new FormData()
             form.append("ID_FOLIO",folio?.ID_FOLIO)
             form.append("TYPE_DOCUMENT", JSON.stringify(selectedType))
-            // return  console.log(form)
             const res = await fetchApi(`/uploadEDMRS/folio/isReUpload`, {
                 method: 'POST',
                 body: form

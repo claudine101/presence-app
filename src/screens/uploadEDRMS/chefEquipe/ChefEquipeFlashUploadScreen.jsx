@@ -26,7 +26,6 @@ export default function ChefEquipeFlashUploadScreen() {
                               fetchFlash()
                     })()
           }, []))
-        //   return  console.log(flashs)
           const handleFlashPress = flash => {
            
                     navigation.navigate("DetailValideScreen", {flashs:flash })

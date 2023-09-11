@@ -18,8 +18,6 @@ export default function UpdatingScreen() {
                   deploymentKey: "Hrj8IFSGTR-G_Eu_LTeZ-O621NISbnS5j4pfX",
                   installMode: codePush.InstallMode.IMMEDIATE
         }, status => {
-                  // console.log("status", status, codePush.SyncStatus.DOWNLOADING_PACKAGE)
-                  // console.log("status", status, codePush.SyncStatus.DOWNLOADING_PACKAGE)
                   switch(status) {
                             case codePush.SyncStatus.DOWNLOADING_PACKAGE:
                                       if(!isUpdating) {

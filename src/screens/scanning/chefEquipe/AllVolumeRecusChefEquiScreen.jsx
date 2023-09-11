@@ -42,7 +42,13 @@ export default function AllVolumeRecusChefEquiScreen() {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/plateau`)
                                         setAllVolumesPlateau(vol.result)
-                                } else {
+                                } 
+                                else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE){
+                                        setLoading(true)
+                                        const vol = await fetchApi(`/scanning/volume`)
+                                        setAllVolumes(vol.result)
+                                }
+                                else {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/tousVolume`)
                                         setAllVolumes(vol.result)

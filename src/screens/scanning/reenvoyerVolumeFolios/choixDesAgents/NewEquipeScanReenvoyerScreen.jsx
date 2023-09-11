@@ -204,7 +204,6 @@ export default function NewEquipeScanReenvoyerScreen(){
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/plateau`, {
                                 method: "PUT",
                                 body: form

@@ -41,8 +41,6 @@ export default function ChefPlateauFlashValideDetailScreen() {
       }
     })()
   }, []))
-  // console.log()
-// console.log(flashDetail.folios)
   return (
     <>
       {(galexyIndex != null && flashDetail && flashDetail?.pv) &&

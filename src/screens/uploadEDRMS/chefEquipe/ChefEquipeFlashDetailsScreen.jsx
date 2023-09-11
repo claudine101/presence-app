@@ -50,7 +50,6 @@ export default function ChefEquipeFlashDetailsScreen() {
                 const res = await fetchApi(`/uploadEDMRS/folio/check/${flashs.flash.ID_FLASH}`)
                 setCheck(res.result)
                 setSelectedItems(res.result)
-                console.log(res.result.length)
             } catch (error) {
                 console.log(error)
             } finally {

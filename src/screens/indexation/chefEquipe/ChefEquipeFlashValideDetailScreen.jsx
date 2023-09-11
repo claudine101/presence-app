@@ -31,7 +31,6 @@ export default function ChefEquipeFlashValideDetailScreen() {
       try {
         const res = await fetchApi(`/indexation/flashs/chef_equipe/details_valide/${flash.ID_FLASH}`)
         setFlashDetail(res.result)
-        console.log(res.result.folios)
         if (res.result.folios) {
           setSelectedItems(res.result.folios)
         }
@@ -42,8 +41,7 @@ export default function ChefEquipeFlashValideDetailScreen() {
       }
     })()
   }, []))
-  // console.log()
-  // return console.log(selectedItems)
+  
   return (
     <>
       {(galexyIndex != null && flashDetail && flashDetail?.pv) &&

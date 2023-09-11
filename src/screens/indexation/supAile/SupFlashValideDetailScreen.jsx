@@ -31,10 +31,8 @@ export default function SupFlashValideDetailScreen() {
       try {
         const res = await fetchApi(`/indexation/flashs/chef_plateau/details_valide/${flash.ID_FLASH}`)
         setFlashDetail(res.result)
-        console.log(res.result.folios)
         if (res.result.folios) {
           setSelectedItems(res.result.folios)
-          console.log(res.result.folios)
         }
       } catch (error) {
         console.log(error)
@@ -43,8 +41,6 @@ export default function SupFlashValideDetailScreen() {
       }
     })()
   }, []))
-  // console.log()
-  // return console.log(selectedItems)
   return (
     <>
       {(galexyIndex != null && flashDetail && flashDetail?.pv) &&
