@@ -5,7 +5,7 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useCallback } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
-import { Ionicons, MaterialIcons, FontAwesome5,Fontisto } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5, Fontisto } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import Loading from "../../components/app/Loading";
@@ -182,8 +182,8 @@ export default function FolioRetourSuperviseurScreen() {
                         setLoadingSubmit(false)
                 }
         }
-        
-      
+
+
         return (
                 <>{(galexyIndex != null && pvs?.result && pvs?.result) &&
                         <ImageView
@@ -224,16 +224,21 @@ export default function FolioRetourSuperviseurScreen() {
                                                                                                 </View>
                                                                                                 <View style={styles.folioDesc}>
                                                                                                         <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio.FOLIO}</Text>
+                                                                                                        <View style={styles.cardNature}>
+                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                {
+                                                                                                                        !(check.length > 0) ?
+                                                                                                                                <Fontisto name="checkbox-passive" size={21} color="#ddd" /> :
+                                                                                                                                folio.IS_PREPARE == 0 ?
+                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                                                                                                                        : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                }
+
+                                                                                                        </View>
                                                                                                 </View>
+
                                                                                         </View>
-                                                                                        {
-                                                                                       !( check.length > 0 ) ?
-                                                                                         <Fontisto name="checkbox-passive" size={21} color="#ddd" />:
-                                                                                        folio.IS_PREPARE == 0  ?
-                                                                                                <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
-                                                                                                : <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
-                                                                                        }
 
                                                                                 </View>
                                                                         </View>
@@ -264,8 +269,8 @@ export default function FolioRetourSuperviseurScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                       
-                                        {check.length > 0 && !checkDetails.length>0  ?
+
+                                        {check.length > 0 && !checkDetails.length > 0 ?
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -281,7 +286,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         </View>
                                                 </TouchableOpacity> : null}
                                 </ScrollView>
-                                {check.length > 0 && !checkDetails.length>0 ?
+                                {check.length > 0 && !checkDetails.length > 0 ?
                                         <TouchableWithoutFeedback
                                                 disabled={!isValidAdd()}
                                                 onPress={submitData}
@@ -439,7 +444,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex:1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',
@@ -452,6 +463,7 @@ const styles = StyleSheet.create({
         selectLabel: {
                 marginLeft: 5
         },
+       
         flash: {
                 flexDirection: 'row',
                 alignItems: 'center',

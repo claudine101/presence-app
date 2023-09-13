@@ -32,7 +32,7 @@ export default function DetailsAgentPreparationScreen() {
         const [selectedItems, setSelectedItems] = useState([])
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [data, handleChange, setValue] = useForm({
-         motif: null,
+                motif: null,
         })
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
         }, {
@@ -41,11 +41,11 @@ export default function DetailsAgentPreparationScreen() {
                 var isValid = false
                 var existMotif = false
                 var motif = true
-                existMotif = (folio.folios.length!=selectedItems.length) ? true : false
-                if(existMotif){
-                        motif=data.motif != null ? true : false
+                existMotif = (folio.folios.length != selectedItems.length) ? true : false
+                if (existMotif) {
+                        motif = data.motif != null ? true : false
                 }
-                isValid = (document != null && selectedItems.length>0)? true : false
+                isValid = (document != null && selectedItems.length > 0) ? true : false
                 return isValid && motif
         }
         //Fonction pour le prendre l'image avec l'appareil photos
@@ -84,9 +84,9 @@ export default function DetailsAgentPreparationScreen() {
                         const form = new FormData()
                         form.append('folio', JSON.stringify(folio.folios))
                         form.append('folioPrepare', JSON.stringify(selectedItems))
-                        form.append('AGENT_PREPARATION',folio.users.USERS_ID)
-                        if(data.motif!=null && selectedItems.length!=folio.folios.length){
-                          form.append('MOTIF',data.motif)
+                        form.append('AGENT_PREPARATION', folio.users.USERS_ID)
+                        if (data.motif != null && selectedItems.length != folio.folios.length) {
+                                form.append('MOTIF', data.motif)
                         }
                         if (document) {
                                 const manipResult = await manipulateAsync(
@@ -111,7 +111,7 @@ export default function DetailsAgentPreparationScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        
+
                         navigation.goBack()
                 }
                 catch (error) {
@@ -186,12 +186,19 @@ export default function DetailsAgentPreparationScreen() {
                                                                                                                                                         <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                                                 </View>
                                                                                                                                                 <View style={styles.folioDesc}>
-                                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                        <View >
+                                                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                        </View>
+                                                                                                                                                        <View style={styles.natureCard}>
+                                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                                                {isSelected(folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                                                                                                                                        </View>
+
                                                                                                                                                 </View>
                                                                                                                                         </View>
-                                                                                                                                        {isSelected(folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </TouchableNativeFeedback>
@@ -217,29 +224,29 @@ export default function DetailsAgentPreparationScreen() {
                                                         </>
                                                 </View>
                                         </View>
-                                {folio.folios.length!=selectedItems?.length ?
-                                               
-                                                
+                                        {folio.folios.length != selectedItems?.length ?
+
+
                                                 <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                                                <OutlinedTextField
-                                                        label="Motif"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.motif}
-                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                        onBlur={() => checkFieldData('motif')}
-                                                        error={hasError('motif') ? getError('motif') : ''}
-                                                        autoCompleteType='off'
-                                                        // keyboardType='number-pad'
-                                                        blurOnSubmit={false}
-                                                        multiline={true}
-                                                />
-                                        </View>:null}
+                                                        <OutlinedTextField
+                                                                label="Motif"
+                                                                fontSize={14}
+                                                                baseColor={COLORS.smallBrown}
+                                                                tintColor={COLORS.primary}
+                                                                containerStyle={{ borderRadius: 20 }}
+                                                                lineWidth={1}
+                                                                activeLineWidth={1}
+                                                                errorColor={COLORS.error}
+                                                                value={data.motif}
+                                                                onChangeText={(newValue) => handleChange('motif', newValue)}
+                                                                onBlur={() => checkFieldData('motif')}
+                                                                error={hasError('motif') ? getError('motif') : ''}
+                                                                autoCompleteType='off'
+                                                                // keyboardType='number-pad'
+                                                                blurOnSubmit={false}
+                                                                multiline={true}
+                                                        />
+                                                </View> : null}
                                         <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -335,7 +342,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
-                
+
         },
         buttonText: {
                 color: "#fff",
@@ -397,6 +404,14 @@ const styles = StyleSheet.create({
                 flex: 1
 
         },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1,
+        },
+        checkIndicator: {
+                top: 0
+        },
         folioLeft: {
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -415,7 +430,8 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
         },
         folioName: {
                 fontWeight: 'bold',

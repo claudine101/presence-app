@@ -95,7 +95,7 @@ export default function AgentPreparationFolioScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {folio.folios?.length ? folio.folios?.length : "0"} dossier{folio.folios?.length > 1 && 's'}
+                                                                                                                                                        {folio.folios?.length ? folio.folios?.length : "0"}dossier{folio.folios?.length > 1 && 's'}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>

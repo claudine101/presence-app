@@ -209,12 +209,16 @@ export default function ChefEquipeFlashDetailsScreen() {
                                                                     </View>
                                                                     <View style={styles.folioDesc}>
                                                                         <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                        <View style={styles.cardNature}>
+                                                                            <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                            <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                            {isExists ?
+                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                                                        </View>
                                                                     </View>
                                                                 </View>
-                                                                {isExists ?
-                                                                    <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                    <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+
                                                             </View>
                                                         </View>
                                                     </TouchableNativeFeedback>
@@ -226,7 +230,7 @@ export default function ChefEquipeFlashDetailsScreen() {
 
                             </View>
                         </View>
-                        {check?.length==flashs.folios.length ? <TouchableOpacity onPress={onTakePhoto}>
+                        {check?.length == flashs.folios.length ? <TouchableOpacity onPress={onTakePhoto}>
                             <View style={[styles.addImageItem]}>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -242,11 +246,11 @@ export default function ChefEquipeFlashDetailsScreen() {
                         </TouchableOpacity> : null}
                     </View>
                 </ScrollView>}
-                {check?.length==flashs.folios.length ?
+                {check?.length == flashs.folios.length ?
                     <View style={styles.actions}>
-                            <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
-                                <Text style={styles.actionText}>Envoyer</Text>
-                            </TouchableOpacity>
+                        <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
+                            <Text style={styles.actionText}>Envoyer</Text>
+                        </TouchableOpacity>
                     </View> : null}
             </View>
 
@@ -315,7 +319,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex:1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',
@@ -353,9 +363,7 @@ const styles = StyleSheet.create({
         width: '60%',
         height: '60%'
     },
-    folioDesc: {
-        marginLeft: 10
-    },
+  
     folioName: {
         fontWeight: 'bold',
         color: '#333',

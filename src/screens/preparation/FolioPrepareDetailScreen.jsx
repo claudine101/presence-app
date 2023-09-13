@@ -1,9 +1,9 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { ActivityIndicator, Image, Text,  TouchableNativeFeedback,  TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Image, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
-import {  Ionicons,  MaterialIcons,  FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import { useCallback,  useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import { COLORS } from "../../styles/COLORS";
 import { useForm } from "../../hooks/useForm";
@@ -81,7 +81,7 @@ export default function FolioPrepareDetailScreen() {
                                         </TouchableNativeFeedback>
                                         <Text style={styles.title}>{agent.NOM} {agent.PRENOM}</Text>
                                 </View>
-                                { <ScrollView style={styles.inputs}>
+                                {<ScrollView style={styles.inputs}>
 
                                         <View style={styles.content}>
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={pvs?.result ? true : false}>
@@ -131,10 +131,13 @@ export default function FolioPrepareDetailScreen() {
                                                                                                                 </View>
                                                                                                                 <View style={styles.folioDesc}>
                                                                                                                         <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <View style={styles.cardNature}>
+                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                        </View>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                                 </View>
                                                                                         </View>
                                                                                 )
@@ -142,41 +145,45 @@ export default function FolioPrepareDetailScreen() {
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {pvs?.result?.foliosNoPrepare?.length > 0 ? 
-                                                <View style={styles.selectContainer}>
-                                                        <View style={{ width: '100%' }}>
-                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                {pvs?.result?.foliosNoPrepare?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
-                                                                </View>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                        </Text>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {pvs?.result?.foliosNoPrepare.length} non préparé{pvs?.result?.foliosPrepares.length > 1 && 's'}
-                                                                        </Text>
-                                                                </View>
-                                                                <View style={styles.folioList}>
-                                                                        {pvs?.result?.foliosNoPrepare.map((folio, index) => {
-                                                                                return (
-                                                                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
-                                                                                                <View style={[styles.folio]}>
-                                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                        <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                                </View>
-                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {pvs?.result?.foliosNoPrepare.length} non préparé{pvs?.result?.foliosPrepares.length > 1 && 's'}
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {pvs?.result?.foliosNoPrepare.map((folio, index) => {
+                                                                                        return (
+                                                                                                <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                                                                                                                </View>
+                                                                                                                        </View>
+
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                        <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
                                                                                                 </View>
-                                                                                        </View>
-                                                                                )
-                                                                        })}
+                                                                                        )
+                                                                                })}
+                                                                        </View>
                                                                 </View>
-                                                        </View>
-                                                </View> : null}
+                                                        </View> : null}
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -186,7 +193,7 @@ export default function FolioPrepareDetailScreen() {
                                                                         </Text>
                                                                 </View>
                                                         </View>
-                                                        <TouchableOpacity  onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
+                                                        <TouchableOpacity onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
                                                                 <View style={{ width: '100%' }}>
 
                                                                         {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -268,6 +275,11 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center'
         },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+        },
         folioImageContainer: {
                 width: 60,
                 height: 60,
@@ -281,7 +293,8 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
         },
         folioName: {
                 fontWeight: 'bold',

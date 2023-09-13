@@ -224,19 +224,21 @@ export default function NewAgentSupAIlleScanScreen() {
                                                                                                         </View>
                                                                                                         <View style={styles.folioDesc}>
                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.cardNature}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                        {
+                                                                                                                                folio.IS_PREPARE == 1 ?
+                                                                                                                                        <>
+                                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                                        </> : <>
+                                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                                                                                                                        </>
+                                                                                                                        }
+                                                                                                                </View>
+
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {
-                                                                                                        folio.IS_PREPARE == 1 ?
-                                                                                                                <>
-                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
-                                                                                                                </> : <>
-                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
-                                                                                                                </>
-                                                                                                }
-
-
                                                                                         </View>
                                                                                 </View>
                                                                         </ScrollView>
@@ -571,13 +573,13 @@ export default function NewAgentSupAIlleScanScreen() {
                                         <TouchableOpacity style={styles.selectContainer} onPress={openFolioModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
-                                                                <Ionicons name= "eye-off-outline"  size={20} color="#777" />
+                                                                <Ionicons name="eye-off-outline" size={20} color="#777" />
                                                         </View>
                                                         <Text style={styles.selectLabel}>
                                                                 Voir les dossiers
                                                         </Text>
                                                 </View>
-                                        </TouchableOpacity> 
+                                        </TouchableOpacity>
 
                                         <TouchableOpacity style={styles.selectContainer} onPress={openAilleSUperviseurModalize}>
                                                 <View style={styles.labelContainer}>
@@ -879,7 +881,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

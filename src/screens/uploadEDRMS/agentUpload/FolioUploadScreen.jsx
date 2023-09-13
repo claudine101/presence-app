@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex: 1
     },
     folioName: {
         fontWeight: 'bold',

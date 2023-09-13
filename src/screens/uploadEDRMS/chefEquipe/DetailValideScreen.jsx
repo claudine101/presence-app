@@ -83,17 +83,17 @@ export default function DetailValideScreen() {
 
     return (
         <>
-           
-             {(galexyIndex != null && pvs && pvs) &&
-                                <ImageView
-                                        images={[{ uri: pvs?.PV_PATH }, flashs.folios[0].PV_PATH ? { uri: flashs.folios[0].PV_PATH} : undefined]}
-                                        imageIndex={galexyIndex}
-                                        visible={(galexyIndex != null) ? true : false}
-                                        onRequestClose={() => setGalexyIndex(null)}
-                                        swipeToCloseEnabled
-                                        keyExtractor={(_, index) => index.toString()}
-                                />
-                        }
+
+            {(galexyIndex != null && pvs && pvs) &&
+                <ImageView
+                    images={[{ uri: pvs?.PV_PATH }, flashs.folios[0].PV_PATH ? { uri: flashs.folios[0].PV_PATH } : undefined]}
+                    imageIndex={galexyIndex}
+                    visible={(galexyIndex != null) ? true : false}
+                    onRequestClose={() => setGalexyIndex(null)}
+                    swipeToCloseEnabled
+                    keyExtractor={(_, index) => index.toString()}
+                />
+            }
             {isSubmitting && <Loading />}
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -169,10 +169,13 @@ export default function DetailValideScreen() {
                                                                     </View>
                                                                     <View style={styles.folioDesc}>
                                                                         <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
+                                                                        <View style={styles.cardNature}>
+                                                                            <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                            <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                            <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                        </View>
                                                                     </View>
                                                                 </View>
-                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                             </View>
                                                         </View>
                                                     </TouchableNativeFeedback>
@@ -184,14 +187,25 @@ export default function DetailValideScreen() {
 
                             </View>
                         </View>
-                        <>
-                            <TouchableOpacity onPress={() => {
-                                setGalexyIndex(1)
-                            }}>
-                                <Image source={{ uri: flashs.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                            </TouchableOpacity>
-                            <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashs.date).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                        </>
+
+                        <TouchableOpacity style={styles.selectContainer} disabled>
+                            <View style={{ width: '100%' }}>
+
+                                {flashs ? <>
+                                    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+                                        <Text style={styles.addImageLabel}>
+                                            Photo du procès verbal retour
+                                        </Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => {
+                                        setGalexyIndex(1)
+                                    }}>
+                                        <Image source={{ uri: flashs?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                    </TouchableOpacity>
+                                    {flashs.PV_PATH ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashs.date).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
+                                </> : null}
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>}
 
@@ -262,7 +276,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex: 1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',
@@ -300,9 +320,7 @@ const styles = StyleSheet.create({
         width: '60%',
         height: '60%'
     },
-    folioDesc: {
-        marginLeft: 10
-    },
+
     folioName: {
         fontWeight: 'bold',
         color: '#333',

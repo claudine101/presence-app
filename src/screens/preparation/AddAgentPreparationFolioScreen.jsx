@@ -31,6 +31,7 @@ export default function AddAgentPreparationFolioScreen() {
         const [document, setDocument] = useState(null)
         const route = useRoute()
         const { volume } = route.params
+        // return console.log(volume.folios)
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -166,10 +167,13 @@ export default function AddAgentPreparationFolioScreen() {
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.folio.FOLIO}</Text>
+                                                                                                        <View style={styles.modalItemCard}>
+                                                                                                        <Text style={styles.itemTitleDesc}>Folio:{fol.folio.FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>Nature:{fol.folio.natures.DESCRIPTION}</Text>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
+                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} style={styles.icons} /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} style={styles.icons} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -461,6 +465,9 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 flex: 1
+        },
+        icons: {
+               top:10,
         },
         addImageItem: {
                 borderWidth: 0.5,

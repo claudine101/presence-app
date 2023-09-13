@@ -24,7 +24,7 @@ export default function FolioEnregistreScreen() {
     }, []))
     const handleFoliosPress = folio => {
 
-        navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio })
+        navigation.navigate("DetailsFolioFlashScreen", { folio: folio.folio })
     }
     return (
         <>
@@ -51,7 +51,11 @@ export default function FolioEnregistreScreen() {
                                                 </View>
                                                 <View style={styles.folioDesc}>
                                                     <Text style={styles.folioName}>{item.folio.NUMERO_FOLIO}</Text>
-                                                    <Text style={styles.folioSubname}>{item.folio.NUMERO_FOLIO}</Text>
+                                                    <View style={styles.cardNature}>
+                                                        <Text style={styles.folioSubname}>Folio:{item.folio.FOLIO}</Text>
+                                                        <Text style={styles.folioSubname}>Nature:{item?.folio.natures?.DESCRIPTION}</Text>
+                                                        <Text style={styles.folioSubname}></Text>
+                                                    </View>
                                                 </View>
                                             </View>
 
@@ -135,7 +139,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex: 1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',

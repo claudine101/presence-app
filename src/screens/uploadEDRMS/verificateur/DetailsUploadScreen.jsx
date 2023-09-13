@@ -1,9 +1,9 @@
-import {  useNavigation, useRoute } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
-import {  useState } from "react";
+import { useState } from "react";
 import fetchApi from "../../../helpers/fetchApi";
 import { COLORS } from "../../../styles/COLORS";
 import Loading from "../../../components/app/Loading";
@@ -33,7 +33,7 @@ export default function DetailsFolioUploadScreen() {
      * @date 14/08/2023
      * @returns 
      */
-    
+
     const handleSubmit = async () => {
         try {
             setIsSubmitting(true)
@@ -45,7 +45,7 @@ export default function DetailsFolioUploadScreen() {
                 body: form
             })
             ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-             navigation.goBack()
+            navigation.goBack()
         } catch (error) {
             console.log(error)
             ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);
@@ -68,41 +68,45 @@ export default function DetailsFolioUploadScreen() {
                     </TouchableNativeFeedback>
                     <Text style={styles.title}>{flash.flashs ? flash.flashs.NOM_FLASH : null}</Text>
                 </View>
-                    <ScrollView style={styles.inputs}>
-                        <View style={styles.content}>
-                            {<View style={styles.folioList}>
-                                {flash?.folios?.map((folio, index) => {
-                                    return (
-                                            <TouchableNativeFeedback onPress={() => handleFolioPress(folio)} key={index} >
-                                                <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
-                                                    <View style={[styles.folio]}>
-                                                        <View style={styles.folioLeftSide}>
-                                                            <View style={styles.folioImageContainer}>
-                                                                <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                            </View>
-                                                            <View style={styles.folioDesc}>
-                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                            </View>
-    
-                                                        </View>
-                                                        {isSelected(folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                            <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
-
+                <ScrollView style={styles.inputs}>
+                    <View style={styles.content}>
+                        {<View style={styles.folioList}>
+                            {flash?.folios?.map((folio, index) => {
+                                return (
+                                    <TouchableNativeFeedback onPress={() => handleFolioPress(folio)} key={index} >
+                                        <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
+                                            <View style={[styles.folio]}>
+                                                <View style={styles.folioLeftSide}>
+                                                    <View style={styles.folioImageContainer}>
+                                                        <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                     </View>
-                                                </View>
-                                            </TouchableNativeFeedback>
-                                    )
-                                })}
-                            </View>}
+                                                    <View style={styles.folioDesc}>
+                                                        <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                        <View style={styles.cardNature}>
+                                                            <Text style={styles.folioSubname}>Folio:{folio.folio.FOLIO}</Text>
+                                                            <Text style={styles.folioSubname}>Nature:{folio?.folio.natures?.DESCRIPTION}</Text>
+                                                            {isSelected(folio) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                                        </View>
+                                                    </View>
 
-                        </View>
-                    </ScrollView>
-                    <View style={styles.actions}>
-                            <TouchableOpacity style={[styles.actionBtn, { opacity: !selectedItems.length > 0 ? 0.5 : 1 }]} disabled={!selectedItems.length > 0} onPress={() => handleSubmit()}>
-                                <Text style={styles.actionText}>Confirmer</Text>
-                            </TouchableOpacity>
-                        </View>
+                                                </View>
+
+
+                                            </View>
+                                        </View>
+                                    </TouchableNativeFeedback>
+                                )
+                            })}
+                        </View>}
+
+                    </View>
+                </ScrollView>
+                <View style={styles.actions}>
+                    <TouchableOpacity style={[styles.actionBtn, { opacity: !selectedItems.length > 0 ? 0.5 : 1 }]} disabled={!selectedItems.length > 0} onPress={() => handleSubmit()}>
+                        <Text style={styles.actionText}>Confirmer</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </>
@@ -172,7 +176,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex: 1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',

@@ -41,7 +41,12 @@ export default function DetailleFlashScreen() {
                                                                       </View>
                                                                       <View style={styles.folioDesc}>
                                                                                 <Text style={styles.folioName}>{ folio.NUMERO_FOLIO }</Text>
-                                                                                <Text style={styles.folioSubname}>{ folio.NUMERO_FOLIO }</Text>
+                                                                                <View style={styles.cardNature}>
+                                                                            <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                            <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                            <Text style={styles.folioSubname}></Text>
+
+                                                                        </View>
                                                                       </View>
                                                             </View>
                                                             
@@ -122,7 +127,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex:1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',

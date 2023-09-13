@@ -46,23 +46,23 @@ export default function ChefPlatauRetourScreen() {
 
   useFocusEffect(useCallback(() => {
     (async () => {
-            try {
-                    // setLoadingCheck(true)
-                    const form = new FormData()
-                    form.append('ID_VOLUME', volume.volume.ID_VOLUME)
-                    const res = await fetchApi(`/preparation/folio/checkPlateau`, {
-                            method: "POST",
-                            body: form
-                    })
-                    setCheck(res.result)
-                    
-            } catch (error) {
-                    console.log(error)
-            } finally {
-                    // setLoadingCheck(false)
-            }
+      try {
+        // setLoadingCheck(true)
+        const form = new FormData()
+        form.append('ID_VOLUME', volume.volume.ID_VOLUME)
+        const res = await fetchApi(`/preparation/folio/checkPlateau`, {
+          method: "POST",
+          body: form
+        })
+        setCheck(res.result)
+
+      } catch (error) {
+        console.log(error)
+      } finally {
+        // setLoadingCheck(false)
+      }
     })()
-}, [volume]))
+  }, [volume]))
   const openAgentModalize = () => {
     agentsModalRef.current?.open()
   }
@@ -243,10 +243,13 @@ export default function ChefPlatauRetourScreen() {
                             </View>
                             <View style={styles.folioDesc}>
                               <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                              <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                              <View style={styles.cardNature}>
+                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                              </View>
                             </View>
                           </View>
-                          <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                         </View>
                       </View>
                     )
@@ -278,10 +281,13 @@ export default function ChefPlatauRetourScreen() {
                               </View>
                               <View style={styles.folioDesc}>
                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                <View style={styles.cardNature}>
+                                  <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                  <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                  <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
+                                </View>
                               </View>
                             </View>
-                            <MaterialIcons style={styles.checkIndicator} name="cancel" size={24} color="red" />
                           </View>
                         </View>
                       )
@@ -291,7 +297,7 @@ export default function ChefPlatauRetourScreen() {
               </View> : null}
 
 
-            {supAile?.result?.check?.length > 0 && check.length==check[0].volume.NOMBRE_DOSSIER ?
+            {supAile?.result?.check?.length > 0 && check.length == check[0].volume.NOMBRE_DOSSIER ?
               <TouchableOpacity onPress={onTakePicha}>
                 <View style={[styles.addImageItem]}>
                   <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -309,7 +315,7 @@ export default function ChefPlatauRetourScreen() {
 
 
           </View>
-          {supAile?.result?.check?.length > 0 && check.length==check[0].volume.NOMBRE_DOSSIER ?
+          {supAile?.result?.check?.length > 0 && check.length == check[0].volume.NOMBRE_DOSSIER ?
             <TouchableNativeFeedback
               disabled={!isValidAdd()}
               onPress={handleSubmitRetour}
@@ -367,7 +373,7 @@ const styles = StyleSheet.create({
   flashName: {
     marginLeft: 5
   },
-folio: {
+  folio: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -391,7 +397,13 @@ folio: {
     height: '60%'
   },
   folioDesc: {
-    marginLeft: 10
+    marginLeft: 10,
+    flex: 1
+  },
+  cardNature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   folioName: {
     fontWeight: 'bold',

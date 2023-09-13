@@ -166,33 +166,36 @@ export default function AddSupervisurPreparationFolioScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers gggs</Text>
                                                 </View>
                                                 {
-                                                        allFolios.length==0? 
-                                                        <Text style={styles.modalTitle}>Aucun dossier trouvé</Text>
-:
-                                                allFolios.map((fol, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.FOLIO}</Text>
+                                                        allFolios.length == 0 ?
+                                                                <Text style={styles.modalTitle}>Aucun dossier trouvé</Text>
+                                                                :
+                                                                allFolios.map((fol, index) => {
+                                                                        return (
+                                                                                <ScrollView key={index}>
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                                <View style={styles.modalItem} >
+                                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
+                                                                                                        <View style={styles.mard}>
+                                                                                                                <View >
+                                                                                                                        <Text style={styles.folioName}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                                </View>
+                                                                                                                <View style={styles.natureCard}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{fol.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{fol.natures.DESCRIPTION}</Text>
+                                                                                                                        {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
+                                                                                                                </View>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
-                                                                                        </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                        </TouchableNativeFeedback>
+                                                                                </ScrollView>
+                                                                        )
+                                                                })}
                                         </View>
                                 }
                                 <TouchableWithoutFeedback
@@ -296,11 +299,11 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         body: form
                                 })
                         }
-                        else{
+                        else {
                                 const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
                                         method: "PUT",
                                         body: form
-                                })    
+                                })
                         }
                         navigation.goBack()
                 }
@@ -565,7 +568,7 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-              resizeMode: "cover"
+                resizeMode: "cover"
         },
         header: {
                 flexDirection: 'row',
@@ -591,5 +594,15 @@ const styles = StyleSheet.create({
         },
         selectLabel: {
                 marginLeft: 5
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex:1
+        },
+        mard: {
+                flexDirection: "column",
+                flex:1
+                // justifyContent: "space-between",
         },
 })

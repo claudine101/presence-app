@@ -127,9 +127,7 @@ export default function DetailsFolioScreen() {
                                                 <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
                                         </View>
                                 </View>
-
                                 {folio.folios.length > 0 ?
-
                                         <View style={styles.folioList}>
                                                 <FlatList
                                                         style={styles.contain}
@@ -143,7 +141,7 @@ export default function DetailsFolioScreen() {
                                                                                 </View> :
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }}>
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio,ID_MAILLE:folio?.mailleNoTraite?.ID_MAILLE })}
+                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio, ID_MAILLE: folio?.mailleNoTraite?.ID_MAILLE })}
                                                                                                 >
                                                                                                         <View style={[styles.folio]}>
                                                                                                                 <View style={styles.folioLeftSide}>
@@ -153,7 +151,11 @@ export default function DetailsFolioScreen() {
                                                                                                                                 </View>
                                                                                                                                 <View style={styles.folioDesc}>
                                                                                                                                         <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                                        <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                        <View style={styles.folioNature}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.folio.natures.DESCRIPTION}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}></Text>
+                                                                                                                                        </View>
                                                                                                                                 </View>
                                                                                                                         </View>
 
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
                 backgroundColor: '#f1f1f1',
                 padding: 10,
                 borderRadius: 10,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         folioLeftSide: {
                 flexDirection: 'row',
@@ -307,6 +309,12 @@ const styles = StyleSheet.create({
         folioLeft: {
                 flexDirection: 'row',
                 alignItems: 'center',
+
+        },
+        folioNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent:"space-between"
 
         },
         folioImageContainer: {
@@ -322,7 +330,8 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex:1
         },
         folioName: {
                 fontWeight: 'bold',

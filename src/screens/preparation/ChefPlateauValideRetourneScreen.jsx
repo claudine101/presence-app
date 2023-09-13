@@ -23,20 +23,8 @@ export default function ChefPlateauValideRetourneScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
-        const [header, setHeader] = useState("Agents superviseurs")
+        const [header, setHeader] = useState("Chefs plateaux")
         const user = useSelector(userSelector)
-
-        const Action = ({ title, image }) => {
-                return (
-                        <View style={styles.action}>
-                                <Text style={styles.actionLabel}>{title}</Text>
-                                <View style={styles.actionIcon}>
-                                        <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                                </View>
-                        </View>
-                )
-        }
-
         //Fonction pour recuperer les details
         useFocusEffect(useCallback(() => {
                 (async () => {

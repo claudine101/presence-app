@@ -81,7 +81,7 @@ export default function FolioRetouPrepareScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                  {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -41,7 +41,8 @@ export default function ChefEquipeFlashValideDetailScreen() {
       }
     })()
   }, []))
-  
+  // return console.log(flashDetail)
+
   return (
     <>
       {(galexyIndex != null && flashDetail && flashDetail?.pv) &&
@@ -110,14 +111,14 @@ export default function ChefEquipeFlashValideDetailScreen() {
               </View>
             </TouchableOpacity>
             {<View style={styles.folioList}>
-               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text style={styles.selectedValue}>
-                      {flashDetail?.folios?.length} dossier{flashDetail?.folios?.length > 1 && 's'}
-                    </Text>
-                    <Text style={styles.selectedValue}>
-                      {selectedItems.length} indexé{selectedItems.length > 1 && 's'}
-                    </Text>
-                  </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={styles.selectedValue}>
+                  {flashDetail?.folios?.length} dossier{flashDetail?.folios?.length > 1 && 's'}
+                </Text>
+                <Text style={styles.selectedValue}>
+                  {selectedItems.length} indexé{selectedItems.length > 1 && 's'}
+                </Text>
+              </View>
               {flashDetail?.folios?.map((folio, index) => {
                 return (
                   <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)} key={index}>
@@ -129,33 +130,36 @@ export default function ChefEquipeFlashValideDetailScreen() {
                           </View>
                           <View style={styles.folioDesc}>
                             <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                            <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                            <View style={styles.cardNature}>
+                               <Text style={styles.folioSubname}>Folio:{folio.folio.FOLIO}</Text>
+                               <Text style={styles.folioSubname}>Nature:{folio.folio.natures.DESCRIPTION}</Text>
+                               <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                            </View>
                           </View>
                         </View>
-                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                       </View>
                     </View>
                   </TouchableNativeFeedback>
                 )
               })}
             </View>}
-            {(flashDetail?.pv) ? 
-            <TouchableOpacity style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]} disabled>
-              <View style={styles.labelContainer}>
-                <View style={styles.icon}>
-                  <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
+            {(flashDetail?.pv) ?
+              <TouchableOpacity style={[styles.selectContainer, { flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'baseline' }]} disabled>
+                <View style={styles.labelContainer}>
+                  <View style={styles.icon}>
+                    <MaterialCommunityIcons name="usb-flash-drive-outline" size={20} color="#777" />
+                  </View>
+                  <Text style={styles.selectLabel}>
+                    Support  de stockage  initial
+                  </Text>
                 </View>
-                <Text style={styles.selectLabel}>
-                  Support  de stockage  initial
+                <Text style={styles.selectedValue}>
+                  {flashDetail?.pv?.folio?.flash ? flashDetail?.pv?.folio?.flash?.NOM_FLASH : "N/A"}
                 </Text>
-              </View>
-              <Text style={styles.selectedValue}>
-                {flashDetail?.pv?.folio?.flash ? flashDetail?.pv?.folio?.flash?.NOM_FLASH:"N/A"}
-              </Text> 
-            </TouchableOpacity> : null}
+              </TouchableOpacity> : null}
             <TouchableOpacity style={styles.selectContainer} disabled>
               <View style={{ width: '100%' }}>
-                
+
                 {flashDetail?.pvRetour ? <>
                   <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
                     <Text style={styles.addImageLabel}>
@@ -172,7 +176,7 @@ export default function ChefEquipeFlashValideDetailScreen() {
               </View>
             </TouchableOpacity>
 
-           
+
           </View>
         </ScrollView>}
 
@@ -243,7 +247,8 @@ const styles = StyleSheet.create({
     height: '60%'
   },
   folioDesc: {
-    marginLeft: 10
+    marginLeft: 10,
+    flex:1
   },
   folioName: {
     fontWeight: 'bold',
@@ -253,8 +258,13 @@ const styles = StyleSheet.create({
     color: '#777',
     fontSize: 12
   },
+  cardNature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+},
   folioList: {
- 
+
     backgroundColor: "#fff",
     padding: 13,
     borderRadius: 5,

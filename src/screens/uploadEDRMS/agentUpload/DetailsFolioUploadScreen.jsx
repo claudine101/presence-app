@@ -8,6 +8,8 @@ import { COLORS } from "../../../styles/COLORS";
 export default function DetailsFolioUploadScreen() {
     const route = useRoute()
     const { flash } = route.params
+     console.log(flash.folios)
+
     const navigation = useNavigation()
     const handleFoliosPress = folio => {
         navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio })
@@ -40,7 +42,11 @@ export default function DetailsFolioUploadScreen() {
                                                             </View>
                                                             <View style={styles.folioDesc}>
                                                                 <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                        <View style={styles.cardNature}>
+                                                                            <Text style={styles.folioSubname}>Folio:{folio.folio.FOLIO}</Text>
+                                                                            <Text style={styles.folioSubname}>Nature:{folio?.folio.natures?.DESCRIPTION}</Text>
+                                                                            <Text style={styles.folioSubname}></Text>
+                                                                        </View>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -120,7 +126,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex:1
+    },
+    cardNature: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     folioName: {
         fontWeight: 'bold',

@@ -167,7 +167,7 @@ export default function DetailsAgentPreparationRetourneScreen() {
                                                 </View> :
                                                     <View style={{ marginTop: 10, borderRadius: 80, }} >
                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple("#c4c4c4", false)}
-                                                          disabled>
+                                                            disabled>
                                                             <View style={[styles.folio]}>
                                                                 <View style={styles.folioLeftSide}>
                                                                     <View style={styles.folioLeft}>
@@ -176,10 +176,13 @@ export default function DetailsAgentPreparationRetourneScreen() {
                                                                         </View>
                                                                         <View style={styles.folioDesc}>
                                                                             <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                            <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                            <View style={styles.natureCard}>
+                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                            </View>
                                                                         </View>
                                                                     </View>
-                                                                    <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                 </View>
                                                             </View>
                                                         </TouchableNativeFeedback>
@@ -379,8 +382,13 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
+        flex: 1,
         marginLeft: 10
     },
+    natureCard: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+},
     folioName: {
         fontWeight: 'bold',
         color: '#333',

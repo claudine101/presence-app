@@ -97,10 +97,11 @@ export default function AllVolumeScreen() {
         <>
 
             <AppHeader title={title} />
+
             {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ?
                 <View style={styles.container}>
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-
+                        <ActivityIndicator animating size={'large'} color={'#777'} />
                     </View> : allVolumes.length <= 0 ?
                         <View style={styles.emptyContainer}>
                             <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
@@ -243,7 +244,7 @@ export default function AllVolumeScreen() {
                                                 </View> :
 
                                                     <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                        onPress={() => navigation.navigate(nextRouteName, { volume: volume ,histo_IDETAPE:volume.ID_ETAPE_VOLUME})}
+                                                        onPress={() => navigation.navigate(nextRouteName, { volume: volume, histo_IDETAPE: volume.ID_ETAPE_VOLUME })}
                                                     >
                                                         <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                             <View style={styles.folio}>
@@ -264,7 +265,7 @@ export default function AllVolumeScreen() {
                                                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                 {volume?.ID_ETAPE_VOLUME == ETAPES_VOLUME.RETOUR_PREPARATION ? <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                    {volume?.foliosNoPrepare.length ? volume?.foliosNoPrepare.length : "0"} dossier{volume?.foliosNoPrepare.length  > 1 && 's'}
+                                                                                    {volume?.foliosNoPrepare.length ? volume?.foliosNoPrepare.length : "0"} dossier{volume?.foliosNoPrepare.length > 1 && 's'}
                                                                                 </Text> :
                                                                                     <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                         {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}

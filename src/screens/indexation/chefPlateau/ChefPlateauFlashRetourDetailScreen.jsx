@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
                     // paddingHorizontal: 10
           },
           actions: {
-                    padding: 10
+                    padding:5,
           },
           actionBtn: {
                     paddingVertical: 15,
