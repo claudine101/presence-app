@@ -58,7 +58,7 @@ export default function NewChefPlateauScreen() {
                                 </View > :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                        <Text style={styles.modalTitle}>Sélectionner chef plateau</Text>
                                                 </View>
                                                 {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
@@ -77,7 +77,7 @@ export default function NewChefPlateauScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                                 {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color={COLORS.primary} />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -211,13 +211,21 @@ export default function NewChefPlateauScreen() {
                                         {folios?.length > 0 ? <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <View style={styles.icon}>
+                                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                        </View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Les dossiers
+                                                                        </Text>
+                                                                </View>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                 <Text style={styles.selectedValue}>
+                                                                        {folios.length} dossier{folios.length > 1 && 's'}
                                                                 </Text>
                                                                 <Text style={styles.selectedValue}>
-                                                                        Listes des dossiers
+                                                                        {folios?.length} préparé{folios.length > 1 && 's'}
                                                                 </Text>
                                                         </View>
                                                         <View style={styles.folioList}>
@@ -231,10 +239,12 @@ export default function NewChefPlateauScreen() {
                                                                                                         </View>
                                                                                                         <View style={styles.folioDesc}>
                                                                                                                 <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.natureCard}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                                                                </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
                                                                                         </View>
                                                                                 </TouchableOpacity>
                                                                         )
@@ -440,7 +450,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
+                flex: 1,
                 marginLeft: 10
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+               
         },
         folioName: {
                 fontWeight: 'bold',

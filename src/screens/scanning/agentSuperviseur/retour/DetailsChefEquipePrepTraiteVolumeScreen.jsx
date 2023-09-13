@@ -1,19 +1,11 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
+import {  StyleSheet, Text, View, TouchableNativeFeedback, Image, ScrollView, TouchableOpacity } from "react-native";
+import { Ionicons,  Feather } from '@expo/vector-icons';
 import { COLORS } from "../../../../styles/COLORS";
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from 'moment'
 import { useState } from "react";
-import * as ImagePicker from 'expo-image-picker';
-import IDS_ETAPES_FOLIO from "../../../../constants/IDS_ETAPES_FOLIO"
-import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import fetchApi from "../../../../helpers/fetchApi";
-import Loading from "../../../../components/app/Loading";
-import PROFILS from "../../../../constants/PROFILS";
 import ImageView from "react-native-image-viewing";
-import { useRef } from "react";
-import { useCallback } from "react";
 
 /**
  * Screen pour afficher les details de volumes deja traites par le chef d'equipe preparation
@@ -27,8 +19,7 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
         const route = useRoute()
         const { volume, PV_PATH, date, userTraite } = route.params
         const [galexyIndex, setGalexyIndex] = useState(null)
-        const [loadingPvs, setLoadingPvs] = useState(false)
-        const [pvs, setPvs] = useState(null)
+        
 
         return (
                 <>
@@ -51,33 +42,37 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.title}>{volume[0]?.NUMERO_VOLUME}</Text>
+                                        <Text style={styles.title}>{userTraite.NOM}  {userTraite.PRENOM}</Text>
                                 </View>
                                 <ScrollView style={styles.inputs}>
-                                        {/* <TouchableOpacity style={styles.selectContainer1}>
+                                <TouchableOpacity style={styles.selectContainer1}>
                                                 <View style={styles.labelContainer1}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
                                                         <Text style={styles.selectLabel1}>
-                                                                Nombre de dossiers
+                                                               Volume
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue1}>
-                                                        {volume[0]?.NOMBRE_DOSSIER}
+                                                        {volume[0]?.NUMERO_VOLUME}
                                                 </Text>
-                                        </TouchableOpacity> */}
+                                        </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer1}>
                                                 <View style={styles.labelContainer1}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
                                                         <Text style={styles.selectLabel1}>
                                                                 Malle
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue1}>
                                                         {volume[0]?.maille?.NUMERO_MAILLE}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer1}>
+                                                <View style={styles.labelContainer1}>
+                                                        <Text style={styles.selectLabel1}>
+                                                                Nombre de dossiers
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue1}>
+                                                        {volume[0]?.NOMBRE_DOSSIER}  dossier{volume[0]?.NOMBRE_DOSSIER > 1 && 's'}
                                                 </Text>
                                         </TouchableOpacity>
                                         <View style={styles.selectContainer}>
@@ -239,6 +234,6 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         selectLabel1: {
-                marginLeft: 5
+                // marginLeft: 5
         },
 })

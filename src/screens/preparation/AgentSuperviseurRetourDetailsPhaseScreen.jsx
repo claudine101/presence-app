@@ -182,8 +182,6 @@ export default function AgentSuperviseurRetourDetailsPhaseScreen() {
                         setLoadingSubmit(false)
                 }
         }
-        
-      
         return (
                 <>{(galexyIndex != null && pvs?.result && pvs?.result) &&
                         <ImageView
@@ -261,26 +259,6 @@ export default function AgentSuperviseurRetourDetailsPhaseScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {/* {check.length > 0 && !(folio?.folios?.length == nbre) ? <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
-                                                <OutlinedTextField
-                                                        label="Motif"
-                                                        fontSize={14}
-                                                        baseColor={COLORS.smallBrown}
-                                                        tintColor={COLORS.primary}
-                                                        containerStyle={{ borderRadius: 20 }}
-                                                        lineWidth={1}
-                                                        activeLineWidth={1}
-                                                        errorColor={COLORS.error}
-                                                        value={data.motif}
-                                                        onChangeText={(newValue) => handleChange('motif', newValue)}
-                                                        onBlur={() => checkFieldData('motif')}
-                                                        error={hasError('motif') ? getError('motif') : ''}
-                                                        autoCompleteType='off'
-                                                        // keyboardType='number-pad'
-                                                        blurOnSubmit={false}
-                                                        multiline={true}
-                                                />
-                                        </View> : null} */}
                                         {check.length > 0 && !checkDetails.length>0  ?
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
