@@ -2,10 +2,9 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, ScrollView, ActivityIndicator, FlatList, TouchableNativeFeedback } from "react-native";
 import { COLORS } from "../../styles/COLORS";
 import AppHeader from "../../components/app/AppHeader";
-import { FloatingAction } from "react-native-floating-action";
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selectors/userSelector';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign,Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from "react";
 import fetchApi from "../../helpers/fetchApi";
 import moment from 'moment'
@@ -24,17 +23,6 @@ export default function AllVolumeDetaillerScreen() {
     const [allVolumes, setAllVolumes] = useState([])
     const [nextRouteName, setNextRouteName] = useState(null)
     const [loading, setLoading] = useState(false)
-    const Action = ({ title, image }) => {
-        return (
-            <View style={styles.action}>
-                <Text style={styles.actionLabel}>{title}</Text>
-                <View style={styles.actionIcon}>
-                    <Image source={image} style={{ tintColor: '#fff', maxWidth: '50%', maxHeight: '50%', minWidth: '50%', minHeight: '50%' }} />
-                </View>
-            </View>
-        )
-    }
-
     //fonction pour recuperer les volumes planifier par rapport de l'utilisateur connecte
 
     useFocusEffect(useCallback(() => {
@@ -63,19 +51,14 @@ export default function AllVolumeDetaillerScreen() {
 
     return (
         <>
-            <AppHeader />
+            <AppHeader  title={"Volumes détaillés"}/>
             {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR ? <View style={styles.container}>
                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
 
-                </View> : allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                    <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                    <Text style={styles.emptyTitle}>
-                        Aucun volume trouvé
-                    </Text>
-                    <Text style={styles.emptyDesc}>
-                        Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                    </Text>
-                </View> :
+                </View> : allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
+                                <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                            </View> :
 
                     <FlatList
                         style={styles.contain}
@@ -122,15 +105,10 @@ export default function AllVolumeDetaillerScreen() {
                     {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                         <ActivityIndicator animating size={'large'} color={'#777'} />
                     </View> :
-                        allVolumes.length <= 0 ? <View style={styles.emptyContaier}>
-                            <Image source={require('../../../assets/images/mail-receive.png')} style={styles.emptyImage} />
-                            <Text style={styles.emptyTitle}>
-                                Aucun volume trouvé
-                            </Text>
-                            <Text style={styles.emptyDesc}>
-                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                            </Text>
-                        </View> :
+                        allVolumes.length <= 0 ? <View style={styles.emptyContainer}>
+                        <Image source={require("../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                        <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                    </View>  :
 
                             <FlatList
                                 style={styles.contain}
@@ -145,17 +123,29 @@ export default function AllVolumeDetaillerScreen() {
                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                     onPress={() => navigation.navigate(nextRouteName, { volume: volume })}
                                                 >
-                                                    <View style={styles.cardDetails}>
-                                                        <View style={styles.carddetailItem}>
-                                                            <View style={styles.cardImages}>
-                                                                <AntDesign name="folderopen" size={24} color="black" />
-                                                            </View>
-                                                            <View style={styles.cardDescription}>
-                                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                    <View>
-                                                                        <Text style={styles.itemVolume}>{volume.volume.NUMERO_VOLUME}</Text>
+                                                   
+                                                     <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                        <View style={styles.folio}>
+                                                            <View style={styles.folioLeftSide}>
+                                                                <View style={styles.folioImageContainer}>
+                                                                    <Image source={require("../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                </View>
+                                                                <View style={styles.folioDesc}>
+                                                                    <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <AntDesign name="calendar" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                            </Text>
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                            <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                            </Text>
+                                                                        </View>
                                                                     </View>
-                                                                    <Text>{moment(volume?.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -178,7 +168,6 @@ export default function AllVolumeDetaillerScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ddd'
     },
     actionIcon: {
         width: 45,
@@ -255,6 +244,57 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     contain: {
-        backgroundColor: '#ddd'
-    }
+        // backgroundColor: '#ddd'
+    },
+    folio: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        padding: 10,
+    },
+    folioLeftSide: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    folioImageContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 40,
+        backgroundColor: '#ddd',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    folioImage: {
+        width: '60%',
+        height: '60%'
+    },
+    folioDesc: {
+        marginLeft: 10,
+        flex: 1
+    },
+    folioName: {
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    folioSubname: {
+        color: '#777',
+        fontSize: 12
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyImage: {
+        width: 100,
+        height: 100,
+        opacity: 0.8
+    },
+    emptyLabel: {
+        fontWeight: 'bold',
+        marginTop: 20,
+        color: '#777',
+        fontSize: 16
+    },
 })

@@ -1,17 +1,14 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
-import { Portal } from 'react-native-portalize';
 import * as DocumentPicker from 'expo-document-picker';
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
-import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useDispatch, useSelector } from "react-redux";
 import { folioDetailsCartSelector } from "../../store/selectors/folioDetailsCartSelector";
-import { addFolioDetailAction, removeFolioDetailAction } from "../../store/actions/folioDetailsCartActions";
 import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
 import fetchApi from "../../helpers/fetchApi";
@@ -34,6 +31,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const [informations, setInformations] = useState(null);
         const [loading, setLoading] = useState(false)
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
         const { volume } = route.params
         const [data, handleChange, setValue] = useForm({
@@ -52,7 +50,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const isValidAdd = () => {
                 var isValid = false
                 isValid = volume != null && supPreparations != null && multiFolios.length > 0 && document != null ? true : false
-                return isValid 
+                return isValid
         }
 
         // Volume select
@@ -65,7 +63,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
         }
-
         // Agent superviseur preparation select
         const preparationModalizeRef = useRef(null);
         const [supPreparations, setSupPreparations] = useState(null);
@@ -86,7 +83,42 @@ export default function AddSupervisurPreparationFolioScreen() {
         const submitConfimer = () => {
                 multSelectModalizeRef.current?.close();
         }
+        const [allFolios, setAllFolios] = useState([]);
 
+        const [foliosLoading, setFoliosLoading] = useState(false);
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                        setMultiFolios(newfolio)
+                } else {
+                        setMultiFolios(u => [...u, fol])
+                }
+        }
+        //fonction pour recuperer le folio par rapport de volume
+        useEffect(() => {
+                (async () => {
+                        try {
+                                if (volume.volume) {
+                                        setFoliosLoading(true)
+                                        if (volume?.mailleNoTraite) {
+                                                const rep = await fetchApi(`/preparation/folio/nonTraite/${volume?.mailleNoTraite.ID_MAILLE}`)
+                                                setAllFolios(rep.result)
+                                        }
+                                        else {
+                                                const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
+                                                setAllFolios(rep.result)
+                                        }
+
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setFoliosLoading(false)
+                        }
+                })()
+        }, [])
         //Composent pour afficher le modal de volume 
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
@@ -127,36 +159,6 @@ export default function AddSupervisurPreparationFolioScreen() {
         }
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
-
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-
-                }
-                //fonction pour recuperer le folio par rapport de volume
-                useEffect(() => {
-                        (async () => {
-                                try {
-                                        if (volume.volume) {
-                                                setFoliosLoading(true)
-                                                const rep = await fetchApi(`/preparation/folio/${volume.volume.ID_VOLUME}`)
-                                                setAllFolios(rep.result)
-                                        }
-                                }
-                                catch (error) {
-                                        console.log(error)
-                                } finally {
-                                        setFoliosLoading(false)
-                                }
-                        })()
-                }, [volumes])
                 return (
                         <>
                                 {foliosLoading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -166,27 +168,34 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
-                                                {allFolios.map((fol, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                {
+                                                        allFolios.length == 0 ?
+                                                                <Text style={styles.modalTitle}>Aucun dossier trouvé</Text>
+                                                                :
+                                                                allFolios.map((fol, index) => {
+                                                                        return (
+                                                                                <ScrollView key={index}>
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
+                                                                                                <View style={styles.modalItem} >
+                                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                        </View>
+                                                                                                        <View style={styles.mard}>
+                                                                                                                <View >
+                                                                                                                        <Text style={styles.folioName}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                                </View>
+                                                                                                                <View style={styles.natureCard}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{fol.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{fol.natures.DESCRIPTION}</Text>
+                                                                                                                        {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
+                                                                                                                </View>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
-                                                                                        </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                        </TouchableNativeFeedback>
+                                                                                </ScrollView>
+                                                                        )
+                                                                })}
                                         </View>
                                 }
                                 <TouchableWithoutFeedback
@@ -199,14 +208,10 @@ export default function AddSupervisurPreparationFolioScreen() {
                         </>
                 )
         }
-
-      
-        
         //Composent pour afficher le modal des agents superviseur phase preparation
         const SupervisionPreparationList = () => {
                 // <AntDesign name="addusergroup" size={24} color="black" />
                 const [loadingSuper, allSuperviseur] = useFetch('/preparation/batiment/superviseurPreparation')
-               console.log(allSuperviseur)
                 return (
                         <>
                                 {loadingSuper ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -221,7 +226,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                <View style={styles.imageContainer}>
+                                                                                        <View style={styles.imageContainer}>
                                                                                                 {prep.PHOTO_USER ? <Image source={{ uri: prep.PHOTO_USER }} style={styles.image} /> :
                                                                                                         <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
@@ -230,8 +235,8 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {supPreparations?.USERS_ID == prep.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -243,52 +248,27 @@ export default function AddSupervisurPreparationFolioScreen() {
                         </>
                 )
         }
-
-         //Fonction pour le prendre l'image avec l'appareil photos
-         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                                // const photo = 
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
+        //Fonction pour le prendre l'image avec l'appareil photos
+        const onTakePicha = async () => {
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
-
         const submitDataPreparation = async () => {
                 try {
                         setLoading(true)
@@ -311,10 +291,20 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
-                                method: "PUT",
-                                body: form
-                        })
+                        if (volume?.mailleNoTraite) {
+
+                                form.append('ID_MAILLE_NO_TRAITE', volume?.mailleNoTraite.ID_MAILLE)
+                                const vol = await fetchApi(`/preparation/folio/renommerSuperviseurPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })
+                        }
+                        else {
+                                const vol = await fetchApi(`/preparation/folio/nommerSuperviseurPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })
+                        }
                         navigation.goBack()
                 }
                 catch (error) {
@@ -323,7 +313,6 @@ export default function AddSupervisurPreparationFolioScreen() {
                         setLoading(false)
                 }
         }
-
         //Fonction pour appeller les autres information en passant l'id de volume selectionner
         useEffect(() => {
                 (async () => {
@@ -342,34 +331,36 @@ export default function AddSupervisurPreparationFolioScreen() {
                         }
                 })()
         }, [volumes])
-
         return (
                 <>
-                        {loading && <Loading/>}
+                        {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent superviseur</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                        <View>
+                                                <TouchableOpacity style={styles.selectContainer}>
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                </View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                        </Text>
                                                 </TouchableOpacity>
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
@@ -377,24 +368,16 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                         Malle
                                                                 </Text>
                                                                 <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
-                                                                        </Text>
+
+                                                                        {volume.volume.maille ? <Text style={styles.selectedValue}>
+                                                                                {volume.volume.maille ? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text> : <Text style={styles.selectedValue}>
+                                                                                {volume?.mailleNoTraite ? `${volume?.mailleNoTraite?.NUMERO_MAILLE}` : 'N/B'}
+                                                                        </Text>}
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volume? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Dossier
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
+
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openSupPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -402,7 +385,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {supPreparations ? `${supPreparations.NOM}` + ` ${supPreparations.PRENOM}` : ' Selectionner un agent superviseur'}
+                                                                                {supPreparations ? `${supPreparations.NOM}` + ` ${supPreparations.PRENOM}` : ' Séléctionner un agent superviseur'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -410,23 +393,27 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Nombre des dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : 'Selectionner les dossiers'}
+                                                                                {multiFolios.length > 0 ? ` ${multiFolios.length} ` + `séléctionné` + `${multiFolios.length > 1 ? "s" : ''}` : 'Selectionner les dossiers'}
+
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                               
+
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
@@ -441,31 +428,30 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                                <Portal>
-                                        <Modalize ref={preparationModalizeRef}  >
-                                                <SupervisionPreparationList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={volumeModalizeRef}  >
-                                                <VolumeAgentSuperviseurList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={multSelectModalizeRef}  >
-                                                <MultiFolioSelctList />
-                                        </Modalize>
-                                </Portal>
+                                <Modalize ref={preparationModalizeRef}  >
+                                        <SupervisionPreparationList />
+                                </Modalize>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
+                                <Modalize ref={multSelectModalizeRef}  >
+                                        <MultiFolioSelctList />
+                                </Modalize>
                         </View>
                 </>
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
+        },
+        butConfirmer: {
+                borderRadius: 8,
+                paddingVertical: 14,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 5,
+                marginVertical: 10
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -489,18 +475,18 @@ const styles = StyleSheet.create({
                 color: COLORS.primary
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -534,77 +520,19 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
-        },
-        buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center"
-        },
-        buttonTextPlus: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 25
-        },
-        headerRead: {
-                borderRadius: 8,
-                backgroundColor: "#ddd",
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 5,
-                paddingHorizontal: 30
-        },
-        cardFolder: {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: '#FFF',
-                maxHeight: 50,
-                borderRadius: 20,
-                padding: 3,
-                paddingVertical: 2,
-                elevation: 10,
-                shadowColor: '#c4c4c4',
-        },
-        cardDescription: {
-                marginLeft: 10,
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ddd"
-        },
-        reomoveBtn: {
-                width: 30,
-                height: 30,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
         },
         itemTitleDesc: {
                 color: "#777",
@@ -616,23 +544,14 @@ const styles = StyleSheet.create({
                 justifyContent: "space-between",
                 flex: 1
         },
-        butConfirmer: {
-                // marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
-                marginHorizontal: 10
-                // marginHorizontal: 50,
-                // marginVertical: 15
-        },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
+                marginBottom: 5,
+                marginHorizontal: 10
         },
         addImageLabel: {
                 marginLeft: 5,
@@ -644,12 +563,46 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.handleColor,
                 borderRadius: 10,
                 padding: 5
-            },
-            image: {
+        },
+        image: {
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
-            },
-
+                resizeMode: "cover"
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex:1
+        },
+        mard: {
+                flexDirection: "column",
+                flex:1
+                // justifyContent: "space-between",
+        },
 })

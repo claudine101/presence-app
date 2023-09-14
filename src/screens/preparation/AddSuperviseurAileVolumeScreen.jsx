@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto, FontAwesome5, MaterialCommunityIcons ,MaterialIcons} from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -30,30 +30,23 @@ export default function AddSuperviseurAileVolumeScreen() {
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
         const [document, setDocument] = useState(null)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
+
         const [data, handleChange, setValue] = useForm({
-                // document: null,
         })
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                // document: {
-                //         required: true
-                // }
+               
         }, {
-                // document: {
-                //         required: 'ce champ est obligatoire',
-                // }
+                
         })
-
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volume != null && agentSuperviseur != null  && document != null ? true : false
+                isValid = volume != null && agentSuperviseur != null && document != null ? true : false
                 return isValid
         }
         // Volume select
         const volumeModalizeRef = useRef(null);
         const [volumes, setVolumes] = useState(null);
-        const openVolumeModalize = () => {
-                volumeModalizeRef.current?.open();
-        };
         const setSelectedVolume = (vol) => {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
@@ -71,52 +64,29 @@ export default function AddSuperviseurAileVolumeScreen() {
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
-        }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         //Composent pour afficher le modal des chefs des platequx
         const AgentSuperviseurAile = () => {
-               
+
                 const [loadingSuperviseur, superviseurList] = useFetch('/preparation/batiment/superviseurAile')
                 return (
                         <>
@@ -125,14 +95,14 @@ export default function AddSuperviseurAileVolumeScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs ailles</Text>
+                                                        <Text style={styles.modalTitle}>Listes des agents superviseurs aile</Text>
                                                 </View>
                                                 {superviseurList?.result?.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedagentSuperviseur(chef)}>
                                                                                 <View style={styles.modalItem} >
-                                                                                <View style={styles.imageContainer}>
+                                                                                        <View style={styles.imageContainer}>
                                                                                                 {chef.PHOTO_USER ? <Image source={{ uri: chef.PHOTO_USER }} style={styles.image} /> :
                                                                                                         <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                         </View>
@@ -141,8 +111,8 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {agentSuperviseur?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {agentSuperviseur?.USERS_ID == chef.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
+                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -167,7 +137,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View>:null}
+                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
                                                 {volumesAll.result.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
@@ -235,7 +205,7 @@ export default function AddSuperviseurAileVolumeScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const vol= await fetchApi(`/preparation/volume/nommerSuperviseurAile/${volume.volume.ID_VOLUME}`, {
+                        const vol = await fetchApi(`/preparation/volume/nommerSuperviseurAile/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
                         })
@@ -253,30 +223,33 @@ export default function AddSuperviseurAileVolumeScreen() {
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent supeviseur aille</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur aile</Text>
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <View style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                        <View>
+                                                <TouchableOpacity style={styles.selectContainer}>
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                </View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
-                                                </View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                        </Text>
+                                                </TouchableOpacity>
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -284,67 +257,42 @@ export default function AddSuperviseurAileVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.volume.maille ? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volume? <View style={styles.selectContainer}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Nombre des dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Batiments
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_BATIMENT}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Ailles
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_AILE}` : 'N/B'}
+                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER} dossier` +`${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </View> : null}
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openagentSuperviseurModalize}>
-                                                        <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                Agent superviseur aille
+                                                                        Agent superviseur aile
                                                                 </Text>
                                                                 <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {agentSuperviseur ? `${agentSuperviseur.NOM}` +  `${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aille'}
+                                                                        <Text style={styles.selectedValue}> {agentSuperviseur ? `${agentSuperviseur.NOM}`  +  ` ${agentSuperviseur.PRENOM}` : 'Sélectionner agent superviseur aile'}
                                                                         </Text>
-                                                                </View>
                                                         </View>
                                                 </TouchableOpacity>
-                                                
-                                                 <TouchableOpacity onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
@@ -377,8 +325,7 @@ export default function AddSuperviseurAileVolumeScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -402,18 +349,18 @@ const styles = StyleSheet.create({
                 color: COLORS.primary
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -452,7 +399,8 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
+                marginHorizontal:10
         },
         buttonText: {
                 color: "#fff",
@@ -472,12 +420,13 @@ const styles = StyleSheet.create({
         },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
-        },
+                marginBottom: 5,
+                marginHorizontal:10
+            },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -488,11 +437,36 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.handleColor,
                 borderRadius: 10,
                 padding: 5
-            },
-            image: {
+        },
+        image: {
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
-            },
+              resizeMode: "cover"
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
 })

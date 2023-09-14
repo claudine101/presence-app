@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Image } from "react-native";
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto,MaterialIcons, FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -27,7 +27,8 @@ export default function AddChefPlateauVolumeScreen() {
         const [loading, setLoading] = useState(false)
         const route = useRoute()
         const { volume } = route.params
-        console.log(volume.volume.NOMBRE_DOSSIER)
+
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingInformation, setLoadingInformation] = useState(false)
         const [informations, setInformations] = useState(null);
         const [document, setDocument] = useState(null)
@@ -37,7 +38,7 @@ export default function AddChefPlateauVolumeScreen() {
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-              
+
         }, {
         })
 
@@ -73,17 +74,24 @@ export default function AddChefPlateauVolumeScreen() {
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
 
         //Fonction pour upload un documents 
@@ -118,7 +126,7 @@ export default function AddChefPlateauVolumeScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des chefs de plateaux</Text>
                                                 </View>
-                                                {superviseurList.result.map((chef, index) => {
+                                                {superviseurList?.result?.map((chef, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedChefPlateau(chef)}>
@@ -132,8 +140,10 @@ export default function AddChefPlateauVolumeScreen() {
                                                                                                         <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {chefPlateaux?.USERS_ID == chef.USERS_ID ? 
+                                                                                                <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
+                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />
+                                                                                                }
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -243,29 +253,32 @@ export default function AddChefPlateauVolumeScreen() {
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer le chef plateau</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un chef plateau</Text>
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <TouchableOpacity style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                        <View>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                </View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                        </Text>
                                                 </TouchableOpacity>
                                                 {volume ? <View style={styles.selectContainer}>
                                                         <View>
@@ -274,43 +287,20 @@ export default function AddChefPlateauVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.maille? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
+                                                                                {volume.volume.maille ? `${volume.volume.maille?.NUMERO_MAILLE}` : 'N/B'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </View> : null}
-                                                {volume? <View style={styles.selectContainer}>
+                                                {volume ? <View style={styles.selectContainer}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                        Dossier
+                                                                        Nombre des dossiers
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume.volume.NOMBRE_DOSSIER ? `${volume.volume.NOMBRE_DOSSIER}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Batiments
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_BATIMENT}` : 'N/B'}
-                                                                        </Text>
-                                                                </View>
-                                                        </View>
-                                                </View> : null}
-                                                {volumes ? <View style={styles.selectContainer}>
-                                                        <View>
-                                                                <Text style={styles.selectLabel}>
-                                                                        Ailles
-                                                                </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {informations ? `${informations?.NUMERO_AILE}` : 'N/B'}
+                                                                                {volume.volume.NOMBRE_DOSSIER ?
+                                                                                        `${volume.volume.NOMBRE_DOSSIER} dossier` + `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : "0"}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -329,11 +319,14 @@ export default function AddChefPlateauVolumeScreen() {
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
@@ -363,11 +356,11 @@ export default function AddChefPlateauVolumeScreen() {
         )
 }
 
+
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -385,24 +378,24 @@ const styles = StyleSheet.create({
                 borderRadius: 50,
         },
         titlePrincipal: {
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: "bold",
                 marginLeft: 10,
                 color: COLORS.primary
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -441,7 +434,8 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
+                marginHorizontal:10
         },
         buttonText: {
                 color: "#fff",
@@ -461,12 +455,13 @@ const styles = StyleSheet.create({
         },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
-        },
+                marginBottom: 5,
+                marginHorizontal:10
+            },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -482,6 +477,31 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
+              resizeMode: "cover"
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+       
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
         },
 })

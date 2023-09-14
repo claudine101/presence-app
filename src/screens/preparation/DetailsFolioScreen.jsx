@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
 import { COLORS } from "../../styles/COLORS";
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
-import moment from 'moment'
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
@@ -22,28 +20,22 @@ import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
  * @returns 
  */
 
-export default function DetailsAgentPreparationScreen() {
+export default function DetailsFolioScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const {folio,users } = route.params
-        console.log(folio.folios)
-        // const [, setAllDetails] = useState([])
+        const { folio } = route.params
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
+        const [selectedItems, setSelectedItems] = useState([])
 
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-                // document: {
-                //         required: true
-                // },
         }, {
-                // document: {
-                //         required: 'ce champ est obligatoire',
-                // },
         })
         const isValidAdd = () => {
                 var isValid = false
@@ -71,28 +63,14 @@ export default function DetailsAgentPreparationScreen() {
 
         }
 
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
-                }
-                catch (error) {
-                        console.log(error)
+        const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
+
+        const handleFolioPress = (folio) => {
+                if (isSelected(folio)) {
+                        const removed = selectedItems.filter(f => f.ID_FOLIO != folio.ID_FOLIO)
+                        setSelectedItems(removed)
+                } else {
+                        setSelectedItems(items => [...items, folio])
                 }
         }
 
@@ -101,6 +79,7 @@ export default function DetailsAgentPreparationScreen() {
                         setLoadingSubmit(true)
                         const form = new FormData()
                         form.append('folio', JSON.stringify(folio.folios))
+                        form.append('folioPrepare', JSON.stringify(selectedItems))
                         form.append('AGENT_PREPARATION', folio.users.USERS_ID)
                         if (document) {
                                 const manipResult = await manipulateAsync(
@@ -118,14 +97,6 @@ export default function DetailsAgentPreparationScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
                         const res = await fetchApi(`/preparation/folio/retourAgentPreparation`, {
                                 method: "PUT",
                                 body: form
@@ -139,83 +110,78 @@ export default function DetailsAgentPreparationScreen() {
                 }
         }
 
-        //Fonction pour recuperer les details de folios 
-        // useFocusEffect(useCallback(() => {
-        //         (async () => {
-        //                 try {
-        //                         setLoading(true)
-        //                         const res = await fetchApi(`/folio/dossiers/folioPreparations/${ID_FOLIO_AILE_AGENT_PREPARATION}`)
-        //                         setAllDetails(res.result)
-        //                 } catch (error) {
-        //                         console.log(error)
-        //                 } finally {
-        //                         setLoading(false)
-        //                 }
-        //         })()
-        // }, [ID_FOLIO_AILE_AGENT_PREPARATION]))
 
         return (
                 <>
                         {loadingSubmit && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>{folio.users.NOM} {folio.users.PRENOM}</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>{folio.users.NOM} {folio.users.PRENOM}</Text>
+                                        </View>
                                 </View>
-                                <FlatList
-                                        style={styles.contain}
-                                        data={folio.folios}
-                                        renderItem={({ item: folio, index }) => {
-                                                const isExists = folio.folio.ID_ETAPE_FOLIO==IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION?true:false
-                                                return (
-                                                        <>
-                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                </View> :
-                                                                       <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                       onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio:folio.folio,users:users})}
-                                                               >
-                                                                                <View style={styles.cardDetails}>
-                                                                                        <View style={styles.carddetailItem}>
-                                                                                                <View style={styles.cardImages}>
-                                                                                                        <AntDesign name="folderopen" size={24} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.cardDescription}>
-                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                                                                <View style={styles.cardNames}>
-                                                                                                                        <Text style={styles.itemVolume} numberOfLines={1}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text>{folio.folio.CODE_FOLIO} {isExists}</Text>
+                                {folio.folios.length > 0 ?
+                                        <View style={styles.folioList}>
+                                                <FlatList
+                                                        style={styles.contain}
+                                                        data={folio.folios}
+                                                        renderItem={({ item: folio, index }) => {
+                                                                const isExists = folio.folio.ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION ? true : false
+                                                                return (
+                                                                        <>
+                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                </View> :
+                                                                                        <View style={{ marginTop: 10, borderRadius: 80, }}>
+                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio, ID_MAILLE: folio?.mailleNoTraite?.ID_MAILLE })}
+                                                                                                >
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioLeft}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                        <View style={styles.folioNature}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.folio.natures.DESCRIPTION}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}></Text>
+                                                                                                                                        </View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+
                                                                                                                 </View>
-                                                                                                                <Text style={{ color: "#777" }}>{moment(folio.DATE_INSERTION).format('DD-MM-YYYY')}</Text>
                                                                                                         </View>
-                                                                                                </View>
+                                                                                                </TouchableNativeFeedback>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                }
-                                                        </>
-                                                )
-                                        }}
-                                        keyExtractor={(folio, index) => index.toString()}
-                                />
-                               
+                                                                                }
+                                                                        </>
+                                                                )
+                                                        }}
+                                                        keyExtractor={(folio, index) => index.toString()}
+                                                />
+                                        </View>
+                                        : null}
+
 
                         </View>
                 </>
 
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                backgroundColor: '#fff'
         },
         cardDetails: {
                 backgroundColor: '#fff',
@@ -258,7 +224,7 @@ const styles = StyleSheet.create({
                 marginVertical: 10
         },
         backBtn: {
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -276,7 +242,7 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 marginHorizontal: 10
         },
         buttonText: {
@@ -312,5 +278,96 @@ const styles = StyleSheet.create({
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#f1f1f1",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                marginBottom: 10,
+                marginHorizontal: 10
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10,
+                borderRadius: 10,
+                marginHorizontal: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flex: 1
+
+        },
+        folioLeft: {
+                flexDirection: 'row',
+                alignItems: 'center',
+
+        },
+        folioNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent:"space-between"
+
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10,
+                flex:1
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        flash: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 10
+        },
+        flashName: {
+                marginLeft: 5
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
         },
 })

@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
@@ -17,14 +17,14 @@ import Loading from "../../../components/app/Loading";
 /**
  * Le screen pour de donner les volumes a un chef du plateau
  * @author Vanny Boy <vanny@mediabox.bi>
- * @date 1/8/2021
+ * @date 1/8/2023
  * @returns 
  */
 
 export default function NewChefPlateauScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
+        const { volume, id, folios } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -58,7 +58,7 @@ export default function NewChefPlateauScreen() {
                                 </View > :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent</Text>
+                                                        <Text style={styles.modalTitle}>Sélectionner chef plateau</Text>
                                                 </View>
                                                 {volumesAll.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun chef plateau trouves</Text></View> : null}
                                                 <View style={styles.modalList}>
@@ -69,16 +69,15 @@ export default function NewChefPlateauScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                <Image source={{ uri: chef.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM} {chef.PRENOM}</Text>
                                                                                                                 <Text style={styles.itemTitleDesc}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {chefPlateau?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color={COLORS.primary} />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -177,7 +176,7 @@ export default function NewChefPlateauScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'un chef plateau</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un chef plateau</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
@@ -196,9 +195,6 @@ export default function NewChefPlateauScreen() {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
                                                         <Text style={styles.selectLabel}>
                                                                 Malle
                                                         </Text>
@@ -209,6 +205,50 @@ export default function NewChefPlateauScreen() {
                                                         </Text> : <Text>N/B</Text>}
                                                 </View>
                                         </TouchableOpacity>
+                                        {folios?.length > 0 ? <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <View style={styles.icon}>
+                                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                        </View>
+                                                                        <Text style={styles.selectLabel}>
+                                                                                Les dossiers
+                                                                        </Text>
+                                                                </View>
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {folios.length} dossier{folios.length > 1 && 's'}
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {folios?.length} préparé{folios.length > 1 && 's'}
+                                                                </Text>
+                                                        </View>
+                                                        <View style={styles.folioList}>
+                                                                {folios?.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.natureCard}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </View>
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })}
+                                                        </View>
+                                                </View>
+                                        </View> : null}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -219,7 +259,7 @@ export default function NewChefPlateauScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {chefPlateau ? `${chefPlateau.NOM} ${chefPlateau.PRENOM}` : "Cliquer pour choisir l'agent"}
+                                                        {chefPlateau ? `${chefPlateau.NOM} ${chefPlateau.PRENOM}` : "Cliquer pour choisir chef plateau"}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={onTakePicha}>
@@ -246,11 +286,9 @@ export default function NewChefPlateauScreen() {
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Portal>
-                                <Modalize ref={chefPlateauModalizeRef}  >
-                                        <ChefPlateauList />
-                                </Modalize>
-                        </Portal>
+                        <Modalize ref={chefPlateauModalizeRef}  >
+                                <ChefPlateauList />
+                        </Modalize>
                 </>
         )
 }
@@ -297,7 +335,7 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         selectLabel: {
-                marginLeft: 5
+                // marginLeft: 5
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -340,8 +378,9 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '90%',
+                height: '90%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',
@@ -383,5 +422,47 @@ const styles = StyleSheet.create({
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
+        },
+        folio: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#f1f1f1',
+                padding: 10
+        },
+        folioLeftSide: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                flex: 1,
+                marginLeft: 10
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+               
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        folioList: {
         },
 })

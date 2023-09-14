@@ -19,8 +19,6 @@ import PROFILS from "../../constants/PROFILS";
  * @returns 
  */
 export default function AllFolioScreen() {
-    console.log('qsdfghjklm:ùdfghjklmùcgvbhn,')
-
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [allVolumes, setAllVolumes] = useState([])

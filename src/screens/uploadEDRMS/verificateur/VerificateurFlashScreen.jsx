@@ -11,15 +11,13 @@ export default function VerificateurFlashScreen() {
     const [loading, setLoading] = useState(true)
     const navigation = useNavigation()
     const [folio, setFolios] = useState([])
-    
+
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
-                
-                const res = await fetchApi(`/uploadEDMRS/folio/folioUpload`)
-                setFolios(res.result)
-                console.log(res)
 
+                const res = await fetchApi(`/uploadEDMRS/folio/folioUploads`)
+                setFolios(res.result)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -32,54 +30,58 @@ export default function VerificateurFlashScreen() {
     }
     return (
         <>
-            <AppHeader title="Folio enregiste to  EDRMS" />
+            <AppHeader title="Dossiers en  attente" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
                 {
-                    <View style={styles.content}>
-                        {<View style={styles.folioList}>
-                            <FlatList
-                                data={folio}
-                                keyExtractor={(_, index) => index}
-                                renderItem={({ item, index }) => {
-                                    return (
-                                        <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item)}>
-                                            <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
-                                                <View style={styles.folio}>
-                                                    <View style={styles.folioLeftSide}>
-                                                        <View style={styles.folioImageContainer}>
-                                                            <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
-                                                        </View>
-                                                        <View style={styles.folioDesc}>
-                                                            <Text style={styles.folioName}>{item.flashs.NOM_FLASH}</Text>
-                                                            {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
-                                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <AntDesign name="calendar" size={20} color="#777" />
-                                                                    <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                        {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                    </Text>
-                                                                </View>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                    <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                    <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                        {item.folios.length} dossier{item.folios.length > 1 && 's'}
-                                                                    </Text>
+                    folio.length == 0 ? <View style={styles.emptyContainer}>
+                        <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                        <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                    </View> :
+                        <View style={styles.content}>
+                            {<View style={styles.folioList}>
+                                <FlatList
+                                    data={folio}
+                                    keyExtractor={(_, index) => index}
+                                    renderItem={({ item, index }) => {
+                                        return (
+                                            <TouchableNativeFeedback key={index} onPress={() => handleFlashPress(item)}>
+                                                <View style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }}>
+                                                    <View style={styles.folio}>
+                                                        <View style={styles.folioLeftSide}>
+                                                            <View style={styles.folioImageContainer}>
+                                                                <Image source={require("../../../../assets/images/usb-flash-drive.png")} style={styles.folioImage} />
+                                                            </View>
+                                                            <View style={styles.folioDesc}>
+                                                                <Text style={styles.folioName}>{item.flashs.NOM_FLASH}</Text>
+                                                                {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                            {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                            {item.folios.length} dossier{item.folios.length > 1 && 's'}
+                                                                        </Text>
+                                                                    </View>
                                                                 </View>
                                                             </View>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>
-                                        </TouchableNativeFeedback>
-                                    )
-                                }}
-                                style={styles.folioList}
-                            />
-                        </View>}
+                                            </TouchableNativeFeedback>
+                                        )
+                                    }}
+                                    style={styles.folioList}
+                                />
+                            </View>}
 
-                    </View>
+                        </View>
                 }
 
             </View>
@@ -92,7 +94,6 @@ export default function VerificateurFlashScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
     },
     header: {
         flexDirection: 'row',
@@ -150,7 +151,8 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex:1
     },
     folioName: {
         fontWeight: 'bold',
@@ -253,5 +255,21 @@ const styles = StyleSheet.create({
         color: '#777',
         fontSize: 12,
         marginTop: 5
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyImage: {
+        width: 100,
+        height: 100,
+        opacity: 0.8
+    },
+    emptyLabel: {
+        fontWeight: 'bold',
+        marginTop: 20,
+        color: '#777',
+        fontSize: 16
     },
 })

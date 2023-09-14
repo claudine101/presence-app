@@ -22,7 +22,6 @@ export default function SelectFolioAgentScreen() {
         agent: null,
         pv: null
     })
-    //   const [loadingFlashs, flashs] = useFetch(`/indexation/flashs`)
     const [loadingAgents, agents] = useFetch(`/uploadEDMRS/folio/users/${PROFILS.AGENT_UPLOAD_EDRMS}`)
     const flashModalRef = useRef()
     const agentsModalRef = useRef()
@@ -30,8 +29,7 @@ export default function SelectFolioAgentScreen() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
     const [pvPhoto, setPvPhoto] = useState(null)
-    const { flashs } = route.params
-
+    const { flash } = route.params
     const { hasError, getError, setErrors, checkFieldData, isValidate, setError } = useFormErrorsHandle(data, {
         agent: {
             required: true,
@@ -62,7 +60,7 @@ export default function SelectFolioAgentScreen() {
             if (!isValidate()) return false
             setIsSubmitting(true)
             const form = new FormData()
-            form.append("ID_FLASH",flashs.flashs.ID_FLASH)
+            form.append("ID_FLASH",flash.flashs.ID_FLASH)
             form.append("ID_AGENT", data.agent.USERS_ID)
             if (data.pv) {
                 const photo = data.pv
@@ -120,7 +118,7 @@ export default function SelectFolioAgentScreen() {
                             <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.title}>Choix d'un agent uploadEDMRS</Text>
+                    <Text style={styles.title}>Affecter un agent upload EDMRS</Text>
                 </View>
                 <ScrollView style={styles.inputs}>
 
@@ -136,13 +134,13 @@ export default function SelectFolioAgentScreen() {
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={styles.selectedValue}>
-                            {flashs.flashs.NOM_FLASH ? flashs.flashs.NOM_FLASH : 'Cliquer pour choisir la clé'}
+                            {flash?.flashs?.NOM_FLASH ? flash?.flashs?.NOM_FLASH : 'Cliquer pour choisir la clé'}
                         </Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                    {flashs.folios.length} dossier{flashs.folios.length > 1 && 's'}
+                                    {flash?.folios?.length} dossier{flash?.folios?.length > 1 && 's'}
                                 </Text>
                             </View>
                         </View>
@@ -153,7 +151,7 @@ export default function SelectFolioAgentScreen() {
                                 <Feather name="user" size={20} color="#777" />
                             </View>
                             <Text style={styles.selectLabel}>
-                                Agent uploadEDMRS
+                                Agent upload EDMRS
                             </Text>
                         </View>
                         <Text style={styles.selectedValue}>
@@ -341,7 +339,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 10,
-        resizeMode: "center"
+      resizeMode: "cover"
     },
     addImageLabel: {
         marginLeft: 5,

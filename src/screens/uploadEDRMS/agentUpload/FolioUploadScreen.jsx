@@ -17,7 +17,6 @@ export default function FolioUploadScreen() {
             try {
                 const res = await fetchApi(`/uploadEDMRS/folio/folioUplad`)
                 setFolios(res.result)
-                // console.log(res.result[0].folios)
 
             } catch (error) {
                 console.log(error)
@@ -31,11 +30,15 @@ export default function FolioUploadScreen() {
     }
     return (
         <>
-            <AppHeader title="Folio enregiste to  EDRMS" />
+            <AppHeader title="Dossiers uploadés" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>
                 {
+                     folio.length == 0 ? <View style={styles.emptyContainer}>
+                     <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                     <Text style={styles.emptyLabel}>Aucun dossier trouvé</Text>
+                 </View> :
                     <View style={styles.content}>
                         {<View style={styles.folioList}>
                             <FlatList
@@ -52,12 +55,11 @@ export default function FolioUploadScreen() {
                                                         </View>
                                                         <View style={styles.folioDesc}>
                                                             <Text style={styles.folioName}>{item.flashs.NOM_FLASH}</Text>
-                                                            {/* <Text style={styles.folioSubname}>Chef d'équipe: { item.user.NOM } { item.user.PRENOM }</Text> */}
-                                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                            <View style={{flex: 1 , flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                     <AntDesign name="calendar" size={20} color="#777" />
                                                                     <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                        {moment(item.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                        {moment(item.date).format('DD/MM/YYYY HH:mm')}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -91,7 +93,6 @@ export default function FolioUploadScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
     },
     header: {
         flexDirection: 'row',
@@ -149,7 +150,8 @@ const styles = StyleSheet.create({
         height: '60%'
     },
     folioDesc: {
-        marginLeft: 10
+        marginLeft: 10,
+        flex: 1
     },
     folioName: {
         fontWeight: 'bold',
@@ -252,5 +254,21 @@ const styles = StyleSheet.create({
         color: '#777',
         fontSize: 12,
         marginTop: 5
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyImage: {
+        width: 100,
+        height: 100,
+        opacity: 0.8
+    },
+    emptyLabel: {
+        fontWeight: 'bold',
+        marginTop: 20,
+        color: '#777',
+        fontSize: 16
     },
 })

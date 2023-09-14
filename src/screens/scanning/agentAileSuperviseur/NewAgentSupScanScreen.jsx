@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../../styles/COLORS";
 import { useRef } from "react";
 import { useState } from "react";
@@ -24,7 +24,7 @@ import Loading from "../../../components/app/Loading";
 export default function NewAgentSupScanScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { volume, id } = route.params
+        const { volume, id, folios } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [malles, setMalles] = useState('')
@@ -57,6 +57,39 @@ export default function NewAgentSupScanScreen() {
         const submitConfimer = () => {
                 multSelectModalizeRef.current?.close();
         }
+
+        const [allFolios, setAllFolios] = useState([]);
+        const [foliosLoading, setFoliosLoading] = useState(false);
+
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const setSelectedFolio = (fol) => {
+                if (isSelected(fol.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
+                        setMultiFolios(newfolio)
+                } else {
+                        setMultiFolios(u => [...u, fol])
+                }
+
+        }
+
+        //fonction pour recuperer le folio par rapport de volume
+        useEffect(() => {
+                (async () => {
+                        try {
+
+                                if (id) {
+                                        setFoliosLoading(true)
+                                        const rep = await fetchApi(`/scanning/folio/${id}`)
+                                        setAllFolios(rep.result)
+                                }
+                        }
+                        catch (error) {
+                                console.log(error)
+                        } finally {
+                                setFoliosLoading(false)
+                        }
+                })()
+        }, [id])
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -100,16 +133,15 @@ export default function NewAgentSupScanScreen() {
                                                                                         <View style={styles.listItem} >
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                                <Image source={{ uri: sup.PHOTO_USER }} style={styles.listItemImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.itemTitle}>{sup.NOM} {sup.PRENOM}</Text>
                                                                                                                 <Text style={styles.itemTitleDesc}>{sup.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {agentSuperviseur?.USERS_ID == sup.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -125,38 +157,6 @@ export default function NewAgentSupScanScreen() {
 
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
-                const [allFolios, setAllFolios] = useState([]);
-                const [foliosLoading, setFoliosLoading] = useState(false);
-
-                const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-                const setSelectedFolio = (fol) => {
-                        if (isSelected(fol.ID_FOLIO)) {
-                                const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
-                                setMultiFolios(newfolio)
-                        } else {
-                                setMultiFolios(u => [...u, fol])
-                        }
-
-                }
-
-                //fonction pour recuperer le folio par rapport de volume
-                useEffect(() => {
-                        (async () => {
-                                try {
-
-                                        if (id) {
-                                                setFoliosLoading(true)
-                                                const rep = await fetchApi(`/scanning/folio/${id}`)
-                                                setAllFolios(rep.result)
-                                        }
-                                }
-                                catch (error) {
-                                        console.log(error)
-                                } finally {
-                                        setFoliosLoading(false)
-                                }
-                        })()
-                }, [id])
                 return (
 
                         <>
@@ -173,18 +173,20 @@ export default function NewAgentSupScanScreen() {
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
                                                                                         <View style={styles.listItem} >
-                                                                                                <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                                {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
+                                                                                                </View>
+                                                                                                <View style={styles.mard}>
+                                                                                                        <View >
+                                                                                                                <Text style={styles.folioName}>{fol.NUMERO_FOLIO}</Text>
                                                                                                         </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
+                                                                                                        <View style={styles.natureCard}>
+                                                                                                                <Text style={styles.folioSubname}>Folio:{fol.FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>Nature:{fol.natures.DESCRIPTION}</Text>
+                                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -194,7 +196,7 @@ export default function NewAgentSupScanScreen() {
                                                 </View>
                                         </View>
                                 }
-                                  <TouchableWithoutFeedback
+                                <TouchableWithoutFeedback
                                         onPress={submitConfimer}
                                 >
                                         <View style={styles.butConfirmer}>
@@ -268,15 +270,13 @@ export default function NewAgentSupScanScreen() {
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'un agent superviseur</Text>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent superviseur</Text>
                                         </View>
                                 </View>
                                 <ScrollView style={styles.inputs}>
                                         <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
+
                                                         <Text style={styles.selectLabel}>
                                                                 Volume
                                                         </Text>
@@ -287,9 +287,7 @@ export default function NewAgentSupScanScreen() {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
+
                                                         <Text style={styles.selectLabel}>
                                                                 Malle
                                                         </Text>
@@ -302,15 +300,13 @@ export default function NewAgentSupScanScreen() {
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer}>
                                                 <View style={styles.labelContainer}>
-                                                        <View style={styles.icon}>
-                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                        </View>
+
                                                         <Text style={styles.selectLabel}>
                                                                 Nombre de dossier
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.volume.NOMBRE_DOSSIER}
+                                                        {folios?.length} dossier{folios?.length > 0 ? "s" : ""}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>
@@ -335,7 +331,7 @@ export default function NewAgentSupScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'}
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} séléctionné{multiFolios.length > 1 ? "s" : ''}
                                                                 </Text>
                                                         </View>
                                                 </View>
@@ -364,16 +360,12 @@ export default function NewAgentSupScanScreen() {
                                         </View>
                                 </TouchableWithoutFeedback>
                         </View>
-                        <Portal>
-                                <Modalize ref={agentSuperviseurRef}  >
-                                        <AgentSuperviseurList />
-                                </Modalize>
-                        </Portal>
-                        <Portal>
-                                <Modalize ref={multSelectModalizeRef}  >
-                                        <MultiFolioSelctList />
-                                </Modalize>
-                        </Portal>
+                        <Modalize ref={agentSuperviseurRef}  >
+                                <AgentSuperviseurList />
+                        </Modalize>
+                        <Modalize ref={multSelectModalizeRef}  >
+                                <MultiFolioSelctList />
+                        </Modalize>
                 </>
         )
 }
@@ -420,7 +412,13 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         selectLabel: {
-                marginLeft: 5
+                // _marginLeft: 5,
+                get marginLeft() {
+                        return this._marginLeft;
+                },
+                set marginLeft(value) {
+                        this._marginLeft = value;
+                },
         },
         addImageItem: {
                 borderWidth: 0.5,
@@ -465,15 +463,16 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         listItemImage: {
-                width: '60%',
-                height: '60%',
+                width: '90%',
+                height: '90%',
+                borderRadius: 10
         },
         listItemDesc: {
                 flexDirection: 'row',
                 alignItems: 'center'
         },
         listNames: {
-                marginLeft: 10
+                // marginLeft: 10
         },
         listItemTitle: {
                 fontWeight: 'bold'
@@ -518,8 +517,53 @@ const styles = StyleSheet.create({
         butConfirmer: {
                 borderRadius: 8,
                 paddingVertical: 14,
-                backgroundColor:COLORS.primary,
-                marginHorizontal: 50,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10,
                 marginVertical: 15
+        },
+        itemTitle: {
+                marginLeft: 10
+        },
+        button: {
+                marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                paddingHorizontal: 10,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10
+        },
+        // buttonText: {
+        //         color: "#fff",
+        //         fontWeight: "bold",
+        //         fontSize: 16,
+        //         textAlign: "center"
+        // },
+        itemTitleDesc: {
+                color: "#777",
+                marginLeft: 10,
+                fontSize: 11
+        },
+        modalItemCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 1
+        },
+        mard: {
+                flexDirection: "column",
+                flex: 1
+                // justifyContent: "space-between",
+        },
+        modalImageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 50,
+                justifyContent: "center",
+                alignItems: "center"
         },
 })

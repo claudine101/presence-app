@@ -1,16 +1,14 @@
-import React, { useCallback, useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
-import { Ionicons, AntDesign, Feather, EvilIcons, Fontisto, FontAwesome5 } from '@expo/vector-icons';
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert, Image } from "react-native";
+import { Ionicons, AntDesign, Feather, MaterialIcons, Fontisto, FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
 import { useForm } from '../../hooks/useForm';
 import { useFormErrorsHandle } from '../../hooks/useFormErrorsHandle';
-import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
-import { launchCamera } from 'react-native-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
@@ -27,8 +25,9 @@ import Loading from "../../components/app/Loading";
 export default function AddDetailsFolioScreen() {
         const navigation = useNavigation()
         const [loading, setLoading] = useState(false)
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { folio, users } = route.params
+        const { folio, } = route.params
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
@@ -83,10 +82,13 @@ export default function AddDetailsFolioScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentPreparation != null ? true : false
-                isValid = allFolio != null ? true : false
-                isValid = logoImage != null ? true : false
-                return isValid && isValidate()
+                var isPhoto = false
+                var isColline = false
+                // isValid = agentPreparation != null ? true : false
+                // isValid = allFolio != null ? true : false
+                isPhoto = logoImage != null ? true : false
+                isValid = collines?.COLLINE_ID != null ? true : false
+                return isValid && isPhoto && isValidate()
         }
 
         // Agent preparation select
@@ -137,8 +139,8 @@ export default function AddDetailsFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {agentPreparation?.ID_USER_AILE == prep.ID_USER_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -197,8 +199,8 @@ export default function AddDetailsFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{fol.NUMERO_FOLIO}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{fol.CODE_FOLIO}</Text>
                                                                                                 </View>
-                                                                                                {allFolio?.ID_FOLIO == fol.ID_FOLIO ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {allFolio?.ID_FOLIO == fol.ID_FOLIO ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -210,39 +212,27 @@ export default function AddDetailsFolioScreen() {
                         </>
                 )
         }
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setLogoImage(image.assets[0])
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
-
+                const photo = image.assets[0]
+                setLogoImage(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
-
-
-        //Fonction pour importer l'image dans le galerie
-
-        // const inporterImages = async () => {
-        //         modelRef.current.close()
-        //         const permission = await ImagePicker.requestCameraPermissionsAsync()
-        //         if (!permission.granted) return false
-        //         let photo = await ImagePicker.launchImageLibraryAsync({
-        //                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        //                 allowsMultipleSelection: true
-        //         })
-        //         if (!photo.cancelled) {
-        //                 setLogoImage(photo)
-        //         }
-        // }
-
         const submitData = async () => {
                 try {
                         setLoading(true)
@@ -273,11 +263,15 @@ export default function AddDetailsFolioScreen() {
                                 })
 
                         }
+                        if (folio?.mailleNoTraite) {
+
+                                form.append('ID_MAILLE_NO_TRAITE', folio?.mailleNoTraite.ID_MAILLE)
+                        }
                         const volume = await fetchApi(`/preparation/folio/addDetails`, {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.goBack()
+                        navigation.navigate("FolioRetourScreen")
                 }
                 catch (error) {
                         console.log(error)
@@ -296,10 +290,9 @@ export default function AddDetailsFolioScreen() {
                 setProvinces(prov)
         }
         //Composent pour afficher le modal des Provincess 
+        const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
         const ProvincesList = () => {
-                const [loadingProvinces, ProvincessAll] = useFetch('/preparation/batiment/provinces')
                 return (
-                        <>
                                 <>
                                         {loadingProvinces ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -314,14 +307,14 @@ export default function AddDetailsFolioScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedProvinces(prov)}>
                                                                                         <View style={styles.modalItem} >
                                                                                                 <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color={COLORS.primary} />
                                                                                                 </View>
                                                                                                 <View style={styles.modalItemCard}>
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{prov.PROVINCE_NAME}</Text>
                                                                                                         </View>
-                                                                                                        {provinces?.PROVINCE_ID == prov.PROVINCE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                        {provinces?.PROVINCE_ID == prov.PROVINCE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -331,10 +324,8 @@ export default function AddDetailsFolioScreen() {
                                                 </View>
                                         }
                                 </>
-                        </>
                 )
         }
-
         // Communes select
         const communeModalizeRef = useRef(null);
         const [communes, setCommunes] = useState(null);
@@ -364,14 +355,14 @@ export default function AddDetailsFolioScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCommunes(comm)}>
                                                                                         <View style={styles.modalItem} >
                                                                                                 <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color={COLORS.primary} />
                                                                                                 </View>
                                                                                                 <View style={styles.modalItemCard}>
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{comm.COMMUNE_NAME}</Text>
                                                                                                         </View>
-                                                                                                        {communes?.COMMUNE_ID == comm.COMMUNE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                        {communes?.COMMUNE_ID == comm.COMMUNE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -414,14 +405,14 @@ export default function AddDetailsFolioScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedZones(zone)}>
                                                                                         <View style={styles.modalItem} >
                                                                                                 <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color={COLORS.primary} />
                                                                                                 </View>
                                                                                                 <View style={styles.modalItemCard}>
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{zone.ZONE_NAME}</Text>
                                                                                                         </View>
-                                                                                                        {zones?.ZONE_ID == zone.ZONE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                        {zones?.ZONE_ID == zone.ZONE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -464,14 +455,14 @@ export default function AddDetailsFolioScreen() {
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCollines(colline)}>
                                                                                         <View style={styles.modalItem} >
                                                                                                 <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color={COLORS.primary} />
                                                                                                 </View>
                                                                                                 <View style={styles.modalItemCard}>
                                                                                                         <View>
                                                                                                                 <Text style={styles.itemTitle}>{colline.COLLINE_NAME}</Text>
                                                                                                         </View>
-                                                                                                        {collines?.COLLINE_ID == colline.COLLINE_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                        {collines?.COLLINE_ID == colline.COLLINE_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                                 </View>
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -491,17 +482,20 @@ export default function AddDetailsFolioScreen() {
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+
+                                <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Ajout de details :{folio.NUMERO_FOLIO}</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Ajout de details :{folio.NUMERO_FOLIO}</Text>
+                                        </View>
                                 </View>
-                                <ScrollView keyboardShouldPersistTaps='handled'>
+                                <ScrollView keyboardShouldPersistTaps='handled' style={styles.inputs}>
                                         <View>
                                                 <View style={{ marginVertical: 8 }}>
                                                         <OutlinedTextField
@@ -510,8 +504,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.parcelle}
                                                                 onChangeText={(newValue) => handleChange('parcelle', newValue)}
@@ -528,8 +522,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.localite}
                                                                 onChangeText={(newValue) => handleChange('localite', newValue)}
@@ -546,8 +540,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.nom}
                                                                 onChangeText={(newValue) => handleChange('nom', newValue)}
@@ -564,8 +558,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.prenom}
                                                                 onChangeText={(newValue) => handleChange('prenom', newValue)}
@@ -578,7 +572,7 @@ export default function AddDetailsFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openProvinceModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                Province
+                                                                        Province
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -604,7 +598,7 @@ export default function AddDetailsFolioScreen() {
                                                 {communes ? <TouchableOpacity style={styles.selectContainer} onPress={openZoneModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                Zone
+                                                                        Zone
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
@@ -622,24 +616,27 @@ export default function AddDetailsFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Sélectionner le  olline'}
+                                                                                {collines ? `${collines.COLLINE_NAME}` : 'Sélectionner le  colline'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity> : null
 
                                                 }
-                                                <TouchableWithoutFeedback onPress={onTakePicha}>
+                                                <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du document
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du dossier
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {logoImage && <Image source={{ uri: logoImage.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
-                                                </TouchableWithoutFeedback>
+                                                </TouchableOpacity>
                                                 <View style={{ marginVertical: 8 }}>
                                                         <OutlinedTextField
                                                                 label="Nombre de feuille"
@@ -647,8 +644,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.nombre}
                                                                 onChangeText={(newValue) => handleChange('nombre', newValue)}
@@ -667,8 +664,8 @@ export default function AddDetailsFolioScreen() {
                                                                 baseColor={COLORS.smallBrown}
                                                                 tintColor={COLORS.primary}
                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                lineWidth={1}
-                                                                activeLineWidth={1}
+                                                                lineWidth={0.25}
+                                                                activeLineWidth={0.25}
                                                                 errorColor={COLORS.error}
                                                                 value={data.doublon}
                                                                 onChangeText={(newValue) => handleChange('doublon', newValue)}
@@ -683,26 +680,7 @@ export default function AddDetailsFolioScreen() {
 
                                         </View>
                                 </ScrollView>
-                                <Portal>
-                                        <Modalize ref={provinceModalizeRef}  >
-                                                <ProvincesList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={communeModalizeRef}  >
-                                                <CommunesList provinces={provinces} />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={zoneModalizeRef}  >
-                                                <ZonesList communes={communes} />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={collineModalizeRef}  >
-                                                <CollinesList zones={zones} />
-                                        </Modalize>
-                                </Portal>
+
                                 <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitData}
@@ -711,16 +689,26 @@ export default function AddDetailsFolioScreen() {
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
                                 </TouchableWithoutFeedback>
-                                <Portal>
-                                        <Modalize ref={preparationModalizeRef}  >
-                                                <PreparationList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={folioModalizeRef}  >
-                                                <FolioList agentPreparation={agentPreparation} />
-                                        </Modalize>
-                                </Portal>
+                                <Modalize ref={provinceModalizeRef}  >
+                                        <ProvincesList />
+                                </Modalize>
+                                <Modalize ref={communeModalizeRef}  >
+                                        <CommunesList provinces={provinces} />
+                                </Modalize>
+                                <Modalize ref={zoneModalizeRef}  >
+                                        <ZonesList communes={communes} />
+                                </Modalize>
+                                <Modalize ref={collineModalizeRef}  >
+                                        <CollinesList zones={zones} />
+                                </Modalize>
+
+                                <Modalize ref={preparationModalizeRef}  >
+                                        <PreparationList />
+                                </Modalize>
+
+                                <Modalize ref={folioModalizeRef}  >
+                                        <FolioList agentPreparation={agentPreparation} />
+                                </Modalize>
 
                         </View>
 
@@ -728,62 +716,62 @@ export default function AddDetailsFolioScreen() {
                 </>
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
         },
-        cardHeader: {
+        header: {
                 flexDirection: 'row',
-                marginTop: StatusBar.currentHeight,
-                alignContent: "center",
-                alignItems: "center",
-                marginBottom: 15
-        },
-        backBtn: {
-                backgroundColor: COLORS.primary,
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
+                paddingVertical: 10
         },
-        titlePrincipal: {
-                fontSize: 18,
-                fontWeight: "bold",
-                marginLeft: 10,
-                color: COLORS.primary
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 17,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        inputs: {
+                paddingHorizontal: 10
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
+                borderColor: "#ddd",
                 marginVertical: 10
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginTop: 2,
+                marginLeft: 5,
         },
-        selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "#fff",
-                padding: 13,
-                borderRadius: 5,
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5,
+                opacity: 0.25
+        },
+        addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 15,
+                marginBottom: 5
         },
-        selectedValue: {
-                color: '#777'
-        },
+
         modalHeader: {
                 flexDirection: "row",
                 alignItems: "center",
@@ -791,47 +779,55 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 5
         },
-        modalItem: {
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 10,
-                paddingVertical: 10,
-                borderBottomWidth: 1,
-                borderBottomColor: '#F1F1F1'
-        },
-        modalImageContainer: {
-                width: 40,
-                height: 40,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 50,
-                justifyContent: "center",
-                alignItems: "center"
-        },
         modalTitle: {
                 fontWeight: "bold",
                 textAlign: "center",
                 marginTop: 10,
                 fontSize: 16
         },
-        itemTitle: {
+        listItem: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 10,
+                paddingHorizontal: 10
+        },
+        listItemImageContainer: {
+                width: 50,
+                height: 50,
+                borderRadius: 10,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        listItemImage: {
+                width: '60%',
+                height: '60%',
+        },
+        image: {
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+              resizeMode: "cover"
+        },
+        listItemDesc: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        listNames: {
                 marginLeft: 10
         },
-        button: {
-                marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 10,
-                backgroundColor: COLORS.primary,
+        listItemTitle: {
+                fontWeight: 'bold'
         },
-        buttonText: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 16,
-                textAlign: "center"
+        listItemSubTitle: {
+                color: '#777',
+                fontSize: 12,
+                marginTop: 5
         },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
@@ -839,7 +835,21 @@ const styles = StyleSheet.create({
         },
         addImageLabel: {
                 marginLeft: 5,
-                opacity: 0.8
+                opacity: 0.25
+        },
+        button: {
+                marginTop: 10,
+                borderRadius: 8,
+                paddingVertical: 14,
+                paddingHorizontal: 10,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10
+        },
+        buttonText: {
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 16,
+                textAlign: "center"
         },
         modalItem: {
                 paddingHorizontal: 20,
@@ -877,6 +887,21 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
+              resizeMode: "cover"
+        },
+
+        modalImageContainer: {
+                width: 40,
+                height: 40,
+                backgroundColor: '#F1F1F1',
+                borderRadius: 50,
+                justifyContent: "center",
+                alignItems: "center"
+        },
+        modalTitle: {
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 16
         },
 })

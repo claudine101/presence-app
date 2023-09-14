@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Image, Alert } from "react-native";
-import { Ionicons, AntDesign, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Fontisto, FontAwesome5,MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { Modalize } from 'react-native-modalize';
@@ -27,10 +27,11 @@ export default function AddAgentPreparationFolioScreen() {
         const dispatch = useDispatch()
         const [countFolio, setCountFolio] = useState('')
         const [loading, setLoading] = useState(false)
-        
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [document, setDocument] = useState(null)
         const route = useRoute()
         const { volume } = route.params
+        // return console.log(volume.folios)
         const [data, handleChange, setValue] = useForm({
                 // document: null,
         })
@@ -75,49 +76,26 @@ export default function AddAgentPreparationFolioScreen() {
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
-
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
+        
 
         //Composent pour afficher le modal les agents de preparation
         const PreparationList = () => {
@@ -131,7 +109,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les agents de preparations</Text>
                                                 </View>
-                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                {allAgentsPreparation?.result?.map((prep, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
@@ -145,8 +123,8 @@ export default function AddAgentPreparationFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{prep.NOM} {prep.PRENOM}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{prep.EMAIL}</Text>
                                                                                                 </View>
-                                                                                                {agentPreparation?.USERS_ID == prep.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {agentPreparation?.USERS_ID == prep.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
+                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -189,10 +167,13 @@ export default function AddAgentPreparationFolioScreen() {
                                                                                         <View style={styles.modalItemCard}>
                                                                                                 <View>
                                                                                                         <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{fol.folio.CODE_FOLIO}</Text>
+                                                                                                        <View style={styles.modalItemCard}>
+                                                                                                        <Text style={styles.itemTitleDesc}>Folio:{fol.folio.FOLIO}</Text>
+                                                                                                        <Text style={styles.itemTitleDesc}>Nature:{fol.folio.natures.DESCRIPTION}</Text>
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} style={styles.icons} /> :
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} style={styles.icons} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -234,10 +215,21 @@ export default function AddAgentPreparationFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/preparation/folio/nommerAgentPreparation`, {
-                                method: "PUT",
-                                body: form
-                        })
+                        if (volume?.mailleNoTraite) {
+
+                                form.append('ID_MAILLE_NO_TRAITE', volume?.mailleNoTraite.ID_MAILLE)
+                                const volume = await fetchApi(`/preparation/folio/renommerAgentPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })
+                        }
+                        else{
+                                const volume = await fetchApi(`/preparation/folio/nommerAgentPreparation`, {
+                                        method: "PUT",
+                                        body: form
+                                })   
+                        }
+                        
                         navigation.goBack()
                 }
                 catch (error) {
@@ -265,15 +257,17 @@ export default function AddAgentPreparationFolioScreen() {
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
-                                <View style={styles.cardHeader}>
+                        <View style={styles.header}>
                                         <TouchableNativeFeedback
                                                 onPress={() => navigation.goBack()}
                                                 background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                                <View style={styles.backBtn}>
-                                                        <Ionicons name="arrow-back-sharp" size={24} color="#fff" />
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.titlePrincipal}>Nommer un agent preparation</Text>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter un agent de préparation</Text>
+                                        </View>
                                 </View>
                                 <ScrollView>
                                         <View>
@@ -299,7 +293,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         {volume ? <Text style={styles.selectedValue}>
-                                                                                {volume.folios.length}
+                                                                                {volume.folios.length} dossier{volume.folios.length>1 ?"s" : ''}
                                                                         </Text> :
                                                                                 <Text style={styles.selectedValue}>
                                                                                         aucun
@@ -326,18 +320,21 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? multiFolios.length : ' Sélectionner les dossiers'}
+                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Selectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={onTakePicha}>
                                                         <View style={[styles.addImageItem]}>
-                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                        <Feather name="image" size={24} color="#777" />
-                                                                        <Text style={styles.addImageLabel}>
-                                                                                Photo du proces verbal
-                                                                        </Text>
+                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                <Text style={styles.addImageLabel}>
+                                                                                        Photo du procès verbal
+                                                                                </Text>
+                                                                        </View>
+                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                 </View>
                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                         </View>
@@ -366,12 +363,10 @@ export default function AddAgentPreparationFolioScreen() {
                 </>
         )
 }
-
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
-                marginTop: -20
+                backgroundColor: '#fff'
         },
         cardHeader: {
                 flexDirection: 'row',
@@ -381,7 +376,7 @@ const styles = StyleSheet.create({
                 marginBottom: 15
         },
         backBtn: {
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 50,
@@ -389,24 +384,24 @@ const styles = StyleSheet.create({
                 borderRadius: 50,
         },
         titlePrincipal: {
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: "bold",
                 marginLeft: 10,
                 color: COLORS.primary
         },
         selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: "#fff",
                 padding: 13,
                 borderRadius: 5,
                 borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+
         },
         selectedValue: {
-                color: '#777'
+                color: '#777',
+                marginLeft: 5
         },
         modalHeader: {
                 flexDirection: "row",
@@ -422,6 +417,13 @@ const styles = StyleSheet.create({
                 paddingVertical: 10,
                 borderBottomWidth: 1,
                 borderBottomColor: '#F1F1F1'
+        },
+        butConfirmer: {
+                borderRadius: 8,
+                paddingVertical: 14,
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 5,
+                 marginVertical: 10
         },
         modalImageContainer: {
                 width: 40,
@@ -440,77 +442,19 @@ const styles = StyleSheet.create({
         itemTitle: {
                 marginLeft: 10
         },
-        label: {
-                fontSize: 16,
-                fontWeight: 'bold'
-        },
-        buttonPlus: {
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center"
-        },
-        buttonTextPlus: {
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: 25
-        },
         button: {
                 marginTop: 10,
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
+                backgroundColor: COLORS.primary,
+                marginHorizontal:10
         },
         buttonText: {
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: 16,
                 textAlign: "center"
-        },
-        headerRead: {
-                borderRadius: 8,
-                backgroundColor: "#ddd",
-                marginTop: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 5,
-                paddingHorizontal: 30
-        },
-        cardFolder: {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: '#FFF',
-                maxHeight: 50,
-                borderRadius: 20,
-                padding: 3,
-                paddingVertical: 2,
-                elevation: 10,
-                shadowColor: '#c4c4c4',
-        },
-        cardDescription: {
-                marginLeft: 10,
-                width: 30,
-                height: 30,
-                borderRadius: 30,
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ddd"
-        },
-        reomoveBtn: {
-                width: 30,
-                height: 30,
-                backgroundColor: '#F1F1F1',
-                borderRadius: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
         },
         itemTitleDesc: {
                 color: "#777",
@@ -522,23 +466,18 @@ const styles = StyleSheet.create({
                 justifyContent: "space-between",
                 flex: 1
         },
-        butConfirmer: {
-                // marginTop: 10,
-                borderRadius: 8,
-                paddingVertical: 14,
-                // paddingHorizontal: 10,
-                backgroundColor:COLORS.primary,
-                marginHorizontal: 10,
-                marginVertical: 15
+        icons: {
+               top:10,
         },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
-        },
+                marginBottom: 5,
+                marginHorizontal:10
+            },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
@@ -554,6 +493,31 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
+              resizeMode: "cover"
+        },
+        header: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+        },
+        headerBtn: {
+                padding: 10
+        },
+        title: {
+                paddingHorizontal: 5,
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#777',
+                // color: COLORS.primary
+        },
+        cardTitle: {
+                maxWidth: "85%"
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
         },
 })

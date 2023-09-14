@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, StatusBar, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator, Image } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, AntDesign, MaterialCommunityIcons, Fontisto, Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from '../../styles/COLORS';
 import { OutlinedTextField } from 'rn-material-ui-textfield'
@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useEffect } from "react";
 import ETAPES_VOLUME from "../../constants/ETAPES_VOLUME";
+import Folios from "../../components/folio/Folios";
 
 /**
  * Le screen pour details le volume, le dossier utilisable par un agent superviseur
@@ -32,33 +33,19 @@ import ETAPES_VOLUME from "../../constants/ETAPES_VOLUME";
 export default function AddFolioScreen() {
         const route = useRoute()
         const { volume } = route.params
-
         const navigation = useNavigation()
         const dispatch = useDispatch()
-        const folioNatures = useSelector(folioNatureCartSelector)
-        const user = useSelector(userSelector)
         const [loading, setLoading] = useState(false)
-        const [loadingCount, setLoadingCount] = useState(false)
         const [document, setDocument] = useState(null)
-        const [documentDist, setDocumentDist] = useState(null)
+        const [dossier, setDossier] = useState(null)
+        const [folios, setFolios] = useState([])
+        const [dossierExiste, setDossierExiste] = useState([])
+        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
 
-        const [nbre, setNbre] = useState(null)
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCount(true)
-                                const vol = await fetchApi(`/preparation/volume/count/${volume.volume.ID_VOLUME}`)
-                                setNbre(vol.result)
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCount(false)
-                        }
-                })()
-        }, [volume]))
         const [data, handleChange, setValue] = useForm({
                 folio: '',
+                dossier: '',
                 // document: null
         })
 
@@ -76,14 +63,25 @@ export default function AddFolioScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = data.folio > 0 ? true : false
+                var isValidFolio = false
+                var isValidDossier = false
+
+                isValidFolio = data.folio != "" ? true : false
+                isValidDossier = data.dossier != "" ? true : false
                 isValid = natures != null ? true : false
-                return isValid
+                return isValid && isValidFolio && isValidDossier
         }
 
         const isValidFin = () => {
                 var isVal = false
-                isVal = document != null ? true : false
+                var isValidFolio = false
+                isVal = folios.length == volume.volume.NOMBRE_DOSSIER ? true : false
+                isValidFolio = document != null ? true : false
+                return isVal && isValidFolio
+        }
+        const isValidFinDistr = () => {
+                var isVal = false
+                isVal = document != null && malles?.ID_MAILLE && distributeur?.USERS_ID ? true : false
                 return isVal
         }
 
@@ -111,17 +109,40 @@ export default function AddFolioScreen() {
                 setNatures(nat)
         }
 
-        //Fonction pour ajouter le folio da le redux
-        const onAddToCart = () => {
-                dispatch(addFolioAction({ NUMERO_FOLIO: data.folio, ID_NATURE: natures.ID_NATURE_FOLIO, TOTAL: data.folio + natures.DESCRIPTION }))
-                // handleChange("folio", data.nbre_volume - 1)
-                handleChange("folio", "")
-                setNatures(null)
+        useEffect(() => {
+                if (natures && data.folio) {
+                        setDossier(natures?.DESCRIPTION + data.folio)
+                }
+        }, [data.folio, natures])
+        //Fonction pour ajouter un volume da le redux
+        const handleAdd = (vol) => {
+                if (data.folio <= 200) {
+                        const folio = folios.find(f => f.NUMERO_FOLIO == data.folio)
+                        if (!folio) {
+                                if (data.dossier) {
+                                        const dossier = folios.find(f => f.NUMERO_DOSSIER == data.dossier)
+                                        if (!dossier) {
+                                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: data.dossier, nature: natures.DESCRIPTION ,ID_NATURE:natures.ID_NATURE_FOLIO}])
+                                                handleChange("folio", "")
+                                                handleChange("dossier", "")
+                                                setNatures(null)
+                                        }
+                                        else {
+                                                setError("dossier", ["dossier existe déjà"])
+                                        }
+                                }
+                        }
+                        else {
+                                setError("folio", ["Folio existe déjà"])
+                        }
+                }
+                else {
+                        setError("folio", ["folio invalide"])
+                }
         }
-
-        //Fonction pour enlever le folio da le redux
-        const onRemoveProduct = (index) => {
-                Alert.alert("Enlever le folio", "Voulez-vous vraiment enlever ce folio dans les details ?",
+        //Fonction pour enlever un volume da le redux
+        const onRemoveFolio = (volIndex) => {
+                Alert.alert("Enlever le volume", "Voulez-vous vraiment enlever ce volume dans les details?",
                         [
                                 {
                                         text: "Annuler",
@@ -129,7 +150,8 @@ export default function AddFolioScreen() {
                                 },
                                 {
                                         text: "Oui", onPress: async () => {
-                                                dispatch(removeFolioAction(index))
+                                                const removed = folios.filter((vol, index) => index != volIndex)
+                                                setFolios(removed)
                                         }
                                 }
                         ])
@@ -137,63 +159,25 @@ export default function AddFolioScreen() {
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocument(image.assets[0])
-                        }
+                setIsCompressingPhoto(true)
+                const permission = await ImagePicker.requestCameraPermissionsAsync()
+                if (!permission.granted) return false
+                const image = await ImagePicker.launchCameraAsync()
+                if (image.canceled) {
+                        return setIsCompressingPhoto(false)
                 }
-                catch (error) {
-                        console.log(error)
-                }
+                const photo = image.assets[0]
+                setDocument(photo)
+                const manipResult = await manipulateAsync(
+                        photo.uri,
+                        [
+                                { resize: { width: 500 } }
+                        ],
+                        { compress: 0.7, format: SaveFormat.JPEG }
+                );
+                setIsCompressingPhoto(false)
+                //     handleChange('pv', manipResult)
         }
-        //Fonction pour le prendre l'image avec l'appareil photos
-        const onTakePichaDistributeur = async () => {
-                try {
-                        const permission = await ImagePicker.requestCameraPermissionsAsync()
-                        if (!permission.granted) return false
-                        const image = await ImagePicker.launchCameraAsync()
-                        if (!image.canceled) {
-                                setDocumentDist(image)
-                                // const photo = image.assets[0]
-                                // const photoId = Date.now()
-                                // const manipResult = await manipulateAsync(
-                                //         photo.uri,
-                                //         [
-                                //                 { resize: { width: 500 } }
-                                //         ],
-                                //         { compress: 0.7, format: SaveFormat.JPEG }
-                                // );
-                                // setLogoImage(manipResult)
-                        }
-                }
-                catch (error) {
-                        console.log(error)
-                }
-        }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
-
         //Composent pour afficher le modal de volume associer a un agent superviceur
         const VolumeAgentSuperviseurList = () => {
                 const [loadingVolume, volumesAll] = useFetch('/volume/dossiers/myVolume')
@@ -206,8 +190,8 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les volumes</Text>
                                                 </View>
-                                                {volumesAll.result.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
-                                                {volumesAll.result.map((vol, index) => {
+                                                {volumesAll?.result?.length == 0 ? <View style={styles.modalHeader}><Text>Aucun volumes trouves</Text></View> : null}
+                                                {volumesAll?.result?.map((vol, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedVolume(vol)}>
@@ -220,8 +204,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{vol.NUMERO_VOLUME}</Text>
                                                                                                         <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text>
                                                                                                 </View>
-                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {volumes?.ID_VOLUME == vol.ID_VOLUME ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -233,7 +217,6 @@ export default function AddFolioScreen() {
                         </>
                 )
         }
-
         //Composent pour afficher le modal de nature de folio
         const NatureDossierList = () => {
                 const [loadingNature, allNatures] = useFetch('/preparation/volume/nature')
@@ -246,7 +229,7 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Nature du dossier</Text>
                                                 </View>
-                                                {allNatures.result.map((nat, index) => {
+                                                {allNatures?.result?.map((nat, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedNtures(nat)}>
@@ -259,8 +242,8 @@ export default function AddFolioScreen() {
                                                                                                         <Text style={styles.itemTitle}>{nat.DESCRIPTION}</Text>
                                                                                                         {/* <Text style={styles.itemTitleDesc}>{nat.CODE_VOLUME}</Text> */}
                                                                                                 </View>
-                                                                                                {natures?.ID_NATURE_FOLIO == nat.ID_NATURE_FOLIO ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                {natures?.ID_NATURE_FOLIO == nat.ID_NATURE_FOLIO ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
                                                                                         </View>
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
@@ -312,31 +295,38 @@ export default function AddFolioScreen() {
                                 {loadingMalle ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
+
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des malles</Text>
                                                 </View>
-                                                {mallesAll.result.map((mal, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <AntDesign name="folderopen" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
-                                                                                                        {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                {mallesAll?.result?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun malle trouvé</Text>
+                                                        </View>
+                                                        :
+                                                        mallesAll?.result?.map((mal, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedMalle(mal)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <AntDesign name="folderopen" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {malles?.ID_MAILLE == mal.ID_MAILLE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{mal.NUMERO_MAILLE}</Text>
+                                                                                                                {/* <Text style={styles.itemTitleDesc}>{vol.CODE_VOLUME}</Text> */}
+                                                                                                        </View>
+                                                                                                        {malles?.ID_MAILLE == mal.ID_MAILLE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })
+                                                }
                                         </View>
                                 }
                         </>
@@ -358,26 +348,31 @@ export default function AddFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des batiments</Text>
                                                         </View>
-                                                        {batimentsAll.result.map((bat, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
-                                                                                        <View style={styles.modalItem} >
-                                                                                                <View style={styles.modalImageContainer}>
-                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                                </View>
-                                                                                                <View style={styles.modalItemCard}>
-                                                                                                        <View>
-                                                                                                                <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                        {batimentsAll?.result?.length <= 0 ?
+                                                                <View style={styles.emptyContainer}>
+                                                                        <Text style={styles.emptyLabel}>Aucun batiment trouvé</Text>
+                                                                </View>
+                                                                :
+                                                                batimentsAll?.result?.map((bat, index) => {
+                                                                        return (
+                                                                                <ScrollView key={index}>
+                                                                                        <TouchableNativeFeedback onPress={() => setSelectedBatiment(bat)}>
+                                                                                                <View style={styles.modalItem} >
+                                                                                                        <View style={styles.modalImageContainer}>
+                                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                         </View>
-                                                                                                        {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                                <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                        <View style={styles.modalItemCard}>
+                                                                                                                <View>
+                                                                                                                        <Text style={styles.itemTitle}>{bat.NUMERO_BATIMENT}</Text>
+                                                                                                                </View>
+                                                                                                                {batiments?.ID_BATIMENT == bat.ID_BATIMENT ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                        <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                        </View>
                                                                                                 </View>
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
+                                                                                        </TouchableNativeFeedback>
+                                                                                </ScrollView>
+                                                                        )
+                                                                })}
                                                 </View>
                                         }
                                 </>
@@ -415,26 +410,31 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des ailles</Text>
                                                 </View>
-                                                {allailles.map((ail, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
-                                                                                <View style={styles.modalItem} >
-                                                                                        <View style={styles.modalImageContainer}>
-                                                                                                <FontAwesome5 name="house-damage" size={20} color="black" />
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                {allailles?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun aile trouvé</Text>
+                                                        </View>
+                                                        :
+                                                        allailles?.map((ail, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedAille(ail)}>
+                                                                                        <View style={styles.modalItem} >
+                                                                                                <View style={styles.modalImageContainer}>
+                                                                                                        <FontAwesome5 name="house-damage" size={20} color="black" />
                                                                                                 </View>
-                                                                                                {ailles?.ID_AILE == ail.ID_AILE ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{ail.NUMERO_AILE}</Text>
+                                                                                                        </View>
+                                                                                                        {ailles?.ID_AILE == ail.ID_AILE ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -472,29 +472,35 @@ export default function AddFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des distributeurs</Text>
                                                 </View>
-                                                {allDistributeur.map((distr, index) => {
-                                                        return (
-                                                                <ScrollView key={index}>
-                                                                        <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
-                                                                                <View style={styles.modalItem} >
+                                                {allDistributeur?.length <= 0 ?
+                                                        <View style={styles.emptyContainer}>
+                                                                <Text style={styles.emptyLabel}>Aucun distributeur trouvé</Text>
+                                                        </View>
+                                                        :
 
-                                                                                        <View style={styles.imageContainer}>
-                                                                                                {distr.PHOTO_USER ? <Image source={{ uri: distr.PHOTO_USER }} style={styles.image} /> :
-                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
-                                                                                        </View>
-                                                                                        <View style={styles.modalItemCard}>
-                                                                                                <View>
-                                                                                                        <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
-                                                                                                        <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                        allDistributeur?.map((distr, index) => {
+                                                                return (
+                                                                        <ScrollView key={index}>
+                                                                                <TouchableNativeFeedback onPress={() => setSelectedDistibuteur(distr)}>
+                                                                                        <View style={styles.modalItem} >
+
+                                                                                                <View style={styles.imageContainer}>
+                                                                                                        {distr.PHOTO_USER ? <Image source={{ uri: distr.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                                                                                                 </View>
-                                                                                                {distributeur?.USERS_ID == distr.USERS_ID ? <Fontisto name="checkbox-active" size={21} color="#007bff" /> :
-                                                                                                        <Fontisto name="checkbox-passive" size={21} color="black" />}
+                                                                                                <View style={styles.modalItemCard}>
+                                                                                                        <View>
+                                                                                                                <Text style={styles.itemTitle}>{distr.NOM} {distr.PRENOM} </Text>
+                                                                                                                <Text style={styles.itemTitleDesc}>{distr.EMAIL}</Text>
+                                                                                                        </View>
+                                                                                                        {distributeur?.USERS_ID == distr.USERS_ID ? <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                                                                                <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                                                                                </View>
                                                                                         </View>
-                                                                                </View>
-                                                                        </TouchableNativeFeedback>
-                                                                </ScrollView>
-                                                        )
-                                                })}
+                                                                                </TouchableNativeFeedback>
+                                                                        </ScrollView>
+                                                                )
+                                                        })}
                                         </View>
                                 }
                         </>
@@ -513,12 +519,11 @@ export default function AddFolioScreen() {
 
         //fonction pour envoyer les donnees dans la base
         const submitFolio = async () => {
-
                 try {
                         setLoading(true)
                         const form = new FormData()
                         form.append('ID_VOLUME', volume.volume.ID_VOLUME)
-                        form.append('folio', JSON.stringify(folioNatures))
+                        form.append('folio', JSON.stringify(folios))
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -535,13 +540,6 @@ export default function AddFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        console.log(form)
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV",({ uri: data.document.uri, name: filename, type: data.document.mimeType }))
-                        // }
-
                         const folio = await fetchApi(`/preparation/folio`, {
                                 method: "POST",
                                 body: form
@@ -550,7 +548,9 @@ export default function AddFolioScreen() {
                         navigation.goBack()
                 }
                 catch (error) {
-                        console.log(error)
+                        console.log(error.result)
+                        setDossierExiste(error.result)
+
                 } finally {
                         setLoading(false)
                 }
@@ -579,13 +579,6 @@ export default function AddFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // if (data.document) {
-                        //         let localUri = data.document.uri;
-                        //         let filename = localUri.split('/').pop();
-                        //         form.append("PV", {
-                        //                 uri: data.document.uri, name: filename, type: data.document.mimeType
-                        //         })
-                        // }
                         const vol = await fetchApi(`/preparation/volume/nommerDistributeur/${volume.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form
@@ -598,42 +591,38 @@ export default function AddFolioScreen() {
                         setLoading(false)
                 }
         }
-
         return (
                 <>
                         {loading && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
-                                        <TouchableNativeFeedback
-                                                onPress={() => navigation.goBack()}
-                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                        <TouchableNativeFeedback onPress={() => navigation.goBack()} background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
                                                 <View style={styles.headerBtn}>
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
                                         <View style={styles.cardTitle}>
-                                                <Text style={styles.title} numberOfLines={2}>Selection d'un chef plateau</Text>
-
                                                 {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
-                                                <Text style={styles.title} numberOfLines={2}>Ajouter le volume dans une malle</Text> :
-                                                <Text style={styles.title} numberOfLines={2}>Detailler le volume</Text>
-                                        }
+                                                        <Text style={styles.title} numberOfLines={2}>Ajouter le volume dans une malle</Text> :
+                                                        <Text style={styles.title} numberOfLines={2}>Détailler le volume</Text>
+                                                }
                                         </View>
                                 </View>
                                 <ScrollView>
                                         <View>
-                                                <View style={styles.selectContainer} onPress={openVolumeModalize}>
-                                                        <View>
+                                                <TouchableOpacity style={styles.selectContainer}>
+                                                        <View style={styles.labelContainer}>
+                                                                <View style={styles.icon}>
+                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                </View>
                                                                 <Text style={styles.selectLabel}>
                                                                         Volume
                                                                 </Text>
-                                                                <View>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
-                                                                        </Text>
-                                                                </View>
                                                         </View>
-                                                </View>
+                                                        <Text style={styles.selectedValue}>
+                                                                {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
+                                                        </Text>
+                                                </TouchableOpacity>
                                                 <View style={styles.selectContainer} onPress={openVolumeModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
@@ -641,7 +630,7 @@ export default function AddFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER}` : 'Aucun'}
+                                                                                {volume ? `${volume.volume.NOMBRE_DOSSIER} dossier` + `${volume.volume.NOMBRE_DOSSIER > 1 ? "s" : ''}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -663,19 +652,17 @@ export default function AddFolioScreen() {
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openMallesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                               Malle
+                                                                                        Malle
                                                                                 </Text>
-                                                                                <View>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                                {malles ? `${malles.NUMERO_MAILLE}` : ' Sélectionner le malle'}
-                                                                                        </Text>
-                                                                                </View>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {malles ? `${malles.NUMERO_MAILLE}` : ' Sélectionner le malle'}
+                                                                                </Text>
                                                                         </View>
                                                                 </TouchableOpacity>
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openBatimentModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                               Batiment
+                                                                                        Batiment
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -687,7 +674,7 @@ export default function AddFolioScreen() {
                                                                 {batiments ? <TouchableOpacity style={styles.selectContainer} onPress={openAilleModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                               Aile
+                                                                                        Aile
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -699,40 +686,41 @@ export default function AddFolioScreen() {
                                                                 {ailles ? <TouchableOpacity style={styles.selectContainer} onPress={openDistributeurModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                Distributeur
+                                                                                        Distributeur
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                {distributeur ? `${distributeur.NOM}` +`  ${distributeur.PRENOM}` : 'Sélectionner le distributeur'}
+                                                                                                {distributeur ? `${distributeur.NOM}` + `  ${distributeur.PRENOM}` : 'Sélectionner le distributeur'}
                                                                                         </Text>
                                                                                 </View>
                                                                         </View>
                                                                 </TouchableOpacity> : null}
                                                                 <TouchableOpacity onPress={onTakePicha}>
                                                                         <View style={[styles.addImageItem]}>
-                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                        <Feather name="image" size={24} color="#777" />
-                                                                                        <Text style={styles.addImageLabel}>
-                                                                                                Photo du proces verbal
-                                                                                        </Text>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                                <Text style={styles.addImageLabel}>
+                                                                                                        Photo du procès verbal
+                                                                                                </Text>
+                                                                                        </View>
+                                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                                 </View>
                                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                         </View>
                                                                 </TouchableOpacity>
                                                         </> :
-                                                        <>{((folioNatures.length == volume.volume.NOMBRE_DOSSIER)) ? null : <>
-                                                                <View style={{ marginBottom: 8 }}>
-                                                                        <Text style={styles.label}>Dossier</Text>
-                                                                </View>
-                                                                <View style={{ marginVertical: 8 }}>
+                                                        <>{((folios.length == volume.volume.NOMBRE_DOSSIER)) ? null : <>
+
+                                                                <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
                                                                         <OutlinedTextField
-                                                                                label="Dossier"
+                                                                                label="Folio"
                                                                                 fontSize={14}
                                                                                 baseColor={COLORS.smallBrown}
                                                                                 tintColor={COLORS.primary}
                                                                                 containerStyle={{ borderRadius: 20 }}
-                                                                                lineWidth={1}
-                                                                                activeLineWidth={1}
+                                                                                lineWidth={0.25}
+                                                                                activeLineWidth={0.25}
                                                                                 errorColor={COLORS.error}
                                                                                 value={data.folio}
                                                                                 onChangeText={(newValue) => handleChange('folio', newValue)}
@@ -740,15 +728,15 @@ export default function AddFolioScreen() {
                                                                                 error={hasError('folio') ? getError('folio') : ''}
                                                                                 autoCompleteType='off'
                                                                                 blurOnSubmit={false}
+                                                                                keyboardType='number-pad'
+
                                                                         />
                                                                 </View>
-                                                                <View style={{ marginBottom: 8 }}>
-                                                                        <Text style={styles.label}>Nature du dossier</Text>
-                                                                </View>
+
                                                                 <TouchableOpacity style={styles.selectContainer} onPress={openNaturesModalize}>
                                                                         <View>
                                                                                 <Text style={styles.selectLabel}>
-                                                                                        Sélectionner la nature
+                                                                                        Nature du dossier
                                                                                 </Text>
                                                                                 <View>
                                                                                         <Text style={styles.selectedValue}>
@@ -757,11 +745,31 @@ export default function AddFolioScreen() {
                                                                                 </View>
                                                                         </View>
                                                                 </TouchableOpacity>
+                                                                <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
+                                                                        <OutlinedTextField
+                                                                                label="Numéro du dossier"
+                                                                                fontSize={14}
+                                                                                baseColor={COLORS.smallBrown}
+                                                                                tintColor={COLORS.primary}
+                                                                                containerStyle={{ borderRadius: 20 }}
+                                                                                lineWidth={0.25}
+                                                                                activeLineWidth={0.25}
+                                                                                errorColor={COLORS.error}
+                                                                                value={data.dossier}
+                                                                                onChangeText={(newValue) => handleChange('dossier', newValue)}
+                                                                                onBlur={() => checkFieldData('dossier')}
+                                                                                error={hasError('dossier') ? getError('dossier') : ''}
+                                                                                autoCompleteType='off'
+                                                                                blurOnSubmit={false}
+                                                                                keyboardType='number-pad'
+
+                                                                        />
+                                                                </View>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                                                         <View></View>
                                                                         <TouchableOpacity
                                                                                 disabled={!isValidAdd()}
-                                                                                onPress={onAddToCart}
+                                                                                onPress={handleAdd}
                                                                         >
                                                                                 <View style={[styles.buttonPlus, !isValidAdd() && { opacity: 0.5 }]}>
                                                                                         <Text style={styles.buttonTextPlus}>+</Text>
@@ -769,56 +777,63 @@ export default function AddFolioScreen() {
                                                                         </TouchableOpacity>
                                                                 </View>
                                                         </>}
-                                                                {folioNatures.map((product, index) => {
+
+                                                                {folios?.map((folio, index) => {
+                                                                        const isExists = dossierExiste?.find(dossier => dossier.NUMERO_FOLIO == folio.NUMERO_DOSSIER) ? true : false
                                                                         return (
-                                                                                <View style={styles.headerRead} key={index}>
-                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                                                <View style={styles.cardFolder}>
-                                                                                                        <Text style={[styles.title]} numberOfLines={1}>{product.TOTAL}</Text>
-                                                                                                        <View style={styles.cardDescription}>
-                                                                                                                <AntDesign name="folderopen" size={20} color="black" />
+                                                                                <View key={index}>
+                                                                                        <View style={[styles.headerRead]} key={index}>
+                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                        <Image source={require("../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                </View>
+                                                                                                <View style={styles.folioDesc}>
+                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_DOSSIER}</Text>
+                                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.nature}</Text>
+                                                                                                                <Text style={styles.folioSubname}></Text>
+                                                                                                                <Text style={styles.folioSubname}>{isExists}</Text>
+
                                                                                                         </View>
 
                                                                                                 </View>
-                                                                                                <View>
-                                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.NATURE}</Text>
-                                                                                                </View>
-                                                                                                <View>
-                                                                                                        <Text style={[styles.title, { marginTop: 5 }]} numberOfLines={1}>{product.ID_NATURE_FOLIO}</Text>
-                                                                                                </View>
-                                                                                                <View>
-                                                                                                        <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveProduct(index)}>
-                                                                                                                <MaterialCommunityIcons name="delete" size={24} color="#777" />
-                                                                                                        </TouchableOpacity>
-                                                                                                </View>
+                                                                                                <TouchableOpacity style={styles.reomoveBtn} onPress={() => onRemoveFolio(index)}>
+                                                                                                        <MaterialCommunityIcons name="delete" size={24} color="#777" />
+                                                                                                </TouchableOpacity>
                                                                                         </View>
+                                                                                        {isExists ? <Text style={{ color: 'red',marginTop:-10,marginLeft:10,marginBottom:5 }}>Dossiesr existe déjà</Text> : null}
                                                                                 </View>
                                                                         )
                                                                 })}
                                                                 <TouchableOpacity onPress={onTakePicha}>
                                                                         <View style={[styles.addImageItem]}>
-                                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                        <Feather name="image" size={24} color="#777" />
-                                                                                        <Text style={styles.addImageLabel}>
-                                                                                                Photo du proces verbal
-                                                                                        </Text>
+                                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                                                <Text style={styles.addImageLabel}>
+                                                                                                        Photo du procès verbal
+                                                                                                </Text>
+                                                                                        </View>
+                                                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                                                 </View>
                                                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                         </View>
                                                                 </TouchableOpacity>
+
                                                         </>
                                                 }
                                         </View>
                                 </ScrollView>
                                 {volume.volume.ID_ETAPE_VOLUME == ETAPES_VOLUME.DETAILLER_LES_FOLIO ?
                                         <TouchableWithoutFeedback
-                                                disabled={!isValidFin()}
+                                                disabled={!isValidFinDistr()}
                                                 onPress={submitInMalle}
                                         >
-                                                <View style={[styles.button, !isValidFin() && { opacity: 0.5 }]}>
+                                                <View style={[styles.button, !isValidFinDistr() && { opacity: 0.5 }]}>
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
-                                        </TouchableWithoutFeedback> : <TouchableWithoutFeedback
+                                        </TouchableWithoutFeedback> :
+                                        <TouchableWithoutFeedback
                                                 disabled={!isValidFin()}
                                                 onPress={submitFolio}
                                         >
@@ -826,39 +841,26 @@ export default function AddFolioScreen() {
                                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                                 </View>
                                         </TouchableWithoutFeedback>}
+                                <Modalize ref={natureModalizeRef}  >
+                                        <NatureDossierList />
+                                </Modalize>
+                                <Modalize ref={volumeModalizeRef}  >
+                                        <VolumeAgentSuperviseurList />
+                                </Modalize>
 
+                                <Modalize ref={maleModalizeRef}  >
+                                        <MalleList />
+                                </Modalize>
+                                <Modalize ref={batimentModalizeRef}  >
+                                        <BatimentList />
+                                </Modalize>
+                                <Modalize ref={aillesModalizeRef}  >
+                                        <AillesList batiments={batiments} />
+                                </Modalize>
 
-                                <Portal>
-                                        <Modalize ref={natureModalizeRef}  >
-                                                <NatureDossierList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={volumeModalizeRef}  >
-                                                <VolumeAgentSuperviseurList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={maleModalizeRef}  >
-                                                <MalleList />
-                                        </Modalize>
-                                </Portal>
-
-                                <Portal>
-                                        <Modalize ref={batimentModalizeRef}  >
-                                                <BatimentList />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={aillesModalizeRef}  >
-                                                <AillesList batiments={batiments} />
-                                        </Modalize>
-                                </Portal>
-                                <Portal>
-                                        <Modalize ref={distributrutModalizeRef}  >
-                                                <DistributeurAgentList ailles={ailles} />
-                                        </Modalize>
-                                </Portal>
+                                <Modalize ref={distributrutModalizeRef}  >
+                                        <DistributeurAgentList ailles={ailles} />
+                                </Modalize>
                         </View>
                 </>
         )
@@ -867,7 +869,7 @@ export default function AddFolioScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                marginHorizontal: 10,
+                backgroundColor: '#fff'
         },
         header: {
                 flexDirection: 'row',
@@ -887,20 +889,9 @@ const styles = StyleSheet.create({
         cardTitle: {
                 maxWidth: "85%"
         },
-        selectContainer: {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "#fff",
-                padding: 13,
-                borderRadius: 5,
-                borderWidth: 0.5,
-                borderColor: "#777",
-                marginVertical: 10
-        },
-        selectedValue: {
-                color: '#777'
-        },
+        // selectedValue: {
+        //         color: '#777'
+        // },
         label: {
                 fontSize: 16,
                 fontWeight: 'bold'
@@ -939,7 +930,7 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-                resizeMode: "center"
+              resizeMode: "cover"
         },
         modalTitle: {
                 fontWeight: "bold",
@@ -955,7 +946,8 @@ const styles = StyleSheet.create({
                 borderRadius: 8,
                 paddingVertical: 14,
                 paddingHorizontal: 10,
-                backgroundColor: COLORS.primary
+                backgroundColor: COLORS.primary,
+                marginHorizontal: 10,
         },
         buttonText: {
                 color: "#fff",
@@ -970,7 +962,9 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.primary,
                 justifyContent: "center",
                 alignContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                marginHorizontal: 10,
+                marginBottom: 10
         },
         buttonTextPlus: {
                 color: "#fff",
@@ -1031,14 +1025,92 @@ const styles = StyleSheet.create({
         },
         addImageItem: {
                 borderWidth: 0.5,
-                borderColor: "#000",
+                borderColor: "#ddd",
                 borderRadius: 5,
                 paddingHorizontal: 10,
                 paddingVertical: 15,
-                marginBottom: 5
+                marginBottom: 5,
+                marginHorizontal: 10
         },
         addImageLabel: {
                 marginLeft: 5,
                 opacity: 0.8
+        },
+        selectContainer: {
+                backgroundColor: "#fff",
+                padding: 13,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#ddd",
+                marginVertical: 10,
+                marginHorizontal: 10
+        },
+        selectedValue: {
+                color: '#777',
+                marginTop: 2,
+                marginLeft: 5
+        },
+        labelContainer: {
+                flexDirection: 'row',
+                alignItems: 'center'
+        },
+        selectLabel: {
+                marginLeft: 5
+        },
+        headerRead: {
+                borderRadius: 8,
+                backgroundColor: "#ddd",
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                marginBottom: 10,
+                marginHorizontal: 10
+        },
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#fff',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        folioImage: {
+                width: '60%',
+                height: '60%'
+        },
+        folioDesc: {
+                marginLeft: 10,
+                flex: 1
+        },
+        folioName: {
+                fontWeight: 'bold',
+                color: '#333',
+        },
+        folioSubname: {
+                color: '#777',
+                fontSize: 12
+        },
+        dossierError: {
+                color: 'red',
+                fontSize: 12
+        },
+        emptyContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
+        emptyImage: {
+                width: 100,
+                height: 100,
+                opacity: 0.8
+        },
+        emptyLabel: {
+                fontWeight: 'bold',
+                marginTop: 20,
+                color: '#777',
+                fontSize: 16
         },
 })

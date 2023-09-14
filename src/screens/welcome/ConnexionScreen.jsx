@@ -85,7 +85,7 @@ export default function ConnexionScreen() {
   return (
     <>
       {loading && <Loading />}
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps='handled'>
           <View style={styles.container}>
             <Image source={require('../../../assets/images/archivage_collage.png')} style={{...styles.image, resizeMode:"center"}}/>
           
@@ -127,7 +127,7 @@ export default function ConnexionScreen() {
                   lineWidth={1}
                   activeLineWidth={1}
                   errorColor={COLORS.error}
-                  renderRightAccessory={() => <EvilIcons name={!showPassword ? "lock" : "unlock"} size={30} color={hasError('password') ? COLORS.error : "#a2a2a2"}
+                  renderRightAccessory={() => <Ionicons name={!showPassword ? "eye-off-outline" : "eye-outline"} size={25} color={hasError('password') ? COLORS.error : "#a2a2a2"}
                     onPress={() => setShowPassword(t => !t)} />}
                   value={data.password}
                   onChangeText={(newValue) => handleChange('password', newValue)}
