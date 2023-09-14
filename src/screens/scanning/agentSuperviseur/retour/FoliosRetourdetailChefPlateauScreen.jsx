@@ -469,7 +469,6 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-<<<<<<< HEAD
                 flex: 1,
 
                 marginLeft: 10
@@ -478,10 +477,6 @@ const styles = StyleSheet.create({
                 flexDirection: "row",
                 justifyContent: "space-between",
         },
-=======
-                marginLeft: 10
-        },
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
         folioName: {
                 fontWeight: 'bold',
                 color: '#333',

@@ -2,11 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../components/app/AppHeader";
 import { COLORS } from "../../../styles/COLORS";
-<<<<<<< HEAD
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-=======
-import { AntDesign, Fontisto } from '@expo/vector-icons';
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
@@ -28,11 +24,7 @@ export default function AllFolioRecusScanScreen() {
         const [loading, setLoading] = useState(false)
 
         const handleSubmit = (folio) => {
-<<<<<<< HEAD
                 navigation.navigate("NewEquipeScanScreen", { folio: folio, fol: folio.folios })
-=======
-                navigation.navigate("NewEquipeScanScreen", { folio: folio, fol:folio.folios })
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
         }
 
         //fonction pour recuperer les folios d'un agent qui est connecter
@@ -55,7 +47,6 @@ export default function AllFolioRecusScanScreen() {
                         <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
-<<<<<<< HEAD
                                 </View> : allFolios.length <= 0 ?
                                         <View style={styles.emptyContainer}>
                                                 <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
@@ -96,54 +87,10 @@ export default function AllFolioRecusScanScreen() {
                                                                                                                                                 {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
                                                                                                                                         </Text>
                                                                                                                                 </View>
-=======
-                                </View> :
-                                        allFolios.length == 0 ? <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
-                                                <Text style={styles.emptyTitle}>
-                                                        Aucun folio trouvés
-                                                </Text>
-                                                {/* <Text style={styles.emptyDesc}>
-                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                </Text> */}
-                                        </View> :
-                                                <FlatList
-                                                        style={styles.contain}
-                                                        data={allFolios}
-                                                        renderItem={({ item: folio, index }) => {
-                                                                return (
-                                                                        <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
-
-                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={()=>handleSubmit(folio)}
-                                                                                        >
-                                                                                                <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.cardImages}>
-                                                                                                                <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.cardAllDetails}>
-                                                                                                                <View>
-                                                                                                                        <Text style={styles.titlePrincipal}>{folio.volume.NUMERO_VOLUME}</Text>
-                                                                                                                        <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio.volume.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                                <View>
-                                                                                                                        <View ><Text></Text></View>
-                                                                                                                        <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio.folios.length} dossiers</Text></View>
-
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                 </View>
-<<<<<<< HEAD
                                                                                         </View>
 
                                                                                 </TouchableNativeFeedback>
@@ -153,15 +100,6 @@ export default function AllFolioRecusScanScreen() {
                                                 }}
                                                 keyExtractor={(volume, index) => index.toString()}
                                         />}
-=======
-                                                                                        </TouchableNativeFeedback>
-                                                                                }
-                                                                        </>
-                                                                )
-                                                        }}
-                                                        keyExtractor={(volume, index) => index.toString()}
-                                                />}
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
                         </View>
                 </>
         )
@@ -251,7 +189,6 @@ const styles = StyleSheet.create({
                 flex:1,
                 marginLeft:8
         },
-<<<<<<< HEAD
 
         folio: {
                 flexDirection: 'row',
@@ -309,10 +246,6 @@ const styles = StyleSheet.create({
         },
         emptyContainer: {
                 flex: 1,
-=======
-        emptyContaier: {
-                flex:1,
->>>>>>> 21141350a80a70ba8978a9898b672706b8f8f086
                 justifyContent: 'center',
                 alignItems: 'center'
         },
