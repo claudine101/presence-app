@@ -175,7 +175,6 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
-
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
@@ -314,7 +313,6 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                 Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
                                                         </Text> */}
                                                 </View> :
-
                                                         <FlatList
                                                                 style={styles.contain}
                                                                 data={allVolumesAgentDistributeur}

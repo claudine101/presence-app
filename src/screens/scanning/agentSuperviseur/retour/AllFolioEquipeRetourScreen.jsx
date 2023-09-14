@@ -26,7 +26,6 @@ export default function AllFolioEquipeRetourScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
-
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
@@ -78,7 +77,6 @@ export default function AllFolioEquipeRetourScreen() {
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
-
                                                         </View> :
                                                                 <FlatList
                                                                         style={styles.contain}
@@ -140,7 +138,6 @@ export default function AllFolioEquipeRetourScreen() {
                                                                 <Text style={styles.emptyTitle}>
                                                                         Aucun folio trouvé
                                                                 </Text>
-
                                                         </View> :
                                                                 <FlatList
                                                                         style={styles.contain}
@@ -258,24 +255,42 @@ const styles = StyleSheet.create({
                 backgroundColor: '#FFF',
                 padding: 10,
                 overflow: 'hidden',
-                marginHorizontal: 10
-        },
-        carddetailItem: {
-                flexDirection: 'row',
-                alignItems: 'center',
+                marginHorizontal: 10,
+                flexDirection: "row"
         },
         cardImages: {
-                backgroundColor: '#DCE4F7',
+                backgroundColor: '#ddd',
                 width: 50,
                 height: 50,
                 borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
-        cardDescription: {
-                marginLeft: 10,
-                flex: 1
+        imageIcon: {
+                width: 25,
+                height: 25
         },
+        titeName: {
+                color: "#777"
+        },
+        cardDescDetails: {
+                flexDirection: "row",
+                marginTop: 8
+        },
+        cardAllDetails: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 1,
+                marginLeft: 8
+        },
+        titlePrincipal: {
+                fontWeight: "bold"
+        },
+
+
+
+
         itemVolume: {
                 fontSize: 15,
                 fontWeight: "bold",

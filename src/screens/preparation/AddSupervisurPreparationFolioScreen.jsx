@@ -166,7 +166,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers gggs</Text>
                                                 </View>
                                                 {
                                                         allFolios.length == 0 ?
