@@ -390,18 +390,14 @@ export default function SelectAgentIndexationScreen() {
                                                   </View>
                                         </ScrollView>}
                                         {(!flashDetail || flashDetail.agentIndexation) ? null : <View style={styles.actions}>
-                                                  <View style={styles.actions}>
                                                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isValidate() || isCompressingPhoto ? 0.5 : 1 }]} disabled={!isValidate() || isCompressingPhoto} onPress={handleSubmit}>
                                                                       <Text style={styles.actionText}>Envoyer</Text>
                                                             </TouchableOpacity>
-                                                  </View>
                                         </View>}
                                         {(flashDetail && flashDetail.agentIndexation && !flashDetail.agentIndexationRetour) ? <View style={styles.actions}>
-                                                  <View style={styles.actions}>
                                                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                                                                       <Text style={styles.actionText}>Envoyer</Text>
                                                             </TouchableOpacity>
-                                                  </View>
                                         </View> : null}
                               </View>
                               <Modalize

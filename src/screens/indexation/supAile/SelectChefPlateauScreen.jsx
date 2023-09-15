@@ -343,18 +343,14 @@ export default function SelectChefPlateauScreen() {
                                                   </View>
                                         </ScrollView>}
                                         {(!flashDetail || chefPlateau?.result) ? null : <View style={styles.actions}>
-                                                  <View style={styles.actions}>
                                                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isValidate() || isCompressingPhoto ? 0.5 : 1 }]} disabled={!isValidate() || isCompressingPhoto} onPress={handleSubmit}>
                                                                       <Text style={styles.actionText}>Envoyer</Text>
                                                             </TouchableOpacity>
-                                                  </View>
                                         </View>}
                                         {(flashDetail && chefPlateau?.result && !chefPlateau?.result.retour && flashDetail.foliosIndexes.length > 0) ? <View style={styles.actions}>
-                                                  <View style={styles.actions}>
                                                             <TouchableOpacity style={[styles.actionBtn, { opacity: !isRetourValid() ? 0.5 : 1 }]} disabled={!isRetourValid()} onPress={handleSubmitRetour}>
                                                                       <Text style={styles.actionText}>Envoyer</Text>
                                                             </TouchableOpacity>
-                                                  </View>
                                         </View> : null}
                               </View>
                               <Modalize

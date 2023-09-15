@@ -23,7 +23,7 @@ export default function AgentSupRetraiteScreen() {
         const navigation = useNavigation()
         const [allDetails, setAllDetails] = useState([])
         const [loading, setLoading] = useState(false)
-        const [header, setHeader] = useState("Agents superviseurs")
+        const [header, setHeader] = useState("Agents superviseurs aile")
         const user = useSelector(userSelector)
 
         const Action = ({ title, image }) => {

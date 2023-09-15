@@ -397,7 +397,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? ` ${multiFolios.length} ` + `séléctionné` + `${multiFolios.length > 1 ? "s" : ''}` : 'Selectionner les dossiers'}
+                                                                                {multiFolios.length > 0 ? ` ${multiFolios.length} ` + `séléctionné` + `${multiFolios.length > 1 ? "s" : ''}` : 'Sélectionner les dossiers'}
 
                                                                         </Text>
                                                                 </View>

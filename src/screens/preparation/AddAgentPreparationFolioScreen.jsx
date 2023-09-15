@@ -107,7 +107,7 @@ export default function AddAgentPreparationFolioScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Les agents de preparations</Text>
+                                                        <Text style={styles.modalTitle}>Les agents de préparations</Text>
                                                 </View>
                                                 {allAgentsPreparation?.result?.map((prep, index) => {
                                                         return (
@@ -304,11 +304,11 @@ export default function AddAgentPreparationFolioScreen() {
                                                 <TouchableOpacity style={styles.selectContainer} onPress={openPreparationModalize}>
                                                         <View>
                                                                 <Text style={styles.selectLabel}>
-                                                                     Agent de preparation
+                                                                     Agent de préparation
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `  ${agentPreparation.PRENOM}` : 'Sélectionner un agent de preparation'}
+                                                                                {agentPreparation ? `${agentPreparation.NOM}` + `  ${agentPreparation.PRENOM}` : 'Sélectionner un agent de préparation'}
                                                                         </Text>
                                                                 </View>
                                                         </View>
@@ -320,7 +320,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Selectionner les dossiers'}
+                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Sélectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

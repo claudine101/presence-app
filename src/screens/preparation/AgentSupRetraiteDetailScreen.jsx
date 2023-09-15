@@ -183,41 +183,7 @@ export default function AgentSupRetraiteDetailScreen() {
                                                                                 </View>
                                                                       </View>
                                                             </View> : null}
-                                                            <View style={[styles.addImageItem]}>
-                                                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                                                          <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                                                    <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                                                    <Text style={styles.addImageLabel}>
-                                                                                                              Procès verbal du retour
-                                                                                                    </Text>
-                                                                                          </View>
-                                                                                          {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
-                                                                                </View>
-                                                            <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize} disabled={pvs?.result?.pvRetour ? true : false}>
-                                                                      <View style={{ width: '100%' }}>
-                                                                               
-                                                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                          <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                                          <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                                                    Chargement
-                                                                                          </Text>
-                                                                                </View> : 
-                                                                                pvs?.result ?
-                                                                                    <>
-                                                                                              <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(1)
-                                                                                              }}>
-                                                                                                        <Image source={{ uri: pvs?.result?.pvRetour?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                                              </TouchableOpacity>
-                                                                                              <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs?.result?.pvRetour?.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                                    </> : null}
-                                                                                    
-                                                                                
-                                                                               
-                                                                                
-                                                                      </View>
-                                                            </TouchableOpacity>
-                                                            </View>
+                                                            
                                                             
                                                   </View>
                                         </ScrollView>}

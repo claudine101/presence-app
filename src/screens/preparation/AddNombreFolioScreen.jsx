@@ -128,41 +128,41 @@ export default function AddNombreFolioScreen() {
         const [loadingAgentArchive, agentSuperviseurArchives] = useFetch('/preparation/batiment/agentArchive')
         return (
             <>
-                                {loadingAgentArchive ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
-                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                </View > :
-                                        <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Sélectionner l'agent superviseur</Text>
+                {loadingAgentArchive ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                    <ActivityIndicator animating size={'large'} color={'#777'} />
+                </View > :
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Sélectionner l'agent superviseur archive</Text>
+                        </View>
+                        <View style={styles.modalList}>
+                            {agentSuperviseurArchives?.result?.map((ag, index) => {
+                                return (
+                                    <ScrollView key={index}>
+                                        <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)} >
+                                            <View style={styles.listItem} >
+                                                <View style={styles.listItemDesc}>
+                                                    <View style={styles.listItemImageContainer}>
+                                                        {ag.PHOTO_USER ? <Image source={{ uri: ag.PHOTO_USER }} style={styles.image} /> :
+                                                            <Image source={require('../../../assets/images/user.png')} style={styles.listItemImage} />}
+                                                    </View>
+                                                    <View style={styles.listNames}>
+                                                        <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
+                                                        <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
+                                                    </View>
                                                 </View>
-                                                <View style={styles.modalList}>
-                                                        {agentSuperviseurArchives?.result?.map((ag, index) => {
-                                                                return (
-                                                                        <ScrollView key={index}>
-                                                                                <TouchableNativeFeedback onPress={() => setSelectedAgent(ag)}>
-                                                                                        <View style={styles.listItem} >
-                                                                                                <View style={styles.listItemDesc}>
-                                                                                                        <View style={styles.listItemImageContainer}>
-                                                                                                      {  ag.PHOTO_USER ? <Image source={{ uri: ag.PHOTO_USER }} style={styles.image} /> :
-                                                                                                                <Image source={require('../../../assets/images/user.png')} style={styles.listItemImage} />}
-                                                                                                        </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{ag.NOM} {ag.PRENOM}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{ag.EMAIL}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                                {agents?.USERS_ID == ag.USERS_ID ? 
-                                                                                               <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} />:
-                                                                                               <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-                                                                        </ScrollView>
-                                                                )
-                                                        })}
-                                                </View>
-                                        </View>
-                                }
-                        </>
+                                                {agents?.USERS_ID == ag.USERS_ID ?
+                                                    <MaterialIcons name="radio-button-checked" size={24} color={COLORS.primary} /> :
+                                                    <MaterialIcons name="radio-button-unchecked" size={24} color={COLORS.primary} />}
+                                            </View>
+                                        </TouchableNativeFeedback>
+                                    </ScrollView>
+                                )
+                            })}
+                        </View>
+                    </View>
+                }
+            </>
         )
     }
 
@@ -197,8 +197,7 @@ export default function AddNombreFolioScreen() {
         }
         catch (error) {
             console.log(error)
-            // setError("numero", ["folio existe"])
-            // setError("numero", [error.message])
+            setErrorsVolume(error.message)
         } finally {
             setLoading(false)
         }
@@ -233,6 +232,9 @@ export default function AddNombreFolioScreen() {
                         {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
                     </Text>
                 </TouchableOpacity>
+                { errorsVolume?<Text style={styles.selectedError}>
+                    {errorsVolume}
+                </Text>:null}
                 <View style={{ marginVertical: 8 }}>
                     <OutlinedTextField
                         label="Nombre de dossier"
@@ -252,6 +254,7 @@ export default function AddNombreFolioScreen() {
                         keyboardType='number-pad'
                     />
                 </View>
+               
                 <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
                     <View style={styles.labelContainer}>
                         <View style={styles.icon}>
@@ -288,10 +291,10 @@ export default function AddNombreFolioScreen() {
                     <Text style={styles.buttonText}>Enregistrer</Text>
                 </View>
             </TouchableWithoutFeedback>
-            
-                <Modalize ref={agentModalizeRef}  >
-                    <AgentArchivageList />
-                </Modalize>
+
+            <Modalize ref={agentModalizeRef}  >
+                <AgentArchivageList />
+            </Modalize>
         </View>
     </>
     )
@@ -313,7 +316,7 @@ const styles = StyleSheet.create({
     itemTitleDesc: {
         color: "#777",
         fontSize: 11
-},
+    },
     title: {
         paddingHorizontal: 5,
         fontSize: 14,
@@ -337,6 +340,11 @@ const styles = StyleSheet.create({
     },
     selectedValue: {
         color: '#777',
+        marginTop: 2
+    },
+    selectedError: {
+        top:-15,
+        color: 'red',
         marginTop: 2
     },
     labelContainer: {
@@ -379,8 +387,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     listItemImageContainer: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderRadius: 10,
         backgroundColor: '#ddd',
         justifyContent: 'center',
@@ -394,7 +402,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 10,
-      resizeMode: "cover"
+        resizeMode: "cover"
     },
     listItemDesc: {
         flexDirection: 'row',
