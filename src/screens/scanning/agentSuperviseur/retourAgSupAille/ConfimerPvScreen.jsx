@@ -118,7 +118,6 @@ export default function ConfimerPvScreen() {
                                 setLoadingCheck(true)
                                 const res = await fetchApi(`/scanning/retour/agent/retour/pvs/supAilles/${detail.volume.ID_VOLUME}`)
                                 setCheck(res.result)
-
                         } catch (error) {
                                 console.log(error)
                         } finally {

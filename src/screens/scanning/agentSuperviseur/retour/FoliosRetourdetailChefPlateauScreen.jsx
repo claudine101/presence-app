@@ -220,27 +220,49 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                                         {details.map((folio, index) => {
                                                                                 return (
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
-                                                                                                        <View style={[styles.folio]}>
-                                                                                                                <View style={styles.folioLeftSide}>
-                                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                                        </View>
-                                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                                <View >
-                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                {folio?.IS_RECONCILIE == 1 ?
+                                                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                                                <View style={[styles.folio]}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                                 </View>
-                                                                                                                                <View style={styles.natureCard}>
-                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
-                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
-                                                                                                                                        {isSelected(folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="#ddd" />}
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <View >
+                                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                        </View>
+                                                                                                                                        <View style={styles.natureCard}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                                {isSelected(folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="#ddd" />}
 
+                                                                                                                                        </View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </TouchableOpacity> :
+                                                                                                        <View style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                                                <View style={[styles.folio]}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <View >
+                                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                        </View>
+                                                                                                                                        <View style={styles.natureCard}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                                {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+
+                                                                                                                                        </View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                </TouchableOpacity>
+                                                                                                }
                                                                                         </View>
                                                                                 )
                                                                         })
@@ -266,7 +288,7 @@ export default function FoliosRetourdetailChefPlateauScreen() {
                                                                                 {details.length} dossier{details.length > 1 && 's'}
                                                                         </Text>
                                                                         <Text style={styles.selectedValue}>
-                                                                                0 scané
+                                                                                0 scanné
                                                                                 {/* {selectedItems?.length} préparé{selectedItems.length > 1 && 's'} */}
                                                                         </Text>
                                                                 </View>
