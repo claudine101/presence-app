@@ -78,8 +78,8 @@ export default function FolioRetourneScreen() {
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
-                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
-                                                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
+                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                        <Image source={require('../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
