@@ -156,8 +156,8 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                         <View style={styles.folio}>
                                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                                         <View style={styles.folioImageContainer}>
-                                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.image} /> :
-                                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.image} />}
+                                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                                                         </View>
                                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                                 <Text style={styles.folioName}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>

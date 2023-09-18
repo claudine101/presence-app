@@ -92,7 +92,7 @@ export default function DetaillerVolumeScreen() {
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                                                         <FontAwesome5 name="file-signature" size={20} color="#777" />
                                                                         <Text style={styles.addImageLabel}>
-                                                                                Procès verbal 
+                                                                                Procès verbal  
                                                                         </Text>
                                                                 </View>
                                                         </View>

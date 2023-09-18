@@ -291,6 +291,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
+                        // return console.log(form)
                         if (volume?.mailleNoTraite) {
 
                                 form.append('ID_MAILLE_NO_TRAITE', volume?.mailleNoTraite.ID_MAILLE)
