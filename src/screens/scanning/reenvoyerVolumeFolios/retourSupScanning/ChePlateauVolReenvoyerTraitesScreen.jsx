@@ -61,7 +61,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                         setAllVolumesSupAilleScan(vol.PvFolios)
                                 }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
                                         setLoading(true)
-                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/aille/getVol/original`)
+                                        const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/aille/getVol/traitees`)
                                         setAllVolumesChefEquiScan(vol.PvFolios)
                                 }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
                                         setLoading(true)

@@ -25,12 +25,15 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const { volume, id } = route.params
+        // console.log(volume)
         const [loadingData, setLoadingData] = useState(false)
 
         const [allVolumes, setAllVolumes] = useState([])
         const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
 
         const [checkIsvalid, setCheckIsvalid] = useState([])
+        const [loadingCheck, setLoadingCheck] = useState(false)
+        const [check, setCheck] = useState([])
 
 
         const modelRef = useRef(null)
@@ -60,6 +63,22 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                 console.log(error)
                         } finally {
                                 setLoadingAilleScanning(false)
+                        }
+                })()
+        }, [volume]))
+
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                if (volume) {
+                                        setLoadingCheck(true)
+                                        const vol = await fetchApi(`/scanning/retour/agent/details/verifier/volume/dossier/valid/${volume.ID_VOLUME}`)
+                                        setCheck(vol)
+                                }
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingCheck(false)
                         }
                 })()
         }, [volume]))
@@ -239,7 +258,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
                                 >
                                         <View style={styles.modalContent}>
-                                               { allVolumes?.foliosNonValid?.length == 0 ?  <>
+                                               { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ? <>
                                                         <TouchableNativeFeedback
                                                                 onPress={() => choixArchives(volume)}
                                                         >

@@ -95,7 +95,7 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/final`, {
+                        const folioss = await fetchApi(`/scanning/retour/agent/retour/plateau/renvoyer/isvalid/retourChefequipescan`, {
                                 method: "PUT",
                                 body: form
                         })
