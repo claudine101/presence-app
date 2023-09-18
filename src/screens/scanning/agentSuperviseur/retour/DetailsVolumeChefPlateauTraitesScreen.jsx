@@ -119,9 +119,9 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                         <Text style={styles.selectedValue}>
                                                                                 {folio?.folios.length} dossier{folio?.folios.length > 1 && 's'}
                                                                         </Text>
-                                                                        <Text style={styles.selectedValue}>
+                                                                        {/* <Text style={styles.selectedValue}>
                                                                                 {folio?.folios.length} Validé{folio?.folios.length > 1 && 's'}
-                                                                        </Text>
+                                                                        </Text> */}
                                                                 </View>
                                                                         <View style={styles.folioList}>
                                                                                 {folio?.folios.map((folio, index) => {
