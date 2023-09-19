@@ -156,14 +156,18 @@ export default function NewAgentSupScanReenvoyerScreen() {
                                                                                                                 {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
                                                                                                                 <AntDesign name="folderopen" size={20} color="black" />
                                                                                                         </View>
-                                                                                                        <View style={styles.listNames}>
-                                                                                                                <Text style={styles.itemTitle}>{fol?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.itemTitleDesc}>{fol?.folio?.CODE_FOLIO}</Text>
+                                                                                                        <View style={styles.mard}>
+                                                                                                                <View >
+                                                                                                                        <Text style={styles.folioName}>{fol.folio.NUMERO_FOLIO}</Text>
+                                                                                                                </View>
+                                                                                                                <View style={styles.natureCard}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{fol.folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{fol?.folio.natures?.DESCRIPTION}</Text>
+                                                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
+                                                                                                                </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
                                                                         </ScrollView>
@@ -494,5 +498,14 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
                 marginVertical: 15
+        },
+        mard: {
+                flexDirection: "column",
+                flex:1
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex:1
         },
 })

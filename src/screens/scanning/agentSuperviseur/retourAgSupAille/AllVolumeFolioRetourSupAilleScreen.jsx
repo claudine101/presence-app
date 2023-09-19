@@ -9,6 +9,7 @@ import PROFILS from "../../../../constants/PROFILS";
 import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../../store/selectors/userSelector";
+import ETAPES_VOLUME from "../../../../constants/ETAPES_VOLUME";
 
 /**
  * Screen pour afficher les volumes retourner par un chef plateau vers un agent superviseur aille
@@ -184,7 +185,8 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allRetourVolumes?.length == 0 ? <View style={styles.emptyContaier}>
+                                        // allRetourVolumes?.length == 0 
+                                        (allRetourVolumes[0]?.volume?.ID_ETAPE_VOLUME != ETAPES_VOLUME.SELECTION_CHEF_EQUIPE_SCANNING) ? <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé
@@ -224,7 +226,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 {
                                                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {volume?.folios.length}dossier{volume?.folios.length > 1 ? "s" : ""}
+                                                                                                                                                                {volume?.folios.length} dossier{volume?.folios.length > 1 ? "s" : ""}
                                                                                                                                                         </Text>
                                                                                                                                                 }
                                                                                                                                         </View>

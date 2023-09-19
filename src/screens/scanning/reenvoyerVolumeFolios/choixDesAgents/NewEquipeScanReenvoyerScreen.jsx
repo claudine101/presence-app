@@ -21,7 +21,7 @@ import Loading from "../../../../components/app/Loading";
  */
 
 
-export default function NewEquipeScanReenvoyerScreen(){
+export default function NewEquipeScanReenvoyerScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
@@ -108,7 +108,7 @@ export default function NewEquipeScanReenvoyerScreen(){
                                                                                                         </View>
                                                                                                 </View>
                                                                                                 {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -155,13 +155,18 @@ export default function NewEquipeScanReenvoyerScreen(){
                                                                                                         {/* <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} /> */}
                                                                                                         <AntDesign name="folderopen" size={20} color="black" />
                                                                                                 </View>
-                                                                                                <View style={styles.listNames}>
-                                                                                                        <Text style={styles.itemTitle}>{fol.folio.NUMERO_FOLIO}</Text>
+                                                                                                <View style={styles.mard}>
+                                                                                                        <View >
+                                                                                                                <Text style={styles.folioName}>{fol.folio.NUMERO_FOLIO}</Text>
+                                                                                                        </View>
+                                                                                                        <View style={styles.natureCard}>
+                                                                                                                <Text style={styles.folioSubname}>Folio:{fol.folio.FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>Nature:{fol?.folio.natures?.DESCRIPTION}</Text>
+                                                                                                                {isSelected(fol.folio.ID_FOLIO) ? <Fontisto name="checkbox-active" size={21} color={COLORS.primary} /> :
+                                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />}
+                                                                                                        </View>
                                                                                                 </View>
                                                                                         </View>
-                                                                                        {isSelected(fol.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
-
                                                                                 </View>
                                                                         </TouchableNativeFeedback>
                                                                 </ScrollView>
@@ -217,111 +222,111 @@ export default function NewEquipeScanReenvoyerScreen(){
                 }
         }
 
-        return(
+        return (
                 <>
-                {loadingData && <Loading />}
-                <View style={styles.container}>
-                        <View style={styles.header}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.headerBtn}>
-                                                <Ionicons name="chevron-back-outline" size={24} color="black" />
+                        {loadingData && <Loading />}
+                        <View style={styles.container}>
+                                <View style={styles.header}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                                </View>
+                                        </TouchableNativeFeedback>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
                                         </View>
-                                </TouchableNativeFeedback>
-                                <View style={styles.cardTitle}>
-                                        <Text style={styles.title} numberOfLines={2}>Affecter une équipe scanning</Text>
                                 </View>
-                        </View>
-                        <ScrollView style={styles.inputs}>
-                                <TouchableOpacity style={styles.selectContainer}>
-                                        <View style={styles.labelContainer}>
-                                                <View style={styles.icon}>
-                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                </View>
-                                                <Text style={styles.selectLabel}>
-                                                        Volume
-                                                </Text>
-                                        </View>
-                                        <Text style={styles.selectedValue}>
-                                                {volume.volume.NUMERO_VOLUME}
-                                        </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.selectContainer}>
-                                        <View style={styles.labelContainer}>
-                                                <View style={styles.icon}>
-                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
-                                                </View>
-                                                <Text style={styles.selectLabel}>
-                                                        Nombre de dossier{volume.folios.length > 1 && 's'}
-                                                </Text>
-                                        </View>
-                                        <Text style={styles.selectedValue}>
-                                                {volume.folios.length}
-                                        </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
-                                        <View style={styles.labelContainer}>
-                                                <View style={styles.icon}>
-                                                        <Feather name="user" size={20} color="#777" />
-                                                </View>
-                                                <Text style={styles.selectLabel}>
-                                                        Equipe scanning
-                                                </Text>
-                                        </View>
-                                        <Text style={styles.selectedValue}>
-                                                {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
-                                        </Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
-                                        <View>
-                                                <Text style={styles.selectLabel}>
-                                                        Folios
-                                                </Text>
-                                                <View>
-                                                        <Text style={styles.selectedValue}>
-                                                                {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
-                                                                {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
+                                <ScrollView style={styles.inputs}>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Volume
                                                         </Text>
                                                 </View>
-                                        </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={onTakePicha}>
-                                        <View style={[styles.addImageItem]}>
-                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du procès verbal
+                                                <Text style={styles.selectedValue}>
+                                                        {volume.volume.NUMERO_VOLUME}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Nombre de dossier{volume.folios.length > 1 && 's'}
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {volume.folios.length}
+                                                </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
+                                                <View style={styles.labelContainer}>
+                                                        <View style={styles.icon}>
+                                                                <Feather name="user" size={20} color="#777" />
+                                                        </View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Equipe scanning
+                                                        </Text>
+                                                </View>
+                                                <Text style={styles.selectedValue}>
+                                                        {equipe ? `${equipe.NOM_EQUIPE}` : "Cliquer pour choisir une equipe"}
+                                                </Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
+                                                <View>
+                                                        <Text style={styles.selectLabel}>
+                                                                Folios
+                                                        </Text>
+                                                        <View>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
+                                                                        {multiFolios.length > 0 ? <Text> sélectionné</Text> : null}
                                                                 </Text>
                                                         </View>
-                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
                                                 </View>
-                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={onTakePicha}>
+                                                <View style={[styles.addImageItem]}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du procès verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                        </View>
+                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </View>
+                                        </TouchableOpacity>
+                                </ScrollView>
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitEquipeData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableOpacity>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={submitEquipeData}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                </View>
-                <Portal>
-                        <Modalize ref={equipeModalizeRef}  >
-                                <EquipeScanningList />
-                        </Modalize>
-                </Portal>
-                <Portal>
-                        <Modalize ref={multSelectModalizeRef}  >
-                                <MultiFolioSelctList />
-                        </Modalize>
-                </Portal>
-        </>
+                                </TouchableWithoutFeedback>
+                        </View>
+                        <Portal>
+                                <Modalize ref={equipeModalizeRef}  >
+                                        <EquipeScanningList />
+                                </Modalize>
+                        </Portal>
+                        <Portal>
+                                <Modalize ref={multSelectModalizeRef}  >
+                                        <MultiFolioSelctList />
+                                </Modalize>
+                        </Portal>
+                </>
         )
 }
 
@@ -470,5 +475,14 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
                 marginVertical: 15
+        },
+        mard: {
+                flexDirection: "column",
+                flex:1
+        },
+        natureCard: {
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex:1
         },
 })

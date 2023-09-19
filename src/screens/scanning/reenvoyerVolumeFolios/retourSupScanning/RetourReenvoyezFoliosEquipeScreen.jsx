@@ -79,7 +79,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = document != null  && multiFolios.length > 0? true : false
+                isValid = document != null ? true : false
                 return isValid
         }
         // const handleSubmit = (fol) => {
