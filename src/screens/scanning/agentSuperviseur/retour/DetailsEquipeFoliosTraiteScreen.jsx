@@ -40,11 +40,11 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', userTraite)
-                                console.log(form)
                                 const res = await fetchApi(`/scanning/retour/agent/equipe/pvs`, {
                                         method: "POST",
                                         body: form
                                 })
+                                
                                 setPvs(res)
                         } catch (error) {
                                 console.log(error)
@@ -58,7 +58,7 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                 <>
                         {(galexyIndex != null && pvs?.result) &&
                                 <ImageView
-                                        images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: date } : undefined]}
+                                        images={[{ uri: pvs?.result.PV_PATH }, PV_PATH ? { uri: PV_PATH } : undefined]}
                                         imageIndex={galexyIndex}
                                         visible={(galexyIndex != null) ? true : false}
                                         onRequestClose={() => setGalexyIndex(null)}
@@ -158,7 +158,7 @@ export default function DetailsEquipeFoliosTraiteScreen() {
                                                                                 {PV_PATH ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
+                                                                                                        setGalexyIndex(1)
                                                                                                 }}>
                                                                                                         <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>

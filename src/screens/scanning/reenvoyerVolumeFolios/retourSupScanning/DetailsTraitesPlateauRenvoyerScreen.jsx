@@ -113,8 +113,6 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
-                                                                                        {/* {folio?.folios.length} pret à être reconcilier{folio?.folios.length > 1 && 's'} */}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -157,7 +155,7 @@ export default function DetailsTraitesPlateauRenvoyerScreen() {
                                                                                 {PV_PATH ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
+                                                                                                        setGalexyIndex(1)
                                                                                                 }}>
                                                                                                         <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>

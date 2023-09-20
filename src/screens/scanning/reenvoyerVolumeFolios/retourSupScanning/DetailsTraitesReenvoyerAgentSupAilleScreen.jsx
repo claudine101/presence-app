@@ -55,7 +55,7 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
                         <ImageView
-                                images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
+                                images={[{ uri: pvs?.result.PV_PATH }, PV_PATH ? { uri: PV_PATH } : undefined]}
                                 imageIndex={galexyIndex}
                                 visible={(galexyIndex != null) ? true : false}
                                 onRequestClose={() => setGalexyIndex(null)}
@@ -160,7 +160,7 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
                                                                         {PV_PATH ?
                                                                                 <>
                                                                                         <TouchableOpacity onPress={() => {
-                                                                                                setGalexyIndex(0)
+                                                                                                setGalexyIndex(1)
                                                                                         }}>
                                                                                                 <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                         </TouchableOpacity>

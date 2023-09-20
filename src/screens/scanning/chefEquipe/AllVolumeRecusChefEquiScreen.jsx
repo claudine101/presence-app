@@ -106,7 +106,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                         {
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                                                                                                                        {volume?.folios.length ? volume?.folios.length : "0"} dossier{volume?.folios.length > 1 && 's'}
                                                                                                                                                                 </Text>
                                                                                                                                                         }
                                                                                                                                                 </View>
@@ -165,7 +165,7 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                         {
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                                                                                                                        {volume?.folios.length ? volume?.folios.length : "0"} dossier{volume?.folios.length > 1 && 's'}
                                                                                                                                                                 </Text>
                                                                                                                                                         }
                                                                                                                                                 </View>

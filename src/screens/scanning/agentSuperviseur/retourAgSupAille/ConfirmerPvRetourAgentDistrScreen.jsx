@@ -25,12 +25,9 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const { volume, id } = route.params
-        // console.log(volume)
         const [loadingData, setLoadingData] = useState(false)
-
         const [allVolumes, setAllVolumes] = useState([])
         const [loadingAilleScanning, setLoadingAilleScanning] = useState(false)
-
         const [checkIsvalid, setCheckIsvalid] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
         const [check, setCheck] = useState([])
@@ -41,14 +38,13 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                 setCheckIsvalid(allVolumes)
                 modelRef.current.open()
         }
-
         const choixArchives = (volume) => {
                 navigation.navigate("ChoixAgentDistributeurRetourScreen", { volume: volume })
-                modelRef.current.close()
+                // modelRef.current.close()
         }
         const choixRetourScanning = (volume) => {
                 navigation.navigate("RetourPhaseScanningVolumeScreen", { volume: volume })
-                modelRef.current.close()
+                // modelRef.current.close()
         }
 
         useFocusEffect(useCallback(() => {
@@ -242,13 +238,20 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                 </View>
                                                         </View> : null}
                                 </ScrollView>
-                                <TouchableWithoutFeedback
-                                        onPress={() => choixAction(allVolumes)}
+                               {allVolumes?.foliosNonValid?.length > 0  ? <TouchableWithoutFeedback
+                                        onPress={() => choixRetourScanning(volume)}
                                 >
                                         <View style={styles.button}>
-                                                <Text style={styles.buttonText}>Choisir l'action</Text>
+                                                <Text style={styles.buttonText}>Retour phase scanning</Text>
                                         </View>
-                                </TouchableWithoutFeedback>
+                                </TouchableWithoutFeedback>:null}
+                                { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ? <TouchableWithoutFeedback
+                                        onPress={() => choixArchives(volume)}
+                                >
+                                        <View style={styles.button}>
+                                                <Text style={styles.buttonText}>Archiver</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>:null}
                         </View>
                         <Portal>
                                 <Modalize ref={modelRef}
@@ -277,7 +280,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                 onPress={() => choixRetourScanning(volume)}
                                                         >
                                                                 <View style={styles.modalItem}>
-                                                                        <AntDesign name="folderopen" size={24} color="black" />
+                                                                        <AntDesign name="back" size={24} color="black" />
                                                                         <Text style={styles.modalItemTitle}>
                                                                                 Retour phase scanning
                                                                         </Text>

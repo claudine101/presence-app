@@ -39,7 +39,7 @@ export default function DetailsFolioRetourScreen() {
         const [check, setCheck] = useState([])
         const [loadingCheck, setLoadingCheck] = useState(false)
 
-        const folio_ids = folio?.folios?.map(foli => foli.folio.ID_FOLIO)
+        const folio_ids = folio?.folios?.map(foli => foli?.ID_FOLIO)
 
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -78,18 +78,16 @@ export default function DetailsFolioRetourScreen() {
 
         //Multi select pour selectionner les folios reconcilier
         const [multiFolios, setMultiFolios] = useState([]);
-        const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (folio) => {
-                if (isSelected(folio.folio.ID_FOLIO)) {
-                        const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != folio.folio.ID_FOLIO)
+                if (isSelected(folio.ID_FOLIO)) {
+                        const newfolio = multiFolios.filter(u => u.ID_FOLIO != folio.ID_FOLIO)
                         setMultiFolios(newfolio)
                 } else {
                         setMultiFolios(u => [...u, folio])
                 }
 
         }
-
-
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null && multiFolios.length > 0 ? true : false
@@ -177,7 +175,7 @@ export default function DetailsFolioRetourScreen() {
                                                         <Ionicons name="chevron-back-outline" size={24} color="black" />
                                                 </View>
                                         </TouchableNativeFeedback>
-                                        <Text style={styles.title}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
+                                        <Text style={styles.title}>{folio.folios[0].equipe.NOM_EQUIPE}</Text>
                                 </View>
                                 {loadingPvs ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -239,11 +237,11 @@ export default function DetailsFolioRetourScreen() {
                                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
                                                                                                                                 <View style={styles.natureCard}>
-                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.folio.FOLIO}</Text>
-                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.folio.natures.DESCRIPTION}</Text>
-                                                                                                                                        {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio?.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio?.natures.DESCRIPTION}</Text>
+                                                                                                                                        {isSelected(folio?.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                                                                 <MaterialIcons name="check-box-outline-blank" size={24} color="#ddd" />}
 
                                                                                                                                 </View>

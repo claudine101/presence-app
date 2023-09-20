@@ -60,7 +60,7 @@ export default function DetailsParAgentClickVolumeScreen() {
                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                {detail?.volume?.NOMBRE_DOSSIER ? detail?.volume?.NOMBRE_DOSSIER: "0"} dossier{detail?.volume?.NOMBRE_DOSSIER > 1 && 's'}
+                                                                                                                                {detail?.folios?.length ? detail?.folios?.length: "0"} dossier{detail?.folios?.length > 1 && 's'}
                                                                                                                         </Text>
                                                                                                                 </View>
                                                                                                         </View>

@@ -125,6 +125,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         style={styles.contain}
                                                         data={allVolumes}
                                                         renderItem={({ item: volume, index }) => {
+                                                                // return console.log(volume.traitant)
                                                                 return (
                                                                         <>
                                                                                 {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -145,9 +146,9 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                 <Text style={styles.folioName}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                                <AntDesign name="mail" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        {volume.users.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -185,8 +186,8 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        // allRetourVolumes?.length == 0 
-                                        (allRetourVolumes[0]?.volume?.ID_ETAPE_VOLUME != ETAPES_VOLUME.SELECTION_CHEF_EQUIPE_SCANNING) ? <View style={styles.emptyContaier}>
+                                        allRetourVolumes?.length == 0 ? 
+                                        <View style={styles.emptyContaier}>
                                                 <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume trouvé

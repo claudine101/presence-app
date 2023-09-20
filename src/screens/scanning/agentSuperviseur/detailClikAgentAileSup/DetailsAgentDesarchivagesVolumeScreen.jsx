@@ -44,6 +44,7 @@ export default function DetailsAgentDesarchivagesVolumeScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('ARCHIVER', valide)
+                        form.append('MAILLE',allDetails.volume.ID_MALLE)
                         const volume = await fetchApi(`/scanning/retour/agent/desarchivages/archivevol/${allDetails.volume.ID_VOLUME}`, {
                                 method: "PUT",
                                 body: form

@@ -26,6 +26,7 @@ export default function DetailsVolumeAgentDistributeurTraiteScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, PV_PATH, date, userTraite } = route.params
+
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
 
@@ -33,7 +34,7 @@ export default function DetailsVolumeAgentDistributeurTraiteScreen() {
                 <>
                         {(galexyIndex != null && PV_PATH) &&
                                 <ImageView
-                                        images={[{ uri: PV_PATH }, date ? { uri: date } : undefined]}
+                                        images={[{ uri: PV_PATH }]}
                                         imageIndex={galexyIndex}
                                         visible={(galexyIndex != null) ? true : false}
                                         onRequestClose={() => setGalexyIndex(null)}

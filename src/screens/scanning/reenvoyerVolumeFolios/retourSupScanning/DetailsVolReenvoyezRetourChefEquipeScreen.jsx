@@ -17,11 +17,6 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
-        const [galexyIndex, setGalexyIndex] = useState(null)
-        const [loadingPvs, setLoadingPvs] = useState(false)
-        const [pvs, setPvs] = useState(false)
-        const [check, setCheck] = useState([])
-        const [loadingCheck, setLoadingCheck] = useState(false)
 
         const folio_ids = details?.map(folio => folio.ID_FOLIO)
         const isValidAdd = () => {
@@ -30,27 +25,7 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                 return isValid
         }
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingPvs(true)
-                                const form = new FormData()
-                                form.append('folioIds', JSON.stringify(folio_ids))
-                                form.append('AGENT_SUPERVISEUR', userTraite.USERS_ID)
-                                const res = await fetchApi(`/scanning/retour/agent/pvs/reenvoyer/pvssss/final`, {
-                                        method: "POST",
-                                        body: form
-                                })
-                                setPvs(res)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingPvs(false)
-                        }
-                })()
-        }, [userTraite]))
-
+     
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -108,33 +83,8 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                 }
         }
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/pvs/reenvoyez/chef/${userTraite.USERS_ID}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [userTraite]))
         return(
                 <>
-                {(galexyIndex != null && pvs?.result && pvs?.result) &&
-                        <ImageView
-                                images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
-                                imageIndex={galexyIndex}
-                                visible={(galexyIndex != null) ? true : false}
-                                onRequestClose={() => setGalexyIndex(null)}
-                                swipeToCloseEnabled
-                                keyExtractor={(_, index) => index.toString()}
-                        />
-                }
-
                 {loadingData && <Loading />}
                 <View style={styles.container}>
 
@@ -151,30 +101,8 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                 </View>
                         </View>
                         <ScrollView>
-                                <View style={styles.selectContainer}>
-                                        <View style={{ width: '100%' }}>
-                                                {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                        <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                        <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                Chargement
-                                                        </Text>
-                                                </View> : null}
-                                                <Text style={styles.selectedValue}>
-                                                        {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                        Pv
-                                                </Text>
-                                                {pvs?.result ?
-                                                        <>
-                                                                <TouchableOpacity onPress={() => {
-                                                                        setGalexyIndex(0)
-                                                                }}>
-                                                                        <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                </TouchableOpacity>
-                                                                <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                        </> : null}
-                                        </View>
-                                </View>
-                                {check.length > 0 ? <View style={styles.selectContainer}>
+                                
+                                 <View style={styles.selectContainer}>
                                         <View style={{ width: '100%' }}>
                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
@@ -208,43 +136,8 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                                         }
                                                 </View>
                                         </View>
-                                </View>: <View style={styles.selectContainer}>
-                                        <View style={{ width: '100%' }}>
-                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-
-                                                </View>
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                        <Text style={styles.selectedValue}>
-                                                        </Text>
-                                                        <Text style={styles.selectedValue}>
-                                                                {details.length} attente d'être scanné{details.length > 1 && 's'}
-                                                        </Text>
-                                                </View>
-                                                <View style={styles.contain}>
-                                                        {details.map((folio, index) => {
-                                                                return (
-                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                <View style={[styles.folio]}>
-                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                </View>
-                                                                                                <View style={styles.folioDesc}>
-                                                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
-                                                                                </View>
-                                                                        </TouchableOpacity>
-                                                                )
-                                                        })
-                                                        }
-                                                </View>
-                                        </View>
-                                </View>}
-
-                                {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                </View>
+                                <TouchableOpacity onPress={onTakePicha}>
                                         <View style={[styles.addImageItem]}>
                                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -257,16 +150,16 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                                                 </View>
                                                 {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
-                                </TouchableOpacity>:null}
+                                </TouchableOpacity>
                         </ScrollView>
-                        {check.length > 0 ? <TouchableWithoutFeedback
+                        <TouchableWithoutFeedback
                                 disabled={!isValidAdd()}
                                 onPress={submitPlateauData}
                         >
                                 <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                         <Text style={styles.buttonText}>Enregistrer</Text>
                                 </View>
-                        </TouchableWithoutFeedback>:null}
+                        </TouchableWithoutFeedback>
                 </View >
         </>
         )

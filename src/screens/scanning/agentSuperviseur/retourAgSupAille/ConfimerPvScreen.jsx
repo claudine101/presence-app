@@ -301,7 +301,7 @@ export default function ConfimerPvScreen() {
                                                                                 </View>
                                                                         </View>
                                                                 </View> : null}
-                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length ==detail.folios.length ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -316,7 +316,7 @@ export default function ConfimerPvScreen() {
                                                 </View>
                                         </TouchableOpacity>:null}
                                 </ScrollView>
-                                {check.length > 0 ? <TouchableWithoutFeedback
+                                {check.length == detail.folios.length ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitAgentSup}
                                 >

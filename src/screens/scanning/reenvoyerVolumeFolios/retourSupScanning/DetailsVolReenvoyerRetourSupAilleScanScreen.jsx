@@ -42,7 +42,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                         body: form
                                 })
                                 setPvs(res)
-
+                                setCheck(res.result.check)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -108,20 +108,6 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                 }
         }
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/pvs/reenvoyez/supAille/chef/${userTraite.USERS_ID}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [userTraite]))
         return (
                 <>
                         {(galexyIndex != null && pvs?.result && pvs?.result) &&
@@ -159,10 +145,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                         Chargement
                                                                 </Text>
                                                         </View> : null}
-                                                        <Text style={styles.selectedValue}>
-                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                Pv
-                                                        </Text>
+                                                        
                                                         {pvs?.result ?
                                                                 <>
                                                                         <TouchableOpacity onPress={() => {
@@ -174,7 +157,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {check.length > 0 ? <View style={styles.selectContainer}>
+                                        {check.length ==details.length ? <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
@@ -219,7 +202,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                         <Text style={styles.selectedValue}>
                                                                         </Text>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {details.length} attente d'être scanné{details.length > 1 && 's'}
+                                                                                {check.length} scanné{details.length > 1 && 's'}
                                                                         </Text>
                                                                 </View>
                                                                 <View style={styles.contain}>
@@ -236,7 +219,9 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                                                                         <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                               {folio?.folio?.IS_RECONCILIE==1 && !(folio?.folio?.IS_VALIDE) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+
+                                                                                                       : <MaterialIcons name="cancel-presentation" size={24} color="red" />}
                                                                                                 </View>
                                                                                         </TouchableOpacity>
                                                                                 )
@@ -246,7 +231,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                         </View>
                                                 </View>}
 
-                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length ==details.length? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -259,16 +244,16 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                         </View>
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
-                                        </TouchableOpacity>:null}
+                                        </TouchableOpacity> : null}
                                 </ScrollView>
-                               {check.length > 0 ? <TouchableWithoutFeedback
+                                {check.length ==details.length? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitPlateauData}
                                 >
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback>:null}
+                                </TouchableWithoutFeedback> : null}
                         </View >
                 </>
         )

@@ -54,7 +54,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
         return (
                 <>{(galexyIndex != null && PV_PATH && pvs?.result) &&
                         <ImageView
-                                images={[{ uri: pvs?.result.PV_PATH }, date ? { uri: PV_PATH } : undefined]}
+                                images={[{ uri: pvs?.result.PV_PATH }, PV_PATH ? { uri: PV_PATH } : undefined]}
                                 imageIndex={galexyIndex}
                                 visible={(galexyIndex != null) ? true : false}
                                 onRequestClose={() => setGalexyIndex(null)}
@@ -119,9 +119,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                         <Text style={styles.selectedValue}>
                                                                                 {folio?.folios.length} dossier{folio?.folios.length > 1 && 's'}
                                                                         </Text>
-                                                                        {/* <Text style={styles.selectedValue}>
-                                                                                {folio?.folios.length} Validé{folio?.folios.length > 1 && 's'}
-                                                                        </Text> */}
+                                                                       
                                                                 </View>
                                                                         <View style={styles.folioList}>
                                                                                 {folio?.folios.map((folio, index) => {
@@ -162,7 +160,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                 {PV_PATH ?
                                                                                         <>
                                                                                                 <TouchableOpacity onPress={() => {
-                                                                                                        setGalexyIndex(0)
+                                                                                                        setGalexyIndex(1)
                                                                                                 }}>
                                                                                                         <Image source={{ uri: PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                                                 </TouchableOpacity>

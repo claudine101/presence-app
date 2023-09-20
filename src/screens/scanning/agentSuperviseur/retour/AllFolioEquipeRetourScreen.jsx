@@ -26,10 +26,11 @@ export default function AllFolioEquipeRetourScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
+                
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
-                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.folios[0].USER_TRAITEMENT, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].folio.equipe.ID_EQUIPE })
+                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.users, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE:folio.folios[0].equipe.ID_EQUIPE })
                 }
         }
 
@@ -39,7 +40,7 @@ export default function AllFolioEquipeRetourScreen() {
                         try {
                                 setLoading(true)
                                 const fol = await fetchApi(`/scanning/volume/equipeScanning`)
-                                setAllFolios(fol.UserFolios)
+                                setAllFolios(fol.PvFolios)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -47,7 +48,6 @@ export default function AllFolioEquipeRetourScreen() {
                         }
                 })()
         }, []))
-
 
         // fonction pour recuperer les folios d'un agent qui est connecter
         useFocusEffect(useCallback(() => {
@@ -160,12 +160,12 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                                         <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                                                         </View>
                                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                                <Text style={styles.folioName}>{folio.folios[0].folio.equipe.NOM_EQUIPE}</Text>
+                                                                                                                                                <Text style={styles.folioName}>{folio.folios[0].equipe.NOM_EQUIPE}</Text>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {moment(folio.folios[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                                        {moment(folio.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                                 </Text>
                                                                                                                                                         </View>
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

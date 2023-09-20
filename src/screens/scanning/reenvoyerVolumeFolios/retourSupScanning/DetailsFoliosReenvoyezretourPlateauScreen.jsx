@@ -28,6 +28,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
         const [check, setCheck] = useState([])
+
         const [loadingCheck, setLoadingCheck] = useState(false)
 
         const folio_ids = details?.map(folio => folio.folio.ID_FOLIO)
@@ -50,7 +51,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                         body: form
                                 })
                                 setPvs(res)
-
+                                setCheck(res?.result?.check)
                         } catch (error) {
                                 console.log(error)
                         } finally {
@@ -130,20 +131,6 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                 }
         }
 
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                setLoadingCheck(true)
-                                const res = await fetchApi(`/scanning/retour/agent/retour/check/action/${userTraite.USERS_ID}`)
-                                setCheck(res.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        } finally {
-                                setLoadingCheck(false)
-                        }
-                })()
-        }, [userTraite]))
         return (
                 <>
                         {(galexyIndex != null && pvs?.result && pvs?.result) &&
@@ -181,10 +168,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                         Chargement
                                                                 </Text>
                                                         </View> : null}
-                                                        <Text style={styles.selectedValue}>
-                                                                {/* {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM} */}
-                                                                Pv
-                                                        </Text>
+                                                        
                                                         {pvs?.result ?
                                                                 <>
                                                                         <TouchableOpacity onPress={() => {
@@ -196,7 +180,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {check.length > 0 ? <View style={styles.selectContainer}>
+                                        {check.length == details.length ? <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
@@ -210,8 +194,9 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                         </View>
                                                         <View style={styles.contain}>
                                                                 {details.map((folio, index) => {
+
                                                                         return (
-                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} onPress={() => setSelectedFolio(folio)}>
+                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index} desabled>
                                                                                         <View style={[styles.folio]}>
                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                         <View style={styles.folioImageContainer}>
@@ -238,15 +223,17 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
                                                                 </View>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                         <Text style={styles.selectedValue}>
                                                                         </Text>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {details.length} attente d'être validé{details.length > 1 && 's'}
+                                                                                {check.length} validé{check.length > 1 && 's'}
                                                                         </Text>
-                                                                </View>
+                                                                </View> */}
                                                                 <View style={styles.contain}>
                                                                         {details.map((folio, index) => {
+
+                                                                        // const isValide = check.find(u => u.ID_FOLIO == folio.folio.ID_FOLIO) ? true : false
                                                                                 return (
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
                                                                                                 <View style={[styles.folio]}>
@@ -271,7 +258,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                         </View>
                                                 </View>}
 
-                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length == details.length ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -286,7 +273,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                 </View>
                                         </TouchableOpacity> : null}
                                 </ScrollView>
-                                {check.length > 0 ? <TouchableWithoutFeedback
+                                {check.length == details.length ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitPlateauData}
                                 >

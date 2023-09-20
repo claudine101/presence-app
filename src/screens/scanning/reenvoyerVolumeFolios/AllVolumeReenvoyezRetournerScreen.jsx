@@ -93,9 +93,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun folio trouvé
                                                         </Text>
-                                                        {/* <Text style={styles.emptyDesc}>
-                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
@@ -151,9 +148,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun folio trouvé
                                                         </Text>
-                                                        {/* <Text style={styles.emptyDesc}>
-                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
@@ -235,7 +229,7 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
