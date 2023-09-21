@@ -24,8 +24,6 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
 export default function AddAgentPreparationFolioScreen() {
         const navigation = useNavigation()
-        const dispatch = useDispatch()
-        const [countFolio, setCountFolio] = useState('')
         const [loading, setLoading] = useState(false)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [document, setDocument] = useState(null)
@@ -73,7 +71,6 @@ export default function AddAgentPreparationFolioScreen() {
         const submitConfimer = () => {
                 multSelectModalizeRef.current?.close();
         }
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -95,8 +92,6 @@ export default function AddAgentPreparationFolioScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-        
-
         //Composent pour afficher le modal les agents de preparation
         const PreparationList = () => {
                 const [loadingAgentPrepa, allAgentsPreparation] = useFetch('/preparation/batiment/agentPreparation')
@@ -239,19 +234,7 @@ export default function AddAgentPreparationFolioScreen() {
                 }
         }
 
-        //Fonction pour recuperer le volume avec le count de folio existants
-        useFocusEffect(useCallback(() => {
-                (async () => {
-                        try {
-                                const response = await fetchApi('/folio/dossiers/nbreFolio')
-                                setCountFolio(response.result)
-
-                        } catch (error) {
-                                console.log(error)
-                        }
-                })()
-        }, []))
-
+       
 
         return (
                 <>

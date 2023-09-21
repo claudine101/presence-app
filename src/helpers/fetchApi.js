@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import cache from "../utils/cache";
-export const API_URL = false
+export const API_URL = true
   ? "https://prodev.mediabox.bi:33204"
   : "http://192.168.241.134:3000";
 /**

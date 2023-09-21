@@ -30,7 +30,7 @@ export default function AppHeaderChefPlateauRetour({ modal }) {
                 </View>
             </TouchableNativeFeedback>
            
-                <Text style={styles.logo}>Folios donnees</Text>
+                {/* <Text style={styles.logo}>Folios donnees</Text> */}
             <TouchableOpacity 
             // onPress={() => {
             //             modal.current?.open()

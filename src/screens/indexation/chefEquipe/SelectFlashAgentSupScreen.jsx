@@ -252,7 +252,7 @@ export default function SelectFlashAgentSupScreen() {
                                                 </View>
                                                 {
                                                         agents?.result?.length == 0 ? <View style={styles.emptyContainer}>
-                                                                <Text style={styles.emptyLabel}>Aucun support  trouvé</Text>
+                                                                <Text style={styles.emptyLabel}>Aucun agent  trouvé</Text>
                                                         </View> :
                                                          <View style={styles.modalList}>
                                                                 {agents?.result?.map((agent, index) => {
@@ -261,7 +261,8 @@ export default function SelectFlashAgentSupScreen() {
                                                                                         <View style={styles.listItem}>
                                                                                                 <View style={styles.listItemDesc}>
                                                                                                         <View style={styles.listItemImageContainer}>
-                                                                                                                <Image source={require('../../../../assets/images/usb-flash-drive.png')} style={styles.listItemImage} />
+                                                                                                        {agent.PHOTO_USER ? <Image source={{ uri: agent.PHOTO_USER }} style={styles.image} /> :
+                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.listItemImage} />}
                                                                                                         </View>
                                                                                                         <View style={styles.listNames}>
                                                                                                                 <Text style={styles.listItemTitle}>{agent.NOM} {agent.PRENOM}</Text>

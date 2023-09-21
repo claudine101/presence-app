@@ -522,7 +522,7 @@ export default function AddFolioScreen() {
                 try {
                         setLoading(true)
                         const form = new FormData()
-                        form.append('ID_VOLUME', volume.volume.ID_VOLUME)
+                        form.append('ID_VOLUME', volume?.volume?.ID_VOLUME)
                         form.append('folio', JSON.stringify(folios))
                         if (document) {
                                 const manipResult = await manipulateAsync(
@@ -540,6 +540,7 @@ export default function AddFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
+                        // return console.log(form)
                         const folio = await fetchApi(`/preparation/folio`, {
                                 method: "POST",
                                 body: form
@@ -548,7 +549,7 @@ export default function AddFolioScreen() {
                         navigation.goBack()
                 }
                 catch (error) {
-                        console.log(error.result)
+                        console.log(error)
                         setDossierExiste(error.result)
 
                 } finally {

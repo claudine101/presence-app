@@ -69,15 +69,15 @@ export default function ChefPlateauScreen() {
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                        <Fontisto name="email" size={20} color="#777" />
+                                                                                                                                        {/* <Fontisto name="email" size={15} color="#777" /> */}
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                                                                      {folio.users?.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                                <Ionicons name="ios-document-text-outline" size={15} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {folio.volumes?.length ? folio.volumes?.length : "0"} volume{folio.volumes?.length > 1 && 's'}
+                                                                                                                                                        {folio.volumes?.length ? folio.volumes?.length : "0"}volume{folio.volumes?.length > 1 && 's'}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>

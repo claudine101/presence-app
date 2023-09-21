@@ -1,5 +1,5 @@
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native"
-import { Image, Text, ToastAndroid, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
+import { Image, Text, ToastAndroid, Touchable, TouchableNativeFeedback, TouchableOpacity, View } from "react-native"
 import { StyleSheet } from "react-native"
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from "react-native";
@@ -69,7 +69,7 @@ export default function DetailsFolioFlashScreen() {
         try {
             setIsSubmitting(true)
             const form = new FormData()
-            form.append("ID_FOLIO",folio?.ID_FOLIO)
+            form.append("ID_FOLIO", folio?.ID_FOLIO)
             form.append("TYPE_DOCUMENT", JSON.stringify(selectedType))
             const res = await fetchApi(`/uploadEDMRS/folio/isUpload`, {
                 method: 'POST',
@@ -86,17 +86,17 @@ export default function DetailsFolioFlashScreen() {
         }
     }
 
-     /**
-     * Permet d'envoyer le chef agent d'indexation
-     * @author darcydev <darcy@mediabox.bi>
-     * @date 03/08/2023
-     * @returns 
-     */
-     const rehandleSubmit = async () => {
+    /**
+    * Permet d'envoyer le chef agent d'indexation
+    * @author darcydev <darcy@mediabox.bi>
+    * @date 03/08/2023
+    * @returns 
+    */
+    const rehandleSubmit = async () => {
         try {
             setIsSubmitting(true)
             const form = new FormData()
-            form.append("ID_FOLIO",folio?.ID_FOLIO)
+            form.append("ID_FOLIO", folio?.ID_FOLIO)
             form.append("TYPE_DOCUMENT", JSON.stringify(selectedType))
             const res = await fetchApi(`/uploadEDMRS/folio/isReUpload`, {
                 method: 'POST',
@@ -125,16 +125,16 @@ export default function DetailsFolioFlashScreen() {
                             <Ionicons name="chevron-back-outline" size={24} color="black" />
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={styles.title}>{folio ?folio?.NUMERO_FOLIO : null}</Text>
+                    <Text style={styles.title}>{folio ? folio?.NUMERO_FOLIO : null}</Text>
                 </View>
                 <ScrollView>
                     <View style={styles.selectContainer}>
-                        <View style={{  overflow: 'hidden', borderRadius: 8 }}>
+                        <View style={{ overflow: 'hidden', borderRadius: 8 }}>
                             <View style={[styles.folio,]}>
                                 <View style={styles.folioLeftSide}>
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Numéro de feuille</Text>
-                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FEUILLE?folio?.NUMERO_FEUILLE:"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FEUILLE ? folio?.NUMERO_FEUILLE : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -145,7 +145,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Propriétaire</Text>
-                                        <Text style={styles.folioSubname}>{folio?.NOM_PROPRIETAIRE && folio?.PRENOM_PROPRIETAIRE ? `${folio?.NOM_PROPRIETAIRE}  `+ ` ${ folio?.PRENOM_PROPRIETAIRE}`   :"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NOM_PROPRIETAIRE && folio?.PRENOM_PROPRIETAIRE ? `${folio?.NOM_PROPRIETAIRE}  ` + ` ${folio?.PRENOM_PROPRIETAIRE}` : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -156,7 +156,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Numéro parcelle</Text>
-                                        <Text style={styles.folioSubname}>{folio?.NUMERO_PARCELLE? folio?.NUMERO_PARCELLE :"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NUMERO_PARCELLE ? folio?.NUMERO_PARCELLE : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -167,7 +167,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Nombre de doublon</Text>
-                                        <Text style={styles.folioSubname}>{folio?.NOMBRE_DOUBLON? folio?.NOMBRE_DOUBLON :"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.NOMBRE_DOUBLON ? folio?.NOMBRE_DOUBLON : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -178,7 +178,7 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Nature du dossier</Text>
-                                        <Text style={styles.folioSubname}>{folio?.natures ? folio?.natures.DESCRIPTION :"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.natures ? folio?.natures.DESCRIPTION : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -189,25 +189,24 @@ export default function DetailsFolioFlashScreen() {
 
                                     <View style={styles.folioDesc}>
                                         <Text style={styles.folioName}>Localité </Text>
-                                        <Text style={styles.folioSubname}>{folio?.LOCALITE ? folio?.LOCALITE :"N/A"}</Text>
+                                        <Text style={styles.folioSubname}>{folio?.LOCALITE ? folio?.LOCALITE : "N/A"}</Text>
                                     </View>
                                 </View>
                             </View>
                         </View>
                     </View>
 
-                    {(folio.ID_ETAPE_FOLIO == ETAPES_FOLIO.SELECTION_AGENT_EDRMS || folio.ID_ETAPE_FOLIO == ETAPES_FOLIO.FOLIO_NO_ENREG_TO_EDRMS)?
+                    {(folio.ID_ETAPE_FOLIO == ETAPES_FOLIO.SELECTION_AGENT_EDRMS || folio.ID_ETAPE_FOLIO == ETAPES_FOLIO.FOLIO_NO_ENREG_TO_EDRMS) ?
 
                         <TouchableNativeFeedback onPress={() => setUpload(u => !u)}>
                             <View style={styles.selectContainer}>
-                            <View style={styles.folioUpload}>
-                                <Text style={styles.folioName}>Dossier upload dans EDRMS</Text>
-                                {upload ?
-                                    <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
-                                    <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                <View style={styles.folioUpload}>
+                                    <Text style={styles.folioName}>Dossier upload dans EDRMS</Text>
+                                    {upload ?
+                                        <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
+                                </View>
                             </View>
-                            </View>
-
 
                         </TouchableNativeFeedback> : null
 
@@ -215,50 +214,50 @@ export default function DetailsFolioFlashScreen() {
                     }
                     {upload ? <View style={styles.selectContainer}>
                         {
-                            typeDocument.length==0 ?
-                            <Text style={styles.listItemTitle}>Aucun type document  trouvé</Text>:
-                        typeDocument?.map((type, index) => {
-                            return (
-                                <TouchableNativeFeedback key={index} onPress={() => handleFolioPressType(type)}>
-                                    <View style={styles.listItem}>
+                            typeDocument.length == 0 ?
+                                <Text style={styles.listItemTitle}>Aucun type document  trouvé</Text> :
+                                typeDocument?.map((type, index) => {
+                                    return (
+                                        <TouchableOpacity key={index} onPress={() => handleFolioPressType(type)}>
+                                            <View style={styles.listItem}>
+                                                <View style={styles.listItemDesc}>
+                                                    <View style={styles.listItemImageContainer}>
+                                                        <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
+                                                    </View>
+                                                    <View style={styles.listNames}>
+                                                        <Text style={styles.listItemTitle}>{type.NOM_DOCUMENT}</Text>
+                                                        {/* <Text style={styles.listItemSubTitle}>{type.NOM_DOCUMENT}</Text> */}
+                                                    </View>
+                                                </View>
+                                                {isSelectedType(type) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                    <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+                                })}
+                    </View> : null
+
+                    }
+                    {document.length > 0 && folio.ID_ETAPE_FOLIO != ETAPES_FOLIO.SELECTION_AGENT_EDRMS ?
+                        <View style={styles.selectContainer}>
+                            <Text style={styles.listItemTitle}>Documents</Text>
+                            {document?.map((type, index) => {
+                                return (
+                                    <View style={styles.listItem} key={index}>
                                         <View style={styles.listItemDesc}>
                                             <View style={styles.listItemImageContainer}>
                                                 <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
                                             </View>
                                             <View style={styles.listNames}>
-                                                <Text style={styles.listItemTitle}>{type.NOM_DOCUMENT}</Text>
-                                                {/* <Text style={styles.listItemSubTitle}>{type.NOM_DOCUMENT}</Text> */}
+                                                <Text style={styles.listItemTitle}>{type.types.NOM_DOCUMENT}</Text>
+                                                {/* <Text style={styles.listItemSubTitle}>{document.length }</Text> */}
                                             </View>
                                         </View>
-                                        {isSelectedType(type) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                            <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />}
+                                        {<MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />}
                                     </View>
-                                </TouchableNativeFeedback>
-                            )
-                        })}
-                    </View> : null
-
-                    }
-                    {document.length > 0 && folio.ID_ETAPE_FOLIO != ETAPES_FOLIO.SELECTION_AGENT_EDRMS ? 
-                    <View style={styles.selectContainer}>
-                                            <Text style={styles.listItemTitle}>Documents</Text>
-                    {document?.map((type, index) => {
-                        return (
-                                <View style={styles.listItem} key={index}>
-                                    <View style={styles.listItemDesc}>
-                                        <View style={styles.listItemImageContainer}>
-                                            <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
-                                        </View>
-                                        <View style={styles.listNames}>
-                                            <Text style={styles.listItemTitle}>{type.types.NOM_DOCUMENT}</Text>
-                                            {/* <Text style={styles.listItemSubTitle}>{document.length }</Text> */}
-                                        </View>
-                                    </View>
-                                    { <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> }
-                                </View>
-                        )
-                    })}
-                </View> :null }
+                                )
+                            })}
+                        </View> : null}
                 </ScrollView>
                 {folio.ID_ETAPE_FOLIO == ETAPES_FOLIO.SELECTION_AGENT_EDRMS ?
                     <View style={styles.actions}>
@@ -402,8 +401,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 0.5,
         borderColor: "#ddd",
-        marginHorizontal: 10,
-        marginVertical:10
+        marginHorizontal: 5,
+        marginVertical: 10
     },
     selectedValue: {
         color: '#777',
@@ -441,7 +440,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingVertical: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 1
     },
     listItemImageContainer: {
         width: 35,

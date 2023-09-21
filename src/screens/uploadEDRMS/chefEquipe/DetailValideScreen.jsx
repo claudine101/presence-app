@@ -86,7 +86,7 @@ export default function DetailValideScreen() {
 
             {(galexyIndex != null && pvs && pvs) &&
                 <ImageView
-                    images={[{ uri: pvs?.PV_PATH }, flashs.folios[0].PV_PATH ? { uri: flashs.folios[0].PV_PATH } : undefined]}
+                    images={[{ uri: pvs?.PV_PATH }, flashs?.folios[0]?.PV_PATH ? { uri: flashs?.folios[0]?.PV_PATH } : undefined]}
                     imageIndex={galexyIndex}
                     visible={(galexyIndex != null) ? true : false}
                     onRequestClose={() => setGalexyIndex(null)}
@@ -133,7 +133,7 @@ export default function DetailValideScreen() {
                                         <TouchableOpacity onPress={() => {
                                             setGalexyIndex(0)
                                         }}>
-                                            <Image source={{ uri: pvs.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                            <Image source={{ uri: pvs?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                         </TouchableOpacity>
                                         <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
                                     </>
@@ -202,7 +202,7 @@ export default function DetailValideScreen() {
                                     }}>
                                         <Image source={{ uri: flashs?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                     </TouchableOpacity>
-                                    {flashs.PV_PATH ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashs.date).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
+                                    {flashs?.PV_PATH ? <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(flashs.date).format("DD/MM/YYYY [à] HH:mm")}</Text> : null}
                                 </> : null}
                             </View>
                         </TouchableOpacity>

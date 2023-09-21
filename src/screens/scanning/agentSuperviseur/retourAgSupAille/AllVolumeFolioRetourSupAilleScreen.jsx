@@ -146,7 +146,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                 <Text style={styles.folioName}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="mail" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                                                                         {volume.users.EMAIL}
                                                                                                                                                 </Text>

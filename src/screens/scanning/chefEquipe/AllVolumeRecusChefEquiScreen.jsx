@@ -23,7 +23,6 @@ export default function AllVolumeRecusChefEquiScreen() {
         const [allVolumesPlateau, setAllVolumesPlateau] = useState([])
         const [loading, setLoading] = useState(false)
         const user = useSelector(userSelector)
-
         const handleSubmit = (volume) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE) {
                         navigation.navigate("NewAgentSupAIlleScanScreen", { volume: volume.volume, id: volume.volume.ID_VOLUME })
@@ -68,10 +67,10 @@ export default function AllVolumeRecusChefEquiScreen() {
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumesPlateau.length == 0 ?  <View style={styles.emptyContainer}>
-                                                <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                                <Text style={styles.emptyLabel}>Aucun volume trouvé</Text>
-                                            </View> :
+                                                allVolumesPlateau?.length == 0 ? <View style={styles.emptyContainer}>
+                                                        <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                                        <Text style={styles.emptyLabel}>Aucun volume trouvé</Text>
+                                                </View> :
                                                         <FlatList
                                                                 style={styles.contain}
                                                                 data={allVolumesPlateau}
@@ -85,54 +84,55 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                                 onPress={() => handleSubmit(volume)}
                                                                                                         >
-                                                                                                                
-                                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
-                                                                                                                <View style={styles.folio}>
-                                                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                                        <Image source={require("../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                                                                                </View>
-                                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                                        <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
-                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                                                                                                {/* {volume.DATE_INSERTION} */}
-                                                                                                                                                        </Text>
-                                                                                                                                                </View>
-                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                                        {
+
+                                                                                                                <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                                                        <View style={styles.folio}>
+                                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                                <Image source={require("../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                                                                                        </View>
+                                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                                <Text style={styles.folioName}>{volume?.volume?.NUMERO_VOLUME}</Text>
+                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {volume?.folios.length ? volume?.folios.length : "0"} dossier{volume?.folios.length > 1 && 's'}
+                                                                                                                                                                        {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                                        {/* {volume.DATE_INSERTION} */}
                                                                                                                                                                 </Text>
-                                                                                                                                                        }
+                                                                                                                                                        </View>
+                                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                                                {
+                                                                                                                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                                                {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
+                                                                                                                                                                        </Text>
+                                                                                                                                                                }
+                                                                                                                                                        </View>
                                                                                                                                                 </View>
                                                                                                                                         </View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                        </View>
                                                                                                         </TouchableNativeFeedback> : null
                                                                                         }
                                                                                 </>
                                                                         )
                                                                 }}
                                                                 keyExtractor={(volume, index) => index.toString()}
-                                                        />}
-                                </View> 
-                                
+                                                        />
+                                                        }
+                                </View>
+
                                 :
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
                                         </View> :
-                                                allVolumes.length == 0 ? <View style={styles.emptyContainer}>
-                                                <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
-                                                <Text style={styles.emptyLabel}>Aucun volume trouvé</Text>
-                                            </View> :
+                                                allVolumes?.length == 0 ? <View style={styles.emptyContainer}>
+                                                        <Image source={require("../../../../assets/images/empty-folio.png")} style={styles.emptyImage} />
+                                                        <Text style={styles.emptyLabel}>Aucun volume trouvé</Text>
+                                                </View> :
                                                         <FlatList
                                                                 style={styles.contain}
                                                                 data={allVolumes}
@@ -164,9 +164,13 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                         {
+                                                                                                                                                             (user.ID_PROFIL == PROFILS.CHEF_EQUIPE) ?   
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {volume?.folios.length ? volume?.folios.length : "0"} dossier{volume?.folios.length > 1 && 's'}
-                                                                                                                                                                </Text>
+                                                                                                                                                                        {volume?.volume?.NOMBRE_DOSSIER ? volume?.volume?.NOMBRE_DOSSIER : "0"} dossier{volume?.volume.NOMBRE_DOSSIER > 1 && 's'}
+                                                                                                                                                                </Text>:
+                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                                 {volume?.folios?.length ? volume?.folios?.length : "0"} dossier{volume?.folios?.length > 1 && 's'}
+                                                                                                                                                         </Text>
                                                                                                                                                         }
                                                                                                                                                 </View>
                                                                                                                                         </View>
@@ -180,7 +184,8 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                         )
                                                                 }}
                                                                 keyExtractor={(volume, index) => index.toString()}
-                                                        />}
+                                                        />
+                                                        }
                                 </View>
                         }
                 </>
