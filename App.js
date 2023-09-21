@@ -6,6 +6,8 @@ import { store } from './src/store'
 import { Host } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import { LogBox } from 'react-native';
+import codePush from 'react-native-code-push';
+
 LogBox.ignoreLogs(["flexWrap: `wrap``", "Warning: This synthetic event is reused for performance reasons", "Possible Unhandled Promise Rejection"]);
 let App = () =>  {
           return (
@@ -20,8 +22,8 @@ let App = () =>  {
                     </>
           )
 }
-// App = codePush({
-//     updateDialog: false,
-//     installMode: codePush.InstallMode.ON_NEXT_RESTART,
-// })(App)
+App = codePush({
+    updateDialog: false,
+    installMode: codePush.InstallMode.ON_NEXT_RESTART,
+})(App)
 export default App
