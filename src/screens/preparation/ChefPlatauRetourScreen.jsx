@@ -229,7 +229,7 @@ export default function ChefPlatauRetourScreen() {
                   <Text style={styles.selectedValue}>
                   </Text>
                   <Text style={styles.selectedValue}>
-                    {supAile?.result?.foliosPrepares?.length} préparé{supAile?.result?.foliosPrepares.length > 1 && 's'}
+                    {supAile?.result?.foliosPrepares?.length} préparé{supAile?.result?.foliosPrepares?.length > 1 && 's'}
                   </Text>
                 </View>
                 <View style={styles.folioList}>
@@ -267,7 +267,7 @@ export default function ChefPlatauRetourScreen() {
                     <Text style={styles.selectedValue}>
                     </Text>
                     <Text style={styles.selectedValue}>
-                      {supAile?.result?.foliosNoPrepare.length} non préparé{supAile?.result?.foliosPrepares.length > 1 && 's'}
+                      {supAile?.result?.foliosNoPrepare?.length} non préparé{supAile?.result?.foliosPrepares?.length > 1 && 's'}
                     </Text>
                   </View>
                   <View style={styles.folioList}>
@@ -297,7 +297,7 @@ export default function ChefPlatauRetourScreen() {
               </View> : null}
 
 
-            {supAile?.result?.check?.length > 0 && check.length == check[0].volume.NOMBRE_DOSSIER ?
+            {supAile?.result?.check?.length > 0 && check?.length == check[0].volume.NOMBRE_DOSSIER ?
               <TouchableOpacity onPress={onTakePicha}>
                 <View style={[styles.addImageItem]}>
                   <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
@@ -315,7 +315,7 @@ export default function ChefPlatauRetourScreen() {
 
 
           </View>
-          {supAile?.result?.check?.length > 0 && check.length == check[0].volume.NOMBRE_DOSSIER ?
+          {supAile?.result?.check?.length > 0 && check?.length == check[0].volume.NOMBRE_DOSSIER ?
             <TouchableNativeFeedback
               disabled={!isValidAdd()}
               onPress={handleSubmitRetour}
