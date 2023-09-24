@@ -216,7 +216,7 @@ export default function ChefEquipeFlashDetailScreen() {
                                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                    {flash.folios.length} dossier{flash.folios.length > 1 && 's'}
+                                                                    {flash.folios.length}dossier{flash.folios.length > 1 && 's'}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -258,7 +258,6 @@ export default function ChefEquipeFlashDetailScreen() {
         </>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
