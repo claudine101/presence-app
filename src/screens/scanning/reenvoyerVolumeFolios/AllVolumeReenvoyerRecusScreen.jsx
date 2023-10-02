@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../components/app/AppHeader";
 import { COLORS } from "../../../styles/COLORS";
-import { AntDesign, Fontisto } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
@@ -27,11 +27,11 @@ export default function AllVolumeReenvoyerRecusScreen() {
 
         const handleSubmit = (volume) => {
                 if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
-                        navigation.navigate("NewChefPlateauReenvoyerVolScreen", {volume: volume, id:volume.ID_VOLUME})
-                } else if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
-                        navigation.navigate("NewAgentSupScanReenvoyerScreen", {volume: volume, id:volume.ID_VOLUME})
-                }else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING){
-                        navigation.navigate("NewEquipeScanReenvoyerScreen", {volume: volume, id:volume.ID_VOLUME})
+                        navigation.navigate("NewChefPlateauReenvoyerVolScreen", { volume: volume, id: volume.ID_VOLUME })
+                } else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
+                        navigation.navigate("NewAgentSupScanReenvoyerScreen", { volume: volume, id: volume.ID_VOLUME })
+                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING) {
+                        navigation.navigate("NewEquipeScanReenvoyerScreen", { volume: volume, id: volume.ID_VOLUME })
                 }
         }
 
@@ -43,11 +43,11 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning`)
                                         setAllVolumes(vol.result)
-                                }else if(user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING){
+                                } else if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning`)
                                         setAllVolumesChefPlateau(vol.result)
-                                }else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING){
+                                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning`)
                                         setAllVolumesSuperviseur(vol.result)
@@ -62,7 +62,7 @@ export default function AllVolumeReenvoyerRecusScreen() {
 
         return (
                 <>
-                        <AppHeader title="Volumes en attente"/>
+                        <AppHeader title="Volumes en attente" />
                         {(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) ? <View style={styles.container}>
                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -96,16 +96,15 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                 <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
-
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -151,14 +150,15 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                 <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                         </View>
@@ -206,14 +206,15 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                 <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                         </View>

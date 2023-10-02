@@ -84,9 +84,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                         renderItem={({ item: folio, index }) => {
                                                                                 return (
                                                                                         <>
-                                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                                </View> : folio.users ?
+                                                                                                { folio.users ?
                                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                                 onPress={() => handleSubmit(folio)}
                                                                                                         >
@@ -103,7 +101,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                                {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                                 </Text>
                                                                                                                                                         </View>
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

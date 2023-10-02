@@ -25,10 +25,9 @@ export default function NewChefPlateauReenvoyerVolScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, id } = route.params
+        const folio_ids = volume?.folios?.map(folio => folio.folio.ID_FOLIO)
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const [malles, setMalles] = useState('')
-        const [loading, setLoading] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
 
         const isValidAdd = () => {
@@ -119,6 +118,7 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('USER_TRAITEMENT', chefPlateau.USERS_ID)
+                        form.append("folioIds",JSON.stringify(folio_ids))
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -199,7 +199,7 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                                                                 <Text style={styles.selectedValue}>
                                                                 </Text>
                                                                 <Text style={styles.selectedValue}>
-                                                                        Listes des dossiers
+                                                                       {volume?.folios?.length}dossier{volume?.folios?.length>0 ?"s":""}
                                                                 </Text>
                                                         </View>
                                                         <View style={styles.folioList}>

@@ -27,10 +27,12 @@ export default function VolumeRetourneDetailScreen() {
     const navigation = useNavigation()
     const route = useRoute()
     const { volume, users } = route.params
+
     const [loadingCheck, setLoadingCheck] = useState(false)
     const [check, setCheck] = useState([])
     const [galexyIndex, setGalexyIndex] = useState(null)
     const folio_ids = volume?.folios?.map(folio => folio.ID_FOLIO)
+
     useFocusEffect(useCallback(() => {
         (async () => {
             try {

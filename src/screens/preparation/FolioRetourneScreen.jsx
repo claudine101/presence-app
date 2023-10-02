@@ -72,7 +72,7 @@ export default function FolioRetourneScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :folio.users?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("DetailsFolioScreen", { folio:folio,users:folio.users})}
+                                                                                                onPress={() => navigation.navigate("DetailsFolioScreen", { folio:folio,users:folio.users,folioRetour:true})}
                                                                                         >
                                                                                               <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
@@ -87,7 +87,7 @@ export default function FolioRetourneScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                       {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -50,7 +50,7 @@ export default function FolioRetourSuperviseurScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', folio.users.USERS_ID)
-                                const res = await fetchApi(`/preparation/folio/getPv`, {
+                                const res = await fetchApi(`/preparation/folio/getPvRetourne`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -212,6 +212,28 @@ export default function FolioRetourSuperviseurScreen() {
                                         </View>
                                 </View>
                                 <ScrollView>
+                                <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null}
+                                                        <Text style={styles.selectedValue}>
+                                                                {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM}
+                                                        </Text>
+                                                        {pvs.result ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}>
+                                                                                <Image source={{ uri: pvs.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
+                                                                        </TouchableOpacity>
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
+                                                </View>
+                                        </View>
                                         <View style={styles.selectContainer}>
                                                 <View style={styles.contain}>
                                                         {folio?.folios.map((folio, index) => {
@@ -247,28 +269,7 @@ export default function FolioRetourSuperviseurScreen() {
                                                         }
                                                 </View>
                                         </View>
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                        Chargement
-                                                                </Text>
-                                                        </View> : null}
-                                                        <Text style={styles.selectedValue}>
-                                                                {pvs?.result?.traitement?.NOM} {pvs?.result?.traitement?.PRENOM}
-                                                        </Text>
-                                                        {pvs.result ?
-                                                                <>
-                                                                        <TouchableOpacity onPress={() => {
-                                                                                setGalexyIndex(0)
-                                                                        }}>
-                                                                                <Image source={{ uri: pvs.result.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
-                                                                        </TouchableOpacity>
-                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
-                                                                </> : null}
-                                                </View>
-                                        </View>
+                                       
 
                                         {check.length > 0 && !checkDetails.length > 0 ?
                                                 <TouchableOpacity onPress={onTakePicha}>

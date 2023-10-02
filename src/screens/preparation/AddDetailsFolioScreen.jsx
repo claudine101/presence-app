@@ -27,7 +27,7 @@ export default function AddDetailsFolioScreen() {
         const [loading, setLoading] = useState(false)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { folio, } = route.params
+        const { folio, folioRetour} = route.params
         const [data, handleChange, setValue] = useForm({
                 parcelle: '',
                 localite: '',
@@ -271,7 +271,12 @@ export default function AddDetailsFolioScreen() {
                                 method: "PUT",
                                 body: form
                         })
-                        navigation.navigate("FolioRetourScreen")
+                        if(folioRetour){
+                                navigation.navigate("FolioRetourneScreen")
+                        }
+                        else{
+                                navigation.navigate("FolioRetourScreen")
+                        }
                 }
                 catch (error) {
                         console.log(error)

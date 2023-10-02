@@ -273,7 +273,7 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        Les dossiers non validés
+                                                                                {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosNonValid?.length>0 ? "s":""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -311,7 +311,7 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        Les dossiers non scannés
+                                                                                {allVolumes?.foliosNoScanReconcilier?.length}non scanné{allVolumes?.foliosNoScanReconcilier?.length>0 ? "s":""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>

@@ -2,13 +2,11 @@ import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, FlatList, Image } from "react-native";
 import { COLORS } from "../../../styles/COLORS";
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import AppHeader from "../../../components/app/AppHeader";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/selectors/userSelector";
-import { FloatingAction } from "react-native-floating-action";
 import AppHeaderPhPreparationRetour from "../../../components/app/AppHeaderPhPreparationRetour";
 
 /**
@@ -78,13 +76,13 @@ export default function ChefPlateauRetourneScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                      {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                       1 volume 
+                                                                                                                                                {folio.folios.length} dossier{folio.folios.length>0 ? "s":""}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>

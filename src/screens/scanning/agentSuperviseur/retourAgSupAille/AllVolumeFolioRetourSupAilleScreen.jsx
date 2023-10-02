@@ -128,9 +128,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                 // return console.log(volume.traitant)
                                                                 return (
                                                                         <>
-                                                                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
+                                                                                {
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                 onPress={() => navigation.navigate('DetailsParAgentClickVolumeScreen', { details: volume?.volumes, userTraite: volume?.users })}
                                                                                         >
@@ -147,7 +145,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {volume.users.EMAIL}
+                                                                                                                                                {volume.users.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -219,7 +217,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                 {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -157,12 +157,6 @@ export default function ConfimerPvScreen() {
                                 <ScrollView>
                                         <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
-                                                        {/* {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
-                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
-                                                                        Chargement
-                                                                </Text>
-                                                        </View> : null} */}
                                                         <View style={styles.labelContainer}>
                                                                 <View style={styles.icon}>
                                                                         <Feather name="user" size={20} color="#777" />
@@ -199,7 +193,7 @@ export default function ConfimerPvScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        Les dossiers validés
+                                                                                        {allVolumes?.foliosValid?.length}validé{allVolumes?.foliosValid?.length>0 ? "s":""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -238,7 +232,7 @@ export default function ConfimerPvScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        Les dossiers non validés
+                                                                                {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosValid?.length>0 ? "s":""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -276,7 +270,7 @@ export default function ConfimerPvScreen() {
                                                                                         <Text style={styles.selectedValue}>
                                                                                         </Text>
                                                                                         <Text style={styles.selectedValue}>
-                                                                                                Les dossiers non scannés
+                                                                                {allVolumes?.foliosNonValid?.length}non scanné{allVolumes?.foliosValid?.length>0 ? "s":""}
                                                                                         </Text>
                                                                                 </View>
                                                                                 <View style={styles.folioList}>

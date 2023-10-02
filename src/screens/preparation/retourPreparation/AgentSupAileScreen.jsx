@@ -84,7 +84,7 @@ export default function AgentSupAileScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                       1 volume
+                                                                                                                                                      {folio?.folios?.length} dossier{folio?.folios?.length>0?"s":""}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                 </View>

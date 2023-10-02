@@ -191,7 +191,7 @@ export default function NewAgentSupScanReenvoyerScreen() {
                 try {
                         setLoadingData(true)
                         const form = new FormData()
-                        form.append('ID_VOLUME', id)
+                        form.append('ID_VOLUME',volume.volume.ID_VOLUME)
                         form.append('folio', JSON.stringify(multiFolios))
                         form.append('USER_TRAITEMENT', agentSuperviseur.USERS_ID)
                         if (document) {
@@ -210,7 +210,7 @@ export default function NewAgentSupScanReenvoyerScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        const volume = await fetchApi(`/scanning/retour/agent/reenvoyez/folios/superviseur`, {
+                        const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/folios/superviseur`, {
                                 method: "PUT",
                                 body: form
                         })

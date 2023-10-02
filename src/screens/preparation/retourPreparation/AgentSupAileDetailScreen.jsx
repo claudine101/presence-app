@@ -190,7 +190,7 @@ export default function AgentSupAileDetailScreen() {
                             </Text>
                             <View>
                                 <Text style={styles.selectedValue}>
-                                    {volume?.folios?.length ? `${volume?.folios?.length}` : 'N/B'}
+                                    {volume?.folios?.length} dossier{volume?.folios?.length>0?"s":""}
                                 </Text>
                             </View>
                         </View>

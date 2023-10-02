@@ -23,97 +23,9 @@ import IDS_ETAPES_FOLIO from "../../constants/ETAPES_FOLIO";
 export default function DetailsFolioScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { folio } = route.params
-        const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-        const [loading, setLoading] = useState(false)
-        const [loadingSubmit, setLoadingSubmit] = useState(false)
-        const [document, setDocument] = useState(null)
-        const [selectedItems, setSelectedItems] = useState([])
-
-        const [data, handleChange, setValue] = useForm({
-                // document: null,
-        })
-
-        const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-        }, {
-        })
-        const isValidAdd = () => {
-                var isValid = false
-                isValid = document != null ? true : false
-                return isValid
-        }
-
-        //Fonction pour upload un documents 
-        const selectdocument = async () => {
-                setError("document", "")
-                handleChange("document", null)
-                const document = await DocumentPicker.getDocumentAsync({
-                        type: ["image/*", "application/pdf", "application/docx", "application/xls", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-                })
-                if (document.type == 'cancel') {
-                        return false
-                }
-                var sizeDocument = ((document.size / 1000) / 1000).toFixed(2)
-                if (sizeDocument <= 2) {
-                        handleChange("document", document)
-                }
-                else {
-                        setError("document", ["Document trop volumineux(max:2M)"])
-                }
-
-        }
-
-        const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
-
-        const handleFolioPress = (folio) => {
-                if (isSelected(folio)) {
-                        const removed = selectedItems.filter(f => f.ID_FOLIO != folio.ID_FOLIO)
-                        setSelectedItems(removed)
-                } else {
-                        setSelectedItems(items => [...items, folio])
-                }
-        }
-
-        const submitData = async () => {
-                try {
-                        setLoadingSubmit(true)
-                        const form = new FormData()
-                        form.append('folio', JSON.stringify(folio.folios))
-                        form.append('folioPrepare', JSON.stringify(selectedItems))
-                        form.append('AGENT_PREPARATION', folio.users.USERS_ID)
-                        if (document) {
-                                const manipResult = await manipulateAsync(
-                                        document.uri,
-                                        [
-                                                { resize: { width: 500 } }
-                                        ],
-                                        { compress: 0.8, format: SaveFormat.JPEG }
-                                );
-                                let localUri = manipResult.uri;
-                                let filename = localUri.split('/').pop();
-                                let match = /\.(\w+)$/.exec(filename);
-                                let type = match ? `image/${match[1]}` : `image`;
-                                form.append('PV', {
-                                        uri: localUri, name: filename, type
-                                })
-                        }
-                        const res = await fetchApi(`/preparation/folio/retourAgentPreparation`, {
-                                method: "PUT",
-                                body: form
-                        })
-                        navigation.goBack()
-                }
-                catch (error) {
-                        console.log(error)
-                } finally {
-                        setLoadingSubmit(false)
-                }
-        }
-
-
+        const { folio,folioRetour } = route.params
         return (
                 <>
-                        {loadingSubmit && <Loading />}
                         <View style={styles.container}>
                                 <View style={styles.header}>
                                         <TouchableNativeFeedback
@@ -133,15 +45,12 @@ export default function DetailsFolioScreen() {
                                                         style={styles.contain}
                                                         data={folio.folios}
                                                         renderItem={({ item: folio, index }) => {
-                                                                const isExists = folio.folio.ID_ETAPE_FOLIO == IDS_ETAPES_FOLIO.SELECTION_AGENT_PREPARATION ? true : false
                                                                 return (
                                                                         <>
-                                                                                {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
+                                                                                {
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }}>
                                                                                                 <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio, ID_MAILLE: folio?.mailleNoTraite?.ID_MAILLE })}
+                                                                                                        onPress={() => navigation.navigate("AddDetailsFolioScreen", { folio: folio.folio, ID_MAILLE: folio?.mailleNoTraite?.ID_MAILLE,folioRetour:folioRetour })}
                                                                                                 >
                                                                                                         <View style={[styles.folio]}>
                                                                                                                 <View style={styles.folioLeftSide}>
