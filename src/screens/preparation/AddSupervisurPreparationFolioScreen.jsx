@@ -166,7 +166,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                 </View> :
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des dossiers gggs</Text>
+                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
                                                 </View>
                                                 {
                                                         allFolios.length == 0 ?
@@ -505,8 +505,8 @@ const styles = StyleSheet.create({
                 borderBottomColor: '#F1F1F1'
         },
         modalImageContainer: {
-                width: 40,
-                height: 40,
+                width: 50,
+                height: 50,
                 backgroundColor: '#F1F1F1',
                 borderRadius: 50,
                 justifyContent: "center",

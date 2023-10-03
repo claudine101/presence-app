@@ -245,13 +245,16 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                 <Text style={styles.buttonText}>Retour phase scanning</Text>
                                         </View>
                                 </TouchableWithoutFeedback>:null}
-                                { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ? <TouchableWithoutFeedback
+                                { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ?
+                                
+                                <TouchableWithoutFeedback
                                         onPress={() => choixArchives(volume)}
                                 >
                                         <View style={styles.button}>
                                                 <Text style={styles.buttonText}>Archiver</Text>
                                         </View>
-                                </TouchableWithoutFeedback>:null}
+                                </TouchableWithoutFeedback>
+                                :null}
                         </View>
                         <Portal>
                                 <Modalize ref={modelRef}

@@ -219,7 +219,7 @@ export default function ChoixAgentDistributeurRetourScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        Les dossiers validés
+                                                                                       {allVolumes?.foliosValid.length} dossier{allVolumes?.foliosValid.length>0?"s":""} 
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>

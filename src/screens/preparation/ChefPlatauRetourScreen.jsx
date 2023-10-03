@@ -315,20 +315,18 @@ export default function ChefPlatauRetourScreen() {
 
 
           </View>
-          {supAile?.result?.check?.length > 0 && check?.length == check[0].volume.NOMBRE_DOSSIER ?
-            <TouchableNativeFeedback
-              disabled={!isValidAdd()}
-              onPress={handleSubmitRetour}
-            >
-              <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                <Text style={styles.buttonText}>Enregistrer</Text>
-              </View>
-            </TouchableNativeFeedback> : null}
+
         </ScrollView>
-
-
         }
-
+        {supAile?.result?.check?.length > 0 && check?.length == check[0].volume.NOMBRE_DOSSIER ?
+          <TouchableNativeFeedback
+            disabled={!isValidAdd()}
+            onPress={handleSubmitRetour}
+          >
+            <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+              <Text style={styles.buttonText}>Enregistrer</Text>
+            </View>
+          </TouchableNativeFeedback> : null}
 
       </View>
 

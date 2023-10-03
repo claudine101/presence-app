@@ -262,7 +262,7 @@ export default function NewEquipeScanReenvoyerScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume.folios.length}
+                                                        {volume.folios.length} dossier{volume.folios.length>0 ?"s":""}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
@@ -281,9 +281,7 @@ export default function NewEquipeScanReenvoyerScreen() {
 
                                         <TouchableOpacity style={styles.selectContainer} onPress={openMultiSelectModalize}>
                                                 <View>
-                                                        <Text style={styles.selectLabel}>
-                                                                Folios
-                                                        </Text>
+                                                        <Text > Folios</Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
                                                                         {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}

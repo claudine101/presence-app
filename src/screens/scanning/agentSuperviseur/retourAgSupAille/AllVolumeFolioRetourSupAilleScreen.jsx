@@ -145,7 +145,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                {volume.users.EMAIL}
+                                                                                                                                                        {volume.users.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -183,14 +183,14 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                 {loadingChefPlateau ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
-                                        allRetourVolumes?.length == 0 ? 
-                                        <View style={styles.emptyContaier}>
-                                                <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
-                                                <Text style={styles.emptyTitle}>
-                                                        Aucun volume trouvé
-                                                </Text>
-                                        </View> :
-                                                
+                                        allRetourVolumes?.length == 0 ?
+                                                <View style={styles.emptyContaier}>
+                                                        <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
+                                                        <Text style={styles.emptyTitle}>
+                                                                Aucun volume trouvé
+                                                        </Text>
+                                                </View> :
+
                                                 <FlatList
                                                         style={styles.contain}
                                                         data={allRetourVolumes}
@@ -201,13 +201,11 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate("ConfirmerPvRetourAgentDistrScreen", { volume: volume?.volume, id: volume.ID_VOLUME })}
+                                                                                                onPress={() => navigation.navigate("ConfirmerPvRetourAgentDistrScreen", { volume: volume?.volume, id: volume.ID_VOLUME })}
                                                                                         >
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
-
-
                                                                                                                         <View style={styles.folioImageContainer}>
                                                                                                                                 <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                                                                                                         </View>
@@ -217,7 +215,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                 {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -254,63 +252,63 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
-                                                       
+
                                                 </View> :
-                                                       
-                                                
+
+
                                                         <FlatList
-                                                        style={styles.contain}
-                                                        data={allRetourVolumesDistributeur}
-                                                        renderItem={({ item: volume, index }) => {
-                                                                return (
-                                                                        <>
-                                                                                {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                                </View> :
-                                                                                        <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate('DetailsClickAgentDistributeurVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
-                                                                                        >
-                                                                                                <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
-                                                                                                        <View style={styles.folio}>
-                                                                                                                <View style={styles.folioLeftSide}>
+                                                                style={styles.contain}
+                                                                data={allRetourVolumesDistributeur}
+                                                                renderItem={({ item: volume, index }) => {
+                                                                        return (
+                                                                                <>
+                                                                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                        </View> :
+                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                        onPress={() => navigation.navigate('DetailsClickAgentDistributeurVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
+                                                                                                >
+                                                                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                                                <View style={styles.folio}>
+                                                                                                                        <View style={styles.folioLeftSide}>
 
 
-                                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                                <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                                                                        </View>
-                                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
-                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                                                                                </Text>
-                                                                                                                                        </View>
-                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                                {
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
+                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {/* 1 volume */}
-                                                                                                                                                                {volume?.volumes.length}volume{volume?.volumes.length > 1 ? "s" : ""}
+                                                                                                                                                                {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                         </Text>
-                                                                                                                                                }
+                                                                                                                                                </View>
+                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                                        {
+                                                                                                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                                        {/* 1 volume */}
+                                                                                                                                                                        {volume?.volumes.length}volume{volume?.volumes.length > 1 ? "s" : ""}
+                                                                                                                                                                </Text>
+                                                                                                                                                        }
+                                                                                                                                                </View>
                                                                                                                                         </View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                </View>
-                                                                                        </TouchableNativeFeedback>
+                                                                                                </TouchableNativeFeedback>
 
-                                                                                }
-                                                                        </>
-                                                                )
-                                                        }}
-                                                        keyExtractor={(volume, index) => index.toString()}
-                                                />
-                                                        
-                                                        }
+                                                                                        }
+                                                                                </>
+                                                                        )
+                                                                }}
+                                                                keyExtractor={(volume, index) => index.toString()}
+                                                        />
+
+                                        }
                                 </View> : null
                         }
                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ? <View style={styles.container}>
@@ -326,77 +324,10 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
                                                 </Text> */}
                                         </View> :
-                                               
+
                                                 <FlatList
-                                                style={styles.contain}
-                                                data={allRetourVolumesArchives}
-                                                renderItem={({ item: volume, index }) => {
-                                                        return (
-                                                                <>
-                                                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                                        </View> :
-                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                onPress={() => navigation.navigate('DetailsClickAgentSupArchiveVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
-                                                                                >
-                                                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
-                                                                                                <View style={styles.folio}>
-                                                                                                        <View style={styles.folioLeftSide}>
-
-
-                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                        <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                                                                </View>
-                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
-                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                                                                        </Text>
-                                                                                                                                </View>
-                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        {
-                                                                                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {/* 1 volume */}
-                                                                                                                                                        {volume?.volumes.length}volume{volume?.volumes.length > 1 ? "s" : ""}
-                                                                                                                                                </Text>
-                                                                                                                                        }
-                                                                                                                                </View>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                </TouchableNativeFeedback>
-
-                                                                        }
-                                                                </>
-                                                        )
-                                                }}
-                                                keyExtractor={(volume, index) => index.toString()}
-                                        />
-                                                
-                                                }
-                        </View> : null}
-
-                        {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
-                                <View style={styles.container}>
-                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                <ActivityIndicator animating size={'large'} color={'#777'} />
-                                        </View> :
-                                                allRetourVolumesDesarchivages.length == 0 ? <View style={styles.emptyContaier}>
-                                                        <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
-                                                        <Text style={styles.emptyTitle}>
-                                                                Aucun volume trouvé
-                                                        </Text>
-                                                </View> :
-                                                        
-                                                        <FlatList
                                                         style={styles.contain}
-                                                        data={allRetourVolumesDesarchivages}
+                                                        data={allRetourVolumesArchives}
                                                         renderItem={({ item: volume, index }) => {
                                                                 return (
                                                                         <>
@@ -404,13 +335,13 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> :
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                        onPress={() => navigation.navigate('DetailsAgentDesarchivagesVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
+                                                                                                onPress={() => navigation.navigate('DetailsClickAgentSupArchiveVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
                                                                                         >
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
-        
-        
+
+
                                                                                                                         <View style={styles.folioImageContainer}>
                                                                                                                                 <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
                                                                                                                         </View>
@@ -438,15 +369,82 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </TouchableNativeFeedback>
-        
+
                                                                                 }
                                                                         </>
                                                                 )
                                                         }}
                                                         keyExtractor={(volume, index) => index.toString()}
                                                 />
-                                                        
-                                                        }
+
+                                }
+                        </View> : null}
+
+                        {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
+                                <View style={styles.container}>
+                                        {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allRetourVolumesDesarchivages.length == 0 ? <View style={styles.emptyContaier}>
+                                                        <Image source={require('../../../../../assets/images/empty-folio.png')} style={styles.emptyImage} />
+                                                        <Text style={styles.emptyTitle}>
+                                                                Aucun volume trouvé
+                                                        </Text>
+                                                </View> :
+
+                                                        <FlatList
+                                                                style={styles.contain}
+                                                                data={allRetourVolumesDesarchivages}
+                                                                renderItem={({ item: volume, index }) => {
+                                                                        return (
+                                                                                <>
+                                                                                        {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                                                        </View> :
+                                                                                                <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
+                                                                                                        onPress={() => navigation.navigate('DetailsAgentDesarchivagesVolumeScreen', { details: volume?.volumes, userTraite: volume?.volumes[0]?.users })}
+                                                                                                >
+                                                                                                        <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
+                                                                                                                <View style={styles.folio}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+
+
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
+                                                                                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                                        <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                                {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        </Text>
+                                                                                                                                                </View>
+                                                                                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                                        {
+                                                                                                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                                        {/* 1 volume */}
+                                                                                                                                                                        {volume?.volumes.length}volume{volume?.volumes.length > 1 ? "s" : ""}
+                                                                                                                                                                </Text>
+                                                                                                                                                        }
+                                                                                                                                                </View>
+                                                                                                                                        </View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </TouchableNativeFeedback>
+
+                                                                                        }
+                                                                                </>
+                                                                        )
+                                                                }}
+                                                                keyExtractor={(volume, index) => index.toString()}
+                                                        />
+
+                                        }
                                 </View> : null}
 
 

@@ -12,7 +12,7 @@ import ETAPES_FOLIO from "../../../constants/ETAPES_FOLIO";
 
 export default function DetailsFolioFlashScreen() {
     const route = useRoute()
-    const { folio } = route.params
+    const { folio,nonUploades } = route.params
     const navigation = useNavigation()
     const natureModalRef = useRef()
     const [selectedType, setSelectedType] = useState([])
@@ -104,7 +104,7 @@ export default function DetailsFolioFlashScreen() {
             })
             setSelectedType([])
             ToastAndroid.show("Opération effectuée avec succès", ToastAndroid.SHORT);
-            navigation.navigate("AgentFlashScreen")
+            navigation.navigate("FolioInvalideScreen")
         } catch (error) {
             console.log(error)
             ToastAndroid.show("Opération non effectuée, réessayer encore", ToastAndroid.SHORT);

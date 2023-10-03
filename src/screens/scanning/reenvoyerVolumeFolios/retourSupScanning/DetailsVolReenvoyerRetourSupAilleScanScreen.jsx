@@ -21,8 +21,6 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
         const [check, setCheck] = useState([])
-        const [loadingCheck, setLoadingCheck] = useState(false)
-
         const folio_ids = details?.map(folio => folio.folio.ID_FOLIO)
         const isValidAdd = () => {
                 var isValid = false
@@ -41,6 +39,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                         method: "POST",
                                         body: form
                                 })
+                               
                                 setPvs(res)
                                 setCheck(res.result.check)
                         } catch (error) {
@@ -157,7 +156,8 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {check.length ==details.length ? <View style={styles.selectContainer}>
+                                        {check.length ==details.length ? 
+                                        <View style={styles.selectContainer}>
                                                 <View style={{ width: '100%' }}>
                                                         <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 

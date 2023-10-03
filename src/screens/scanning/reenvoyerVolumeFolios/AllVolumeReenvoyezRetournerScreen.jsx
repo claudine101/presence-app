@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../components/app/AppHeader";
 import { COLORS } from "../../../styles/COLORS";
-import { AntDesign, Fontisto } from '@expo/vector-icons';
+import { AntDesign, Fontisto,Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
@@ -29,17 +29,19 @@ export default function AllVolumeReenvoyezRetournerScreen() {
         const user = useSelector(userSelector)
 
         const handleSubmit = (folio) => {
+
+                
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("DetailsFoliosReenvoyezretourPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
-                } else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
+                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                         navigation.navigate("DetailsVolReenvoyerRetourSupAilleScanScreen", { details: folio?.folios, userTraite: folio?.users })
-                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
+                } else if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) {
                         navigation.navigate("DetailsVolReenvoyezRetourChefEquipeScreen", { details: folio?.folios, userTraite: folio?.users })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
                         navigation.navigate("DetailsAffecterAgentArchivagesScreen", { details: folio?.folios, userTraite: folio?.users })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
                         navigation.navigate("DetailsAffecterAgentDesarchivagesScreen", { details: folio?.folios, userTraite: folio?.users })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
                         navigation.navigate("DetailsAccepteVolArchivesScreen", { details: folio?.folios, userTraite: folio?.users })
                 }
         }
@@ -55,19 +57,19 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/chefPlateau/bien`)
                                         setAllVolumesChefPlateau(vol.UserFolios)
-                                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
+                                } else if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/ChefEquipe/getVol`)
                                         setAllVolumesChefEquipe(vol.PvFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/dist`)
                                         setAllVolumesDistributeur(vol.UserFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/archives`)
                                         setAllVolumesArchives(vol.UserFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/reenvoyez/supailleScanning/retour/archivages/archives/finito`)
                                         setAllVolumesDesarchives(vol.UserFolios)
@@ -115,14 +117,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -170,14 +172,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY  HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -228,14 +230,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -286,14 +288,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -344,14 +346,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -402,14 +404,14 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
+                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                         <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
@@ -425,7 +427,7 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                         />}
                                 </View>
                         </View> : null}
-                        
+
                 </>
         )
 }

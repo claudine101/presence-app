@@ -28,17 +28,12 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(false)
         const [check, setCheck] = useState([])
-
-        const [loadingCheck, setLoadingCheck] = useState(false)
-
-        const folio_ids = details?.map(folio => folio.folio.ID_FOLIO)
-
+        const folio_ids = details?.map(folio => folio.ID_FOLIO)
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null && multiFolios.length > 0 ? true : false
                 return isValid
         }
-
         useFocusEffect(useCallback(() => {
                 (async () => {
                         try {
@@ -62,16 +57,8 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
 
         //Multi select pour selectionner les filios bien renconciliers
         const [multiFolios, setMultiFolios] = useState(details);
-        const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
-        const setSelectedFolio = (folio) => {
-                if (isSelected(folio.folio.ID_FOLIO)) {
-                        const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != folio.folio.ID_FOLIO)
-                        setMultiFolios(newfolio)
-                } else {
-                        setMultiFolios(u => [...u, folio])
-                }
-
-        }
+        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+       
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -168,7 +155,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                         Chargement
                                                                 </Text>
                                                         </View> : null}
-                                                        
+
                                                         {pvs?.result ?
                                                                 <>
                                                                         <TouchableOpacity onPress={() => {
@@ -203,11 +190,11 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                {isSelected(folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
                                                                                                         <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
@@ -223,17 +210,9 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
                                                                 </View>
-                                                                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                        </Text>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {check.length} validé{check.length > 1 && 's'}
-                                                                        </Text>
-                                                                </View> */}
+
                                                                 <View style={styles.contain}>
                                                                         {details.map((folio, index) => {
-
-                                                                        // const isValide = check.find(u => u.ID_FOLIO == folio.folio.ID_FOLIO) ? true : false
                                                                                 return (
                                                                                         <View style={{ marginTop: 10, borderRadius: 80, }} key={index}>
                                                                                                 <View style={[styles.folio]}>
@@ -242,13 +221,10 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                                                                         <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                 </View>
                                                                                                                 <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
                                                                                                                 </View>
                                                                                                         </View>
-                                                                                                        {/* {isSelected(folio.folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />} */}
-
                                                                                                 </View>
                                                                                         </View>
                                                                                 )

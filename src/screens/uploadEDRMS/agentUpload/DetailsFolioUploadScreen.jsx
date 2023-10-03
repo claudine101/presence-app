@@ -7,12 +7,12 @@ import { COLORS } from "../../../styles/COLORS";
 
 export default function DetailsFolioUploadScreen() {
     const route = useRoute()
-    const { flash } = route.params
+    const { flash,nonUploades } = route.params
      console.log(flash.folios)
 
     const navigation = useNavigation()
     const handleFoliosPress = folio => {
-        navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio })
+        navigation.navigate("DetailsFolioFlashScreen", { folio:folio.folio,nonUploades:nonUploades})
     }
     return (
         <>

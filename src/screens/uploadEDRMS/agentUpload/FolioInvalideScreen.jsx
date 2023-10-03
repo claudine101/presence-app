@@ -26,11 +26,11 @@ export default function FolioInvalideScreen() {
         })()
     }, []))
     const handleFlashPress = flash => {
-        navigation.navigate("DetailsFolioUploadScreen", { flash })
+        navigation.navigate("DetailsFolioUploadScreen", { flash ,nonUploades:true})
     }
     return (
         <>
-            <AppHeader title="Dossiers non  uploadés" />
+            <AppHeader title="Dossiers non uploadés" />
             {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator animating size={'large'} color={'#777'} />
             </View> : <View style={styles.container}>

@@ -18,17 +18,14 @@ import { userSelector } from "../../../../store/selectors/userSelector";
  */
 
 export default function ChePlateauVolReenvoyerTraitesScreen() {
-        const [allVolumes, setAllVolumes] = useState([])
         const [loading, setLoading] = useState(false)
         const navigation = useNavigation()
-
         const [allVolumesChefPlateau, setAllVolumesChefPlateau] = useState([])
         const [allVolumesSupAilleScan, setAllVolumesSupAilleScan] = useState([])
         const [allVolumesChefEquiScan, setAllVolumesChefEquiScan] = useState([])
         const [allVolumesAgentDistributeur, setAllVolumesAgentDistributeur] = useState([])
         const [allVolumesAgentArchives, setAllVolumesAgentArchives] = useState([])
         const [allVolumesDesarchivages, setAllVolumesDesarchivages] = useState([])
-        const [allVolumesChefEquipePrep, setAllVolumesChefEquipePrep] = useState([])
         const user = useSelector(userSelector)
 
         const handleSubmit = (volume) => {
@@ -112,7 +109,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.imageIcon} />
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
@@ -451,8 +448,8 @@ const styles = StyleSheet.create({
                 alignItems: 'center'
         },
         imageIcon: {
-                width: 25,
-                height: 25
+                width: '60%',
+                height: '60%',
         },
         titeName: {
                 color: "#777"

@@ -29,18 +29,9 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
-        const [reconsilier, setReconsilier] = useState(0)
-
-        const [loading, setLoading] = useState(true)
-        const agentsModalRef = useRef()
-        const [isSubmitting, setIsSubmitting] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
-
-        const [check, setCheck] = useState([])
-        const [loadingCheck, setLoadingCheck] = useState(false)
-
         const folio_ids = folio?.map(foli => foli.ID_FOLIO)
 
         useFocusEffect(useCallback(() => {

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import AppHeaderPhPreparationRetour from "../../../../components/app/AppHeaderPhPreparationRetour";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
-import { AntDesign, Fontisto } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
@@ -22,9 +22,7 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
         const navigation = useNavigation()
         const user = useSelector(userSelector)
         const [allFolios, setAllFolios] = useState([])
-        const [allFoliosRetour, setAllFoliosRetour] = useState([])
         const [loading, setLoading] = useState(false)
-        const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
                 if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING) {
                         navigation.navigate("RetourReenvoyezFoliosEquipeScreen", { folio: folio.folios, userTraite: folio.USERS_ID, ID_EQUIPE: folio.equipe  })
@@ -32,7 +30,6 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                         navigation.navigate("DetailsFolioRetourScreen", )
                 }
         }
-
         //fonction pour recuperer les folios d'un agent qui est connecter
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -86,14 +83,14 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{folio?.equipe?.NOM_EQUIPE}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                  <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
+                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
                                                                                                                                 <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                         </View>
