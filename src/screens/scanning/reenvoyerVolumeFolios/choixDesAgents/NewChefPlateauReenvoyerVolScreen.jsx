@@ -118,7 +118,7 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                         setLoadingData(true)
                         const form = new FormData()
                         form.append('USER_TRAITEMENT', chefPlateau.USERS_ID)
-                        form.append("folioIds",JSON.stringify(folio_ids))
+                        form.append("folioIds", JSON.stringify(folio_ids))
                         if (document) {
                                 const manipResult = await manipulateAsync(
                                         document.uri,
@@ -199,7 +199,7 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                                                                 <Text style={styles.selectedValue}>
                                                                 </Text>
                                                                 <Text style={styles.selectedValue}>
-                                                                       {volume?.folios?.length}dossier{volume?.folios?.length>0 ?"s":""}
+                                                                        {volume?.folios?.length}dossier{volume?.folios?.length > 0 ? "s" : ""}
                                                                 </Text>
                                                         </View>
                                                         <View style={styles.folioList}>
@@ -213,17 +213,20 @@ export default function NewChefPlateauReenvoyerVolScreen() {
                                                                                                         </View>
                                                                                                         <View style={styles.folioDesc}>
                                                                                                                 <Text style={styles.folioName}>{folio.folio.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio.folio.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.cardNature}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.folio.natures.DESCRIPTION}</Text>
+                                                                                                                        {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
+                                                                                                                </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {/* <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> */}
                                                                                         </View>
                                                                                 </TouchableOpacity>
                                                                         )
                                                                 })}
                                                         </View>
                                                 </View>
-                                        </View>:null}
+                                        </View> : null}
                                         <TouchableOpacity style={styles.selectContainer} onPress={openChefPlateuModalize}>
                                                 <View style={styles.labelContainer}>
                                                         <View style={styles.icon}>
@@ -391,7 +394,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",
@@ -423,7 +427,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

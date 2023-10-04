@@ -287,10 +287,13 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -325,10 +328,13 @@ export default function RetourPhaseScanningVolumeScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -511,7 +517,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",
@@ -543,7 +550,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

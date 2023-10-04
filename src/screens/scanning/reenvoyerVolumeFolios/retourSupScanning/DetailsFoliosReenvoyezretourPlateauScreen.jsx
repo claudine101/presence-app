@@ -58,7 +58,7 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
         //Multi select pour selectionner les filios bien renconciliers
         const [multiFolios, setMultiFolios] = useState(details);
         const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
-       
+
 
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
@@ -190,12 +190,16 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                         </View>
                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.cardNature}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                        {isSelected(folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
+                                                                                                                                <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+
+                                                                                                                </View>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {isSelected(folio.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
 
                                                                                         </View>
                                                                                 </TouchableOpacity>
@@ -221,9 +225,13 @@ export default function DetailsFoliosReenvoyezretourPlateauScreen() {
                                                                                                                         <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                 </View>
                                                                                                                 <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
+                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.cardNature}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+
                                                                                                                 </View>
+                                                                                                        </View>
                                                                                                         </View>
                                                                                                 </View>
                                                                                         </View>
@@ -327,7 +335,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom: 5
         },
         buttonText: {
                 color: "#fff",
@@ -402,8 +411,14 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
-        },
+                marginLeft: 10,
+                flex: 1
+              },
+              cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              },
         folioName: {
                 fontWeight: 'bold',
                 color: '#333',

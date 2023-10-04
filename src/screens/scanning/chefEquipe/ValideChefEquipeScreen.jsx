@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor:COLORS.primary,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

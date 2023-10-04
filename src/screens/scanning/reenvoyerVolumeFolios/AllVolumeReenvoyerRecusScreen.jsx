@@ -72,9 +72,6 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume
                                                 </Text>
-                                                {/* <Text style={styles.emptyDesc}>
-                                                        Aucun volume planifier ou vous n'êtes pas affecté a aucun volume
-                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -97,14 +94,18 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                         <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}>
+                                                                                                                                        <Text style={[styles.titeName, { marginLeft: 3 }]}>
+                                                                                                                                                {moment(volume.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                </Text>
+                                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                         </View>
@@ -126,9 +127,6 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume
                                                 </Text>
-                                                {/* <Text style={styles.emptyDesc}>
-                                                        Aucun volume planifier ou vous n'êtes pas affecté a aucun volume
-                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -151,15 +149,14 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                         <Text style={styles.titlePrincipal}>{volume?.volume?.NUMERO_VOLUME}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                         <AntDesign name="calendar" size={20} color="#777" />
-
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -182,9 +179,6 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun volume
                                                 </Text>
-                                                {/* <Text style={styles.emptyDesc}>
-                                                        Aucun volume planifier ou vous n'êtes pas affecté a aucun volume
-                                                </Text> */}
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -208,14 +202,14 @@ export default function AllVolumeReenvoyerRecusScreen() {
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                         <AntDesign name="calendar" size={20} color="#777" />
 
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume.date).format('DD-MM-YYYY HH:mm')}</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -236,7 +230,7 @@ export default function AllVolumeReenvoyerRecusScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
+                // backgroundColor: '#ddd'
         },
         cardDetails: {
                 borderRadius: 10,
@@ -262,7 +256,8 @@ const styles = StyleSheet.create({
                 height: 25
         },
         titeName: {
-                color: "#777"
+                color: '#777',
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

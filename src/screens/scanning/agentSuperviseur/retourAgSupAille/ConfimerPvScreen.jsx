@@ -24,7 +24,7 @@ export default function ConfimerPvScreen() {
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const route = useRoute()
-        const { detail , userTraite} = route.params
+        const { detail, userTraite } = route.params
         const [loadingData, setLoadingData] = useState(false)
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [check, setCheck] = useState([])
@@ -193,7 +193,7 @@ export default function ConfimerPvScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {allVolumes?.foliosValid?.length}validé{allVolumes?.foliosValid?.length>0 ? "s":""}
+                                                                                        {allVolumes?.foliosValid?.length}validé{allVolumes?.foliosValid?.length > 0 ? "s" : ""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -207,10 +207,13 @@ export default function ConfimerPvScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -232,7 +235,7 @@ export default function ConfimerPvScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosValid?.length>0 ? "s":""}
+                                                                                        {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosValid?.length > 0 ? "s" : ""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -246,10 +249,13 @@ export default function ConfimerPvScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -258,44 +264,48 @@ export default function ConfimerPvScreen() {
                                                                 </View>
                                                         </View> : null}
                                         {loadingAilleScanning ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
-                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
-                                                </View> :
-                                                        allVolumes?.foliosNoScanReconcilier?.length > 0 ?
-                                                                <View style={styles.selectContainer}>
-                                                                        <View style={{ width: '100%' }}>
-                                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                <ActivityIndicator animating size={'large'} color={'#777'} />
+                                        </View> :
+                                                allVolumes?.foliosNoScanReconcilier?.length > 0 ?
+                                                        <View style={styles.selectContainer}>
+                                                                <View style={{ width: '100%' }}>
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
-                                                                                </View>
-                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                        </Text>
-                                                                                        <Text style={styles.selectedValue}>
-                                                                                {allVolumes?.foliosNonValid?.length}non scanné{allVolumes?.foliosValid?.length>0 ? "s":""}
-                                                                                        </Text>
-                                                                                </View>
-                                                                                <View style={styles.folioList}>
-                                                                                        {allVolumes?.foliosNoScanReconcilier?.map((folio, index) => {
-                                                                                                return (
-                                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
-                                                                                                                <View style={[styles.folio]}>
-                                                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                                                </View>
-                                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                        <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                </Text>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {allVolumes?.foliosNonValid?.length}non scanné{allVolumes?.foliosValid?.length > 0 ? "s" : ""}
+                                                                                </Text>
+                                                                        </View>
+                                                                        <View style={styles.folioList}>
+                                                                                {allVolumes?.foliosNoScanReconcilier?.map((folio, index) => {
+                                                                                        return (
+                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                        <View style={[styles.folio]}>
+                                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                        </View>
+                                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                                                 </View>
                                                                                                                         </View>
-                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                                 </View>
-                                                                                                        </TouchableOpacity>
-                                                                                                )
-                                                                                        })}
-                                                                                </View>
+
+                                                                                                        </View>
+                                                                                                </TouchableOpacity>
+                                                                                        )
+                                                                                })}
                                                                         </View>
-                                                                </View> : null}
-                                        {check.length ==detail.folios.length ? <TouchableOpacity onPress={onTakePicha}>
+                                                                </View>
+                                                        </View> : null}
+                                        {check.length == detail.folios.length ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -308,7 +318,7 @@ export default function ConfimerPvScreen() {
                                                         </View>
                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                 </View>
-                                        </TouchableOpacity>:null}
+                                        </TouchableOpacity> : null}
                                 </ScrollView>
                                 {check.length == detail.folios.length ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
@@ -317,7 +327,7 @@ export default function ConfimerPvScreen() {
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback>:null}
+                                </TouchableWithoutFeedback> : null}
                         </View>
                 </>
         )
@@ -385,7 +395,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",
@@ -417,7 +428,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

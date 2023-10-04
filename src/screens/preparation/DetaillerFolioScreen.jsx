@@ -949,6 +949,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

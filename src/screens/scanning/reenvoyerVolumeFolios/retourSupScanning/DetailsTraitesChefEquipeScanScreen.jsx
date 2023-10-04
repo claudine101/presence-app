@@ -107,8 +107,8 @@ export default function DetailsTraitesChefEquipeScanScreen() {
                                                                                                                 <Text style={{ ...styles.itemTitle, color: "#777" }}>{chef.EMAIL}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {equipe?.USERS_ID == chef.USERS_ID ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -507,7 +507,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

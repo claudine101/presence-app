@@ -68,15 +68,15 @@ export default function AllFoliosBienTraitesApresRetourScreen() {
                                                                                                         <View>
                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                 </View>
                                                                                                         </View>
                                                                                                         <View>
                                                                                                                 <View ><Text></Text></View>
                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                 </View>
                                                                                                         </View>
@@ -122,8 +122,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

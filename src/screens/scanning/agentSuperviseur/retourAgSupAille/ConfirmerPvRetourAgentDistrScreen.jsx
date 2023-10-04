@@ -135,7 +135,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                {allVolumes?.foliosValid?.length}validé{allVolumes?.foliosValid?.length>0 ? "s":""}
+                                                                                        {allVolumes?.foliosValid?.length}validé{allVolumes?.foliosValid?.length > 0 ? "s" : ""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -149,10 +149,13 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -174,7 +177,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosNonValid?.length>0 ? "s":""}
+                                                                                        {allVolumes?.foliosNonValid?.length}non validé{allVolumes?.foliosNonValid?.length > 0 ? "s" : ""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -188,10 +191,14 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
+
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -212,7 +219,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                {allVolumes?.foliosNoScanReconcilier?.length}non scanné{allVolumes?.foliosNoScanReconcilier?.length>0 ? "s":""}
+                                                                                        {allVolumes?.foliosNoScanReconcilier?.length}non scanné{allVolumes?.foliosNoScanReconcilier?.length > 0 ? "s" : ""}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -226,10 +233,13 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons name="cancel-presentation" size={24} color="red" />
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons name="cancel-presentation" size={24} color="red" />
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -238,23 +248,23 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                 </View>
                                                         </View> : null}
                                 </ScrollView>
-                               {allVolumes?.foliosNonValid?.length > 0  ? <TouchableWithoutFeedback
+                                {allVolumes?.foliosNonValid?.length > 0 ? <TouchableWithoutFeedback
                                         onPress={() => choixRetourScanning(volume)}
                                 >
                                         <View style={styles.button}>
                                                 <Text style={styles.buttonText}>Retour phase scanning</Text>
                                         </View>
-                                </TouchableWithoutFeedback>:null}
-                                { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ?
-                                
-                                <TouchableWithoutFeedback
-                                        onPress={() => choixArchives(volume)}
-                                >
-                                        <View style={styles.button}>
-                                                <Text style={styles.buttonText}>Archiver</Text>
-                                        </View>
-                                </TouchableWithoutFeedback>
-                                :null}
+                                </TouchableWithoutFeedback> : null}
+                                {(check?.check?.length == volume?.NOMBRE_DOSSIER) ?
+
+                                        <TouchableWithoutFeedback
+                                                onPress={() => choixArchives(volume)}
+                                        >
+                                                <View style={styles.button}>
+                                                        <Text style={styles.buttonText}>Archiver</Text>
+                                                </View>
+                                        </TouchableWithoutFeedback>
+                                        : null}
                         </View>
                         <Portal>
                                 <Modalize ref={modelRef}
@@ -264,7 +274,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
                                 >
                                         <View style={styles.modalContent}>
-                                               { (check?.check?.length == volume?.NOMBRE_DOSSIER ) ? <>
+                                                {(check?.check?.length == volume?.NOMBRE_DOSSIER) ? <>
                                                         <TouchableNativeFeedback
                                                                 onPress={() => choixArchives(volume)}
                                                         >
@@ -276,9 +286,9 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                 </View>
                                                         </TouchableNativeFeedback>
                                                         <View style={styles.separator} />
-                                                </>:null}
+                                                </> : null}
 
-                                                { allVolumes?.foliosNonValid?.length > 0 ? <>
+                                                {allVolumes?.foliosNonValid?.length > 0 ? <>
                                                         <TouchableNativeFeedback
                                                                 onPress={() => choixRetourScanning(volume)}
                                                         >
@@ -290,7 +300,7 @@ export default function ConfirmerPvRetourAgentDistrScreen() {
                                                                 </View>
                                                         </TouchableNativeFeedback>
                                                         <View style={styles.separator} />
-                                                </>:null}
+                                                </> : null}
                                         </View>
                                 </Modalize>
                         </Portal>
@@ -420,7 +430,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",
@@ -452,7 +463,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

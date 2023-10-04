@@ -158,7 +158,6 @@ export default function AllVolumeRecusChefEquiScreen() {
                                                                                                                                                         <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
                                                                                                                                                                 {moment(volume?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
-                                                                                                                                                                {/* {volume.DATE_INSERTION} */}
                                                                                                                                                         </Text>
                                                                                                                                                 </View>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import AppHeaderPhPreparationRetour from "../../../../components/app/AppHeaderPhPreparationRetour";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
-import { AntDesign, Fontisto } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
@@ -19,7 +19,7 @@ export default function FoliosReenvoyezTraitesScreen() {
         const [allFolios, setAllFolios] = useState([])
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
-                navigation.navigate("DetailsEquipeFoliosTraiteScreen", { folio: folio, userTraite: folio?.users, PV_PATH:folio?.PV_PATH, date:folio.date })
+                navigation.navigate("DetailsEquipeFoliosTraiteScreen", { folio: folio, userTraite: folio?.users, PV_PATH: folio?.PV_PATH, date: folio.date })
         }
 
         //fonction pour recuperer les folios d'un agent qui est connecter
@@ -65,21 +65,21 @@ export default function FoliosReenvoyezTraitesScreen() {
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
                                                                                                         <View style={styles.cardImages}>
-                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />
                                                                                                         </View>
                                                                                                         <View style={styles.cardAllDetails}>
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{folio?.equipe.NOM_EQUIPE}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio.folios.length} dossiers</Text></View>
+                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio.folios.length} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -99,7 +99,6 @@ export default function FoliosReenvoyezTraitesScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
         },
         cardDetails: {
                 borderRadius: 10,
@@ -113,10 +112,10 @@ const styles = StyleSheet.create({
                 flexDirection: "row"
         },
         cardImages: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
                 backgroundColor: '#ddd',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
@@ -125,7 +124,8 @@ const styles = StyleSheet.create({
                 height: 25
         },
         titeName: {
-                color: "#777"
+                color: '#777',
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

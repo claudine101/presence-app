@@ -290,7 +290,7 @@ export default function NewAgentSupScanReenvoyerScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {volume?.folios?.length}
+                                                        {volume?.folios?.length} dossier{volume?.folios?.length>0?"s":""}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openSuperviseurModalize}>
@@ -478,7 +478,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

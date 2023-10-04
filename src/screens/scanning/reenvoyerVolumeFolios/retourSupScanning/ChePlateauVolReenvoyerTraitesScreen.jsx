@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../../components/app/AppHeader";
 import { COLORS } from "../../../../styles/COLORS";
-import { AntDesign, Fontisto } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../../helpers/fetchApi";
 import moment from 'moment'
@@ -31,15 +31,15 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
         const handleSubmit = (volume) => {
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("DetailsTraitesPlateauRenvoyerScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                } else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING){
+                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                         navigation.navigate("DetailsTraitesReenvoyerAgentSupAilleScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
+                } else if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) {
                         navigation.navigate("DetailsTraitesChefEquipeScanScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
                         navigation.navigate("DetailsArchivagesReenvoyezDistrScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
                         navigation.navigate("DetailsTraitesArchivesReenvoyezScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
-                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                } else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
                         navigation.navigate("DetailsBienArchiverScreen", { folio: volume, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }
         }
@@ -52,23 +52,24 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/ok`)
                                         setAllVolumesChefPlateau(vol.PvFolios)
-                                } else if(user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING){
+
+                                } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/aille/getVol`)
                                         setAllVolumesSupAilleScan(vol.PvFolios)
-                                }else if(user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING){
+                                } else if (user.ID_PROFIL == PROFILS.CHEF_EQUIPE_SCANNING) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/reenvoyer/aille/getVol/traitees`)
                                         setAllVolumesChefEquiScan(vol.PvFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/archivages/trait`)
                                         setAllVolumesAgentDistributeur(vol.PvFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/archivages/finArchives`)
                                         setAllVolumesAgentArchives(vol.PvFolios)
-                                }else if(user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES){
+                                } else if (user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES) {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/plateau/asrchgg`)
                                         setAllVolumesDesarchivages(vol.PvFolios)
@@ -109,21 +110,22 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.imageIcon} />
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -139,7 +141,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                         />}
                                 </View> : null
                         }
-                         {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
+                        {user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING ?
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -164,22 +166,23 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -220,22 +223,23 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -251,7 +255,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                         />}
                                 </View> : null
                         }
-                         {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ?
+                        {user.ID_PROFIL == PROFILS.AGENTS_DISTRIBUTEUR ?
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -276,22 +280,23 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -307,7 +312,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                         />}
                                 </View> : null
                         }
-                         {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
+                        {user.ID_PROFIL == PROFILS.AGENTS_SUPERVISEUR_ARCHIVE ?
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -332,22 +337,23 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -363,7 +369,7 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                         />}
                                 </View> : null
                         }
-                         {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
+                        {user.ID_PROFIL == PROFILS.AGENTS_DESARCHIVAGES ?
                                 <View style={styles.container}>
                                         {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                                 <ActivityIndicator animating size={'large'} color={'#777'} />
@@ -388,22 +394,23 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
                                                                                                         onPress={() => handleSubmit(volume)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
-                                                                                                                <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.cardImages}>
+                                                                                                                        {volume.users?.PHOTO_USER ? <Image source={{ uri: volume.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{volume.users.NOM} {volume.users.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(volume?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(volume?.date).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.folios?.length} dossiers</Text></View>
+                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.folios?.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -426,7 +433,6 @@ export default function ChePlateauVolReenvoyerTraitesScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
         },
         cardDetails: {
                 borderRadius: 10,
@@ -440,10 +446,10 @@ const styles = StyleSheet.create({
                 flexDirection: "row"
         },
         cardImages: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
                 backgroundColor: '#ddd',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
@@ -452,7 +458,8 @@ const styles = StyleSheet.create({
                 height: '60%',
         },
         titeName: {
-                color: "#777"
+                color: '#777',
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

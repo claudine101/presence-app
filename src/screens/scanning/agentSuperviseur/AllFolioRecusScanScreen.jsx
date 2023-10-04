@@ -175,8 +175,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

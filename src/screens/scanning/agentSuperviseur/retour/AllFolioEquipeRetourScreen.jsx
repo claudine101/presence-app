@@ -26,11 +26,11 @@ export default function AllFolioEquipeRetourScreen() {
         const [loading, setLoading] = useState(false)
         const [loadingRetour, setLoadingRetour] = useState(false)
         const handleSubmit = (folio) => {
-                
+
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("FoliosRetourdetailChefPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else {
-                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.users, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE:folio.folios[0].equipe.ID_EQUIPE })
+                        navigation.navigate("DetailsFolioRetourScreen", { folio: folio, userTraite: folio?.users, ID_ETAPE_FOLIO: folio.folios[0].ID_ETAPE_FOLIO, ID_EQUIPE: folio.folios[0].equipe.ID_EQUIPE })
                 }
         }
 
@@ -84,7 +84,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                         renderItem={({ item: folio, index }) => {
                                                                                 return (
                                                                                         <>
-                                                                                                { folio.users ?
+                                                                                                {folio.users ?
                                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
                                                                                                                 onPress={() => handleSubmit(folio)}
                                                                                                         >
@@ -92,8 +92,8 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                         <View style={styles.folio}>
                                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                                         <View style={styles.folioImageContainer}>
-
-                                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.image} />
+                                                                                                                                                {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                                                         </View>
                                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
@@ -101,7 +101,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                                 <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                                        {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
                                                                                                                                                                 </Text>
                                                                                                                                                         </View>
                                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -125,7 +125,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                 }
                                         </View>
                                 </> :
-                                 <>
+                                <>
                                         <AppHeaderPhPreparationRetour />
                                         <View style={styles.container}>
                                                 {loading ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
@@ -186,7 +186,7 @@ export default function AllFolioEquipeRetourScreen() {
                                                                 />}
                                         </View>
                                 </>
-                                }
+                        }
                 </>
 
         )
@@ -268,8 +268,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

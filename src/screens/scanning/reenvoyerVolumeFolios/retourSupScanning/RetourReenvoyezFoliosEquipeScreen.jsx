@@ -22,7 +22,7 @@ import { useCallback } from "react";
  * @returns 
  */
 
-export default function RetourReenvoyezFoliosEquipeScreen(){
+export default function RetourReenvoyezFoliosEquipeScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, ID_EQUIPE, userTraite } = route.params
@@ -73,10 +73,6 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                 isValid = document != null ? true : false
                 return isValid
         }
-        // const handleSubmit = (fol) => {
-        //         navigation.navigate("NewFolioRetourScreen", { details: fol })
-        // }
-
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -96,7 +92,6 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                         { compress: 0.7, format: SaveFormat.JPEG }
                 );
                 setIsCompressingPhoto(false)
-                //     handleChange('pv', manipResult)
         }
 
         const submitEquipeData = async () => {
@@ -133,7 +128,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                         setLoadingData(false)
                 }
         }
-        return(
+        return (
                 <>
                         {(galexyIndex != null && pvs?.result && pvs?.result) &&
                                 <ImageView
@@ -196,7 +191,6 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                                 <Text style={styles.selectedValue}>
                                                                                 </Text>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {/* {pvs?.result?.foliosPrepares.length} préparé{pvs?.result?.foliosPrepares.length > 1 && 's'} */}
                                                                                         {folio?.length} reconcilié{folio?.length > 1 && 's'}
                                                                                 </Text>
                                                                         </View>
@@ -210,11 +204,16 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{fol.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{fol.NUMERO_FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioName}>{fol?.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{fol?.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{fol?.natures?.DESCRIPTION}</Text>
+                                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> 
+
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -223,7 +222,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                 </View>
                                                         </View> : null}
 
-                                                         <TouchableOpacity onPress={onTakePicha}>
+                                                        <TouchableOpacity onPress={onTakePicha}>
                                                                 <View style={[styles.addImageItem]}>
                                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -236,7 +235,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                                                         </View>
                                                                         {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                                                 </View>
-                                                        </TouchableOpacity> 
+                                                        </TouchableOpacity>
 
                                                 </View>
                                         </ScrollView>}
@@ -247,7 +246,7 @@ export default function RetourReenvoyezFoliosEquipeScreen(){
                                         <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
                                                 <Text style={styles.buttonText}>Enregistrer</Text>
                                         </View>
-                                </TouchableWithoutFeedback> 
+                                </TouchableWithoutFeedback>
 
                         </View>
 
@@ -315,7 +314,8 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex:1
         },
         folioName: {
                 fontWeight: 'bold',
@@ -424,7 +424,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom: 5
         },
         buttonText: {
                 color: "#fff",
@@ -432,4 +433,9 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 textAlign: "center"
         },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+            },
 })

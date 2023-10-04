@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
 import AppHeader from "../../../components/app/AppHeader";
 import { COLORS } from "../../../styles/COLORS";
-import { AntDesign, Fontisto,Ionicons } from '@expo/vector-icons';
+import { AntDesign, Fontisto, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../../helpers/fetchApi";
 import moment from 'moment'
@@ -29,8 +29,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
         const user = useSelector(userSelector)
 
         const handleSubmit = (folio) => {
-
-                
                 if (user.ID_PROFIL == PROFILS.CHEF_PLATEAU_SCANNING) {
                         navigation.navigate("DetailsFoliosReenvoyezretourPlateauScreen", { details: folio?.folios, userTraite: folio?.users })
                 } else if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_AILE_SCANNING) {
@@ -111,21 +109,22 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -166,21 +165,22 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY  HH:mm')}</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.date).format('DD/MM/YYYY  HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -205,9 +205,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun folio trouvé
                                                         </Text>
-                                                        {/* <Text style={styles.emptyDesc}>
-                                                                        Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                                                </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}
@@ -224,21 +221,22 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.date).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.date).format('DD/MM/YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -282,21 +280,22 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -339,22 +338,24 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                         onPress={() => handleSubmit(folio)}
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
+
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -398,21 +399,22 @@ export default function AllVolumeReenvoyezRetournerScreen() {
                                                                                                 >
                                                                                                         <View style={styles.cardDetails}>
                                                                                                                 <View style={styles.cardImages}>
-                                                                                                                        <Image source={require('../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                                        {folio.users?.PHOTO_USER ? <Image source={{ uri: folio.users?.PHOTO_USER }} style={styles.cardImages} /> :
+                                                                                                                                <Image source={require('../../../../assets/images/user.png')} style={styles.cardImages} />}
                                                                                                                 </View>
                                                                                                                 <View style={styles.cardAllDetails}>
                                                                                                                         <View>
                                                                                                                                 <Text style={styles.titlePrincipal}>{folio?.users?.NOM} {folio?.users?.PRENOM}</Text>
                                                                                                                                 <View style={styles.cardDescDetails}>
-                                                                                                                                       <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY, HH:mm')}</Text></View>
                                                                                                                                 </View>
                                                                                                                         </View>
                                                                                                                         <View>
                                                                                                                                 <View ><Text></Text></View>
                                                                                                                                 <View style={styles.cardDescDetails}>
                                                                                                                                         <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                                 </View>
                                                                                                                         </View>
@@ -435,7 +437,6 @@ export default function AllVolumeReenvoyezRetournerScreen() {
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
         },
         cardDetails: {
                 borderRadius: 10,
@@ -449,10 +450,10 @@ const styles = StyleSheet.create({
                 flexDirection: "row"
         },
         cardImages: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
                 backgroundColor: '#ddd',
-                width: 50,
-                height: 50,
-                borderRadius: 50,
                 justifyContent: 'center',
                 alignItems: 'center'
         },
@@ -461,7 +462,8 @@ const styles = StyleSheet.create({
                 height: 25
         },
         titeName: {
-                color: "#777"
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

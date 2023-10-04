@@ -110,8 +110,8 @@ export default function NewEquipeRetourScanScreen() {
                                                                                                                 <Text style={styles.itemTitle}>{chef.NOM_EQUIPE}</Text>
                                                                                                         </View>
                                                                                                 </View>
-                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                {equipe?.ID_EQUIPE == chef.ID_EQUIPE ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
 
                                                                                         </View>
                                                                                 </TouchableNativeFeedback>
@@ -164,8 +164,8 @@ export default function NewEquipeRetourScanScreen() {
                                                                                                                         <Text style={styles.itemTitle}>{fol?.folio?.NUMERO_FOLIO}</Text>
                                                                                                                 </View> : null}
                                                                                                         </View>
-                                                                                                                {isSelected(fol?.folio?.ID_FOLIO) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
-                                                                                                                        <MaterialIcons name="check-box-outline-blank" size={24} color="black" />}
+                                                                                                                {isSelected(fol?.folio?.ID_FOLIO) ? <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.primary} /> :
+                                                                                                        <MaterialCommunityIcons name="radiobox-blank" size={24} color="#777" />}
                                                                                                       
 
                                                                                                 </View>
@@ -476,7 +476,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

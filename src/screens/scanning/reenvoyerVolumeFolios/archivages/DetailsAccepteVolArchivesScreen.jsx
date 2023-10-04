@@ -158,8 +158,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",
@@ -196,7 +197,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

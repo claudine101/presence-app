@@ -75,7 +75,7 @@ export default function AllIncidentsDeclarerScreen() {
                                                                                         <View style={styles.itemsCard}>
                                                                                                 <View style={styles.itemContainer}>
                                                                                                         <Text style={styles.username} numberOfLines={1} >{incident?.types_incidents?.TYPE_INCIDENT}</Text>
-                                                                                                        <Text style={styles.date} numberOfLines={2}>{moment(incident?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                        <Text style={styles.date} numberOfLines={2}>{moment(incident?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text>
                                                                                                 </View>
                                                                                                 <View style={styles.itemContainer}>
                                                                                                         <Text style={styles.contenu} numberOfLines={2}>{incident.DESCRIPTION}</Text>

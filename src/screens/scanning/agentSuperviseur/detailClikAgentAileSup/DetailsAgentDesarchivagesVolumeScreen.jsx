@@ -126,15 +126,15 @@ export default function DetailsAgentDesarchivagesVolumeScreen() {
                                                                         <View>
                                                                                 <Text style={styles.titlePrincipal}>{detail?.volume?.NUMERO_VOLUME}</Text>
                                                                                 <View style={styles.cardDescDetails}>
-                                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(detail?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(detail?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                 </View>
                                                                         </View>
                                                                         <View>
                                                                                 <View ><Text></Text></View>
                                                                                 <View style={styles.cardDescDetails}>
-                                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{detail?.volume?.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{detail?.volume?.NOMBRE_DOSSIER} dossiers</Text></View>
 
                                                                                 </View>
                                                                         </View>
@@ -201,8 +201,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",
@@ -239,7 +240,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

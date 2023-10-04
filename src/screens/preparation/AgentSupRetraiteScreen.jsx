@@ -43,6 +43,7 @@ export default function AgentSupRetraiteScreen() {
                                 setLoading(true)
                                 const res = await fetchApi('/preparation/folio/agentSupAileRetraite')
                                 setAllDetails(res.result)
+                                
                         } catch (error) {
                                 console.log(error)
                         } finally {

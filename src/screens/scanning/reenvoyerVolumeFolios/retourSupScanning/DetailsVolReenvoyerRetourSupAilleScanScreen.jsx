@@ -39,7 +39,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                         method: "POST",
                                         body: form
                                 })
-                               
+
                                 setPvs(res)
                                 setCheck(res.result.check)
                         } catch (error) {
@@ -144,7 +144,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                         Chargement
                                                                 </Text>
                                                         </View> : null}
-                                                        
+
                                                         {pvs?.result ?
                                                                 <>
                                                                         <TouchableOpacity onPress={() => {
@@ -156,82 +156,93 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                                 </> : null}
                                                 </View>
                                         </View>
-                                        {check.length ==details.length ? 
-                                        <View style={styles.selectContainer}>
-                                                <View style={{ width: '100%' }}>
-                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                        {
+                                                loadingPvs ? <View style={{ flex: 1, alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <ActivityIndicator animating size={'large'} color={'#777'} />
+                                                </View> :
+                                                        check.length == details.length ?
+                                                                <View style={styles.selectContainer}>
 
-                                                        </View>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                <Text style={styles.selectedValue}>
-                                                                </Text>
-                                                                <Text style={styles.selectedValue}>
-                                                                        {details.length} validé{details.length > 1 && 's'}
-                                                                </Text>
-                                                        </View>
-                                                        <View style={styles.contain}>
-                                                                {details.map((folio, index) => {
-                                                                        return (
-                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                        <View style={[styles.folio]}>
-                                                                                                <View style={styles.folioLeftSide}>
-                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                        </View>
-                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                        </View>
-                                                                                                </View>
-                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                        <View style={{ width: '100%' }}>
+                                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
-                                                                                        </View>
-                                                                                </TouchableOpacity>
-                                                                        )
-                                                                })
-                                                                }
-                                                        </View>
-                                                </View>
-                                        </View> :
-                                                <View style={styles.selectContainer}>
-                                                        <View style={{ width: '100%' }}>
-                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                                                </View>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                        </Text>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                                {details.length} validé{details.length > 1 && 's'}
+                                                                                        </Text>
+                                                                                </View>
+                                                                                <View style={styles.contain}>
+                                                                                        {details.map((folio, index) => {
+                                                                                                return (
+                                                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                                                <View style={[styles.folio]}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                                        <View style={styles.cardNature}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio?.folio?.FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio?.folio?.natures.DESCRIPTION}</Text>
+                                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
 
-                                                                </View>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                        </Text>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {check.length} scanné{details.length > 1 && 's'}
-                                                                        </Text>
-                                                                </View>
-                                                                <View style={styles.contain}>
-                                                                        {details.map((folio, index) => {
-                                                                                return (
-                                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                                <View style={[styles.folio]}>
-                                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                        </View>
+                                                                                                                                </View>
+                                                                                                                        </View>
+
                                                                                                                 </View>
-                                                                                                                <View style={styles.folioDesc}>
-                                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
-                                                                                                                        <Text style={styles.folioSubname}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                        </TouchableOpacity>
+                                                                                                )
+                                                                                        })
+                                                                                        }
+                                                                                </View>
+                                                                        </View>
+                                                                </View> :
+                                                                <View style={styles.selectContainer}>
+                                                                        <View style={{ width: '100%' }}>
+                                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                                                </View>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                        </Text>
+                                                                                        <Text style={styles.selectedValue}>
+                                                                                                {check.length} scanné{details.length > 1 && 's'}
+                                                                                        </Text>
+                                                                                </View>
+                                                                                <View style={styles.contain}>
+                                                                                        {details.map((folio, index) => {
+                                                                                                return (
+                                                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                                                <View style={[styles.folio]}>
+                                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                                </View>
+                                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                                        <Text style={styles.folioName}>{folio?.folio?.NUMERO_FOLIO}</Text>
+                                                                                                                                        <View style={styles.cardNature}>
+                                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio?.folio?.FOLIO}</Text>
+                                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio?.folio?.natures.DESCRIPTION}</Text>
+                                                                                                                                                {folio?.folio?.IS_RECONCILIE == 1 && !(folio?.folio?.IS_VALIDE) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                                                                        : <MaterialIcons name="cancel-presentation" size={24} color="red" />}
+                                                                                                                                        </View>
+                                                                                                                                </View>
+                                                                                                                        </View>
                                                                                                                 </View>
-                                                                                                        </View>
-                                                                                               {folio?.folio?.IS_RECONCILIE==1 && !(folio?.folio?.IS_VALIDE) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                        </TouchableOpacity>
+                                                                                                )
+                                                                                        })
+                                                                                        }
+                                                                                </View>
+                                                                        </View>
+                                                                </View>}
 
-                                                                                                       : <MaterialIcons name="cancel-presentation" size={24} color="red" />}
-                                                                                                </View>
-                                                                                        </TouchableOpacity>
-                                                                                )
-                                                                        })
-                                                                        }
-                                                                </View>
-                                                        </View>
-                                                </View>}
-
-                                        {check.length ==details.length? <TouchableOpacity onPress={onTakePicha}>
+                                        {check.length == details.length ? <TouchableOpacity onPress={onTakePicha}>
                                                 <View style={[styles.addImageItem]}>
                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -246,7 +257,7 @@ export default function DetailsVolReenvoyerRetourSupAilleScanScreen() {
                                                 </View>
                                         </TouchableOpacity> : null}
                                 </ScrollView>
-                                {check.length ==details.length? <TouchableWithoutFeedback
+                                {check.length == details.length ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitPlateauData}
                                 >
@@ -297,7 +308,6 @@ const styles = StyleSheet.create({
         },
         cardHeader: {
                 flexDirection: 'row',
-                // marginTop: StatusBar.currentHeight,
                 alignContent: "center",
                 alignItems: "center",
                 marginBottom: 15,
@@ -324,7 +334,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom: 5
         },
         buttonText: {
                 color: "#fff",
@@ -399,7 +410,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

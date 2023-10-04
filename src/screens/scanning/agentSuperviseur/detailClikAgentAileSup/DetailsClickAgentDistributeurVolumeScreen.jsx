@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View, TouchableNativeFeedback, Image, TouchableOpacity } from "react-native";
-import { Ionicons, AntDesign, MaterialCommunityIcons, FontAwesome5, Fontisto, Feather } from '@expo/vector-icons';
+import { Ionicons, AntDesign} from '@expo/vector-icons';
 import { COLORS } from "../../../../styles/COLORS"
 import moment from 'moment'
 
@@ -44,15 +44,15 @@ export default function DetailsClickAgentDistributeurVolumeScreen() {
                                                         <View>
                                                                 <Text style={styles.titlePrincipal}>{detail?.volume?.NUMERO_VOLUME}</Text>
                                                                 <View style={styles.cardDescDetails}>
-                                                                        <Fontisto name="date" size={20} color="#777" />
-                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(detail?.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text></View>
+                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(detail?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                 </View>
                                                         </View>
                                                         <View>
                                                                 <View ><Text></Text></View>
                                                                 <View style={styles.cardDescDetails}>
-                                                                        <AntDesign name="filetext1" size={20} color="#777" />
-                                                                        <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{detail?.volume?.NOMBRE_DOSSIER} dossiers</Text></View>
+                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                        <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{detail?.volume?.NOMBRE_DOSSIER} dossiers</Text></View>
 
                                                                 </View>
                                                         </View>
@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
                 height: 25
         },
         titeName: {
-                color: "#777"
+                color: '#777',
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

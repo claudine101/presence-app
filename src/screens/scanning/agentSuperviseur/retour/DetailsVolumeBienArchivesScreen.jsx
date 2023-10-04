@@ -25,7 +25,7 @@ import { useCallback } from "react";
 export default function DetailsVolumeBienArchivesScreen() {
         const navigation = useNavigation()
         const route = useRoute()
-        const { vol,date, detail } = route.params
+        const { vol, date, detail } = route.params
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
 
@@ -57,41 +57,45 @@ export default function DetailsVolumeBienArchivesScreen() {
                                                 </Text>
                                         </TouchableOpacity>
 
-                                          {detail?.length > 0 ?
-                                                        <View style={styles.selectContainer}>
-                                                                <View style={{ width: '100%' }}>
-                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                        {detail?.length > 0 ?
+                                                <View style={styles.selectContainer}>
+                                                        <View style={{ width: '100%' }}>
+                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
 
-                                                                        </View>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                                <Text style={styles.selectedValue}>
-                                                                                </Text>
-                                                                                <Text style={styles.selectedValue}>
-                                                                                        Les dossiers validés
-                                                                                </Text>
-                                                                        </View>
-                                                                        <View style={styles.folioList}>
-                                                                                {detail?.map((folio, index) => {
-                                                                                        return (
-                                                                                                <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
-                                                                                                        <View style={[styles.folio]}>
-                                                                                                                <View style={styles.folioLeftSide}>
-                                                                                                                        <View style={styles.folioImageContainer}>
-                                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                                        </View>
-                                                                                                                        <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                </View>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                        <Text style={styles.selectedValue}>
+                                                                        </Text>
+                                                                        <Text style={styles.selectedValue}>
+                                                                                {detail?.length} dossier{detail?.length > 0 ? "s" : ""}
+                                                                        </Text>
+                                                                </View>
+                                                                <View style={styles.folioList}>
+                                                                        {detail?.map((folio, index) => {
+                                                                                return (
+                                                                                        <TouchableOpacity style={{ marginTop: 10, overflow: 'hidden', borderRadius: 8 }} key={index}>
+                                                                                                <View style={[styles.folio]}>
+                                                                                                        <View style={styles.folioLeftSide}>
+                                                                                                                <View style={styles.folioImageContainer}>
+                                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                                </View>
+                                                                                                                <View style={styles.folioDesc}>
+                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <View style={styles.cardNature}>
+                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
                                                                                                         </View>
-                                                                                                </TouchableOpacity>
-                                                                                        )
-                                                                                })}
-                                                                        </View>
+                                                                                                </View>
+                                                                                        </TouchableOpacity>
+                                                                                )
+                                                                        })}
                                                                 </View>
-                                                        </View> : null}
+                                                        </View>
+                                                </View> : null}
 
                                 </ScrollView>
                         </View>
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue: {
                 color: '#777',
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
                 borderWidth: 0.5,
                 borderColor: "#ddd",
                 marginVertical: 5,
-                marginHorizontal:10
+                marginHorizontal: 10
         },
         selectedValue1: {
                 color: '#777',
@@ -252,8 +256,14 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex:1
         },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+            },
         folioName: {
                 fontWeight: 'bold',
                 color: '#333',

@@ -105,22 +105,22 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
 
                                                         {folio?.folios?.length > 0 ? <View style={styles.selectContainer}>
                                                                 <View style={{ width: '100%' }}>
-                                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
-                                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                <View style={styles.icon}>
-                                                                                        <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <View style={styles.icon}>
+                                                                                                <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
+                                                                                        </View>
+                                                                                        <Text style={styles.selectLabel}>
+                                                                                                Les dossiers
+                                                                                        </Text>
                                                                                 </View>
-                                                                                <Text style={styles.selectLabel}>
-                                                                                        Les dossiers
-                                                                                </Text>
                                                                         </View>
-                                                                </View>
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                        <Text style={styles.selectedValue}>
-                                                                                {folio?.folios.length} dossier{folio?.folios.length > 1 && 's'}
-                                                                        </Text>
-                                                                       
-                                                                </View>
+                                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                <Text style={styles.selectedValue}>
+                                                                                        {folio?.folios.length} dossier{folio?.folios.length > 1 && 's'}
+                                                                                </Text>
+
+                                                                        </View>
                                                                         <View style={styles.folioList}>
                                                                                 {folio?.folios.map((folio, index) => {
                                                                                         return (
@@ -132,12 +132,16 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                                <View style={styles.cardNature}>
+                                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                        {folio.IS_VALIDE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
+                                                                                                                                        {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+                                                                                                                                        {(folio.IS_VALIDE == 0 && folio.IS_RECONCILIE == 1) ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+                                                                                                                                </View>
                                                                                                                         </View>
                                                                                                                 </View>
-                                                                                                                {folio.IS_VALIDE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
-                                                                                                                {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
-                                                                                                                {(folio.IS_VALIDE == 0 && folio.IS_RECONCILIE == 1) ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -154,7 +158,7 @@ export default function DetailsVolumeChefPlateauTraitesScreen() {
                                                                                 </Text>
                                                                         </View> : null}
                                                                         <Text style={styles.selectedValue}>
-                                                                        Photo du procès verbal
+                                                                                Photo du procès verbal
                                                                         </Text>
                                                                         <View style={{ width: '100%' }}>
                                                                                 {PV_PATH ?
@@ -235,7 +239,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',
@@ -268,7 +278,7 @@ const styles = StyleSheet.create({
                 borderWidth: 0.5,
                 borderColor: "#ddd",
                 marginVertical: 5,
-                marginHorizontal:10,
+                marginHorizontal: 10,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between'
@@ -345,7 +355,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

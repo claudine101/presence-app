@@ -114,7 +114,7 @@ export default function DetailsFolioRetourChefPlateau() {
                                                                                                         <Text style={styles.itemVolume}>{fol.folio.NUMERO_FOLIO}</Text>
                                                                                                         {/* <Text>sjjjs</Text> */}
                                                                                                 </View>
-                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD-MM-YYYY, HH:mm')}</Text>
+                                                                                                <Text>{moment(fol.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text>
                                                                                         </View>
                                                                                 </View>
                                                                         </View>
@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

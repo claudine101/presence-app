@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import AppHeaderPhPreparationRetour from "../../../../components/app/AppHeaderPhPreparationRetour";
 import { FlatList, StyleSheet, Text, View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
-import { AntDesign, Fontisto, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../styles/COLORS"
 import fetchApi from "../../../../helpers/fetchApi";
@@ -9,7 +9,6 @@ import PROFILS from "../../../../constants/PROFILS";
 import moment from 'moment'
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../../store/selectors/userSelector";
-import ETAPES_VOLUME from "../../../../constants/ETAPES_VOLUME";
 
 /**
  * Screen pour afficher les volumes retourner par un chef plateau vers un agent superviseur aille
@@ -125,7 +124,6 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         style={styles.contain}
                                                         data={allVolumes}
                                                         renderItem={({ item: volume, index }) => {
-                                                                // return console.log(volume.traitant)
                                                                 return (
                                                                         <>
                                                                                 {
@@ -163,7 +161,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         {/* <View style={styles.cardDescDetails}>
                                                                                                                                 <AntDesign name="filetext1" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{volume?.volumes[0].volume.NOMBRE_DOSSIER}</Text></View>
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{volume?.volumes[0].volume.NOMBRE_DOSSIER}</Text></View>
 
                                                                                                                         </View> */}
                                                                                                                 </View>
@@ -254,9 +252,7 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                         </Text>
 
                                                 </View> :
-
-
-                                                        <FlatList
+                                                <FlatList
                                                                 style={styles.contain}
                                                                 data={allRetourVolumesDistributeur}
                                                                 renderItem={({ item: volume, index }) => {
@@ -272,17 +268,16 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                                 <View style={styles.folio}>
                                                                                                                         <View style={styles.folioLeftSide}>
 
-
-                                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                                        <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                                                                                </View>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                {volume?.volumes[0]?.users?.PHOTO_USER ? <Image source={{ uri: volume?.volumes[0]?.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
+                                                                                                                        </View>
                                                                                                                                 <View style={styles.folioDesc}>
                                                                                                                                         <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                                {volume?.volumes[0]?.users?.EMAIL}
                                                                                                                                                         </Text>
                                                                                                                                                 </View>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -340,18 +335,16 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                         <View style={styles.folio}>
                                                                                                                 <View style={styles.folioLeftSide}>
-
-
                                                                                                                         <View style={styles.folioImageContainer}>
-                                                                                                                                <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
+                                                                                                                                {volume?.volumes[0]?.users?.PHOTO_USER ? <Image source={{ uri: volume?.volumes[0]?.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                {volume?.volumes[0]?.users?.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -407,18 +400,16 @@ export default function AllVolumeFolioRetourSupAilleScreen() {
                                                                                                         <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>
                                                                                                                 <View style={styles.folio}>
                                                                                                                         <View style={styles.folioLeftSide}>
-
-
-                                                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                                                        <Image source={require("../../../../../assets/images/dossierDetail.png")} style={styles.folioImage} />
-                                                                                                                                </View>
+                                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                                {volume?.volumes[0]?.users?.PHOTO_USER ? <Image source={{ uri: volume?.volumes[0]?.users?.PHOTO_USER }} style={styles.folioImageContainer} /> :
+                                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
+                                                                                                                        </View>
                                                                                                                                 <View style={styles.folioDesc}>
                                                                                                                                         <Text style={styles.folioName}>{volume?.volumes[0]?.users?.NOM}</Text>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                        <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                         <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                                {moment(volume?.volumes[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                        {volume?.volumes[0]?.users?.EMAIL}
                                                                                                                                                         </Text>
                                                                                                                                                 </View>
                                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -522,8 +513,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",

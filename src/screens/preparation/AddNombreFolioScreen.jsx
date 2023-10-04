@@ -232,9 +232,9 @@ export default function AddNombreFolioScreen() {
                         {volume ? `${volume.volume.NUMERO_VOLUME}` : 'Aucun'}
                     </Text>
                 </TouchableOpacity>
-                { errorsVolume?<Text style={styles.selectedError}>
+                {errorsVolume ? <Text style={styles.selectedError}>
                     {errorsVolume}
-                </Text>:null}
+                </Text> : null}
                 <View style={{ marginVertical: 8 }}>
                     <OutlinedTextField
                         label="Nombre de dossier"
@@ -254,7 +254,7 @@ export default function AddNombreFolioScreen() {
                         keyboardType='number-pad'
                     />
                 </View>
-               
+
                 <TouchableOpacity style={styles.selectContainer} onPress={openAgentModalize}>
                     <View style={styles.labelContainer}>
                         <View style={styles.icon}>
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
         marginTop: 2
     },
     selectedError: {
-        top:-15,
+        top: -15,
         color: 'red',
         marginTop: 2
     },
@@ -437,7 +437,8 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         paddingHorizontal: 10,
         backgroundColor: COLORS.primary,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        marginBottom: 5
     },
     buttonText: {
         color: "#fff",

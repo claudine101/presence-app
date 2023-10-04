@@ -25,9 +25,9 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
         const [loading, setLoading] = useState(false)
         const handleSubmit = (folio) => {
                 if (user.ID_PROFIL == PROFILS.AGENT_SUPERVISEUR_SCANNING) {
-                        navigation.navigate("RetourReenvoyezFoliosEquipeScreen", { folio: folio.folios, userTraite: folio.USERS_ID, ID_EQUIPE: folio.equipe  })
+                        navigation.navigate("RetourReenvoyezFoliosEquipeScreen", { folio: folio.folios, userTraite: folio.USERS_ID, ID_EQUIPE: folio.equipe })
                 } else {
-                        navigation.navigate("DetailsFolioRetourScreen", )
+                        navigation.navigate("DetailsFolioRetourScreen",)
                 }
         }
         //fonction pour recuperer les folios d'un agent qui est connecter
@@ -58,9 +58,7 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                                                 <Text style={styles.emptyTitle}>
                                                         Aucun folio trouvé
                                                 </Text>
-                                                {/* <Text style={styles.emptyDesc}>
-                                                Aucun folio planifier ou vous n'êtes pas affecte a aucun folio
-                                        </Text> */}
+
                                         </View> :
                                                 <FlatList
                                                         style={styles.contain}
@@ -76,22 +74,23 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                                                                                                 onPress={() => handleSubmit(folio)}
                                                                                         >
                                                                                                 <View style={styles.cardDetails}>
-                                                                                                        <View style={styles.cardImages}>
-                                                                                                                <Image source={require('../../../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                {
+                                                                                                                        <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />}
                                                                                                         </View>
                                                                                                         <View style={styles.cardAllDetails}>
                                                                                                                 <View>
                                                                                                                         <Text style={styles.titlePrincipal}>{folio?.equipe?.NOM_EQUIPE}</Text>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                                  <AntDesign name="calendar" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
+                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{moment(folio?.folios[0].DATE_INSERTION).format('DD/MM/YYYY HH:mm')}</Text></View>
                                                                                                                         </View>
                                                                                                                 </View>
                                                                                                                 <View>
                                                                                                                         <View ><Text></Text></View>
                                                                                                                         <View style={styles.cardDescDetails}>
-                                                                                                                        <Ionicons name="ios-document-text-outline" size={20} color="#777" />
-                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={styles.titeName}>{folio?.folios.length} dossiers</Text></View>
+                                                                                                                                <Ionicons name="ios-document-text-outline" size={20} color="#777" />
+                                                                                                                                <View style={{ marginLeft: 3 }}><Text style={[styles.titeName, { marginLeft: 3 }]}>{folio?.folios.length} dossiers</Text></View>
 
                                                                                                                         </View>
                                                                                                                 </View>
@@ -104,14 +103,13 @@ export default function AllRetourFoliosReenvoyezSupScreen() {
                                                         }}
                                                         keyExtractor={(folio, index) => index.toString()}
                                                 />}
-                        </View>:null}
+                        </View> : null}
                 </>
         )
 }
 const styles = StyleSheet.create({
         container: {
                 flex: 1,
-                backgroundColor: '#ddd'
         },
         cardDetails: {
                 borderRadius: 10,
@@ -137,7 +135,8 @@ const styles = StyleSheet.create({
                 height: 25
         },
         titeName: {
-                color: "#777"
+                color: '#777',
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",
@@ -153,10 +152,14 @@ const styles = StyleSheet.create({
         titlePrincipal: {
                 fontWeight: "bold"
         },
-
-
-
-
+        folioImageContainer: {
+                width: 60,
+                height: 60,
+                borderRadius: 40,
+                backgroundColor: '#ddd',
+                justifyContent: 'center',
+                alignItems: 'center'
+        },
         itemVolume: {
                 fontSize: 15,
                 fontWeight: "bold",

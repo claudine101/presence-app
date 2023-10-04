@@ -10,22 +10,48 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import Loading from "../../../../components/app/Loading";
 
-export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
+export default function DetailsVolReenvoyezRetourChefEquipeScreen() {
         const route = useRoute()
         const navigation = useNavigation()
         const { details, userTraite } = route.params
         const [document, setDocument] = useState(null)
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
         const [loadingData, setLoadingData] = useState(false)
+        const [loadingPvs, setLoadingPvs] = useState(false)
+        const [pvs, setPvs] = useState(false)
+        const [check, setCheck] = useState(false)
+        const [galexyIndex, setGalexyIndex] = useState(null)
+
+
 
         const folio_ids = details?.map(folio => folio.ID_FOLIO)
+        useFocusEffect(useCallback(() => {
+                (async () => {
+                        try {
+                                setLoadingPvs(true)
+                                const form = new FormData()
+                                form.append('folioIds', JSON.stringify(folio_ids))
+                                const res = await fetchApi(`/scanning/retour/agent/chefPlateau/retour/pvs/nonValid/chefEquipes
+                                `, {
+                                        method: "POST",
+                                        body: form
+                                })
+                                setPvs(res)
+                                setCheck(res.result.check)
+                        } catch (error) {
+                                console.log(error)
+                        } finally {
+                                setLoadingPvs(false)
+                        }
+                })()
+        }, []))
         const isValidAdd = () => {
                 var isValid = false
                 isValid = document != null ? true : false
                 return isValid
         }
 
-     
+
         //Fonction pour le prendre l'image avec l'appareil photos
         const onTakePicha = async () => {
                 setIsCompressingPhoto(true)
@@ -83,85 +109,120 @@ export default function DetailsVolReenvoyezRetourChefEquipeScreen(){
                 }
         }
 
-        return(
+        return (
                 <>
-                {loadingData && <Loading />}
-                <View style={styles.container}>
+                 {(galexyIndex != null && pvs?.result && pvs?.result) &&
+                                <ImageView
+                                        images={[{ uri: pvs?.result.PV_PATH }, pvs?.result?.retour ? { uri: pvs?.result?.retour.PV_PATH } : undefined]}
+                                        imageIndex={galexyIndex}
+                                        visible={(galexyIndex != null) ? true : false}
+                                        onRequestClose={() => setGalexyIndex(null)}
+                                        swipeToCloseEnabled
+                                        keyExtractor={(_, index) => index.toString()}
+                                />
+                        }
+                        {loadingData && <Loading />}
+                        <View style={styles.container}>
 
-                        <View style={styles.header}>
-                                <TouchableNativeFeedback
-                                        onPress={() => navigation.goBack()}
-                                        background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
-                                        <View style={styles.headerBtn}>
-                                                <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                <View style={styles.header}>
+                                        <TouchableNativeFeedback
+                                                onPress={() => navigation.goBack()}
+                                                background={TouchableNativeFeedback.Ripple('#c9c5c5', true)}>
+                                                <View style={styles.headerBtn}>
+                                                        <Ionicons name="chevron-back-outline" size={24} color="black" />
+                                                </View>
+                                        </TouchableNativeFeedback>
+                                        <View style={styles.cardTitle}>
+                                                <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text>
                                         </View>
-                                </TouchableNativeFeedback>
-                                <View style={styles.cardTitle}>
-                                        <Text style={styles.title} numberOfLines={2}>{userTraite.NOM} {userTraite.PRENOM}</Text>
                                 </View>
-                        </View>
-                        <ScrollView>
-                                
-                                 <View style={styles.selectContainer}>
-                                        <View style={{ width: '100%' }}>
-                                                <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+                                <ScrollView>
+                                <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        {loadingPvs ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <ActivityIndicator animating size={'small'} color={'#777'} />
+                                                                <Text style={[styles.selectedValue, { marginLeft: 5 }]}>
+                                                                        Chargement
+                                                                </Text>
+                                                        </View> : null}
 
-                                                </View>
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                        <Text style={styles.selectedValue}>
-                                                        </Text>
-                                                        <Text style={styles.selectedValue}>
-                                                                {details.length} validé{details.length > 1 && 's'}
-                                                        </Text>
-                                                </View>
-                                                <View style={styles.contain}>
-                                                        {details.map((folio, index) => {
-                                                                return (
-                                                                        <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
-                                                                                <View style={[styles.folio]}>
-                                                                                        <View style={styles.folioLeftSide}>
-                                                                                                <View style={styles.folioImageContainer}>
-                                                                                                        <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
-                                                                                                </View>
-                                                                                                <View style={styles.folioDesc}>
-                                                                                                        <Text style={styles.folioName}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                        <Text style={styles.folioSubname}>{folio?.NUMERO_FOLIO}</Text>
-                                                                                                </View>
-                                                                                        </View>
-                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> 
-                                                                                </View>
+                                                        {pvs?.result ?
+                                                                <>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                                setGalexyIndex(0)
+                                                                        }}>
+                                                                                <Image source={{ uri: pvs?.result?.PV_PATH }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />
                                                                         </TouchableOpacity>
-                                                                )
-                                                        })
-                                                        }
+                                                                        <Text style={{ fontStyle: 'italic', color: '#777', fontSize: 10, marginTop: 5, textAlign: 'right' }}>Fait: {moment(pvs.result.DATE_INSERTION).format("DD/MM/YYYY [à] HH:mm")}</Text>
+                                                                </> : null}
                                                 </View>
                                         </View>
-                                </View>
-                                <TouchableOpacity onPress={onTakePicha}>
-                                        <View style={[styles.addImageItem]}>
-                                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                                <FontAwesome5 name="file-signature" size={20} color="#777" />
-                                                                <Text style={styles.addImageLabel}>
-                                                                        Photo du procès verbal
+                                        <View style={styles.selectContainer}>
+                                                <View style={{ width: '100%' }}>
+                                                        <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
+
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Text style={styles.selectedValue}>
+                                                                </Text>
+                                                                <Text style={styles.selectedValue}>
+                                                                        {details.length} validé{details.length > 1 && 's'}
                                                                 </Text>
                                                         </View>
-                                                        {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                        <View style={styles.contain}>
+                                                                {details.map((folio, index) => {
+                                                                        return (
+                                                                                <TouchableOpacity style={{ marginTop: 10, borderRadius: 80, }} key={index}>
+                                                                                        <View style={[styles.folio]}>
+                                                                                                <View style={styles.folioLeftSide}>
+                                                                                                        <View style={styles.folioImageContainer}>
+                                                                                                                <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
+                                                                                                        </View>
+                                                                                                        <View style={styles.folioDesc}>
+                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                <View style={styles.cardNature}>
+                                                                                                                        <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                        <Text style={styles.folioSubname}>Nature:{folio?.natures?.DESCRIPTION}</Text>
+                                                                                                                        <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+
+                                                                                                                </View>
+                                                                                                        </View>
+                                                                                                </View>
+
+                                                                                        </View>
+                                                                                </TouchableOpacity>
+                                                                        )
+                                                                })
+                                                                }
+                                                        </View>
                                                 </View>
-                                                {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
                                         </View>
-                                </TouchableOpacity>
-                        </ScrollView>
-                        <TouchableWithoutFeedback
-                                disabled={!isValidAdd()}
-                                onPress={submitPlateauData}
-                        >
-                                <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
-                                        <Text style={styles.buttonText}>Enregistrer</Text>
-                                </View>
-                        </TouchableWithoutFeedback>
-                </View >
-        </>
+                                        {details.length==check.length?<TouchableOpacity onPress={onTakePicha}>
+                                                <View style={[styles.addImageItem]}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
+                                                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                        <FontAwesome5 name="file-signature" size={20} color="#777" />
+                                                                        <Text style={styles.addImageLabel}>
+                                                                                Photo du procès verbal
+                                                                        </Text>
+                                                                </View>
+                                                                {isCompressingPhoto ? <ActivityIndicator animating size={'small'} color={'#777'} /> : null}
+                                                        </View>
+                                                        {document && <Image source={{ uri: document.uri }} style={{ width: "100%", height: 200, marginTop: 10, borderRadius: 5 }} />}
+                                                </View>
+                                        </TouchableOpacity>:null}
+                                </ScrollView>
+                                {details.length==check.length?
+                                <TouchableWithoutFeedback
+                                        disabled={!isValidAdd()}
+                                        onPress={submitPlateauData}
+                                >
+                                        <View style={[styles.button, !isValidAdd() && { opacity: 0.5 }]}>
+                                                <Text style={styles.buttonText}>Enregistrer</Text>
+                                        </View>
+                                </TouchableWithoutFeedback>:null}
+                        </View >
+                </>
         )
 }
 
@@ -230,7 +291,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",
@@ -305,7 +367,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex: 1
+        },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',

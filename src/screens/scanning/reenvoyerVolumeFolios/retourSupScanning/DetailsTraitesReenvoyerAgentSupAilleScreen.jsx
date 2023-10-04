@@ -26,7 +26,6 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio, PV_PATH, date, userTraite } = route.params
-
         const [galexyIndex, setGalexyIndex] = useState(null)
         const [loadingPvs, setLoadingPvs] = useState(false)
         const [pvs, setPvs] = useState(null)
@@ -131,13 +130,17 @@ export default function DetailsTraitesReenvoyerAgentSupAilleScreen() {
                                                                                                                                 <Image source={require("../../../../../assets/images/folio.png")} style={styles.folioImage} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
-                                                                                                                                <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                                <Text style={styles.folioSubname}>{folio.NUMERO_FOLIO}</Text>
-                                                                                                                        </View>
-                                                                                                                </View>
-                                                                                                                {folio.IS_VALIDE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
+                                                                                                                        <Text style={styles.folioName}>{folio.NUMERO_FOLIO}</Text>
+                                                                                                                        <View style={styles.cardNature}>
+                                                                                                                                <Text style={styles.folioSubname}>Folio:{folio.FOLIO}</Text>
+                                                                                                                                <Text style={styles.folioSubname}>Nature:{folio.natures.DESCRIPTION}</Text>
+                                                                                                                                {folio.IS_VALIDE == 1 ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> : null}
                                                                                                                 {folio.IS_RECONCILIE == 0 ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
                                                                                                                 {(folio.IS_VALIDE == 0 && folio.IS_RECONCILIE == 1) ? <MaterialIcons name="cancel-presentation" size={24} color="red" /> : null}
+                                                                                                                        </View>
+                                                                                                                </View>
+                                                                                                                </View>
+                                                                                                               
                                                                                                         </View>
                                                                                                 </TouchableOpacity>
                                                                                         )
@@ -234,7 +237,13 @@ const styles = StyleSheet.create({
                 height: '60%'
         },
         folioDesc: {
-                marginLeft: 10
+                marginLeft: 10,
+                flex:1
+              },
+        cardNature: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
         },
         folioName: {
                 fontWeight: 'bold',
@@ -343,7 +352,8 @@ const styles = StyleSheet.create({
                 paddingVertical: 14,
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
-                marginHorizontal: 10
+                marginHorizontal: 10,
+                marginBottom:5
         },
         buttonText: {
                 color: "#fff",

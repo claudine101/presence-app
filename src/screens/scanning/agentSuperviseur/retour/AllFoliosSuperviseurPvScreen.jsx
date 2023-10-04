@@ -69,7 +69,7 @@ export default function AllFoliosSuperviseurPvScreen() {
                                                                                                                 <View style={styles.folioLeftSide}>
                                                                                                                         <View style={styles.folioImageContainer}>
 
-                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.image} />
+                                                                                                                                <Image source={require('../../../../../assets/images/user.png')} style={styles.folioImageContainer} />
                                                                                                                         </View>
                                                                                                                         <View style={styles.folioDesc}>
                                                                                                                                 <Text style={styles.folioName}>{folio?.folios[0]?.equipe.NOM_EQUIPE}</Text>
@@ -180,8 +180,9 @@ const styles = StyleSheet.create({
                 width: 25,
                 height: 25
         },
-        titeName: {
-                color: "#777"
+       titeName: {
+                color: "#777",
+                fontSize: 12
         },
         cardDescDetails: {
                 flexDirection: "row",
