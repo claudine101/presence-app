@@ -85,9 +85,8 @@ export default function AgentPreparationFolioScreen() {
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <AntDesign name="calendar" size={20} color="#777" />
                                                                                                                                                 <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                        {moment(folio?.DATE_INSERTION).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                                {folio.users?.EMAIL}
                                                                                                                                                 </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
