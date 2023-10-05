@@ -225,8 +225,7 @@ export default function DetailsFolioFlashScreen() {
                                                         <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
                                                     </View>
                                                     <View style={styles.listNames}>
-                                                        <Text style={styles.listItemTitle}>{type.NOM_DOCUMENT}</Text>
-                                                        {/* <Text style={styles.listItemSubTitle}>{type.NOM_DOCUMENT}</Text> */}
+                                                        <Text  style={styles.listItemTitledDoc}>{type.NOM_DOCUMENT}</Text>
                                                     </View>
                                                 </View>
                                                 {isSelectedType(type) ? <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} /> :
@@ -249,7 +248,7 @@ export default function DetailsFolioFlashScreen() {
                                                 <Image source={require('../../../../assets/images/dossier.png')} style={styles.listItemImage} />
                                             </View>
                                             <View style={styles.listNames}>
-                                                <Text style={styles.listItemTitle}>{type.types.NOM_DOCUMENT}</Text>
+                                                <Text numberOfLines={10} style={styles.listItemTitledDoc}>{type.types.NOM_DOCUMENT}</Text>
                                                 {/* <Text style={styles.listItemSubTitle}>{document.length }</Text> */}
                                             </View>
                                         </View>
@@ -456,14 +455,18 @@ const styles = StyleSheet.create({
     },
     listItemDesc: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '95%',
     },
     listNames: {
         marginLeft: 10,
         fontSize: 17,
     },
     listItemTitle: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+    },
+    listItemTitledDoc: {
+        maxWidth:'95%'
     },
     listItemSubTitle: {
         color: '#777',
