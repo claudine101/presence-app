@@ -23,11 +23,10 @@ import { ScrollView } from "react-native-gesture-handler";
  * @returns 
  */
 
-export default function FolioRetourSuperviseurScreen() {
+export default function FolioRetourneSuperviseurScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { folio } = route.params
-        const [loading, setLoading] = useState(false)
         const [loadingSubmit, setLoadingSubmit] = useState(false)
         const [document, setDocument] = useState(null)
         const [nbre, setNbre] = useState(null)
@@ -50,7 +49,7 @@ export default function FolioRetourSuperviseurScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('AGENT_SUPERVISEUR', folio.users.USERS_ID)
-                                const res = await fetchApi(`/preparation/folio/getPvRetour`, {
+                                const res = await fetchApi(`/preparation/folio/getPvRetourne`, {
                                         method: "POST",
                                         body: form
                                 })
@@ -71,7 +70,7 @@ export default function FolioRetourSuperviseurScreen() {
                                 const form = new FormData()
                                 form.append('folioIds', JSON.stringify(folio_ids))
                                 form.append('USERS_ID', folio.users.USERS_ID)
-                                const res = await fetchApi(`/preparation/folio/checkAgentsup`, {
+                                const res = await fetchApi(`/preparation/folio/checkAgentsupRetourne`, {
                                         method: "POST",
                                         body: form
                                 })

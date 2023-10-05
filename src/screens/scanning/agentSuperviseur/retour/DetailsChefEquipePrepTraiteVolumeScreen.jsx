@@ -18,6 +18,7 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
         const navigation = useNavigation()
         const route = useRoute()
         const { volume, PV_PATH, date, userTraite } = route.params
+        // return console.log(volume)
         const [galexyIndex, setGalexyIndex] = useState(null)
         
 
@@ -72,7 +73,7 @@ export default function DetailsChefEquipePrepTraiteVolumeScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue1}>
-                                                        {volume[0]?.NOMBRE_DOSSIER}  dossier{volume[0]?.NOMBRE_DOSSIER > 1 && 's'}
+                                                        {volume[0]?.NOMBRE_DOSSIER}  dossiers{volume[0]?.NOMBRE_DOSSIER > 1 && 's'}
                                                 </Text>
                                         </TouchableOpacity>
                                         <View style={styles.selectContainer}>

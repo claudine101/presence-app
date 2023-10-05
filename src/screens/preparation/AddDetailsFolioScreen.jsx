@@ -125,7 +125,7 @@ export default function AddDetailsFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Les agents de preparations</Text>
                                                 </View>
-                                                {allAgentsPreparation.result.map((prep, index) => {
+                                                {allAgentsPreparation?.result?.map((prep, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedPreparartion(prep)}>
@@ -245,7 +245,9 @@ export default function AddDetailsFolioScreen() {
                         form.append('NOMBRE_DOUBLON', data.doublon)
                         form.append('ID_FOLIO', folio.ID_FOLIO)
                         form.append('COLLINE_ID', collines.COLLINE_ID)
-
+                        if(folioRetour){
+                                form.append('folioRetour', folioRetour)
+                        }
                         if (logoImage) {
                                 const manipResult = await manipulateAsync(
                                         logoImage.uri,
@@ -306,7 +308,7 @@ export default function AddDetailsFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des Provinces</Text>
                                                         </View>
-                                                        {ProvincessAll.result.map((prov, index) => {
+                                                        {ProvincessAll?.result?.map((prov, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedProvinces(prov)}>
@@ -354,7 +356,7 @@ export default function AddDetailsFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des communes</Text>
                                                         </View>
-                                                        {CommunesAll.result.map((comm, index) => {
+                                                        {CommunesAll?.result?.map((comm, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCommunes(comm)}>
@@ -404,7 +406,7 @@ export default function AddDetailsFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des zones</Text>
                                                         </View>
-                                                        {zonesAll.result.map((zone, index) => {
+                                                        {zonesAll?.result?.map((zone, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedZones(zone)}>
@@ -454,7 +456,7 @@ export default function AddDetailsFolioScreen() {
                                                         <View style={styles.modalHeader}>
                                                                 <Text style={styles.modalTitle}>Listes des collines</Text>
                                                         </View>
-                                                        {collinesAll.result.map((colline, index) => {
+                                                        {collinesAll?.result?.map((colline, index) => {
                                                                 return (
                                                                         <ScrollView key={index}>
                                                                                 <TouchableNativeFeedback onPress={() => setSelectedCollines(colline)}>

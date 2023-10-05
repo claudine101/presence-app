@@ -7,10 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "../../store/selectors/userSelector";
 import { COLORS } from "../../styles/COLORS";
 import { DrawerActions } from "@react-navigation/native";
-import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { unsetUserAction } from "../../store/actions/userActions";
-import { runOnJS } from "react-native-reanimated";
 import PROFILS from "../../constants/PROFILS";
 
 export default function DrawerContent({ state, navigation, descriptors }) {
@@ -129,7 +127,7 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 <View style={styles.drawerItem}>
                                     <Image source={require('../../../assets/images/dossierDetail.png')} style={styles.imageIcon} />
                                     <Text style={[styles.drawerItemLabel, (state.index == 2) && { color: '#777' }, { marginBottom: 3 }]}>
-                                        Volumes distribués
+                                       Volumes supervisés
                                     </Text>
                                 </View>
                             </View>
@@ -706,16 +704,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
-                        {/* <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)} onPress={() => handlePress('AllFoliosBienTraitesApresRetourScreen')}>
-                            <View style={[{ borderRadius: 10, overflow: "hidden" }, (state.index == 5) && { backgroundColor: COLORS.handleColor }]}>
-                                <View style={styles.drawerItem}>
-                                    <View style={styles.imageIcon} />
-                                    <Text style={[styles.drawerItemLabel, (state.index == 5) && { color: '#777' }]}>
-                                    Retournés
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableNativeFeedback> */}
                     </>
                     : null}
 

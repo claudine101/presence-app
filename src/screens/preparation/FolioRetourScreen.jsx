@@ -50,7 +50,9 @@ export default function AgentPreparationFolioScreen() {
                         }
                 })()
         }, []))
+        // return console.log(allDetails[0].date)
         return (
+               
                 <>
                         <AppHeader title="Folio préparés" />
                         <View style={styles.container}>
@@ -85,9 +87,10 @@ export default function AgentPreparationFolioScreen() {
                                                                                                                                 <Text style={styles.folioName}>{folio.users?.NOM} {folio.users?.PRENOM}</Text>
                                                                                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                                                                                                                <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
-                                                                                                                                                {folio.users?.EMAIL}
-                                                                                                                                                </Text>
+                                                                                                                                            <AntDesign name="calendar" size={20} color="#777" />
+                                                                                                                                            <Text style={[styles.folioSubname, { marginLeft: 3 }]}>
+                                                                                                                                                      {moment(folio?.date).format('DD/MM/YYYY HH:mm')}
+                                                                                                                                            </Text>
                                                                                                                                         </View>
                                                                                                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                                                                                                 <Ionicons name="ios-document-text-outline" size={20} color="#777" />

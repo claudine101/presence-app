@@ -73,7 +73,7 @@ export default function AgentSuperviseurRetourPhaseScreen() {
                                                                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                                                                 </View> : folio.users ?
                                                                                         <TouchableNativeFeedback useForeground background={TouchableNativeFeedback.Ripple(COLORS.handleColor)}
-                                                                                                onPress={() => navigation.navigate("FolioRetourSuperviseurScreen", { folio: folio})}
+                                                                                                onPress={() => navigation.navigate("FolioRetourneSuperviseurScreen", { folio: folio})}
                                                                                         >
      
                                                                                                 <View style={{ marginTop: 10, marginHorizontal: 5, overflow: 'hidden', borderRadius: 8 }}>

@@ -50,7 +50,7 @@ export default function DetaillerVolumeScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {volume ? `${volume?.volume?.NOMBRE_DOSSIER}` : 'Aucun'}
+                                                                                {volume ? `${volume?.volume?.NOMBRE_DOSSIER} dossier${volume?.volume?.NOMBRE_DOSSIER>0?"s":""}` : 'Aucun'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

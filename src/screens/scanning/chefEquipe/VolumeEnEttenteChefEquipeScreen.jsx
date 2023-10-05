@@ -49,7 +49,6 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                         navigation.navigate("DetailsSupAilleScanTraiteVolumeScreen", { volume: volume.volumes, userTraite: volume?.users, PV_PATH: volume?.PV_PATH, date: volume.date })
                 }
         }
-
         //fonction pour recuperer les volumes associer a un chef d'equipe
         useFocusEffect(useCallback(() => {
                 (async () => {
@@ -82,6 +81,7 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/volume/traitees/chefequipepreparation`)
                                         setAllVolumesChefEquipePrep(vol.PvVolume)
+                                       
                                 } else {
                                         setLoading(true)
                                         const vol = await fetchApi(`/scanning/retour/agent/chefEquipe/envoyer`)
@@ -243,8 +243,6 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                                 Aucun volume trouvé
                                                         </Text>
                                                 </View> :
-
-
                                                         <FlatList
                                                                 style={styles.contain}
                                                                 data={allVolumesChefPlateau}
@@ -309,9 +307,6 @@ export default function VolumeEnEttenteChefEquipeScreen() {
                                                         <Text style={styles.emptyTitle}>
                                                                 Aucun volume trouvé
                                                         </Text>
-                                                        {/* <Text style={styles.emptyDesc}>
-                                                                Aucun volume planifier ou vous n'êtes pas affecte a aucun volume
-                                                        </Text> */}
                                                 </View> :
                                                         <FlatList
                                                                 style={styles.contain}

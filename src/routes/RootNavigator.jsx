@@ -107,6 +107,7 @@ import DetailsBienArchiverScreen from '../screens/scanning/reenvoyerVolumeFolios
 import DetailsVolumeBienArchivesScreen from '../screens/scanning/agentSuperviseur/retour/DetailsVolumeBienArchivesScreen';
 import ChefEquipeFlashValideDetailScreen from '../screens/indexation/chefEquipe/ChefEquipeFlashValideDetailScreen';
 import AgentSuperviseurReValideDetailScreen from '../screens/preparation/AgentSuperviseurReValideDetailScreen';
+import FolioRetourneSuperviseurScreen from '../screens/preparation/FolioRetourneSuperviseurScreen';
 
 export default function RootNavigator() {
     const Stack = createStackNavigator()
@@ -119,6 +120,8 @@ export default function RootNavigator() {
             }}>
             <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}>
                 <Stack.Screen name='Root' component={DrawerNavigator} options={{ headerShown: false }} />
+                
+                <Stack.Screen name='FolioRetourneSuperviseurScreen' component={FolioRetourneSuperviseurScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='NewVolumeScreen' component={NewVolumeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='AllVolumeChefPlateauScreen' component={AllVolumeChefPlateauScreen} options={{ headerShown: false }} />
                 <Stack.Screen name='DescriptionEtapeScreen' component={DescriptionEtapeScreen} options={{ headerShown: false }} />
