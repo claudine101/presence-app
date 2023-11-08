@@ -51,9 +51,7 @@ export default function AddFolioScreen() {
 
         }, {
 
-                // document: {
-                //         required: 'ce champ est obligatoire',
-                // }
+               
         })
 
         const isValidAdd = () => {
@@ -139,7 +137,6 @@ export default function AddFolioScreen() {
                 const addInStroge = async () => {
                         const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
                         if (folios.length > 0) {
-                                console.log(folios)
                                 await AsyncStorage.setItem(id, JSON.stringify(folios))
                         }
                 }
@@ -543,7 +540,7 @@ export default function AddFolioScreen() {
                         const form = new FormData()
                         form.append('ID_VOLUME', volume?.volume?.ID_VOLUME)
                         form.append('folio', JSON.stringify(folios))
-                        if (document) {
+                        if (document){
                                 const manipResult = await manipulateAsync(
                                         document.uri,
                                         [
@@ -559,12 +556,12 @@ export default function AddFolioScreen() {
                                         uri: localUri, name: filename, type
                                 })
                         }
-                        // return console.log(form)
-                        const folio = await fetchApi(`/preparation/folio`, {
+                        await fetchApi(`/preparation/folio`, {
                                 method: "POST",
                                 body: form
                         })
-                        dispatch(resetCartAction())
+                        const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
+                        await AsyncStorage.removeItem(id)
                         navigation.goBack()
                 }
                 catch (error) {
