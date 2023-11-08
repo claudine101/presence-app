@@ -138,8 +138,8 @@ export default function AddFolioScreen() {
         useEffect(() => {
                 const addInStroge = async () => {
                         const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
-
                         if (folios.length > 0) {
+                                console.log(folios)
                                 await AsyncStorage.setItem(id, JSON.stringify(folios))
                         }
                 }
@@ -149,7 +149,6 @@ export default function AddFolioScreen() {
                 const getInStroge = async () => {
                         const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
                                 const preveFolio = await AsyncStorage.getItem(id)
-                                console.log(preveFolio)
                                 if(preveFolio){
                                         setFolios(JSON.parse(preveFolio))
                                 }
@@ -167,6 +166,10 @@ export default function AddFolioScreen() {
                                 {
                                         text: "Oui", onPress: async () => {
                                                 const removed = folios.filter((vol, index) => index != volIndex)
+                                                if(removed.length==0){
+                                                        const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
+                                                        await AsyncStorage.removeItem(id)
+                                                }
                                                 setFolios(removed)
                                         }
                                 }
