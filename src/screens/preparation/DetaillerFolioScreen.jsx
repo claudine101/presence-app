@@ -21,6 +21,7 @@ import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 import { useEffect } from "react";
 import ETAPES_VOLUME from "../../constants/ETAPES_VOLUME";
 import Folios from "../../components/folio/Folios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Le screen pour details le volume, le dossier utilisable par un agent superviseur
@@ -41,19 +42,13 @@ export default function AddFolioScreen() {
         const [folios, setFolios] = useState([])
         const [dossierExiste, setDossierExiste] = useState([])
         const [isCompressingPhoto, setIsCompressingPhoto] = useState(false)
-
-
         const [data, handleChange, setValue] = useForm({
                 folio: '',
                 dossier: '',
-                // document: null
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
 
-                // document: {
-                //         required: true
-                // }
         }, {
 
                 // document: {
@@ -115,14 +110,14 @@ export default function AddFolioScreen() {
                 }
         }, [data.folio, natures])
         //Fonction pour ajouter un volume da le redux
-        const handleAdd = (vol) => {
+        const handleAdd = async () => {
                 if (data.folio <= 200) {
                         const folio = folios.find(f => f.NUMERO_FOLIO == data.folio)
                         if (!folio) {
                                 if (data.dossier) {
                                         const dossier = folios.find(f => f.NUMERO_DOSSIER == data.dossier)
                                         if (!dossier) {
-                                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: data.dossier, nature: natures.DESCRIPTION ,ID_NATURE:natures.ID_NATURE_FOLIO}])
+                                                setFolios(vols => [...vols, { NUMERO_FOLIO: data.folio, NUMERO_DOSSIER: data.dossier, nature: natures.DESCRIPTION, ID_NATURE: natures.ID_NATURE_FOLIO }])
                                                 handleChange("folio", "")
                                                 handleChange("dossier", "")
                                                 setNatures(null)
@@ -140,7 +135,28 @@ export default function AddFolioScreen() {
                         setError("folio", ["folio invalide"])
                 }
         }
-        //Fonction pour enlever un volume da le redux
+        useEffect(() => {
+                const addInStroge = async () => {
+                        const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
+
+                        if (folios.length > 0) {
+                                await AsyncStorage.setItem(id, JSON.stringify(folios))
+                        }
+                }
+                addInStroge()
+        }, [folios,volume])
+        useEffect(() => {
+                const getInStroge = async () => {
+                        const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
+                                const preveFolio = await AsyncStorage.getItem(id)
+                                console.log(preveFolio)
+                                if(preveFolio){
+                                        setFolios(JSON.parse(preveFolio))
+                                }
+                }
+                getInStroge()
+        }, [])
+        //Fonction pour enlever un vo(lume da le redux
         const onRemoveFolio = (volIndex) => {
                 Alert.alert("Enlever le volume", "Voulez-vous vraiment enlever ce volume dans les details?",
                         [
@@ -550,7 +566,7 @@ export default function AddFolioScreen() {
                 }
                 catch (error) {
                         console.log(error)
-                        setDossierExiste(error.result)
+                        // setDossierExiste(error.result)
 
                 } finally {
                         setLoading(false)
@@ -802,7 +818,7 @@ export default function AddFolioScreen() {
                                                                                                         <MaterialCommunityIcons name="delete" size={24} color="#777" />
                                                                                                 </TouchableOpacity>
                                                                                         </View>
-                                                                                        {isExists ? <Text style={{ color: 'red',marginTop:-10,marginLeft:10,marginBottom:5 }}>Dossiesr existe déjà</Text> : null}
+                                                                                        {isExists ? <Text style={{ color: 'red', marginTop: -10, marginLeft: 10, marginBottom: 5 }}>Dossiesr existe déjà</Text> : null}
                                                                                 </View>
                                                                         )
                                                                 })}
@@ -931,7 +947,7 @@ const styles = StyleSheet.create({
                 width: "100%",
                 height: "100%",
                 borderRadius: 10,
-              resizeMode: "cover"
+                resizeMode: "cover"
         },
         modalTitle: {
                 fontWeight: "bold",
@@ -949,7 +965,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
-                marginBottom:5
+                marginBottom: 5
         },
         buttonText: {
                 color: "#fff",
