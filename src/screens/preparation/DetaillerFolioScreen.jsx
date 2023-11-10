@@ -48,23 +48,16 @@ export default function AddFolioScreen() {
         })
 
         const { errors, setError, getErrors, setErrors, checkFieldData, isValidate, getError, hasError } = useFormErrorsHandle(data, {
-
-        }, {
-
-               
-        })
-
+        }, { })
         const isValidAdd = () => {
                 var isValid = false
                 var isValidFolio = false
                 var isValidDossier = false
-
                 isValidFolio = data.folio != "" ? true : false
                 isValidDossier = data.dossier != "" ? true : false
                 isValid = natures != null ? true : false
                 return isValid && isValidFolio && isValidDossier
         }
-
         const isValidFin = () => {
                 var isVal = false
                 var isValidFolio = false
@@ -77,8 +70,6 @@ export default function AddFolioScreen() {
                 isVal = document != null && malles?.ID_MAILLE && distributeur?.USERS_ID ? true : false
                 return isVal
         }
-
-
         // Volume select
         const volumeModalizeRef = useRef(null);
         const [volumes, setVolumes] = useState(null);
@@ -89,7 +80,6 @@ export default function AddFolioScreen() {
                 volumeModalizeRef.current?.close();
                 setVolumes(vol)
         }
-
         // Nature du dossier select
         const natureModalizeRef = useRef(null);
         const [natures, setNatures] = useState(null);
@@ -560,8 +550,8 @@ export default function AddFolioScreen() {
                                 method: "POST",
                                 body: form
                         })
-                        const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
-                        await AsyncStorage.removeItem(id)
+                        // const id = `folios_volume_${volume?.volume?.ID_VOLUME}`
+                        // await AsyncStorage.removeItem(id)
                         navigation.goBack()
                 }
                 catch (error) {

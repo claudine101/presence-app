@@ -33,7 +33,7 @@ export default function NewAgentSupScanScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentSuperviseur != null && multiFolios.length > 0 && document != null ? true : false
+                isValid = agentSuperviseur != null && multiFolios?.length > 0 && document != null ? true : false
                 return isValid
         }
 
@@ -61,7 +61,7 @@ export default function NewAgentSupScanScreen() {
         const [allFolios, setAllFolios] = useState([]);
         const [foliosLoading, setFoliosLoading] = useState(false);
 
-        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const isSelected = id_folio => multiFolios?.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (fol) => {
                 if (isSelected(fol.ID_FOLIO)) {
                         const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
@@ -70,6 +70,12 @@ export default function NewAgentSupScanScreen() {
                         setMultiFolios(u => [...u, fol])
                 }
 
+        }
+        const selecteAll = () => {
+                setMultiFolios(allFolios)
+        }
+        const deselecteAll = () => {
+                setMultiFolios(null)
         }
 
         //fonction pour recuperer le folio par rapport de volume
@@ -166,6 +172,19 @@ export default function NewAgentSupScanScreen() {
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des folios</Text>
+                                                        {multiFolios?.length == allFolios?.length ?
+                                                                <View>
+                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+                                                                                <Fontisto name="checkbox-active" size={21} color={COLORS.primary} />
+                                                                        </TouchableNativeFeedback>
+                                                                </View>
+                                                                :
+                                                                <View>
+                                                                        <TouchableOpacity onPress={selecteAll}>
+                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} onPress={() => selecteAll()} />
+                                                                        </TouchableOpacity>
+                                                                </View>
+                                                        }
                                                 </View>
                                                 <View style={styles.modalList}>
                                                         {allFolios.map((fol, index) => {
@@ -331,7 +350,7 @@ export default function NewAgentSupScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Aucun'} séléctionné{multiFolios.length > 1 ? "s" : ''}
+                                                                        {multiFolios?.length > 0 ? multiFolios?.length : 'Aucun'} séléctionné{multiFolios?.length > 1 ? "s" : ''}
                                                                 </Text>
                                                         </View>
                                                 </View>

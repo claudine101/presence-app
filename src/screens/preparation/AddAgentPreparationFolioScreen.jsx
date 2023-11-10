@@ -47,7 +47,7 @@ export default function AddAgentPreparationFolioScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = agentPreparation != null && document != null && multiFolios.length > 0 ? true : false
+                isValid = agentPreparation != null && document != null && multiFolios?.length > 0 ? true : false
                 return isValid && isValidate()
         }
 
@@ -135,7 +135,7 @@ export default function AddAgentPreparationFolioScreen() {
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
         const [allFolios, setAllFolios] = useState(volume.folios)
-                const isSelected = id_folio => multiFolios.find(u =>u.folio.ID_FOLIO == id_folio) ? true : false
+                const isSelected = id_folio => multiFolios?.find(u =>u.folio.ID_FOLIO == id_folio) ? true : false
                 const setSelectedFolio = (fol) => {
                         if (isSelected(fol.folio.ID_FOLIO)) {
                                 const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != fol.folio.ID_FOLIO)
@@ -144,12 +144,31 @@ export default function AddAgentPreparationFolioScreen() {
                                 setMultiFolios(u => [...u, fol])
                         }
                 }
+                const selecteAll = () => {
+                        setMultiFolios(allFolios)
+                }
+                const deselecteAll = () => {
+                        setMultiFolios(null)
+                }
                 return (
                         <>
                                 {
                                         <View style={styles.modalContainer}>
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des dossiers</Text>
+                                                        {multiFolios?.length == allFolios?.length ?
+                                                                <View>
+                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+                                                                                <Fontisto name="checkbox-active" size={21} color={COLORS.primary} />
+                                                                        </TouchableNativeFeedback>
+                                                                </View>
+                                                                :
+                                                                <View>
+                                                                        <TouchableNativeFeedback onPress={selecteAll}>
+                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} onPress={() => selecteAll()} />
+                                                                        </TouchableNativeFeedback>
+                                                                </View>
+                                                        }
                                                 </View>
                                                 {allFolios.map((fol, index) => {
                                                         return (
@@ -276,7 +295,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         {volume ? <Text style={styles.selectedValue}>
-                                                                                {volume.folios.length} dossier{volume.folios.length>1 ?"s" : ''}
+                                                                                {volume.folios?.length} dossier{volume.folios?.length>1 ?"s" : ''}
                                                                         </Text> :
                                                                                 <Text style={styles.selectedValue}>
                                                                                         aucun
@@ -303,7 +322,7 @@ export default function AddAgentPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? ` ${multiFolios.length} `+ `séléctionné`+`${multiFolios.length>1 ?"s" : ''}` :'Sélectionner les dossiers'}
+                                                                        {multiFolios?.length > 0 ? ` ${multiFolios?.length} `+ `séléctionné`+`${multiFolios?.length>1 ?"s" : ''}` :'Sélectionner les dossiers'}
                                                                         </Text>
                                                                 </View>
                                                         </View>

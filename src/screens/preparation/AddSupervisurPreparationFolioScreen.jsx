@@ -49,7 +49,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         })
         const isValidAdd = () => {
                 var isValid = false
-                isValid = volume != null && supPreparations != null && multiFolios.length > 0 && document != null ? true : false
+                isValid = volume != null && supPreparations != null && multiFolios?.length > 0 && document != null ? true : false
                 return isValid
         }
 
@@ -86,7 +86,7 @@ export default function AddSupervisurPreparationFolioScreen() {
         const [allFolios, setAllFolios] = useState([]);
 
         const [foliosLoading, setFoliosLoading] = useState(false);
-        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const isSelected = id_folio => multiFolios?.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (fol) => {
                 if (isSelected(fol.ID_FOLIO)) {
                         const newfolio = multiFolios.filter(u => u.ID_FOLIO != fol.ID_FOLIO)
@@ -94,6 +94,12 @@ export default function AddSupervisurPreparationFolioScreen() {
                 } else {
                         setMultiFolios(u => [...u, fol])
                 }
+        }
+        const selecteAll = () => {
+                setMultiFolios(allFolios)
+        }
+        const deselecteAll = () => {
+                setMultiFolios(null)
         }
         //fonction pour recuperer le folio par rapport de volume
         useEffect(() => {
@@ -165,14 +171,33 @@ export default function AddSupervisurPreparationFolioScreen() {
                                         <ActivityIndicator animating size={'large'} color={'#777'} />
                                 </View> :
                                         <View style={styles.modalContainer}>
-                                                <View style={styles.modalHeader}>
-                                                        <Text style={styles.modalTitle}>Listes des dossiers</Text>
+                                                <View style={styles.modalTitre}>
+                                                        <View style={styles.modalHeader}>
+                                                                <Text style={styles.modalTitle}>Listes des dossiers</Text>
+
+                                                        </View>
+
+
+                                                        {multiFolios?.length == allFolios?.length ?
+                                                                <View>
+                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+                                                                                <Fontisto name="checkbox-active" size={21} color={COLORS.primary} />
+                                                                        </TouchableNativeFeedback>
+                                                                </View>
+                                                                :
+                                                                <View>
+                                                                        <TouchableNativeFeedback onPress={selecteAll}>
+                                                                                <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} onPress={() => selecteAll()} />
+                                                                        </TouchableNativeFeedback>
+                                                                </View>
+                                                        }
                                                 </View>
+
                                                 {
-                                                        allFolios.length == 0 ?
+                                                        allFolios?.length == 0 ?
                                                                 <Text style={styles.modalTitle}>Aucun dossier trouvé</Text>
                                                                 :
-                                                                allFolios.map((fol, index) => {
+                                                                allFolios?.map((fol, index) => {
                                                                         return (
                                                                                 <ScrollView key={index}>
                                                                                         <TouchableNativeFeedback onPress={() => setSelectedFolio(fol)}>
@@ -221,7 +246,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                 <View style={styles.modalHeader}>
                                                         <Text style={styles.modalTitle}>Listes des agents superviseur</Text>
                                                 </View>
-                                                {allSuperviseur.result.map((prep, index) => {
+                                                {allSuperviseur?.result?.map((prep, index) => {
                                                         return (
                                                                 <ScrollView key={index}>
                                                                         <TouchableNativeFeedback onPress={() => setSelectedSupPreparation(prep)}>
@@ -398,7 +423,7 @@ export default function AddSupervisurPreparationFolioScreen() {
                                                                 </Text>
                                                                 <View>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {multiFolios.length > 0 ? ` ${multiFolios.length} ` + `séléctionné` + `${multiFolios.length > 1 ? "s" : ''}` : 'Sélectionner les dossiers'}
+                                                                                {multiFolios?.length > 0 ? ` ${multiFolios?.length} ` + `séléctionné` + `${multiFolios?.length > 1 ? "s" : ''}` : 'Sélectionner les dossiers'}
 
                                                                         </Text>
                                                                 </View>
@@ -496,6 +521,13 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 paddingVertical: 5
         },
+        modalTitre: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 10,
+                paddingVertical: 5
+        },
         modalItem: {
                 flexDirection: "row",
                 alignItems: "center",
@@ -528,7 +560,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
-                marginBottom:5
+                marginBottom: 5
         },
         buttonText: {
                 color: "#fff",
@@ -600,11 +632,11 @@ const styles = StyleSheet.create({
         natureCard: {
                 flexDirection: "row",
                 justifyContent: "space-between",
-                flex:1
+                flex: 1
         },
         mard: {
                 flexDirection: "column",
-                flex:1
+                flex: 1
                 // justifyContent: "space-between",
         },
 })

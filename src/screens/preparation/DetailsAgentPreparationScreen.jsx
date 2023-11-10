@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableNativeFeedback, ActivityIn
 import { COLORS } from "../../styles/COLORS";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
-import { Ionicons, FontAwesome5, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, MaterialIcons, MaterialCommunityIcons, Fontisto } from '@expo/vector-icons';
 import { useForm } from "../../hooks/useForm";
 import { useFormErrorsHandle } from "../../hooks/useFormErrorsHandle";
 import * as DocumentPicker from 'expo-document-picker';
@@ -41,11 +41,11 @@ export default function DetailsAgentPreparationScreen() {
                 var isValid = false
                 var existMotif = false
                 var motif = true
-                existMotif = (folio.folios.length != selectedItems.length) ? true : false
+                existMotif = (folio?.folios?.length != selectedItems?.length) ? true : false
                 if (existMotif) {
                         motif = data.motif != null ? true : false
                 }
-                isValid = (document != null && selectedItems.length > 0) ? true : false
+                isValid = (document != null && selectedItems?.length > 0) ? true : false
                 return isValid && motif
         }
         //Fonction pour le prendre l'image avec l'appareil photos
@@ -69,7 +69,7 @@ export default function DetailsAgentPreparationScreen() {
                 setIsCompressingPhoto(false)
                 //     handleChange('pv', manipResult)
         }
-        const isSelected = folio => selectedItems.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
+        const isSelected = folio => selectedItems?.find(f => f.ID_FOLIO == folio.ID_FOLIO) ? true : false
         const handleFolioPress = (folio) => {
                 if (isSelected(folio)) {
                         const removed = selectedItems.filter(f => f.ID_FOLIO != folio.ID_FOLIO)
@@ -82,10 +82,10 @@ export default function DetailsAgentPreparationScreen() {
                 try {
                         setLoadingSubmit(true)
                         const form = new FormData()
-                        form.append('folio', JSON.stringify(folio.folios))
+                        form.append('folio', JSON.stringify(folio?.folios))
                         form.append('folioPrepare', JSON.stringify(selectedItems))
                         form.append('AGENT_PREPARATION', folio.users.USERS_ID)
-                        if (data.motif != null && selectedItems.length != folio.folios.length) {
+                        if (data.motif != null && selectedItems?.length != folio?.folios?.length) {
                                 form.append('MOTIF', data.motif)
                         }
                         if (document) {
@@ -120,6 +120,12 @@ export default function DetailsAgentPreparationScreen() {
                         setLoadingSubmit(false)
                 }
         }
+        const selecteAll = () => {
+                setSelectedItems(folio?.folios)
+        }
+        const deselecteAll = () => {
+                setSelectedItems(null)
+        }
         return (
                 <>
                         {(galexyIndex != null && folio && folio) &&
@@ -148,7 +154,7 @@ export default function DetailsAgentPreparationScreen() {
                                         </View>
                                 </View>
                                 <ScrollView keyboardShouldPersistTaps='handled'>
-                                        {folio.folios.length > 0 ?
+                                        {folio?.folios?.length > 0 ?
                                                 <View style={styles.selectContainer}>
                                                         <View style={{ width: '100%' }}>
                                                                 <View style={[styles.labelContainer, { justifyContent: 'space-between' }]}>
@@ -156,17 +162,33 @@ export default function DetailsAgentPreparationScreen() {
                                                                                 <View style={styles.icon}>
                                                                                         <MaterialCommunityIcons name="file-document-multiple-outline" size={20} color="#777" />
                                                                                 </View>
-                                                                                <Text style={styles.selectLabel}>
-                                                                                        Les dossiers
-                                                                                </Text>
+                                                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                                        <Text style={styles.selectLabel}>
+                                                                                                Les dossiers
+                                                                                        </Text>
+                                                                                        {selectedItems?.length == folio?.folios?.length ?
+                                                                                                <View>
+                                                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box" size={24} color={COLORS.primary} />
+                                                                                                        </TouchableNativeFeedback>
+                                                                                                </View>
+                                                                                                :
+                                                                                                <View>
+                                                                                                        <TouchableNativeFeedback onPress={selecteAll}>
+
+                                                                                                                <MaterialIcons style={styles.checkIndicator} name="check-box-outline-blank" size={24} color="#ddd" />
+                                                                                                        </TouchableNativeFeedback>
+                                                                                                </View>
+                                                                                        }
+                                                                                </View>
                                                                         </View>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {folio.folios.length} dossier{folio.folios.length > 1 && 's'}
+                                                                                {folio?.folios?.length} dossier{folio?.folios?.length > 1 && 's'}
                                                                         </Text>
                                                                         <Text style={styles.selectedValue}>
-                                                                                {selectedItems?.length} préparé{selectedItems.length > 1 && 's'}
+                                                                                {selectedItems?.length} préparé{selectedItems?.length > 1 && 's'}
                                                                         </Text>
                                                                 </View>
                                                                 <View style={styles.folioList}>
@@ -224,7 +246,7 @@ export default function DetailsAgentPreparationScreen() {
                                                         </>
                                                 </View>
                                         </View>
-                                        {folio.folios.length != selectedItems?.length ?
+                                        {folio?.folios?.length != selectedItems?.length ?
 
 
                                                 <View style={{ marginVertical: 8, marginHorizontal: 10 }}>
@@ -342,7 +364,7 @@ const styles = StyleSheet.create({
                 paddingHorizontal: 10,
                 backgroundColor: COLORS.primary,
                 marginHorizontal: 10,
-                marginBottom:5
+                marginBottom: 5
 
         },
         buttonText: {
