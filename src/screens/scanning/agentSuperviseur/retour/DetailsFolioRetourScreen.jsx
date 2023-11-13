@@ -78,7 +78,7 @@ export default function DetailsFolioRetourScreen() {
 
         //Multi select pour selectionner les folios reconcilier
         const [multiFolios, setMultiFolios] = useState([]);
-        const isSelected = id_folio => multiFolios.find(u => u.ID_FOLIO == id_folio) ? true : false
+        const isSelected = id_folio => multiFolios?.find(u => u.ID_FOLIO == id_folio) ? true : false
         const setSelectedFolio = (folio) => {
                 if (isSelected(folio.ID_FOLIO)) {
                         const newfolio = multiFolios.filter(u => u.ID_FOLIO != folio.ID_FOLIO)
@@ -90,7 +90,7 @@ export default function DetailsFolioRetourScreen() {
         }
         const isValidAdd = () => {
                 var isValid = false
-                isValid = document != null && multiFolios.length > 0 ? true : false
+                isValid = document != null && multiFolios?.length > 0 ? true : false
                 return isValid
         }
         // const handleSubmit = (fol) => {
@@ -152,6 +152,12 @@ export default function DetailsFolioRetourScreen() {
                 } finally {
                         setLoadingData(false)
                 }
+        }
+        const selecteAll = () => {
+                setMultiFolios(folio.folios)
+        }
+        const deselecteAll = () => {
+                setMultiFolios(null)
         }
         return (
                 <>
@@ -221,10 +227,25 @@ export default function DetailsFolioRetourScreen() {
                                                                         </View>
                                                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {folio.folios.length} dossier{folio.folios.length > 1 && 's'}
+                                                                                        {folio.folios?.length} dossier{folio.folios?.length > 1 && 's'}
                                                                                 </Text>
+                                                                                {multiFolios?.length == folio?.folios?.length ?
+                                                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+
+                                                                                                <View>
+                                                                                                        <MaterialIcons  name="check-box" size={21}  color={COLORS.primary} />
+                                                                                                </View>
+                                                                                                </TouchableNativeFeedback>
+
+                                                                                                :
+                                                                                                <View>
+                                                                                                        <TouchableNativeFeedback onPress={selecteAll}>
+                                                                                                        <MaterialIcons name="check-box-outline-blank"  size={21}  />
+                                                                                                        </TouchableNativeFeedback>
+                                                                                                </View>
+                                                                                        }
                                                                                 <Text style={styles.selectedValue}>
-                                                                                        {multiFolios?.length} Scanné{multiFolios.length > 1 && 's'}
+                                                                                        {multiFolios?.length} Scanné{multiFolios?.length > 1 && 's'}
                                                                                 </Text>
                                                                         </View>
                                                                         <View style={styles.folioList}>
@@ -256,7 +277,7 @@ export default function DetailsFolioRetourScreen() {
                                                                 </View>
                                                         </View> : null}
 
-                                                        {check.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
+                                                        {check?.length > 0 ? <TouchableOpacity onPress={onTakePicha}>
                                                                 <View style={[styles.addImageItem]}>
                                                                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
                                                                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -273,7 +294,7 @@ export default function DetailsFolioRetourScreen() {
 
                                                 </View>
                                         </ScrollView>}
-                                {check.length > 0 ? <TouchableWithoutFeedback
+                                {check?.length > 0 ? <TouchableWithoutFeedback
                                         disabled={!isValidAdd()}
                                         onPress={submitEquipeData}
                                 >

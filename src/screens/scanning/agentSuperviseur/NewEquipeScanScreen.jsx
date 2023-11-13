@@ -30,7 +30,7 @@ export default function NewEquipeScanScreen() {
 
         const isValidAdd = () => {
                 var isValid = false
-                isValid = equipe != null && multiFolios.length > 0 && document != null ? true : false
+                isValid = equipe != null && multiFolios?.length > 0 && document != null ? true : false
                 return isValid
         }
 
@@ -124,7 +124,7 @@ export default function NewEquipeScanScreen() {
         //Composent pour afficher le modal de multi select des folio
         const MultiFolioSelctList = () => {
 
-                const isSelected = id_folio => multiFolios.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
+                const isSelected = id_folio => multiFolios?.find(u => u.folio.ID_FOLIO == id_folio) ? true : false
                 const setSelectedFolio = (fol) => {
                         if (isSelected(fol.folio.ID_FOLIO)) {
                                 const newfolio = multiFolios.filter(u => u.folio.ID_FOLIO != fol.folio.ID_FOLIO)
@@ -140,6 +140,19 @@ export default function NewEquipeScanScreen() {
                                 <View style={styles.modalContainer}>
                                         <View style={styles.modalHeader}>
                                                 <Text style={styles.modalTitle}>Listes des dossiers</Text>
+                                                 {multiFolios?.length == folio?.folios?.length ?
+                                                                                                <View>
+                                                                                                        <TouchableNativeFeedback onPress={deselecteAll}>
+                                                                                                        <Fontisto name="checkbox-active" size={21} color={COLORS.primary} />
+                                                                                                        </TouchableNativeFeedback>
+                                                                                                </View>
+                                                                                                :
+                                                                                                <View>
+                                                                                                        <TouchableNativeFeedback onPress={selecteAll}>
+                                                                                                        <Fontisto name="checkbox-passive" size={21} color={COLORS.primary} />
+                                                                                                        </TouchableNativeFeedback>
+                                                                                                </View>
+                                                                                        }
                                         </View>
                                         <View style={styles.modalList}>
                                                 {folio.folios.map((fol, index) => {
@@ -216,6 +229,12 @@ export default function NewEquipeScanScreen() {
                         setLoadingData(false)
                 }
         }
+        const selecteAll = () => {
+                setMultiFolios(folio.folios)
+        }
+        const deselecteAll = () => {
+                setMultiFolios(null)
+        }
         return (
                 <>
                         {loadingData && <Loading />}
@@ -254,7 +273,7 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                 </View>
                                                 <Text style={styles.selectedValue}>
-                                                        {fol.length} dossier{fol.length>0 ? "s":""}
+                                                        {fol?.length} dossier{fol?.length>0 ? "s":""}
                                                 </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.selectContainer} onPress={openEquipeModalize}>
@@ -278,8 +297,8 @@ export default function NewEquipeScanScreen() {
                                                         </Text>
                                                         <View>
                                                                 <Text style={styles.selectedValue}>
-                                                                        {multiFolios.length > 0 ? multiFolios.length : 'Selectioner les folios'}
-                                                                        {multiFolios.length > 0 ? <Text> sélectionné </Text> : null}
+                                                                        {multiFolios?.length > 0 ? multiFolios?.length : 'Selectioner les folios'}
+                                                                        {multiFolios?.length > 0 ? <Text> sélectionné </Text> : null}
                                                                 </Text>
                                                         </View>
                                                 </View>
