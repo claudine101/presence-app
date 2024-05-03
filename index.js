@@ -1,6 +1,6 @@
-if(__DEV__) {
-          import('./ReactotronConfig').then(() => console.log('Reactotron Configured'))
-}
+// if(__DEV__) {
+//           import('./ReactotronConfig').then(() => console.log('Reactotron Configured'))
+// }
 import { registerRootComponent } from 'expo';
 
 import App from './App';

@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "499447712609",
-    "project_id": "archivage-395413",
-    "storage_bucket": "archivage-395413.appspot.com"
+    "project_id": "presence-395413",
+    "storage_bucket": "presence-395413.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:499447712609:android:1417874d893defcf909320",
         "android_client_info": {
-          "package_name": "com.mediabox.archivage"
+          "package_name": "com.mediabox.presence"
         }
       },
       "oauth_client": [

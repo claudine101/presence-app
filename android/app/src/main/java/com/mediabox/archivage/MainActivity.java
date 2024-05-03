@@ -1,4 +1,4 @@
-package com.mediabox.archivage;
+package com.mediabox.presence;
 
 import android.os.Build;
 import android.os.Bundle;

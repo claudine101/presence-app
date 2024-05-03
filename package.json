@@ -1,5 +1,5 @@
 {
-  "name": "archivage-app",
+  "name": "presence-app",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
@@ -42,17 +42,14 @@
     "expo-notifications": "~0.17.0",
     "expo-screen-orientation": "~5.0.1",
     "expo-splash-screen": "~0.17.5",
-    "expo-sqlite": "~11.0.0",
     "expo-status-bar": "~1.4.2",
     "expo-system-ui": "~2.0.1",
     "expo-web-browser": "~12.0.0",
-    "intl": "^1.2.5",
     "lottie-react-native": "5.1.4",
     "moment": "^2.29.4",
     "native-base": "^3.4.13",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-intl": "^6.0.8",
     "react-native": "0.70.8",
     "react-native-chart-kit": "^6.12.0",
     "react-native-code-push": "^7.0.5",
@@ -78,8 +75,7 @@
     "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "reactotron-react-native": "^5.0.3"
+    "@babel/core": "^7.19.3"
   },
   "private": true
 }

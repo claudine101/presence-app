@@ -2,7 +2,7 @@
   "expo": {
     "jsEngine": "hermes",
     "name": "DTFCN",
-    "slug": "archivage",
+    "slug": "presence",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mediabox.archivage"
+      "bundleIdentifier": "com.mediabox.presence"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.mediabox.archivage"
+      "package": "com.mediabox.presence"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +39,7 @@
       "androidCollapsedTitle": "DTFCN",
       "iosDisplayInForeground": true
     },
-    "scheme": "archivage",
+    "scheme": "presence",
     "description": "Une application de DTFCN pour la numerisatio des archives"
   }
 }

@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mediabox.archivage" xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.mediabox.presence" xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.CAMERA"/>
@@ -24,7 +24,7 @@
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="47.0.0"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
-    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@dukizwe/archivage"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@dukizwe/presence"/>
     <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -36,11 +36,11 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.dukizwe.psr"/>
         <data android:scheme="psr"/>
-        <data android:scheme="archivage"/>
-        <data android:scheme="com.mediabox.archivage"/>
-        <data android:scheme="com.mediabox.archivage"/>
-        <data android:scheme="archivage"/>
-        <data android:scheme="com.mediabox.archivage"/>
+        <data android:scheme="presence"/>
+        <data android:scheme="com.mediabox.presence"/>
+        <data android:scheme="com.mediabox.presence"/>
+        <data android:scheme="presence"/>
+        <data android:scheme="com.mediabox.presence"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
