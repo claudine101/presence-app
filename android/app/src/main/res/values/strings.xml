@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">DTFCN</string>
+  <string name="app_name">RECECA</string>
   <string moduleConfig="true" name="CodePushDeploymentKey">Hrj8IFSGTR-G_Eu_LTeZ-O621NISbnS5j4pfX</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>

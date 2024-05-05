@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { ImageBackground, ScrollView, StyleSheet, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View, useWindowDimensions, StatusBar } from "react-native";
 import { TextField, FilledTextField, InputAdornment, OutlinedTextField } from 'rn-material-ui-textfield'
 import { FontAwesome, Fontisto, EvilIcons, AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import fetchApi from "../../helpers/fetchApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,8 @@ export default function ConnexionScreen() {
   const dispatch = useDispatch()
   const { height } = useWindowDimensions()
   const [showPassword, setShowPassword] = useState(false)
+  const [users, setUsers] = useState([])
+
   const [loading, setLoading] = useState(false);
   const passwordInputRef = useRef(null)
   const token = useSelector(notificationTokenSelector)
@@ -50,22 +52,49 @@ export default function ConnexionScreen() {
 
   const [additioanalErrors, setAdditionalErrors] = useState({})
 
+  useFocusEffect(useCallback(() => {
+    (async () => {
+        try {
+           
+                setLoading(true)
+                const vol = await fetchApi(`/auth/users/users`)
+                setUsers(vol.result)
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    })()
+}, []))
   const handleLogin = async () => {
     const user = {
       email: data.email,
       password: data.password,
       PUSH_NOTIFICATION_TOKEN: token,
-      DEVICE: Platform.OS === 'ios' ? 1 : 0
-
+      // DEVICE: Platform.OS === 'ios' ? 1 : 0
     }
+    // console.log(user)
     try {
       setLoading(true)
-      setAdditionalErrors({})
-      const userData = await fetchApi("/auth/users/login", {
+      // setAdditionalErrors({})
+      const form = new FormData()
+      form.append('email', data.email)
+      form.append('password', data.password)
+      form.append('PUSH_NOTIFICATION_TOKEN', token)
+      // form.append('DEVICE', typesOrdres.ID_TYPE_INCIDENT)
+    //  console.log(form)
+
+      // const userData = await fetchApi("/auth/users/login", {
+      //   method: "POST",
+      //   body: JSON.stringify(user),
+      //   headers: { "Content-Type": "application/json" },
+      // });
+      const userData = await fetchApi(`/auth/users/login`, {
         method: "POST",
-        body: JSON.stringify(user),
-        headers: { "Content-Type": "application/json" },
-      });
+        body: form
+})
+console.log(userData)
       await AsyncStorage.setItem("user", JSON.stringify(userData.result));
       dispatch(setUserAction(userData.result))
     }
@@ -87,7 +116,7 @@ export default function ConnexionScreen() {
       {loading && <Loading />}
       <ScrollView keyboardShouldPersistTaps='handled'>
           <View style={styles.container}>
-            <Image source={require('../../../assets/images/archivage_collage.png')} style={{...styles.image, resizeMode:"center"}}/>
+            <Image source={require('../../../assets/images/presence_collage.png')} style={{...styles.image, resizeMode:"center"}}/>
           
               <Text style={styles.title}>Connexion</Text>
 
