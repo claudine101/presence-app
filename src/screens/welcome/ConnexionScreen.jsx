@@ -94,7 +94,6 @@ export default function ConnexionScreen() {
         method: "POST",
         body: form
 })
-console.log(userData)
       await AsyncStorage.setItem("user", JSON.stringify(userData.result));
       dispatch(setUserAction(userData.result))
     }

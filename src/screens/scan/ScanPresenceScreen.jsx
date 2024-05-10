@@ -1,82 +1,69 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, TouchableNativeFeedback, ActivityIndicator } from 'react-native'
-import { Portal } from 'react-native-portalize';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, TouchableNativeFeedback, ActivityIndicator } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/app/Loading';
 import ErrorModal from '../../components/modals/ErrorModal';
 import fetchApi from '../../helpers/fetchApi';
+
 export default function ScanPresenceScreen() {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
-    const [location, setLocation] = useState("null")
-    const navigation = useNavigation()
-    const route = useRoute()
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const navigation = useNavigation();
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location.coords);
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
         })();
     }, []);
 
-
-    const askCameraPermission = async () => {
-        const { status } = await BarCodeScanner.requestPermissionsAsync();
-        setHasPermission(status === "granted");
-    }
-    useEffect(() => {
-        askCameraPermission()
-    }, []);
-    const handleBarCodeScanned = async ({ type, data }) => {
+    const handleBarCodeScanned = async ({ data }) => {
         setScanned(true);
-        console.log(JSON.parse(data))
         try {
-            setLoading(true)
-            const ScanCourrier = await fetchApi(`/services/coderefernce?CODE_REFERENCE=${data}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-            })
-            navigation.navigate('DetailCourrierScreen', { courrier: ScanCourrier.result })
-
+            setLoading(true);
+            
+            const scanPresence = await fetchApi(`/auth/users/scanPresence?CODE_REFERENCE=${data}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            navigation.navigate('PresenceScreen', { presence: scanPresence.result });
         } catch (error) {
-            console.log(error)
-            if (error.message) {
-                setError(error.message)
-            }
+            console.log(error);
+            setError(error.message || 'Une erreur est survenue lors du traitement.');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
-
+    if (hasPermission === null) {
+        return (
+            <View style={styles.container}>
+                <Text>Demande de permission en cours...</Text>
+            </View>
+        );
+    }
     if (hasPermission === false) {
-        return <View style={{ alignContent: 'center', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <Text>Pas d'accès à la caméra</Text>
-            <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple('#fff')}
-                useForeground={true}
-                onPress={() => askCameraPermission()}
-            >
-                <View style={{ backgroundColor: '#ddd', borderRadius: 10, padding: 10, marginTop: 50 }}>
-                    <Text>Autoriser l'accès</Text>
-                </View>
-            </TouchableNativeFeedback>
-        </View>
+        return (
+            <View style={styles.container}>
+                <Text>Pas d'accès à la caméra</Text>
+                <TouchableNativeFeedback
+                    background={TouchableNativeFeedback.Ripple('#fff')}
+                    useForeground={true}
+                    onPress={() => BarCodeScanner.requestPermissionsAsync()}
+                >
+                    <View style={styles.button}>
+                        <Text>Autoriser l'accès</Text>
+                    </View>
+                </TouchableNativeFeedback>
+            </View>
+        );
     }
 
     return (
-        // handleClose={onDecline}
-
         <View style={styles.container}>
             {loading && <Loading />}
             {error ? <ErrorModal onClose={() => {setError(null),setScanned(false)}} body={error} handleTitle="Ok" /> : null}

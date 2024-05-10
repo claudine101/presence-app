@@ -3,7 +3,7 @@ import cache from "../utils/cache";
 export const API_URL = false
   ? "https://prodev.mediabox.bi:33204"
   // : "http://192.168.56.1:3000/";
-  : "http://10.10.62.140:3000";
+  : "http://192.168.63.241:3000";
   // : "http://localhost:3000";
 
 

@@ -32,7 +32,6 @@ export default function DrawerContent({ state, navigation, descriptors }) {
                         {user.PHOTO_USER ? <Image source={{ uri: user.PHOTO_USER }} style={styles.image} /> :
                             <Image source={require('../../../assets/images/user.png')} style={styles.image} />}
                     </View>
-                    {console.log(user)}
                     <View style={styles.userNames}>
                         <Text style={styles.fullName} numberOfLines={1}>{user.NOM_EMPLOYE} {user.PRENOM_EMPLOYE}</Text>
                         <Text style={styles.email}>{user.USERNAME}</Text>
